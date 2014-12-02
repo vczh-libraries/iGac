@@ -1,0 +1,280 @@
+========================================================
+Computation Query
+========================================================
+
+========================================================
+Keywords
+========================================================
+int, uint, float, char, string, bool
+ref, data
+external, storage, query, in, out, var
+
+========================================================
+Types
+========================================================
+
+int, uint, float, char, string, bool (all in highest precision)
+
+[abstract] [ref] data <type-name> [: <parent-type>]
+{
+	[shared | owned] <field-name> : <type>;
+}
+
+// ref data automatically contains "identifier : int"
+// comparing ref data only cares about identifier
+// [ref] data is immutable
+// data constructor: Person (for empty struct), Person{"vczh"}
+// ref data constructor: ref Person{"vczh"}
+
+========================================================
+Queries (External Functions)
+========================================================
+
+// external function
+external MarryWith(husband : Person, wife : Person);
+external Square(in number : int, squared : int);
+external Sqrt(in number: int, sqrt : int);
+
+========================================================
+Queries (Storages)
+========================================================
+
+storage Father(child : Person, father : Person)
+	requires:
+		unique:(child)
+	;
+
+query Create(child : Person, father : Person)
+	:- set: Father(child, father)
+	;
+
+query Request(child : Person, father : Person)
+	:- Father(child, father)
+	;
+
+query Delete(child : Person, father : Person)
+	:- delete: Father(child, var theFather) :- theFather == father;
+	;
+
+query Update(child : Person, oldFather : Person, newfather : Person)
+	:- update: Father(child, var theFather) set: theFather = newFather :- theFather == father;
+	;
+
+====================================
+
+storage Fibonacci(in index : int, number : int)
+	requires:
+		index >= 1,
+		unique:(index)
+	index:
+		ordered:(index)
+	:- index >= 3, Fibonacci(index-1, var a), Fibonacci(index-2, var b), a + b == number
+	;
+
+Fibonacci(1, 1);
+Fibonacci(2, 1);
+
+// all ref data types automatically has a storage:
+//		storage <type>(instances : <type>)
+
+// all storage X(a, b, c) automatically has a constraint:
+//		unique:(a, b, c)
+
+========================================================
+Queries (Predicates)
+========================================================
+
+// variable defined in one ":-" cannot be used in another
+// variable defined after "," cannot be used before ","
+// in: input argument only
+// a new variable in a condition should be initialized in all condition
+// if it is referenced after ","
+//		e.g. f(var a) or g(var a) is right
+//		e.g. f(var a) and g(var a) is right
+//		e.g. f(var a) or g(var b) is wrong
+//		e.g. f(var a) and g(var b) is right
+
+query Ancestor(person : Person, ancestor : Person)
+	:- Father(person, ancestor) 
+	:- Father(person, var father), Ancestor(father, ancestor)
+	;
+
+query Ancestor(person : Person, ancestor : Person)
+	:- Father(person, ancestor) or Father(person, var father) and Ancestor(var father, ancestor)
+	;
+
+query Square(in number : float, out squared : float)
+	:- squared == number * number
+	;
+
+query VectorLength(in v : vector<float>, length : float)
+	:- Square(v.x, var x2), Square(v.y, var y2), Sqrt(x2+y2, length)
+	:- var x2 == Square(v.x), var y2 == Square(v.y), length == Sqrt(x2+y2)
+	:- Sqrt(Square(v.x) + Square(v.y), length)
+	:- length == Sqrt(v.x * v.x + v.y * v.y)
+	;
+
+========================================================
+Indices
+========================================================
+
+storage Test(test : int, name : string)
+	requires:
+		test >= 0,
+		unique:(test),
+		unique:(name),
+	index:
+		hash:(test),
+		hash:(name)
+	;
+
+storage Student(student : int, name : string)
+	requires:
+		unique:(student)
+	index:
+		hash:(student),
+		hash:(name)
+	;
+
+storage Score(student : int, test : int, score : int)
+	requires:
+		test >= 0,
+		unique:(student, test)
+	index
+		hash:(student),
+		hash:(test),
+		group:(student, test, ordered:(score))
+	;
+
+========================================================
+Collections (List Comprehension)
+========================================================
+
+query Contains<T>(in collection : {T}, item : T);
+query OrderBy<T>(in collection : {T}, in order : query(a : T, b : T), result : {T});
+query Skip<T>(in collection : {T}, in count : int, result : {T});
+query Top<T>(in collection : {T}, in count : int, result : {T});
+query Transform<T, U>(in collection : {T}, in selector : query(in a : T, b : U), result : {U});
+
+query OddNumbers(xs : {int}, odds: {int})
+	:- odds == (collect:- Contains(xs, var x); where:- x % 2 == 0; select: x;)
+	;
+
+query TopStudents(in test : int, in count : int, out students : {(name, score)})
+	:- students ==
+		collect:- Score(var student, test, var score), Student(student, var name);
+		->OrderBy(query (a, b) :- a.score < b.score)
+		->Skip(0)
+		->Top(count)
+		->Transform(query (in a, b) :- b == (a.name, a.score))
+	;
+
+==========================================
+
+query Skip<T>(in collection : {T}, in count : int, result : {T})
+Skip(collection, 0, {});
+Skip({x:xs}, count, result) :- count > 0, Skip(xs, count - 1, var ys), result == {x:ys};
+
+========================================================
+Pattern Matching
+========================================================
+
+struct Type{}
+struct Int : Type{}
+struct Array : Type{element : Type;}
+
+query TypeName(type : Type, out name : string);
+
+TypeName(Int, "int");
+TypeName(Array{element}, out name)
+	:- name == "array of " & TypeName(element);
+
+<pattern>
+	::- "_"
+	::- <constant>
+	::- <identifier> ":" <pattern>
+	::- "(" <pattern> "," ... ")"
+	::- <type>
+	::- <type> "{" <pattern> "," ... "}"
+	::- <type> "{" <identifier> ":" <pattern> "," ... "}"
+	::= {<pattern>:<pattern>}
+
+========================================================
+Example (Actors and Couples)
+========================================================
+
+ref data Actor
+{
+	name : string;
+}
+
+ref data Movie
+{
+	name : string;
+}
+
+storage Perform(actor : Actor, movie : Movie);
+storage Couple(man : Actor, woman : Actor);
+
+query CouplePerformMovie(man : Actor, woman : Actor, movie : Movie)
+	:- Couple(man, woman), Perform(man, movie), Perform(woman, movie)
+	;
+
+========================================================
+Example (Expression Evaluation)
+========================================================
+
+enum Operator
+{
+	Add, Sub, Mul, Div
+}
+/* equivalent to 
+abstract data Operator{};
+data Add : Operator{};
+...
+*/
+
+abstract ref data Expr{}
+ref data Number : Expr{value : double;}
+ref data Binary : Expr{first : Expr; second : Expr; op : Operator;}
+ref data Function : Expr{name : string;}
+ref data Call : Expr{name : Expr; arguments : {Expr};}
+
+data Type{}
+data Float : Type{}
+data Func : Type{argument : int;}
+
+query all<T>(xs : T{}, subQuery : query (item : T));
+all({}, subQuery);
+all({x:xs}, subQuery)
+	:- subQuery(x), all(xs, subQuery)
+	;
+
+storage ExpressionType(expr : Expr, out type : Type);
+storage Error(expr : Expr, error : string);
+
+ExpressionType(Number, Float);
+ExpressionType(Binary{a, b, op}, Float)
+	:-	ExpressionType(a, Float) and :- ExpressionType(b, Float)
+	;
+ExpressionType(Function{"sqrt"}, Func{1});
+ExpressionType(Function{"exp"}, Func{2});
+ExpressionType(expr : Call, Float)
+	:-	ExpressionType(expr.name, var functionType)
+	,	Func{var argumentCount} == functionType failed: set: Error(expr, "Cannot invoke non-function value.")
+	,	var argumentCount == expr.arguments.Length failed: set: Error(expr, "Argument count doesn't match the function type.")
+	,	all(expr.arguments, query (argument):- ExpressionType(argument, Float);)
+	;
+
+query Evaluate(expr : Expr, out result : float);
+Evaluate(Number{value}, value);
+Evaluate(Binary{a, b, Add}, Evaluate(a)+Evaluate(b));
+Evaluate(Binary{a, b, Sub}, Evaluate(a)-Evaluate(b));
+Evaluate(Binary{a, b, Mul}, Evaluate(a)*Evaluate(b));
+Evaluate(Binary{a, b, Div}, Evaluate(a)/Evaluate(b));
+Evaluate(Call{Function{"sqrt"}, {a}}, sqrt(Evaluate(a)));
+Evaluate(Call{Function{"exp"}, {a, b}}, exp(Evaluate(a), Evaluate(b)));
+
+========================================================
+Example (Pascal)
+========================================================

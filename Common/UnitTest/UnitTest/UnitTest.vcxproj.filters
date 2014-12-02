@@ -1,0 +1,571 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f3779849-c949-4b60-8751-58f50e27be8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Basic">
+      <UniqueIdentifier>{42b60bd4-7164-4935-bf76-808ec5a1fc90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Collections">
+      <UniqueIdentifier>{04f34fd9-11ee-4e9b-92ae-13a0ee6bb4e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Regex">
+      <UniqueIdentifier>{4523f76a-a088-44c2-8446-3cd21c07ecb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Stream">
+      <UniqueIdentifier>{5d7b32ab-1fdf-4930-9223-3a5083c0a061}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\UnitTest">
+      <UniqueIdentifier>{4cee4ebe-34cf-4f3e-b531-1e809f809106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Reflection">
+      <UniqueIdentifier>{11397095-5fca-4107-b756-59b53eebb209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Parsing">
+      <UniqueIdentifier>{8aafff42-d00d-4e55-8817-bb4b04359fe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parser.Calculator">
+      <UniqueIdentifier>{fa5e8885-6899-4ec0-9aad-edce47642ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Parsing\Xml">
+      <UniqueIdentifier>{c3320bf1-8595-40df-ba7a-b73bc124bdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Parsing\Json">
+      <UniqueIdentifier>{c81ce8b0-d506-4471-827a-0aabed45a927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Baseline">
+      <UniqueIdentifier>{83f6ed23-d1a3-4053-a352-a08219b0c4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Parsers">
+      <UniqueIdentifier>{88a4d592-d2fb-49b1-8808-d56cb94e5c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\_Codegen">
+      <UniqueIdentifier>{e96165f5-e7d9-454c-bb9d-94664f58da4c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Basic.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Console.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Exception.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GlobalStorage.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\String.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Threading.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\UnitTest\UnitTest.cpp">
+      <Filter>Common\UnitTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\Accessor.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\BroadcastStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\CacheStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\CharFormat.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\FileStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\MemoryStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\MemoryWrapperStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\RecorderStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\Regex.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexAutomaton.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexData.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexExpression.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexParser.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexPure.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexRich.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Regex\RegexWriter.cpp">
+      <Filter>Common\Regex</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestBasic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestGlobalStorage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestRegex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reflection\GuiTypeDescriptor.cpp">
+      <Filter>Common\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder.cpp">
+      <Filter>Common\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingDefinitions.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="TestParsing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingTree.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingLogging.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAnalyzer.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_EPDA.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_NPDA.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_Closure.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_JPDA.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingTable.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_GenerateTable.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingDefinitions_CreateParserDefinition.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\Parsing.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingState.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.Calculator\Parser.Calculator.cpp">
+      <Filter>Parser.Calculator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\Xml\ParsingXml.cpp">
+      <Filter>Common\Parsing\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\Xml\ParsingXml_Parser.cpp">
+      <Filter>Common\Parsing\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\Json\ParsingJson_Parser.cpp">
+      <Filter>Common\Parsing\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\Json\ParsingJson.cpp">
+      <Filter>Common\Parsing\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Locale.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reflection\GuiTypeDescriptorPredefined.cpp">
+      <Filter>Common\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="TestReflection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Parsing\ParsingAutomaton_MergeStates.cpp">
+      <Filter>Common\Parsing</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLocale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder_Container.h">
+      <Filter>Common\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\HttpUtility.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Stream\CompressionStream.cpp">
+      <Filter>Common\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLocaleString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ThreadingLinux.cpp">
+      <Filter>Common\Basic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\Basic.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Console.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Event.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Exception.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Function.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GlobalStorage.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Lazy.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Pointer.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\String.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Threading.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Tuple.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\Dictionary.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\Interfaces.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\List.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\Operation.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationConcat.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationCopyFrom.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationEnumerable.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationForEach.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationPair.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationSelect.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationSequence.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationSet.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationString.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\OperationWhere.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Collections\Pair.h">
+      <Filter>Common\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\UnitTest\UnitTest.h">
+      <Filter>Common\UnitTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\Accessor.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\BroadcastStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\CacheStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\CharFormat.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\FileStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\Interfaces.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\MemoryStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\MemoryWrapperStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\RecorderStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\Regex.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexAutomaton.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexData.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexExpression.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexPure.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexRich.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Regex\RegexWriter.h">
+      <Filter>Common\Regex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptor.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingDefinitions.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingTree.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingAutomaton.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingAnalyzer.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingTable.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\Parsing.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\ParsingState.h">
+      <Filter>Common\Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.Calculator\Parser.Calculator.h">
+      <Filter>Parser.Calculator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\Xml\ParsingXml.h">
+      <Filter>Common\Parsing\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\Xml\ParsingXml_Parser.h">
+      <Filter>Common\Parsing\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\Json\ParsingJson_Parser.h">
+      <Filter>Common\Parsing\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Parsing\Json\ParsingJson.h">
+      <Filter>Common\Parsing\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Locale.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptorPredefined.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptorMacros.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder_Function.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder_Struct.h">
+      <Filter>Common\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\HttpUtility.h">
+      <Filter>Common\Basic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Stream\CompressionStream.h">
+      <Filter>Common\Stream</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Parser.Calculator\Codegen.bat">
+      <Filter>Parser.Calculator</Filter>
+    </None>
+    <None Include="..\..\Source\Common.fpm">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+    <None Include="..\..\Source\Event.h.fpm">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+    <None Include="..\..\Source\Function.h.fpm">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+    <None Include="..\..\Source\Tuple.h.fpm">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+    <None Include="..\..\Source\GenerateCode.bat">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+    <None Include="..\..\Source\Reflection\GuiTypeDescriptorBuilder_Gen.h.fpm">
+      <Filter>Common\_Codegen</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Parser.Calculator\Parser.Calculator.parser.txt">
+      <Filter>Parser.Calculator</Filter>
+    </Text>
+    <Text Include="..\..\Source\Parsing\Json\ParsingJson_Parser.parser.txt">
+      <Filter>Common\Parsing\Json</Filter>
+    </Text>
+    <Text Include="..\..\Source\Parsing\Xml\ParsingXml_Parser.parser.txt">
+      <Filter>Common\Parsing\Xml</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexComment.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexComment.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexComment.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexDuplicate.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexDuplicate.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexDuplicate.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFloat.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFloat.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFloat.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFullint.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFullint.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexFullint.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexInteger.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexInteger.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexInteger.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexIP.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexIP.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexIP.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexPrescan.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexPrescan.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexPrescan.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexString.Dfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexString.eNfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Baseline\RegexString.Nfa.txt">
+      <Filter>Resource Files\Baseline</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.Calculator.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.NameList.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.Statement.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.NameSemicolonList.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.AmbiguousExpression.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+    <Text Include="..\TestFiles\Parsers\Parsing.WorkflowType.Definition.txt">
+      <Filter>Resource Files\Parsers</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

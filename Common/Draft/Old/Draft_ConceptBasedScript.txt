@@ -1,0 +1,312 @@
+fib = {
+    fib_ x y = {
+        yield y;
+        join fib_ y (x+y);
+    }
+    yield 1;
+    join fib_ 1 1;
+}
+
+main = {
+    N = int.Parse readln;
+    xs = take N fib;
+    ave = sum xs / len xs;
+    print $ sum $ map {sqrt (?-ave)} xs;
+}
+
+operator use: and or xor bitand bitor bitxor ...
+              & for list concatination
+
+========================================================
+Types
+========================================================
+
+sbyte	(Int8)
+short	(Int16)
+int		(Int32)
+long	(Int64)
+byte	(UInt8)
+ushort	(UInt16)
+uint	(UInt32)
+ulong	(UInt64)
+float	(Float32)
+double	(Float64)
+
+bool							: true, false
+char							: 'a', 'b'
+string							: "a", "b"
+
+generic type instantiation		: Array int
+function type					: argument -> result
+
+object							: object
+
+========================================================
+Types Definitions (reference type)
+========================================================
+
+type Handle = int
+
+enum Season = Spring | Summer | Autumn | Winter   (e.g. Season.Spring, ...)
+
+data Point T = { x:T, y:T }
+
+data Vector T 
+	where Comparable T = { x:T, y:T }
+
+data Expression
+= Nunmber { value:double }
+| Binary { left:Expression, right:Expression, op:BinaryOpeartor }
+
+match value
+{
+     when (v::Number): ....;   // pattern can be (pattern :: type)
+     when (v::Binary): ....;
+}
+
+========================================================
+Type Constructors
+========================================================
+
+iterator T		: iterator [a, b, c:xs]
+				: iterator [a..b]
+array T			: array {a, b, c}
+map T U			: map {a:b, c:d, e:f}
+(T, U, V)		: (a, b, c) == Pair{x:a, Pair{x:b, y:b}}
+void			: void
+
+data			: Point { x:10, y:20 }
+				: new { x:10, y:20 }
+
+========================================================
+Expressions
+========================================================
+
+this, base, null
+
+function call	: function argument
+				: argument -> function
+
+field			: expression . name
+association		: (a b c) d <==> a b c $ d
+				: (a b c) . d <==> a b c $ . d
+
+function		: pattern=>expression
+				: x=>x+1
+				: x=>y=>x+y
+
+a <- b			: x=>a $ b x
+(op)			: x=>y=>x op y
+? op value		: x=>x ope value
+value op ?		: x=>value op x
+
+shallow copy	: (shallow_copy x)
+deep copy		: (deep_copy x)
+
+specify type	: (value :: type)
+				: (array [] :: array int)
+				: (map {} :: map string int)
+				: (value is T) -> bool
+				: (value as T) -> T
+
+default value	: (default type)
+
+range			: a..b	(requires Addable T)
+
+serialize		: (to_tuple struct)
+				: (from_tuple (a,b,c) [:: StructName])
+
+boxing			: (to_object value)
+				: (from_object value [:: Type])
+type cast		: (cast value :: Type)
+
+monad's bind	: pull expression
+
+block			: do [continuation] { statements ... }
+				// the expresion value is the return value. If nothing returns, it is void
+
+========================================================
+Operators
+========================================================
+
+operator precedence
+	=>
+	field
+	a[b]
+	function call
+	+ - not
+	* / %
+	+ - ++
+	<< >>
+	..
+	== != < <= > >=
+	&
+	^
+	|
+	and
+	xor
+	or
+	<-
+	->
+	custom operator
+	$
+
+========================================================
+Statements
+========================================================
+
+function definition ;
+variable definition ;
+readonly value definition ;
+
+expression ;
+push expression;
+
+{ statements }
+
+if condition then statement else statement
+for a in b do statement
+for a in b to c do statement
+while condition do statement
+do statement while condition ;
+
+break ;
+continue ;
+return ;
+yield expression ;
+return expression ;
+
+match value {
+	when pattern : statement
+	...
+	[default : statement] // no default: not matched throws PatternMatchException
+}
+
+throw expression ;
+
+try statement
+catch 
+
+========================================================
+Definitions
+========================================================
+
+def readonly_value [ :: type ] = value
+
+var variable [ :: type ] = value
+
+def [<GENERIC-ARGUMENT-DEFINITION>] [this | (this :: type).]function_name pattern1 pattern2 ... [ :: <TYPE-DEFINITION> ] 
+	= value
+
+property [<GENERIC-ARGUMENT-DEFINITION>] [this | (this :: type).]function_name pattern1 pattern2 [ :: <TYPE-DEFINITION> ] = {
+	get = function_body
+	set pattern1 = function_body
+	set pattern2 = function_body
+}
+
+<GENERIC-ARGUMENT-DEFINITION>	: ( T, U, V )
+<TYPE-DEFINITION>				: List T -> (T -> List U) -> List U where Comparable T, Comparable U
+
+this argument can only be used outside of interfaces
+
+========================================================
+Interfaces
+========================================================
+
+concept Indexable C I R = 
+{
+	property ([]) :: C -> I -> R {get set}
+}
+
+instance (T) Indexable (RandomAccess T) int T
+{
+	property ([]) r i =
+	{
+		get = C.GetItem i
+		set value = C.SetItem value
+	}
+}
+
+interface RandomAccess T :: Enumerable T = {
+	property Length :: int = { get }
+	def Resize :: int -> void
+	def GetItem (index :: int) :: int
+	def SetItem (index :: int) (value :: T) :: void
+}
+
+interface Array T :: RandomAccess T = {
+	def Resize :: int -> void
+}
+
+interface Collection T :: RandomAccess T
+	where Equable T
+{
+	def Add :: T -> int
+	def Remove :: T -> bool
+	def RemoveAt :: int -> T
+	def Clear :: void -> T
+}
+
+interface SortedList T :: Collection T
+	where Comparable T = {
+}
+
+========================================================
+Interfaces Implementation
+========================================================
+
+this : expression for interface implementation to reference itself
+base : expression for interface implementation to reference the inherits object
+
+implement (T) SortedList xs
+	:: array T -> SortedList T
+	where Comparable T
+	= interface SortedList T
+	inherits ListStorage xs
+{
+	var (buffer :: array T) = null
+
+	protected def GetLengthInternal void = buffer.Length
+	virtual def CreateItemFirst void = (default T)
+	abstract def CreateItemSecond void :: T
+	override def CreateItemThird void = throw NotImplementException
+
+	property Length // the only visible member from outside
+	{
+		get = GetLengthInternal void
+		set value = do {
+			this.Resize value
+		}
+	}
+}
+
+========================================================
+Concept
+========================================================
+
+concept Comparable T = {
+	def Compare :: T -> T -> int
+}
+
+========================================================
+Concept Instance
+========================================================
+
+instance Compare int = {
+	def Compare a b = ...
+}
+
+instance (T) Comparable Vector T
+	where Comparable T = 
+{
+	def Compare a b = ...
+}
+
+========================================================
+Continuation
+========================================================
+
+concept Monad M = {
+	def (T) Return :: T -> M T
+	def (T, U) Bind :: M T -> (T -> M U) -> M U
+}

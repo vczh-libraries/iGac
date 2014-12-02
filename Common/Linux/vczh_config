@@ -1,0 +1,54 @@
+.bashrc
+export PATH=/home/vczh/Downloads/TEE-CLC-11.0.0:$PATH;
+export TF_AUTO_SAVE_CREDENTIALS=0;
+export VLPP_LINUX=~/code/gac/Common/Linux;
+export WORKFLOW_LINUX=~/code/gac/Libraries/Workflow/WorkflowSrc/Linux;
+export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\$ "
+
+apt-get install
+	htop
+	cgdb
+	manpages-posix-dev
+	git
+
+.vimrc
+set tabstop=4
+set number
+set hlsearch
+set fileencodings=utf-8,ucs-bom,cp936
+
+sudo auto-get openssh-server
+
+/etc/rc.local
+/etc/init.d/ssh start
+
+make 2>&1 | tee make_log
+gedit make_log &
+nautilus .
+
+(gdb)
+gdb <executable>
+set disassembly-flavor intel
+q:	quit
+r:	run
+c:	continue
+s:	step
+n:	next
+si:	stepi
+ni:	nexti
+f:	frame
+bt:	backtrace
+u:	up
+d:	down
+
+info line
+info register
+info breakpoints
+info threads
+
+p $rip
+disassemble 0xstart 0xend
+
+break filename:function
+clear function
+delete breakpoint-number

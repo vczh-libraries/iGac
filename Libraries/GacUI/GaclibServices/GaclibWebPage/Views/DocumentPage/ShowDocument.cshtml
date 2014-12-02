@@ -1,0 +1,37 @@
+﻿@model GaclibWebPage.Models.DocumentPageModel
+@{
+    ViewBag.Title = @Model.Title;
+    Layout = "~/Views/Shared/_DocumentPageLayout.cshtml";
+}
+<td class="frameTable indexPanel" valign="top">
+    @foreach (var node in Model.IndexTree)
+    {
+        @:<nobr>
+        for (int i = 0; i < node.Level; i++)
+        {
+            @:&nbsp;&nbsp;&nbsp;&nbsp;
+        }
+        if (node.Link)
+        {
+            <a href="@Url.Action("ShowDocument", "DocumentPage", new { uniqueId = node.UniqueId })">@node.Title</a>
+        }
+        else
+        {
+            <b>@node.Title</b>
+        }
+        @:</nobr><br/>
+    }
+</td>
+<td class="frameTable contentPanel" valign="top">
+    @foreach (var fragment in Model.Content)
+    {
+        if (fragment.IsUniqueId)
+        {
+            @(Url.Action("ShowDocument", "DocumentPage", new { uniqueId = fragment.Text }))
+        }
+        else
+        {
+            @(new MvcHtmlString(fragment.Text))
+        }
+    }
+</td>

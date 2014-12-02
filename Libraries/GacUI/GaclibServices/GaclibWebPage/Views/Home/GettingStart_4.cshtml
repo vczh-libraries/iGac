@@ -1,0 +1,28 @@
+﻿@model GaclibWebPage.Models.GettingStartPageModel
+
+@{
+    ViewBag.Title = "GacLib - Getting Started - Step 4";
+}
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shCore.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shBrushCpp.js")"></script>
+<link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/SyntaxHighlighter/styles/shCore.css")" />
+<link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/SyntaxHighlighter/styles/shThemeRDark.css")" />
+<tr>
+    <td align="left" valign="top" colspan="6">
+        <h1>Step 4. @Model.TutorialTitles[3]</h1>
+        <p>
+            Build the program and run!<br /><br />
+            <img src="@Url.Content("~/Content/GettingStart/HelloWorld.jpg")" alt="Hello, world!" />
+        </p>
+        <h1>See also ...</h1>
+        <ul>
+            @for (int index = 0; index < Model.TutorialTitles.Length; index++)
+            {
+                <li>Step @(index + 1). <a href="@Url.Action("GettingStart_" + (index + 1).ToString(), "Home")">@Model.TutorialTitles[index]</a></li>
+            }
+        </ul>
+    </td>
+</tr>
+<script type="text/javascript">
+    SyntaxHighlighter.all()
+</script>

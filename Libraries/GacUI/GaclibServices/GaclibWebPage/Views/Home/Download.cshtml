@@ -1,0 +1,92 @@
+﻿@model GaclibWebPage.Models.DownloadPageModel
+
+@{
+    ViewBag.Title = "GacLib - Download";
+}
+
+<tr>
+    <td align="left" valign="top" colspan="6">
+        <h1 id="QuickLinks">Quick Links</h1>
+        <ul>
+            <il>
+                @{
+                    var version = Model.Versions[0];
+                }
+                <strong>The latest release (@version.Version)</strong>
+                <p>
+                    <a href="@version.Url" target="_blank">@version.Url</a>
+                </p>
+                <p>
+                    <a href="https://github.com/vczh/gac/" target="_blank">https://github.com/vczh/gac/</a>
+                </p>
+            </il>
+            <il>
+                <strong>The latest source code</strong>
+                <p>
+                    <a href="https://gac.codeplex.com/SourceControl/latest" target="_blank">https://gac.codeplex.com/SourceControl/latest</a>
+                </p>
+            </il>
+        </ul>
+        <p>
+            GacUI library is released by source code in <a href="http://gac.codeplex.com/" target="_blank">http://gac.codeplex.com/</a>. GacUI is released under the MS-PL license. That says, if you want to redistribute your open source project that depends on GacUI, all GacUI source code (modified or not) should be under MS-PL, and your can choose your favorite license for your code. In other cases, MS-PL is very similar to Apache or BSD.
+        </p>
+        <p>
+            If you download the release, you can find the GacUI library at "<b>Public\Source</b>". If you download the latest source code, you can find the GacUI library at "<b>Libraries\GacUI\Public\Source</b>". This folder contains the following files:
+        </p>
+        <table class="GuideTable" cellpadding="0" cellspacing="0">
+            <tr class="GuideTableHeader">
+                <td>Files</td>
+                <td>Dependencies</td>
+                <td>Description</td>
+                <td>g++ 4.8.1 Compatibility</td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>Vlpp.h/cpp</b></td>
+                <td>&nbsp;</td>
+                <td>A C++ common library.</td>
+                <td><b>YES</b></td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>VlppWorkflow.h/cpp</b></td>
+                <td>Vlpp.h/cpp</td>
+                <td>A strong typed script language designing for accessing reflectable C++ classes. <b>If you don't want the XML resource window feature, you don't need to add these files.</b></td>
+                <td><b>YES</b></td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>GacUI.h/cpp</b></td>
+                <td>Vlpp.h/cpp</td>
+                <td>Containing all the GUI features.</td>
+                <td><b>YES</b></td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>GacUIWindows.h.cpp</b></td>
+                <td>GacUI.h/cpp</td>
+                <td>Containing all features that interact with the Microsoft Windows.</td>
+                <td><b>NO</b></td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>GacUIReflection.h/cpp</b></td>
+                <td>GacUI.h/cpp, VlppWorkflow.h/cpp</td>
+                <td>Containing all features that need reflection, like loading windows from xml resource, data binding, etc. <b>If you don't want the XML resource window feature, you don't need to add these files.</b></td>
+                <td><b>YES</b></td>
+            </tr>
+            <tr class="GuideTableBody">
+                <td><b>GacGen.exe</b></td>
+                <td></td>
+                <td>C++ code generator from XML resource.</b></td>
+                <td><b></b></td>
+            </tr>
+        </table>
+        <p>
+            GacUI prepared the <strong>online HTML documents</strong>, click <a href="@Url.Action("ShowDocument", "DocumentPage", new { uniqueId = "reference_gacui" })">HERE</a> to begin.
+        </p>
+        <p>
+            To build a release from the source code, you should follow these steps:
+        </p>
+        <ul>
+            <li>Open <strong>Libraries\GacUI\GacUISrc\GacUISrc.sln</strong> using Visual Studio 2013.</li>
+            <li>Compile the GacUISrc project under <strong>DebugNoReflection</strong> configuration.</li>
+            <li>Run <strong>Libraries\GacUI\Public\Release.bat</strong> in Windows Explorer.</li>
+        </ul>
+    </td>
+</tr>

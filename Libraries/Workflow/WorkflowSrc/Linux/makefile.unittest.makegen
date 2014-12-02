@@ -1,0 +1,8 @@
+include
+	../../Source/makefile.workflow.makegen
+
+folder UNITTEST = ../WorkflowSrc
+	cpp = *.cpp
+
+dependency
+	UNITTEST:cpp < WORKFLOW:h

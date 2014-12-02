@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NestleConsole", "NestleConsole\NestleConsole.vcxproj", "{06A5B663-83ED-42C3-AAA7-AD536555D0FC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NestleGacUI", "NestleGacUI\NestleGacUI.vcxproj", "{8FB164EE-2A0A-43F0-A8DE-4D70A36CB707}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = NestleConsole\\NestleConsole.vcxproj
+		SccProjectName1 = NestleConsole
+		SccLocalPath1 = NestleConsole
+		SccProjectUniqueName2 = NestleGacUI\\NestleGacUI.vcxproj
+		SccProjectName2 = NestleGacUI
+		SccLocalPath2 = NestleGacUI
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06A5B663-83ED-42C3-AAA7-AD536555D0FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06A5B663-83ED-42C3-AAA7-AD536555D0FC}.Debug|Win32.Build.0 = Debug|Win32
+		{06A5B663-83ED-42C3-AAA7-AD536555D0FC}.Release|Win32.ActiveCfg = Release|Win32
+		{06A5B663-83ED-42C3-AAA7-AD536555D0FC}.Release|Win32.Build.0 = Release|Win32
+		{8FB164EE-2A0A-43F0-A8DE-4D70A36CB707}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8FB164EE-2A0A-43F0-A8DE-4D70A36CB707}.Debug|Win32.Build.0 = Debug|Win32
+		{8FB164EE-2A0A-43F0-A8DE-4D70A36CB707}.Release|Win32.ActiveCfg = Release|Win32
+		{8FB164EE-2A0A-43F0-A8DE-4D70A36CB707}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

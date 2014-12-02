@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B8C0F5A7-559F-4DD1-88F1-557DF96BAA4A}</ProjectGuid>
+    <SccProjectName>SAK</SccProjectName>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccProvider>SAK</SccProvider>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GacGenTest</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Xml Include="XmlDocDemo.xml" />
+    <Xml Include="XmlWindowResource.precompiled.xml" />
+    <Xml Include="XmlWindowResource.xml" />
+    <Xml Include="XmlWindowResourceControlTemplates.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUI.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUIReflection.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUIWindows.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\GacUI\Public\Source\Vlpp.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\GacUI\Public\Source\VlppWorkflow.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="BottomScrollButtonTemplate.cpp" />
+    <ClCompile Include="ButtonTemplate.cpp" />
+    <ClCompile Include="CheckBoxTemplate.cpp" />
+    <ClCompile Include="CheckItemBackgroundTemplate.cpp" />
+    <ClCompile Include="CheckTextListTemplate.cpp" />
+    <ClCompile Include="ComboBoxTemplate.cpp" />
+    <ClCompile Include="DatePickerTemplate.cpp" />
+    <ClCompile Include="DocumentLabelTemplate.cpp" />
+    <ClCompile Include="ExpandingDecoratorTemplate.cpp" />
+    <ClCompile Include="GroupBoxTemplate.cpp" />
+    <ClCompile Include="HelloWorldPartialClasses.cpp" />
+    <ClCompile Include="HScrollHandleTemplate.cpp" />
+    <ClCompile Include="HScrollTemplate.cpp" />
+    <ClCompile Include="HTrackerTemplate.cpp" />
+    <ClCompile Include="ItemBackgroundTemplate.cpp" />
+    <ClCompile Include="LabelTemplate.cpp" />
+    <ClCompile Include="LeftScrollButtonTemplate.cpp" />
+    <ClCompile Include="ListViewColumnHeaderTemplate.cpp" />
+    <ClCompile Include="ListViewTemplate.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="MenuBarButtonTemplate.cpp" />
+    <ClCompile Include="MenuItemButtonTemplate.cpp" />
+    <ClCompile Include="MenuSplitterTemplate.cpp" />
+    <ClCompile Include="MultilineTextBoxTemplate.cpp" />
+    <ClCompile Include="ProgressBarTemplate.cpp" />
+    <ClCompile Include="RadioButtonTemplate.cpp" />
+    <ClCompile Include="RadioTextListTemplate.cpp" />
+    <ClCompile Include="RightScrollButtonTemplate.cpp" />
+    <ClCompile Include="ScrollViewTemplate.cpp" />
+    <ClCompile Include="SinglelineTextBoxTemplate.cpp" />
+    <ClCompile Include="TabDropdownTemplate.cpp" />
+    <ClCompile Include="TabHeaderTemplate.cpp" />
+    <ClCompile Include="TabTemplate.cpp" />
+    <ClCompile Include="TextListTemplate.cpp" />
+    <ClCompile Include="ToolstripButtonTemplate.cpp" />
+    <ClCompile Include="ToolstripDropdownButtonTemplate.cpp" />
+    <ClCompile Include="ToolstripMenuTemplate.cpp" />
+    <ClCompile Include="ToolstripSplitArrowTemplate.cpp" />
+    <ClCompile Include="ToolstripSplitButtonTemplate.cpp" />
+    <ClCompile Include="ToolstripSplitterTemplate.cpp" />
+    <ClCompile Include="ToolstripTemplate.cpp" />
+    <ClCompile Include="TopScrollButtonTemplate.cpp" />
+    <ClCompile Include="TreeViewTemplate.cpp" />
+    <ClCompile Include="VScrollHandleTemplate.cpp" />
+    <ClCompile Include="VScrollTemplate.cpp" />
+    <ClCompile Include="VTrackerTemplate.cpp" />
+    <ClCompile Include="WindowTemplate.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUI.h" />
+    <ClInclude Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUIReflection.h" />
+    <ClInclude Include="..\..\..\..\Libraries\GacUI\Public\Source\GacUIWindows.h" />
+    <ClInclude Include="..\..\..\..\Libraries\GacUI\Public\Source\Vlpp.h" />
+    <ClInclude Include="..\..\..\..\Libraries\GacUI\Public\Source\VlppWorkflow.h" />
+    <ClInclude Include="BottomScrollButtonTemplate.h" />
+    <ClInclude Include="ButtonTemplate.h" />
+    <ClInclude Include="CheckBoxTemplate.h" />
+    <ClInclude Include="CheckItemBackgroundTemplate.h" />
+    <ClInclude Include="CheckTextListTemplate.h" />
+    <ClInclude Include="ComboBoxTemplate.h" />
+    <ClInclude Include="DatePickerTemplate.h" />
+    <ClInclude Include="DocumentLabelTemplate.h" />
+    <ClInclude Include="ExpandingDecoratorTemplate.h" />
+    <ClInclude Include="GroupBoxTemplate.h" />
+    <ClInclude Include="HelloWorld.h" />
+    <ClInclude Include="HelloWorldPartialClasses.h" />
+    <ClInclude Include="HScrollHandleTemplate.h" />
+    <ClInclude Include="HScrollTemplate.h" />
+    <ClInclude Include="HTrackerTemplate.h" />
+    <ClInclude Include="ItemBackgroundTemplate.h" />
+    <ClInclude Include="LabelTemplate.h" />
+    <ClInclude Include="LeftScrollButtonTemplate.h" />
+    <ClInclude Include="ListViewColumnHeaderTemplate.h" />
+    <ClInclude Include="ListViewTemplate.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="MenuBarButtonTemplate.h" />
+    <ClInclude Include="MenuItemButtonTemplate.h" />
+    <ClInclude Include="MenuSplitterTemplate.h" />
+    <ClInclude Include="MultilineTextBoxTemplate.h" />
+    <ClInclude Include="ProgressBarTemplate.h" />
+    <ClInclude Include="RadioButtonTemplate.h" />
+    <ClInclude Include="RadioTextListTemplate.h" />
+    <ClInclude Include="RightScrollButtonTemplate.h" />
+    <ClInclude Include="ScrollViewTemplate.h" />
+    <ClInclude Include="SinglelineTextBoxTemplate.h" />
+    <ClInclude Include="TabDropdownTemplate.h" />
+    <ClInclude Include="TabHeaderTemplate.h" />
+    <ClInclude Include="TabTemplate.h" />
+    <ClInclude Include="TextListTemplate.h" />
+    <ClInclude Include="ToolstripButtonTemplate.h" />
+    <ClInclude Include="ToolstripDropdownButtonTemplate.h" />
+    <ClInclude Include="ToolstripMenuTemplate.h" />
+    <ClInclude Include="ToolstripSplitArrowTemplate.h" />
+    <ClInclude Include="ToolstripSplitButtonTemplate.h" />
+    <ClInclude Include="ToolstripSplitterTemplate.h" />
+    <ClInclude Include="ToolstripTemplate.h" />
+    <ClInclude Include="TopScrollButtonTemplate.h" />
+    <ClInclude Include="TreeViewTemplate.h" />
+    <ClInclude Include="VScrollHandleTemplate.h" />
+    <ClInclude Include="VScrollTemplate.h" />
+    <ClInclude Include="VTrackerTemplate.h" />
+    <ClInclude Include="WindowTemplate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="OfficeExcel.ico" />
+    <Image Include="OfficeOneNote.ico" />
+    <Image Include="OfficeOutlook.ico" />
+    <Image Include="OfficePowerPoint.ico" />
+    <Image Include="OfficeWord.ico" />
+    <Image Include="_Copy.png" />
+    <Image Include="_Cut.png" />
+    <Image Include="_Delete.png" />
+    <Image Include="_New.png" />
+    <Image Include="_Open.png" />
+    <Image Include="_Paste.png" />
+    <Image Include="_Print.png" />
+    <Image Include="_Redo.png" />
+    <Image Include="_Save.png" />
+    <Image Include="_SaveAs.png" />
+    <Image Include="_Undo.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

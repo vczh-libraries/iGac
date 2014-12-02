@@ -1,0 +1,1033 @@
+========================================================
+Primitive Types
+========================================================
+
+Int8		sbyte		0
+Int16		short		0
+Int32		dshort		0
+Int64		long		0	(int)
+UInt8		byte		0
+UInt16		word		0
+UInt32		dword		0
+UInt64		ulong		0	(uint)
+Boolean		bool		false
+Char		char		'\0'
+String		string		""
+Float32		float		0.0f
+Float64		double		0.0
+DateTime				0000-00-00 00:00:00.000
+Guid					00000000-0000-0000-0000-000000000000
+Void		void		<>
+Object		object		null
+
+========================================================
+Composite Types
+========================================================
+
+Pair<T, U>							T..U						default..default // right associative
+Pair<T, Pair<U, Pair<V, void>>>		<T, U, V>, T..U..V..void	<default, default, default>
+
+IDelegate<R, <T, U, V>>				func (T, U, V)->R
+									func (..<T, U, V>)->R
+									func (T, .. <U, V>)->R
+
+IEnumerable<T>						{T}
+IMap<TKey, TValue>					{TKey : TValue}
+IArray<T>							[T]
+
+========================================================
+Composite Type Constructors
+========================================================
+
+default::T
+null::T
+new(args)::T
+
+x->x+1
+(x,y)->x+y
+func (int x, int y)->int = x+y
+func (int x, int y)->int{ return x+y; }
+
+// IArray
+array(10) :: int[]
+[]
+[1, 2, 3]
+[1, 2, 3, 4, 5].Slice(1, 3) == [2, 3, 4] // reference, not copy
+
+// IEnumerable
+[1, 2, 3] ++ [4, 5, 6]
+{1, 2, 3} ++ {4, 5, 6}
+
+// IMap
+{}
+{1:"a", 2:"b"}
+
+========================================================
+Custom Types
+========================================================
+
+type Link [ : base1, base2, ... ]
+{
+	object value;
+	Link next;
+}
+
+type<T> Link
+{
+	T value;
+	Link<T> next;
+}
+
+struct Point	// struct members are immutable
+{
+	int x;
+	int y;
+}
+
+struct<T> Point
+	where Numeric<T>
+{
+	T x;
+	T y;
+}
+
+enum Season
+{
+	Spring,
+	Summer,
+	Autumn,
+	Winter,
+}
+
+type Box = {int : string};
+type<T> Box = {int : T};
+
+========================================================
+Custom Type Constructors
+========================================================
+
+Point{x=1, y=2}						{x=1, y=2}
+Point{}								{}
+DealWithPoint(Point{x=1, y=2})		DealWithPoint({x=1, y=2})
+
+========================================================
+Variables
+========================================================
+
+int a[ = default];
+int a = 0;
+var a = 0;
+
+========================================================
+Functions
+========================================================
+
+@Inline
+func Add(int a, int b)->int = a+b ;
+func Add(int a, int b)->int
+{
+	return a+b;
+}
+
+func Add(a, b) = a+b ;
+func<T> Add(T a, T b)->T
+	where Numeric<T>
+{
+	return a+b;
+}
+
+func<T> IsLastNode(Link<T> node)->bool
+{
+	return node.next==null;
+}
+
+prop<T> Config
+	where Creatable<T>
+{
+	get
+	{
+		<config, exists>=globalConfigs.Find<T>();
+		if(!exists)
+		{
+			config=new();
+			globalConfigs[typeof(T)]=config;
+		}
+		return config;
+	}
+	set
+	{
+		globalConfigs[typeof(T)]=value;
+	}
+}
+
+========================================================
+Extension Functions
+========================================================
+
+@Inline
+func<T> bool Link<T>.IsLastNode()
+{
+	return this.next==null;
+}
+
+@Inline
+prop<T> bool Link<T>.IsLastNode
+{
+	return this.next==null;
+}
+
+func<T, U> {T}.Map(func U(T))->{U};
+func<T> operator++({T}, {T})->{T};
+func<T> {T}.Filter(func bool(T))->{T};
+func<T> {T}.First()->T;
+func<T> {T}.Last()->T;
+func<T> {T}.Empty()->T;
+
+func<T> {T}.Take(int)->{T};
+func<T> {T}.TakeWhile(int, func bool(T))->{T};
+func<T> {T}.Drop(int)->{T};
+func<T> {T}.DropWhile(int, func bool(T))->{T};
+func<T> {T}.Reverse()->{T};
+func<T, U> {U}.Foldl(T, func T(T, U))->T;
+func<T, U> {U}.Foldr(T, func T(T, U))->T;
+func<T, U> {U}.Scanl(T, func T(T, U))->{T};
+func<T, U> {U}.Scanr(T, func T(T, U))->{T};
+func<T> {T}.All(func bool(T))->bool;
+func<T> {T}.Any(func bool(T))->bool;
+func<T> {T}.SplitAt(int count)->{T} .. {T};
+func<T> {T}.Span(func bool(T))->{T} .. {T};
+func<T> {T}.Break(func bool(T))->{T} .. {T};
+func<T, U> {U}.GroupBy(func T(U))->{T .. U};
+func<T, U> {U}.OrderBy(func T(U))->{U};
+
+func<T> {T}.Sum()->T;
+func<T> {T}.Product()->T;
+func<T> {T}.Min()->T;
+func<T> {T}.Max()->T;
+func<T> {{T}}.Flatten()->{T};
+func<T, U> {T}.Zip({U})->{(T, U)};
+
+========================================================
+Concepts
+========================================================
+
+// if a concept include a dynamic dispatch switch function, instances should have case functions.
+
+concept<T> Equatable
+{
+	func AreEqual(T a, T b)->bool;
+	@Inline
+	func operator==(T a, T b)->bool = AreEqual(a, b);
+	@Inline
+	func operator!=(T a, T b)->bool = !AreEqual(a, b);
+}
+
+concept<T> Comparable
+{
+	func Compare(T a, T b)->int;
+	@Inline
+	func operator<(T a, T b)->bool = Compare(a, b)<0;
+	@Inline
+	func operator<=(T a, T b)->bool = Compare(a, b)<=0;
+	@Inline
+	func operator>(T a, T b)->bool = Compare(a, b)>0;
+	@Inline
+	func operator>=(T a, T b)->bool = Compare(a, b)>=0;
+	@Inline
+	func Min(a, b)->T = (if (Compare(a, b)<0) a else b);
+	@Inline
+	func Max(a, b)->T = (if (Compare(a, b)>0) a else b);
+}
+
+concept<T> Enumerable
+	where Comparable<T>
+{
+	func Next(T a)->T;
+	func Prev(T a)->T;
+	prop T LowerBound{get;}
+	prop T UpperBound{get;}
+	func EnumFrom(T a, T b)->IEnumerable<T>;
+	func EnumFrom(T a, T b, int step)->IEnumerable<T>;
+	func ReverseEnumFrom(T a, T b)->IEnumerable<T>;
+	func ReverseEnumFrom(T a, T b, int step)->IEnumerable<T>;
+}
+
+concept<T> Bitwise
+	where Comparable<T>
+{
+	func operator &&(T a, T b)->T;
+	func operator ||(T a, T b)->T;
+	func operator !(T a, T b)->T;
+}
+
+concept<T> Numeric
+	where Comparable<T>
+{
+	prop T Zero{get;}
+	prop T One{get;}
+	func operator+(T a, T b)->T;
+	func operator+(T a)->T;
+	func operator-(T a, T b)->T;
+	func operator-(T a)->T;
+	func operator*(T a, T b)->T;
+	func operator/(T a, T b)->T;
+	func Abs(T a)->T;
+	func Sign(T a)->T;
+}
+
+concept<T> Integral
+	where Numeric<T>
+{
+	func operator%(T a, T b)->T;
+	func Even(T a)->bool;
+	func Odd(T a)->bool;
+	func Gcd(T a)->bool;
+	func Lcm(T a)->bool;
+	func operator<<(T a, T b)->T;
+	func operator>>(T a, T b)->T;
+}
+
+concept<T> Fractional
+	where Numeric<T>
+{
+	func Truncate(T a)->T;
+	func Round(T a)->T;
+	func Floor(T a)->T;
+	func Ceiling(T a)->T;
+}
+
+concept<T> Floating
+	where Fractional<T>
+{
+	prop T Pi{get;}
+	prop bool T.IsNan{get;}
+	prop bool T.IsInfinite{get;}
+	func Exp(T a)->T;
+	func Sqrt(T a)->T;
+	func Log(T a)->T;
+	func Sin(T a)->T;
+	func Cos(T a)->T;
+	func Tan(T a)->T;
+	func ASin(T a)->T;
+	func ACos(T a)->T;
+	func ATan(T a)->T;
+	func Sinh(T a)->T;
+	func Cosh(T a)->T;
+	func Tanh(T a)->T;
+	func ASinh(T a)->T;
+	func ACosh(T a)->T;
+	func ATanh(T a)->T;
+}
+
+concept<T> Defaultable
+{
+	prop T Default{get;}
+}
+
+concept<T> Nullable
+{
+	prop T Null{get;}
+}
+
+concept<TType, TArgs> Constructable
+	where Tuple<TArgs>
+{
+	func New(..TArgs args)->TType;
+}
+
+concept<T, U> Convertable
+{
+	func Convert(T a)->U;
+}
+
+concept<T, U> ImplicitlyConvertable
+	where Convertable<T, U>
+{
+}
+
+concept<T> Printable
+{
+	func T.ToString()->string;
+}
+
+concept<T> Parsable
+{
+	func Parse(string s)->T;
+	func TryParse(string s)-><T, bool>
+}
+
+concept<T> Tuple // predefined
+{
+}
+
+concept<T->U> Tuplizable // predefined
+	where Tuple<U>
+{
+	func ToTuple(T value)->U;
+	func FromTuple(U tuple)->T;
+}
+
+instance<T> Equatable<T>
+	where Comparable<T>
+{
+	@Inline
+	func AreEqual(T a, T b)->bool = Compare(a, b)==0;
+}
+
+instance<T, U> Comparable<T..U>
+{
+	func Compare(T..U a, T..U b)->int
+	{
+		int result=Compare(a.first, b.first);
+		if(result==0)
+		{
+			return Compare(a.second, b.second);
+		}
+		else
+		{
+			return result;
+		}
+	}
+}
+
+instance<T> Printable
+	where Convertable<T, string>
+{
+	@Inline
+	func T.ToString()->string = Convert(this);
+}
+
+instance<T> Parsable
+	where Convertable<string, T>
+{
+	@Inline
+	func Parse(string s)->T = Convert(s);
+}
+
+instance<T, U> Convertable<IEnumerable<T>, IEnumerable<U>>
+	where Convertable<T, U>
+{
+}
+
+========================================================
+Interfaces
+========================================================
+
+all functions in interface are switch-case-ing the this argument.
+
+interface<T> IEnumerator
+{
+	prop T Current{get;}
+	func MoveNext()->bool;
+}
+
+interface<T> IEnumerable
+{
+	func CreateEnumerator()->IEnumerator<T>;
+}
+
+interface<T> IReadonlyCollection
+	where this.IEnumerable<T>
+{
+	prop int Count{get;}
+	func Contains(T value)->bool;
+}
+
+interface<T> IReadonlyArray
+	where this.IReadonlyCollection<T>
+{
+	prop T operator[](int index){get;}
+	func IndexOf(T value)->int;
+}
+
+interface<T> IArray
+	where this.IReadonlyArray<T>
+{
+	prop T operator[](int index){get; set;}
+}
+
+interface<T> ICollection
+	where this.IReadonlyCollection<T>
+{
+	func void Clear();
+	func Add(T value)->bool;
+	func Remove(T value)->bool;
+}
+
+interface<T> IList
+	where this.ICollection<T>
+	where this.IArray<T>
+{
+	func Insert(T value, int index)->int;
+	func RemoveAt(int index)->T;
+}
+
+interface<TKey, TValue> IReadonlyMap
+	where this.IReadonlyCollection<<TKey, TValue>>
+{
+	prop IReadonlyCollection<TKey> Keys{get;}
+	prop IReadonlyCollection<TValue> Values{get;}
+	func Find(TKey key)-><TValue, bool>;
+}
+
+interface<TKey, TValue> IMap
+	where this.ICollection<<TKey, TValue>>
+	where this.IReadonlyMap<TKey, TValue>
+{
+	func Add(TKey key, TValue value)->void;
+	func Set(TKey key, TValue value)->bool;
+	func Remove(TKey key)->bool;
+	prop TValue operator[](TKey key){get; set;}
+}
+
+========================================================
+Pattern Matching
+========================================================
+
+Patterns:
+<a, b, c>
+[a, b, c: d]
+
+<pattern> = expression; // PatternMatchingFailedException
+
+switch(value)
+{
+	case <pattern> : ...
+}
+
+if(<pattern> = expression) statement
+[partial] foreach(<pattern> in xs) statement // PatternMatchingFailedException
+
+<pattern-element>:
+	_							: placeholder
+	id							: new variable to receive a component
+	set left-value-expr			: reuse the old variable to receive a component
+	case expr					: a component with Equatable<T> that act like a filter
+	constant					: a component with Equatable<T> that act like a filter
+	Type a						: infer a as type Type, new variable
+	a as Type					: cast, new variable
+	a as Point{x=b, y=c}		: cast, new variable
+	{x=a, y=b}					: match struct/type members
+	Point{x=a, y=b}				: match struct/type members
+	// all <pattern-element> above cannot be a <pattern>
+	// variable is not allowed to cover visible-with-the-same-name variables
+
+	<pattern>					: internal pattern
+	<pattern-element> if expr	: binding with a filter
+	a :: <pattern>				: store values in both a and variables in <pattern>
+
+partial foreach(even if even%2==0 in numbers)
+{
+	Console.WriteLine(even);
+}
+
+========================================================
+Statments
+========================================================
+
+<variable-declaration>
+<pattern> = expression;
+<variable> = expression;
+<invoke-expression>;
+
+return [expression];
+break;
+continue;
+throw expression;
+
+if (condition) statement [else statement]
+while (condition) statement
+do statement while (condition);
+foreach([type] x in xs) statement
+
+try statement { catch (Type [ex]) statement } [ finally statement ]
+using ([type] x = T where T.IDisposable) statement
+lock (object) statement
+
+[partial] switch(value)
+{
+	{ case <pattern> : statement }
+	[ default : statement ] // PatternMatchingFailedException
+}
+
+if (x = y) --> (x, success) = y; if(success)
+while the same
+
+========================================================
+Expressions
+========================================================
+
+a op b
+op a
+a op
+
+f(a, b, c)
+f(.. t)
+f(a, b, ..t)
+a.b
+a as Type		// explicit type conversion, invoking Convertable
+
+<continuation-control-flow>! [expression]
+
+<constructors>
+<patterns>
+
+(if (condition) value else value)
+(switch (value) { case <pattern> : value } [default : value]) // PatternMatchingFailedException
+(using (x = T where T.IDisposable) value)
+(lock (object) value)
+
+========================================================
+Exceptions
+========================================================
+
+type Exception // base type for all exceptions
+{
+	string message;
+	CallstackSnapshot callstack;
+	Exception innerException;
+};
+
+========================================================
+Attributes
+========================================================
+
+type Attribute // base type for all attributes
+{
+};
+
+@STAThread
+func ThreadProc(){}
+
+attribute marks
+	function
+	variable
+	type
+	concept
+	instance
+	field
+	argument
+	return
+	property
+
+@Attribute
+func Function(@Attribute int a, @Attribute int b) : @Attribute c;
+
+@ThreadLocal
+int a;
+
+@Serializable
+type Class
+{
+	@Item{name="Name"}
+	string name;
+}
+
+========================================================
+Static Dispatching (pattern matching)
+========================================================
+
+func<T> Length({T} xs)->int; // can be omitted
+func Length_(r, []) = r;
+func Length_(r, [x:xs]) = Length_(r+1, xs);
+func Length(xs) = Length_(0, xs);
+
+---------------------------------------
+
+@Private // declarations put in @Private will be put in a nested random generated namespace like namespace private-guid
+func<T> string.Format_(T args, int start)
+	where Tuple<T>;
+
+@Private
+func string.Format_(<>, _) = this;
+@Private
+func string.Format_(a..b, start) = 
+	message
+		.Replace("{" + start.ToString() + "}", a.ToString())
+		.Format(b, start + 1);
+
+// functions in the same module can see declarations in the private namespace without naming it.
+func string.Format(..args) = this.Format_(args, 0);
+
+---------------------------------------
+
+@Private
+func<T> string.Format_(T args, int start)
+	where Tuple<T>;
+
+@Private
+func string.Format_<void>(<>::void, int _)
+{
+	return this;
+}
+
+@Private
+func<A, B> string.Format_<A..B>(a..b::A..B, int start)
+{
+	return message
+		.Replace("{" + start.ToString() + "}", a.ToString())
+		.Format(b, start + 1);
+}
+
+========================================================
+Dynamic Dispatching
+========================================================
+
+func DealWith(switch object x) // switch only for reference type
+{
+	Console.WriteLine("x is an object");
+}
+
+func DealWith(case {object} x)
+{
+	Console.WriteLine("x is an enumerable");
+}
+
+func DealWith(case string x)
+{
+	Console.WriteLine("x is a string");
+}
+
+========================================================
+Type
+========================================================
+
+var one = 1;
+// one :: int
+
+var inc = x:x+1;
+// inc :: func(int)->int
+
+var pinc = x:x+Convert(1);
+// pinc :: type<T> where Numeric<T>, Convertable<int, T> func(T)->T
+
+func Apply(f, x, c)
+{
+	foreach(i in 1..c)
+		x=f(x);
+	return x;
+}
+// Apply :: type<T> func(func(T)->T, T, int)->T
+
+var x = Apply(inc, 1, 100);
+// x = 100
+
+var x = Apply(pinc, 1.0, 100);
+// x = 100.0
+
+func Filter(xs, p) seq
+{
+	foreach(x in xs)
+	    if (p) yield! x;
+}
+// Filter :: type<T> func({T}, func (T)->bool)->{T}
+
+func Concat(urls, cont) async
+{
+    var xs = new()::IList<string>;
+	foreach(url in urls)
+		xs.Add(await! DownloadTextAsync(url))
+	cont(xs);
+}
+// Concat :: func({string}, func(IList<string>)->void)->Task<void>
+
+========================================================
+Continuations
+========================================================
+
+type seq
+{
+}
+
+func<T> seq.CreateCps(func (seq_Enumerator<T>)->void startContinuation)->IEnumerable<T>
+{
+	return seq_Enumerable
+	{
+		startContinuation = startContinuation,
+	};
+}
+
+type<T> seq_Enumerable
+{
+	func (seq_Enumerator<T>)->void	startContinuation;
+}
+
+implement<T> seq_Enumerable.IEnumerable<T>
+{
+	func CreateEnumerator()
+	{
+		return seq_Enumerator
+		{
+			startContinuation = this.startContinuation;
+		};
+	}
+}
+
+type<T> seq_Enumerator
+{
+	T							current;
+	bool						available;
+	func (seq_Enumerator<T>)	startContinuation;
+	func ()->void				continuation;
+}
+
+implement<T> seq_Enumerator.IEnumerator<T>
+{
+	prop T Current
+	{
+		get
+		{
+			return this.current;
+		}
+	}
+
+	func MoveNext()
+	{
+		this.available=false;
+		if(this.continuation==null)
+		{
+			this.startContinuation(this);
+		}
+		else
+		{
+			this.continuation();
+		}
+		return this.available;
+	}
+}
+
+@ContinuationControlFlow
+@Inline
+func<T> seq.yield(seq_Enumerator<T> state, T value, func ()->void continuation)
+{
+	state.current=value;
+	state.available=true;
+	state.continuation=continuation;
+}
+
+@ContinuationControlFlow
+@Inline
+func<T> seq.exit(seq_Enumerator<T> task)
+{
+}
+
+---------------------------------------
+
+type async
+{
+}
+
+func<T> async.CreateCps(func (FuturePromiseTask<T>)->void startContinuation)->Task<T>
+{
+	var task = FuturePromiseTask<T>{};
+	task.onStart = ()->startContinuation(task);
+	return task;
+}
+
+@ContinuationControlFlow
+@Inline
+func<T, U> async.await(FuturePromiseTask<U> task, Task<T> source, func T->void continuation)
+{
+	source.ContinueWith(task->continuation(task.Result));
+}
+
+@ContinuationControlFlow
+@Inline
+func<T> async.exit(FuturePromiseTask<T> task, T source)
+{
+	task.SetResult(source);
+}
+
+---------------------------------------
+
+func Find(src) async
+{
+    var urls=(await! DownloadAsync(src)).Split("\r\n");
+	foreach(url in urls)
+	{
+		var content=await! DownloadAsync(url);
+		if(content.Length>100)
+		{
+			return content;
+		}
+	}
+	return null; // compiler will find exit!
+}
+
+=>
+
+type _Find
+{
+	FuturePromiseTask<string>	_controller;
+	string						_output0;
+	func string->void			_output0_continuation;
+	string						_output1;
+	func string->void			_output1_continuation;
+	int							_state;
+	
+	IEnumerator<string>			_x0;
+	string						src;
+	[string]					urls;
+	string						url;
+}
+
+func _Find.RunStateMachine()
+{
+	this._output0_continuation = _output->
+	{
+		this._output0 = output;
+		this.RunStateMachine();
+	};
+	this._output1_continuation = _output->
+	{
+		this._output1 = output;
+		this.RunStateMachine();
+	};
+
+	while(true)
+	{
+		switch(this._state)
+		{
+			case 0:
+			{
+				this._state = 1;
+				var input = DownloadAsync(this.src);
+				(null::async).await(this._controller, input, this._output0_continuation);
+				return;
+			}
+			case 1:
+			{
+				this.urls = this._output0.Split("\r\n");
+				this._x0 = this.urls.CreateEnumerator();
+				this._state = 2;
+			}
+			case 2:
+			{
+				if(_x0.MoveNext())
+				{
+					this.url = _x0.Current;
+					this._state = 4;
+					var input = this.url;
+					(null::async).await(this._controller, input, this._output1_continuation);
+					return;
+				}
+				else
+				{
+					this._state=3;
+				}
+			}
+			case 3:
+			{
+				this._result = null;
+				return;
+			}
+			case 4:
+			{
+				this.content = this._output1;
+				if(this.content.Length>100)
+				{
+					var input = this.content;
+					(null::async).exit(this.controller, input);
+					return;
+				}
+				else
+				{
+					this._state = 2;
+				}
+			}
+		}
+	}
+}
+
+func Find(string src)->Task<string>
+{
+	return (null::async).CreateCps(controller->
+	{
+		var sm = _Find
+		{
+			_state = 0;
+			src = src;
+		};
+
+		sm._controller=controller;
+		sm.RunStateMachine();
+	});
+}
+
+---------------------------------------
+
+func<T> IEnumerable<T>.Where(func (T)->bool predicate) seq
+{
+	foreach(s in this)
+		if(predicate(s))
+			yield! s;
+}
+
+=>
+
+type<T> _Where
+{
+	seq_Enumerator<T>	_controller;
+	func ()->void		_output_continuation;
+	int					_state;
+	IEnumerable<T>		_this;
+
+	IEnumerator<T>		_x0;
+	func (T)->bool		predicate;
+	T					s;
+}
+
+func _Where.RunStateMachine()
+{
+	this._output_continuation = this.RunStateMachine;
+
+	while(true)
+	{
+		switch(this._state)
+		{
+			case 0:
+			{
+				this._x0 = this._this.CreateEnumerator();
+				this._state = 1;
+			}
+			case 1:
+			{
+				if(this._x0.MoveNext())
+				{
+					this.s = this._x0.Current;
+					this._state = 2;
+					var input = this.s;
+					(null::seq).yield(this._controller, input, this._output_continuation);
+					return;
+				}
+				else
+				{
+					this._state = 3;
+				}
+			}
+			case 2:
+			{
+				this.state = 1;
+			}
+			case 3:
+			{
+				return;
+			}
+		}
+	}
+}
+
+func<T> IEnumerable<T>.Where(func (T)->bool predicate)->IEnumerable<T>
+{
+	return (null::seq).CreateCps(controller->
+	{
+		var sm = _Where
+		{
+			_state = 0;
+			_this = this;
+		};
+
+		sm._controller=controller;
+		sm.RunStateMachine();
+	});
+}

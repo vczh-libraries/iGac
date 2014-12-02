@@ -1,0 +1,610 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0F2F1D78-2FEB-4C0B-AB34-33DDCFF5E744}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>WorkflowSrc</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Common\Source\Basic.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\Dictionary.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\Interfaces.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\List.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\Operation.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationConcat.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationCopyFrom.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationEnumerable.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationForEach.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationPair.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationSelect.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationSequence.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationSet.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationString.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\OperationWhere.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Collections\Pair.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Console.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Exception.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Function.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Locale.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\Json\ParsingJson.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\Json\ParsingJson_Parser.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\Parsing.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingAnalyzer.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingDefinitions.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingState.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingTable.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\ParsingTree.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\Xml\ParsingXml.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Parsing\Xml\ParsingXml_Parser.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Pointer.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptor.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorBuilder.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorBuilder_Container.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorBuilder_Function.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorBuilder_Struct.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorMacros.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorPredefined.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\Regex.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexAutomaton.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexData.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexExpression.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexPure.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexRich.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Regex\RegexWriter.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\Accessor.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\BroadcastStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\CacheStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\CharFormat.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\CompressionStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\FileStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\Interfaces.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\MemoryStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\MemoryWrapperStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Stream\RecorderStream.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\String.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Threading.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\Tuple.h" />
+    <ClInclude Include="..\..\..\..\Common\Source\UnitTest\UnitTest.h" />
+    <ClInclude Include="..\..\Source\Analyzer\WfAnalyzer.h" />
+    <ClInclude Include="..\..\Source\Expression\WfExpression.h" />
+    <ClInclude Include="..\..\Source\Expression\WfExpressionParser.h" />
+    <ClInclude Include="..\..\Source\Runtime\WfRuntime.h" />
+    <ClInclude Include="..\..\Source\WorkflowVlppReferences.h" />
+    <ClInclude Include="TestFunctions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Common\Source\Basic.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Console.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Exception.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Locale.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\Json\ParsingJson.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\Json\ParsingJson_Parser.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\Parsing.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAnalyzer.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_Closure.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_EPDA.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_GenerateTable.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_JPDA.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_MergeStates.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingAutomaton_NPDA.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingDefinitions.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingDefinitions_CreateParserDefinition.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingLogging.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingState.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingTable.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\ParsingTree.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\Xml\ParsingXml.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Parsing\Xml\ParsingXml_Parser.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptor.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Reflection\GuiTypeDescriptorPredefined.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\Regex.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexAutomaton.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexData.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexExpression.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexParser.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexPure.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexRich.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Regex\RegexWriter.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\Accessor.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\BroadcastStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\CacheStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\CharFormat.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\CompressionStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\FileStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\MemoryStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\MemoryWrapperStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Stream\RecorderStream.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\String.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\Threading.cpp" />
+    <ClCompile Include="..\..\..\..\Common\Source\UnitTest\UnitTest.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_BuildScope.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_Errors.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_GenerateAssembly.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_GenerateBind.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_GenerateDeclaration.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_GenerateExpression.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_GenerateStatement.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_Misc.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_SearchOrderedName.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_TypeInfo.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_ValidateSemantic.cpp" />
+    <ClCompile Include="..\..\Source\Analyzer\WfAnalyzer_ValidateStructure.cpp" />
+    <ClCompile Include="..\..\Source\Expression\WfExpression.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Expression\WfExpressionParser.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Runtime\WfRuntime.cpp" />
+    <ClCompile Include="..\..\Source\Runtime\WfRuntime_Execution.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TestAnalyzer.cpp" />
+    <ClCompile Include="TestCodegen.cpp" />
+    <ClCompile Include="TestSamples.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Source\Expression\WfExpressionParser.parser.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A0_WrongFormatStringSyntax.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_AnonymousLambdaToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_AnonymousLambdaToWrongFunctionType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_AssignToList.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_AssignToVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_BaseToDerived.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_ConstructorToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_FunctionLambdaToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_FunctionLambdaToWrongFunctionType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_FunctionMemberToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_NullableToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_NullableToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_NullableToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_NullableToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfBaseToDerived.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfNullableToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfNullableToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfNullableToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfNullableToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfOrderedLambdaToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfOrderedLambdaToWrongBody.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfOrderedLambdaToWrongFunctionType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfRawPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfRawPtrToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfRawPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfSharedPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfSharedPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfSharedToRaw.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfStructToToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfStructToToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfStructToToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OfStructToToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OrderedLambdaToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OrderedLambdaToWrongBody.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_OrderedLambdaToWrongFunctionType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_PropertyMemberToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_RawPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_RawPtrToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_RawPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_SharedPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_SharedPtrToRaw.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_SharedPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_StructToToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_StructToToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_StructToToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_StructToToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongAttachExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongAttachExpressionToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongDetachExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongDetachExpressionToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongIfVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongTypeOfExpressionToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongTypeOfTypeToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A10_WrongTypeTestingToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsNullableToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsNullableToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsRawPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsRawPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsSharedPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsSharedPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsStructToToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_AsStructToToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_NullableToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_NullableToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_RawPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_RawPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_SharedPtrToNullable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_SharedPtrToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_StructToToRawPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A11_StructToToSharedPtr.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A12_StructToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A13_IntegerLiteralOutOfRange.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_IfExpressionCannotMergeType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_IncompatibleList.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_IncompatibleMap.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_IncompatibleSwitch.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_RangeCannotMergeType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A14_SetTestingInWrongCollection.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A15_RangeOfBoolean.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A17_IndexNotEnumerableObject.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A18_ForInNotEnumerableObject.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A18_SetTestingInNotEnumerableObject.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A19_CallStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A1_WrongSimpleObserveExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A20_CallWrongArgumentCount.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A21_CallWrongArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A22_CannotPickOverloadedConstructor.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A22_CannotPickOverloadedFunctions.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A23_ImplementStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A23_NewStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A24_CallRawConstructorToShared.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToCapturedVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToCapturedVariable2.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToConstant.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToFunctionCall.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToLambdaArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToOrderedLambdaArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToReadonlyList.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToReadonlyProperty.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A25_AssignToStructField.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A2_EmptyExtendedObserveEvent.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A2_WrongSimpleObserveEvent.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A3_ObserveNotInBind.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A4_BindInBind.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A5_ConstructorMixMapAndList.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A7_EventIsNotExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A7_ScopeNameIsNotExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A8_ExpressionIsNotScopeName.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A9_ConstructorCannotResolveType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A9_ExpressionCannotResolveType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A9_LetExpressionCannotResolveType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A9_NullCannotResolveType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\A9_OrderedLambdaCannotResolveType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B0_VoidArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B0_VoidMapElement.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B0_VoidVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B1_InterfaceArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B1_InterfaceMapElement.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B1_InterfaceVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B2_RawPointerToEnumerable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B2_RawPointerToMap.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B2_RawPointerToString.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B2_RawPointerToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B2_RawPointerToVoid.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B3_SharedPointerToEnumerable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B3_SharedPointerToMap.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B3_SharedPointerToString.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B3_SharedPointerToStruct.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B3_SharedPointerToVoid.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B4_NullableToClass.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B4_NullableToEnumerable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B4_NullableToMap.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B4_NullableToVoid.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B5_ChildOfEnumerable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B5_ChildOfMap.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B6_FunctionIsNotType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B6_VariableIsNotType.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C4_ReturnMissExpression.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C5_DeleteNonRawPointer.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D3_ImplementMissFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D4_ImplementUnexistsFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D6_ImplementDuplicateFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F0_ExpressionTopQualifiedSymbolNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_ExpressionChildSymbolNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_ObservedEventNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_ObservedEventNotExists2.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_ObservedPropertyNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_ObservedPropertyNotExists2.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_TypeMemberNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F2_ExpressionReferenceNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F2_TypeReferenceNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\B7_ClassNotForValue.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C0_BreakNotInLoop.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C1_ContinueNotInLoop.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C2_RethrowNotInCatch.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\C3_TryMissCatchAndFinally.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D0_AnonymousFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D0_AnonymousInterfaceFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_DuplicatedFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_DuplicatedNamespace.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_DuplicatedVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_OverloadedFunction.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_OverloadedNamespace.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D1_OverloadedVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D2_DuplicatedFunctionArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D2_DuplicatedLambdaFunctionArgument.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D2_DuplicatedLetVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\D2_DuplicatedVariable.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\E0_NoWildCard.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\E0_TooManyWildCard.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\E0_WildCardInWrongPlace.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F0_TypeTopQualifiedSymbolNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F1_TypeChildSymbolNotExists.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_ExpressionReferenceToVariablesInNestedBlocks.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_TypeReferenceToVariablesInNestedBlocks.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_ExpressionReferenceToFunctionsByUsing.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_ExpressionReferenceToFunctionsInLocalAndUsing.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_ExpressionReferenceToFunctionsInNestedNamespaces.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_TypeReferenceToFunctionsByUsing.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_TypeReferenceToFunctionsInLocalAndUsing.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerError\F3_TypeReferenceToFunctionsInNestedNamespaces.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerScope\ModuleA.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerScope\ModuleB.txt" />
+    <Text Include="..\TestFiles\Samples\AnalyzerScope\ModuleC.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\AnonymousLambda.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\BindComplex.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\BindFormat.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\BindSimple.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\ControlFlow.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\Delete.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\ElementInSet.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\Event.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\FailedThen.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\ForEach.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\GlobalVariable.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\HelloWorld.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\IfNotNull.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\LetIn.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\ListProcessing.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\MapProcessing.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\MethodClosure.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\NamedLambda.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\NewInterface.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpAdd.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpAnd.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpCompare.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpCompareReference.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpDiv.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpMod.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpMul.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpNegative.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpNot.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpOr.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpPositive.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpShl.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpShr.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpSub.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OpXor.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\OrderedLambda.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\Property.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\RecursiveFunction.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\StaticMethod.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\TryCatch.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\TryFinally.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\TypeOf.txt" />
+    <Text Include="..\TestFiles\Samples\Codegen\TypeTesting.txt" />
+    <Text Include="..\TestFiles\Samples\Declaration\Function.txt" />
+    <Text Include="..\TestFiles\Samples\Declaration\HelloWorld.txt" />
+    <Text Include="..\TestFiles\Samples\Declaration\Namespace.txt" />
+    <Text Include="..\TestFiles\Samples\Declaration\NestedNamespace.txt" />
+    <Text Include="..\TestFiles\Samples\Declaration\Variable.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Attach.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\BinaryAscending.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\BinaryDescending.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Bind.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Bracket.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Call.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\CastStrong.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\CastWeak.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Child.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Detach.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\EmptyCollection.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\ExtendedObserve1.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\ExtendedObserve2.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\False.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Float.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\FormatString.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Function.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\HelloWorld.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Index.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Infer.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Integer.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\IsNotNull.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\IsNotType.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\IsNull.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\IsType.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Let.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\List.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Map.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Member.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Negative.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\New1.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\New2.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Not.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Null.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\OrderedLambda.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\OrderedName.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Positive.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Range1.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Range2.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Range3.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Range4.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\Reference.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\SetIn.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\SetNotIn.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\SimpleObserve1.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\SimpleObserve2.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\String.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\True.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\TypeOfExpression.txt" />
+    <Text Include="..\TestFiles\Samples\Expression\TypeOfType.txt" />
+    <Text Include="..\TestFiles\Samples\IndexAnalyzerError.txt" />
+    <Text Include="..\TestFiles\Samples\IndexAnalyzerScope.txt" />
+    <Text Include="..\TestFiles\Samples\IndexCodegen.txt" />
+    <Text Include="..\TestFiles\Samples\IndexDeclaration.txt" />
+    <Text Include="..\TestFiles\Samples\IndexExpression.txt" />
+    <Text Include="..\TestFiles\Samples\IndexModule.txt" />
+    <Text Include="..\TestFiles\Samples\IndexStatement.txt" />
+    <Text Include="..\TestFiles\Samples\Module\HelloWorld.txt" />
+    <Text Include="..\TestFiles\Samples\Module\Useful.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Break.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Continue.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Delete.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Expression.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\ForEach.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\ForEachReversed.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\HelloWorld.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\If.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\IfCast.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Raise.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Return.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Switch.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Try.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\Variable.txt" />
+    <Text Include="..\TestFiles\Samples\Statement\While.txt" />
+    <Text Include="Spec.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Source\Expression\Codegen.bat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

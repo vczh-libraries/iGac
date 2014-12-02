@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4629481D-EB9E-43DB-B0D7-6C3F4265D002}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GaclibWebPage</RootNamespace>
+    <AssemblyName>GaclibWebPage</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\System.Web.Providers.Core.1.0\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\DemoPageController.cs" />
+    <Compile Include="Controllers\DocumentPageController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DemoPageModel.cs" />
+    <Compile Include="Models\DownloadPageModel.cs" />
+    <Compile Include="Models\GettingStartPageModel.cs" />
+    <Compile Include="Models\IndividualDemoPageModel.cs" />
+    <Compile Include="Models\DocumentPageModel.cs" />
+    <Compile Include="Models\IndexPageModel.cs" />
+    <Compile Include="Models\NavigationBarModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebRole.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\CommonLibrary\FileSystemInformation.cpp" />
+    <Content Include="Content\Demos\CommonLibrary\FileSystemInformation.h" />
+    <Content Include="Content\Demos\Controls.Button.CheckAndRadio\DXGUI_30.jpg" />
+    <Content Include="Content\Demos\Controls.Button.CheckAndRadio\DXGUI_31.jpg" />
+    <Content Include="Content\Demos\Controls.Button.CheckAndRadio\Main.cpp" />
+    <Content Include="Content\Demos\Controls.Button.EnableDisable\DXGUI_28.jpg" />
+    <Content Include="Content\Demos\Controls.Button.EnableDisable\DXGUI_29.jpg" />
+    <Content Include="Content\Demos\Controls.Button.EnableDisable\Main.cpp" />
+    <Content Include="Content\Demos\Controls.DataGrid.ChemicalElements\DXGUI_64.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.ChemicalElements\Main.cpp" />
+    <Content Include="Content\Demos\Controls.DataGrid.FileExplorer\DXGUI_65.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.FileExplorer\DXGUI_66.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.FileExplorer\DXGUI_67.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.FileExplorer\Main.cpp" />
+    <Content Include="Content\Demos\Controls.DataGrid.TableEditor\DXGUI_73.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.TableEditor\DXGUI_74.jpg" />
+    <Content Include="Content\Demos\Controls.DataGrid.TableEditor\Main.cpp" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\DXGUI_68.jpg" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\DXGUI_69.jpg" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\DXGUI_70.jpg" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\DXGUI_71.jpg" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\DXGUI_72.jpg" />
+    <Content Include="Content\Demos\Controls.DatePicker.DateAndLocale\Main.cpp" />
+    <Content Include="Content\Demos\Controls.Label.Hyperlink\DXGUI_27.jpg" />
+    <Content Include="Content\Demos\Controls.Label.Hyperlink\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListBox.NameEditor\DXGUI_38.jpg" />
+    <Content Include="Content\Demos\Controls.ListBox.NameEditor\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListBox.NameSelector\DXGUI_39.jpg" />
+    <Content Include="Content\Demos\Controls.ListBox.NameSelector\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListBox.VirtualMode\DXGUI_40.jpg" />
+    <Content Include="Content\Demos\Controls.ListBox.VirtualMode\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListView.SortingAndFiltering\DXGUI_48.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.SortingAndFiltering\DXGUI_49.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.SortingAndFiltering\DXGUI_50.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.SortingAndFiltering\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_41.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_42.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_43.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_44.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_45.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\DXGUI_46.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.ViewSwitching\Main.cpp" />
+    <Content Include="Content\Demos\Controls.ListView.VirtualMode\DXGUI_47.jpg" />
+    <Content Include="Content\Demos\Controls.ListView.VirtualMode\Main.cpp" />
+    <Content Include="Content\Demos\Controls.Scroll.ColorPicker\DXGUI_56.jpg" />
+    <Content Include="Content\Demos\Controls.Scroll.ColorPicker\Main.cpp" />
+    <Content Include="Content\Demos\Controls.Tab.TextBoxPage\DXGUI_32.jpg" />
+    <Content Include="Content\Demos\Controls.Tab.TextBoxPage\DXGUI_33.jpg" />
+    <Content Include="Content\Demos\Controls.Tab.TextBoxPage\Main.cpp" />
+    <Content Include="Content\Demos\Controls.TextBox.Colorizer\DXGUI_35.jpg" />
+    <Content Include="Content\Demos\Controls.TextBox.Colorizer\DXGUI_36.jpg" />
+    <Content Include="Content\Demos\Controls.TextBox.Colorizer\DXGUI_37.jpg" />
+    <Content Include="Content\Demos\Controls.TextBox.Colorizer\Main.cpp" />
+    <Content Include="Content\Demos\Controls.TextBox.Editor\DXGUI_34.jpg" />
+    <Content Include="Content\Demos\Controls.TextBox.Editor\Main.cpp" />
+    <Content Include="Content\Demos\Demos.Editor.Toolstrip.Document.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.DirectCode.Scripting.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.Controls.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.ControlTemplate.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.DataBinding.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.ItemTemplate.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.ListViewModel.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.LoadFromXml.ViewModel.jpg" />
+    <Content Include="Content\Demos\Editor.Toolstrip.Document\DocumentEditorWindow.cpp" />
+    <Content Include="Content\Demos\Editor.Toolstrip.Document\DocumentEditorWindow.h" />
+    <Content Include="Content\Demos\Editor.Toolstrip.Document\DocumentEditorWindow_Initialization.cpp" />
+    <Content Include="Content\Demos\Editor.Toolstrip.Document\DXGUI_84.jpg" />
+    <Content Include="Content\Demos\Editor.Toolstrip.Document\Main.cpp" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\DXGUI_53.jpg" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\DXGUI_54.jpg" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\DXGUI_55.jpg" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\Main.cpp" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\TextEditorWindow.cpp" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\TextEditorWindow.h" />
+    <Content Include="Content\Demos\Editor.Toolstrip.TextFile\TextEditorWindow_Initialization.cpp" />
+    <Content Include="Content\Demos\Controls.Tooltip.RichTextAndResource\DXGUI_61.jpg" />
+    <Content Include="Content\Demos\Controls.Tooltip.RichTextAndResource\Main.cpp" />
+    <Content Include="Content\Demos\Controls.Tooltip.RichTextAndResource\XmlResource.xml" />
+    <Content Include="Content\Demos\Controls.TreeView.FileExplorer\DXGUI_51.jpg" />
+    <Content Include="Content\Demos\Controls.TreeView.FileExplorer\DXGUI_52.jpg" />
+    <Content Include="Content\Demos\Controls.TreeView.FileExplorer\Main.cpp" />
+    <Content Include="Content\Demos\Demos.Controls.DataGrid.ChemicalElements.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.DataGrid.FileExplorer.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.DataGrid.TableEditor.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.DatePicker.DateAndLocale.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.TextBox.AdvancedColorizer.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.TextBox.ContextColorizer.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Tooltip.RichTextAndResource.jpg" />
+    <Content Include="Content\Demos\Demos.Editor.AutoComplete.Grammar.jpg" />
+    <Content Include="Content\Demos\Demos.Editor.Colorizer.Grammar.jpg" />
+    <Content Include="Content\Demos\Demos.Editor.Colorizer.Json.jpg" />
+    <Content Include="Content\Demos\Demos.Editor.Colorizer.Xml.jpg" />
+    <Content Include="Content\Demos\Demos.Persistant.DirectCode.SimpleWindow.jpg" />
+    <Content Include="Content\Demos\Demos.Rendering.TextLayout.RichText.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Button.CheckAndRadio.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Button.EnableDisable.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Label.Hyperlink.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListBox.NameEditor.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListBox.NameSelector.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListBox.VirtualMode.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListView.SortingAndFiltering.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListView.ViewSwitching.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.ListView.VirtualMode.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Scroll.ColorPicker.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.Tab.TextBoxPage.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.TextBox.Colorizer.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.TextBox.Editor.jpg" />
+    <Content Include="Content\Demos\Demos.Editor.Toolstrip.TextFile.jpg" />
+    <Content Include="Content\Demos\Demos.Controls.TreeView.FileExplorer.jpg" />
+    <Content Include="Content\Demos\Demos.Rendering.RawAPI.Direct2D.jpg" />
+    <Content Include="Content\Demos\Demos.Rendering.RawAPI.GDI.jpg" />
+    <Content Include="Content\Demos\Demos.Template.Window.CustomizedBorder.jpg" />
+    <Content Include="Content\Demos\Editor.AutoComplete.Grammar\DXGUI_83.jpg" />
+    <Content Include="Content\Demos\Editor.AutoComplete.Grammar\Main.cpp" />
+    <Content Include="Content\Demos\Editor.Colorizer.Grammar\DXGUI_75.jpg" />
+    <Content Include="Content\Demos\Editor.Colorizer.Grammar\Main.cpp" />
+    <Content Include="Content\Demos\Editor.Colorizer.Json\DXGUI_76.jpg" />
+    <Content Include="Content\Demos\Editor.Colorizer.Json\Main.cpp" />
+    <Content Include="Content\Demos\Editor.Colorizer.Xml\DXGUI_77.jpg" />
+    <Content Include="Content\Demos\Editor.Colorizer.Xml\Main.cpp" />
+    <Content Include="Content\Demos\Index.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\Demos\Persistant.DirectCode.Scripting\DXGUI_89.jpg" />
+    <Content Include="Content\Demos\Persistant.DirectCode.Scripting\DXGUI_90.jpg" />
+    <Content Include="Content\Demos\Persistant.DirectCode.Scripting\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.DirectCode.SimpleWindow\DXGUI_62.jpg" />
+    <Content Include="Content\Demos\Persistant.DirectCode.SimpleWindow\DXGUI_63.jpg" />
+    <Content Include="Content\Demos\Persistant.DirectCode.SimpleWindow\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\DXGUI_84.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\DXGUI_85.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\DXGUI_86.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\DXGUI_87.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\DXGUI_88.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.Controls\XmlWindowResource.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\DXGUI_96.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\DXGUI_97.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29HScrollTemplate.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29HScrollTemplate.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29HTrackerTemplate.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29HTrackerTemplate.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\MainWindow.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29VScrollTemplate.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29VScrollTemplate.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29VTrackerTemplate.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\%28Generated, Modifiable%29VTrackerTemplate.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\XmlWindowResourceControlTemplate.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\XmlWindowResourceControlTemplates.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\%28Generated%29Demo.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\%28Generated%29DemoPartialClasses.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\%28Generated%29DemoPartialClasses.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\%28Generated, Modifiable%29MainWindow.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\%28Generated, Modifiable%29MainWindow.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\DXGUI_91.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\DXGUI_92.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\XmlWindowResourceDataBinding.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated%29Demo.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated%29DemoPartialClasses.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated%29DemoPartialClasses.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated, Modifiable%29MainWindow.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated, Modifiable%29MainWindow.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated, Modifiable%29SeasonItemTemplate.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\%28Generated, Modifiable%29SeasonItemTemplate.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\DXGUI_95.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\XmlWindowResourceItemTemplate.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\%28Generated%29Demo.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\%28Generated%29DemoPartialClasses.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\%28Generated%29DemoPartialClasses.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\%28Generated, Modifiable%29MainWindow.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\%28Generated, Modifiable%29MainWindow.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\DXGUI_94.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\XmlWindowResourceListViewModel.xml" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated%29Demo.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated%29DemoPartialClasses.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated%29DemoPartialClasses.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated, Modifiable%29CalculatorControl.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated, Modifiable%29CalculatorControl.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated, Modifiable%29MainWindow.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\%28Generated, Modifiable%29MainWindow.h" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\DXGUI_93.jpg" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\Main.cpp" />
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\XmlWindowResourceViewModel.xml" />
+    <Content Include="Content\Demos\Rendering.RawAPI.Direct2D\DXGUI_58.jpg" />
+    <Content Include="Content\Demos\Rendering.RawAPI.Direct2D\Main.cpp" />
+    <Content Include="Content\Demos\Rendering.RawAPI.GDI\DXGUI_59.jpg" />
+    <Content Include="Content\Demos\Rendering.RawAPI.GDI\Main.cpp" />
+    <Content Include="Content\Demos\Rendering.TextLayout.RichText\DXGUI_60.jpg" />
+    <Content Include="Content\Demos\Rendering.TextLayout.RichText\Main.cpp" />
+    <Content Include="Content\Demos\Template.Window.CustomizedBorder\DXGUI_57.jpg" />
+    <Content Include="Content\Demos\Template.Window.CustomizedBorder\Main.cpp" />
+    <Content Include="Content\favicon.ico" />
+    <Content Include="Content\GacLib.png" />
+    <Content Include="Content\GacLib_Logo.gif" />
+    <Content Include="Content\GacLib_LogoAndTitle.gif" />
+    <Content Include="Content\GacLib_LogoAndTitle_Large.png" />
+    <Content Include="Content\GettingStart\HelloWorld.jpg" />
+    <Content Include="Content\GettingStart\ViewModel_1.jpg" />
+    <Content Include="Content\GettingStart\ViewModel_2.jpg" />
+    <Content Include="Content\GettingStart\ViewModel_3.jpg" />
+    <Content Include="Content\GettingStart\ViewModel_4.jpg" />
+    <Content Include="Content\PageStyle.css" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shAutoloader.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushAppleScript.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushAS3.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushBash.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushColdFusion.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushCpp.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushCSharp.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushCss.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushDelphi.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushDiff.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushErlang.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushGroovy.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushJava.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushJavaFX.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushJScript.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushPerl.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushPhp.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushPlain.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushPowerShell.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushPython.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushRuby.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushSass.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushScala.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushSql.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushVb.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shBrushXml.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shCore.js" />
+    <Content Include="Content\SyntaxHighlighter\scripts\shLegacy.js" />
+    <Content Include="Content\SyntaxHighlighter\src\shAutoloader.js" />
+    <Content Include="Content\SyntaxHighlighter\src\shCore.js" />
+    <Content Include="Content\SyntaxHighlighter\src\shLegacy.js" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCore.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreDefault.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreDjango.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreEclipse.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreEmacs.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreFadeToGrey.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreMDUltra.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreMidnight.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shCoreRDark.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeDefault.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeDjango.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeEclipse.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeEmacs.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeFadeToGrey.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeMDUltra.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeMidnight.css" />
+    <Content Include="Content\SyntaxHighlighter\styles\shThemeRDark.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\DocStyle.css" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\GettingStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Demos.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Download.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Contact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DemoPage\ShowDemo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DocumentPage\ShowDocument.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_DocumentPageLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\Persistant.LoadFromXml.DataBinding\Codegen.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\GettingStart_1.cshtml" />
+    <Content Include="Views\Home\GettingStart_2.cshtml" />
+    <Content Include="Views\Home\GettingStart_3.cshtml" />
+    <Content Include="Views\Home\GettingStart_4.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ViewModel\Codegen.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\GettingStart_5.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ItemTemplate\Codegen.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ListViewModel\Codegen.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Demos\Persistant.LoadFromXml.ControlTemplate\Codegen.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\GettingStart_6.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>8447</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

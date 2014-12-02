@@ -1,0 +1,240 @@
+
+ViewContext GetViewContext(Control control)
+{
+	return
+		try (control as ViewPage).ViewContext
+		then GetViewContext(control.Parent)
+		then null;
+}
+
+ViewContext GetViewContext(Control control)
+{
+	try
+	{
+		return (control as ViewPage).ViewContext;
+	}
+	catch(Exception)
+	{
+		try
+		{
+			return GetViewContext(control.Parent);
+		}
+		catch(Exception)
+		{
+			return null;
+		}
+	}
+}
+
+========================================================
+Types
+========================================================
+
+Root Type:
+	object	(Object)	: null(default)
+
+Literal Types: (all value types)
+	sbyte	(Int8)		: 0(default)
+	short	(Int16)		: 0(default)
+	int		(Int32)		: 0(default)
+	long	(Int64)		: 0(default)
+	byte	(UInt8)		: 0(default)
+	ushort	(UInt16)	: 0(default)
+	uint	(UInt32)	: 0(default)
+	ulong	(UInt64)	: 0(default)
+	float	(Float32)	: 0(default)
+	double	(Float64)	: 0(default)
+	bool	(Boolean)	: true, false(default)
+	char	(Char)		: 'a', 'b', '\0'(default)
+	string	(String)	: "abc", ""(default)
+	void	(Void)		: void(default)
+
+Composited Types: (reference types, null(default))
+	[T]					: array [1,2,3]
+	{T}					: set {1,2,3}
+	{T:U}				: map {1:1, 2:4, 3:9}
+	(T..U)				: pair (1..2)
+
+	T=>U				: function x=>x+1, (a,b)=>a+b
+	T*					: raw interface pointer
+	T^					: shared interface pointer with reference counter
+	ref T				: nullable T
+
+Composited Types: (value types, no default value)
+	(T)					: tuple (1..void), equivalent to (T..void)
+	(T, U, V, W)		: tuple (1,2,3), equivalent to (T..(U..(V..(W..void))))
+	T|U					: case type, T and U should be value type
+
+Structured Types:
+
+	struct Point<T>
+	{
+		T x;
+		T y;
+	}
+
+	struct Node<T>
+	{
+		T data;
+		ref Node<T> next;
+	}
+
+	enum BinaryOperator
+	{
+		Add,
+		Sub,
+		Mul,
+		Div,
+	}
+
+Interface Types:
+
+	interface ExpressionVisitor
+	{
+		void Visit(ConstantExpression exp);
+		void Visit(VariableExpression exp);
+		void Visit(BinaryExpression exp);
+	}
+
+	interface Expression __foreign("presentation::scripting::Expression")
+	{
+		double Evaluate();
+		double Evaluate({string:double} variables);
+		void Accept(ExpressionVisitor visitor);
+
+		Expression^ new(string expressionCode) __extern;
+		Expression^ new() __inherit;
+	}
+
+	interface ConstantExpression : Expression
+	{
+	}
+
+	interface VariableExpression : Expression
+	{
+		string Variable{get;set;}
+	}
+
+	interface BinaryExpression : Expression
+	{
+		Expression First{get;set;}
+		Expression Second{get;set;}
+		BinaryOperator Operator{get;set;}
+	}
+
+Concepts:
+
+	concept ImplicitlyConvertable<TSrc, TDst>
+	{
+		TDst ConvertImplicitly(TSrc source);
+	}
+
+	concept Convertable<TSrc, TDst>
+	{
+		TDst Convert(TSrc source);
+	}
+
+Concept Instances:
+
+	instance <TSrc, TDst> : ExplicitConvertable<TSrc, TDst>
+		where ImplicitlyConvertable<TSrc, TDst>
+	{
+		TDst Convert(TSrc source)
+		{
+			return ConvertImplicitly(source);
+			return ImplicitlyConvertable<TSrc, TDst>.ConvertImplicitly(source);
+		}
+	}
+
+	instance <T> : ImplicitlyConvertable<T^, T*>
+		where interface T (struct /*value type*/ T, ref /*reference type*/ T, IExpression T, ...)
+	{
+		T* ConvertImplicitly(T^ source) __instruction("shared_ptr_to_raw_ptr");
+	}
+
+Functions:
+
+	int Add(int a, int b)
+	{
+		return a+b;
+	}
+
+Multiple Dispatch:
+
+	struct ConstantExpression
+	{
+		double value;
+	}
+
+	struct BinaryExpression
+	{
+		Expression first;
+		Expression second;
+		BinaryOperator op;
+	}
+
+	type Expression = ConstantExpression | BinaryExpression
+
+	double Evaluate(switch Expression exp);
+
+	double Evaluate(case ConstantExpression exp)
+	{
+		return exp.value;
+	}
+
+	double Evaluate(case BinaryExpression exp)
+	{
+		...
+	}
+	
+========================================================
+Operators
+========================================================
+
+operator precedence
+	a[b]
+	function call
+	+ - ! ++ --
+	* / %
+	+ - ++
+	<< >>
+	== != < <= > >=
+	&
+	^
+	|
+	&&
+	||
+
+========================================================
+Expressions
+========================================================
+
+op a, a op			: unary operator
+a op b				: binary operator
+(a : type)			: explicit conversion, fail with TypeConvertException
+a.b					: get member, fail with ObjectDisposedException
+f(a, b)				: function invoking, equivalent to f((a, b))
+Concept<T, U>.a		: get member from concept instance
+
+Lambda Expressions:
+	x=>x+1
+	(x,y)=>x+y
+	(x,y)=>{return x+y;}
+	int(int x, int y){return x+y;}
+
+Object Creation:
+	[1, 2, 3]
+	{1, 2, 3}
+	{1:2, 3:4}
+	{1..4}
+	(1, 2, 3, 4)
+	new Interface(...)
+	Struct{a=b, c=d}
+
+========================================================
+Statements
+========================================================
+	
+========================================================
+Continuation
+========================================================

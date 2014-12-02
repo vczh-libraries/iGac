@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Folder>
+  <Image content="File">Class.png</Image>
+  <Image content="File">Dialog.png</Image>
+  <Image content="File">Control.png</Image>
+  <Image content="File">Template.png</Image>
+  <Image content="File">Image.png</Image>
+  <Image content="File">Document.png</Image>
+  <Image content="File">RichDocument.png</Image>
+  <Image content="File">XmlDocument.png</Image>
+  <Image content="File">Parser.png</Image>
+  <Image content="File">SQLDatabase.png</Image>
+  <Image content="File">GraphDatabase.png</Image>
+</Folder>

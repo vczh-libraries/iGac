@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schemas>
+  <Interface ref.Class="vm::IFileFactoryModel">
+    <Property Name="Image" Type="presentation::GuiImageData^" Readonly="true"/>
+    <Property Name="Name" Type="string" Readonly="true"/>
+    <Property Name="Category" Type="string" Readonly="true"/>
+    <Property Name="Description" Type="string" Readonly="true"/>
+    <Property Name="Id" Type="string" Readonly="true"/>
+  </Interface>
+
+  <Interface ref.Class="vm::IProjectFactoryModel">
+    <Property Name="Image" Type="presentation::GuiImageData^" Readonly="true"/>
+    <Property Name="SmallImage" Type="presentation::GuiImageData^" Readonly="true"/>
+    <Property Name="Name" Type="string" Readonly="true"/>
+    <Property Name="Description" Type="string" Readonly="true"/>
+    <Property Name="Id" Type="string" Readonly="true"/>
+    <Property Name="Children" Type="vm::IProjectFactoryModel^{}" Readonly="true"/>
+  </Interface>
+
+  <Interface ref.Class="vm::ISolutionItemModel">
+    <Property Name="Image" Type="presentation::GuiImageData^" Readonly="true" Observable="true"/>
+    <Property Name="Name" Type="string" Readonly="true" Observable="true"/>
+    <Property Name="Children" Type="description::IValueObservableList^" Readonly="true"/>
+  </Interface>
+
+  <Interface ref.Class="vm::IStudioModel">
+    <Property Name="ProjectModels" Type="vm::IProjectFactoryModel^{}" Readonly="true"/>
+    <Property Name="FileModels" Type="system::ObservableList^" Readonly="true"/>
+    <Property Name="FileFilters" Type="vm::IProjectFactoryModel^" Readonly="true"/>
+    
+    <Property Name="FileCategory" Type="string"/>
+    <Property Name="OpeningSolution" Type="ISolutionItemModel^" Readonly="true"/>
+    <Property Name="HasOpeningSolution" Type="bool" Readonly="true" Observable="true"/>
+
+    <Method Name="OpenSolution" Type="bool">
+      <Argument Name="filePath" Type="string"/>
+    </Method>
+    <Method Name="SaveSolution" Type="bool">
+    </Method>
+    <Method Name="NewSolution" Type="bool">
+      <Argument Name="filePath" Type="string"/>
+    </Method>
+    <Method Name="CloseSolution" Type="bool">
+    </Method>
+    <Method Name="AddProject" Type="bool">
+      <Argument Name="projectFactory" Type="vm::IProjectFactoryModel^"/>
+      <Argument Name="projectName" Type="string"/>
+    </Method>
+    
+    <Method Name="OpenBrowser" Type="void">
+      <Argument Name="url" Type="string"/>
+    </Method>
+  </Interface>
+</Schemas>

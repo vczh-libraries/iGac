@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<demos>
+  <category name="Editor">
+    <description>The &quot;Editor&quot; category contains demos that show how to develop editors using GacUI.</description>
+    <demo name="Colorizer.Grammar">
+      <date>2013/8/13</date>
+      <image src="DXGUI_75.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a context sensitive colorizer for GacUI embedded EBNF grammar.</description>
+    </demo>
+    <demo name="Colorizer.Json">
+      <date>2013/8/13</date>
+      <image src="DXGUI_76.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a context sensitive colorizer for Json.</description>
+    </demo>
+    <demo name="Colorizer.Xml">
+      <date>2013/8/13</date>
+      <image src="DXGUI_77.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a context sensitive colorizer for XML.</description>
+    </demo>
+    <demo name="AutoComplete.Grammar">
+      <date>2013/9/14</date>
+      <image src="DXGUI_83.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build an editor with auto complete for GacUI embedded EBNF grammar.</description>
+    </demo>
+    <demo name="Toolstrip.TextFile">
+      <date>2012/7/23</date>
+      <image src="DXGUI_53.jpg" />
+      <image src="DXGUI_54.jpg" />
+      <image src="DXGUI_55.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="TextEditorWindow.h" />
+      <cpp src="TextEditorWindow.cpp" />
+      <cpp src="TextEditorWindow_Initialization.cpp" />
+      <description>This demo shows how to build Notepad with functionalities like new/open/save, or undo/redo/clipboard operations, using menus and toolbars in the toolstrip control package.</description>
+    </demo>
+    <demo name="Toolstrip.Document">
+      <date>2013/10/24</date>
+      <image src="DXGUI_84.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="DocumentEditorWindow.h" />
+      <cpp src="DocumentEditorWindow.cpp" />
+      <cpp src="DocumentEditorWindow_Initialization.cpp" />
+      <description>This demo shows how to build an editor like Microsoft Write.</description>
+    </demo>
+  </category>
+  <category name="Controls">
+    <description>The &quot;Controls&quot; category contains demos that show how to use individual controls.</description>
+    <demo name="Label.Hyperlink">
+      <date>2012/5/4</date>
+      <image src="DXGUI_27.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a hyperlink using a GuiLabel.</description>
+    </demo>
+    <demo name="Button.EnableDisable">
+      <date>2012/4/25</date>
+      <image src="DXGUI_28.jpg" />
+      <image src="DXGUI_29.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to layout, enable and disable a GuiButton.</description>
+    </demo>
+    <demo name="Button.CheckAndRadio">
+      <date>2012/4/27</date>
+      <image src="DXGUI_30.jpg" />
+      <image src="DXGUI_31.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to layout and use GuiSelectableButton with check box and radio button styles.</description>
+    </demo>
+    <demo name="Tab.TextBoxPage">
+      <date>2012/5/1</date>
+      <image src="DXGUI_32.jpg" />
+      <image src="DXGUI_33.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how add and remove tabs in a GuiTab dynamically.</description>
+    </demo>
+    <demo name="TextBox.Editor">
+      <date>2012/5/5</date>
+      <image src="DXGUI_34.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use GuiSinglineTextBox and GuiMultilineTextBox.</description>
+    </demo>
+    <demo name="TextBox.Colorizer">
+      <date>2012/5/20</date>
+      <image src="DXGUI_35.jpg" />
+      <image src="DXGUI_36.jpg" />
+      <image src="DXGUI_37.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to colorize the text in a GuiMultilineTextBox just like other IDEs do.</description>
+    </demo>
+    <demo name="ListBox.NameEditor">
+      <date>2012/5/23</date>
+      <image src="DXGUI_38.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to add and remove items in a GuiTextList.</description>
+    </demo>
+    <demo name="ListBox.NameSelector">
+      <date>2012/5/26</date>
+      <image src="DXGUI_39.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use Linq for C++ with a GuiTextList.</description>
+    </demo>
+    <demo name="ListBox.VirtualMode">
+      <date>2012/5/27</date>
+      <image src="DXGUI_40.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use the virtual mode of a GuiTextList to implemente delay loading.</description>
+    </demo>
+    <demo name="ListView.ViewSwitching">
+      <date>2012/5/30</date>
+      <image src="DXGUI_41.jpg" />
+      <image src="DXGUI_42.jpg" />
+      <image src="DXGUI_43.jpg" />
+      <image src="DXGUI_44.jpg" />
+      <image src="DXGUI_45.jpg" />
+      <image src="DXGUI_46.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="../CommonLibrary/FileSystemInformation.h" />
+      <cpp src="../CommonLibrary/FileSystemInformation.cpp" />
+      <description>This demo shows how to use different predefined views of a GuiListView.</description>
+    </demo>
+    <demo name="ListView.VirtualMode">
+      <date>2012/6/6</date>
+      <image src="DXGUI_47.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="../CommonLibrary/FileSystemInformation.h" />
+      <cpp src="../CommonLibrary/FileSystemInformation.cpp" />
+      <description>This demo shows how to use the virtual mode of a GuiListView to implemente delay loading.</description>
+    </demo>
+    <demo name="ListView.SortingAndFiltering">
+      <date>2012/6/16</date>
+      <image src="DXGUI_48.jpg" />
+      <image src="DXGUI_49.jpg" />
+      <image src="DXGUI_50.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="../CommonLibrary/FileSystemInformation.h" />
+      <cpp src="../CommonLibrary/FileSystemInformation.cpp" />
+      <description>This demo shows how to use a GuiListView column sorting state and dropdown menu to process the data.</description>
+    </demo>
+    <demo name="TreeView.FileExplorer">
+      <date>2012/6/24</date>
+      <image src="DXGUI_51.jpg" />
+      <image src="DXGUI_52.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="../CommonLibrary/FileSystemInformation.h" />
+      <cpp src="../CommonLibrary/FileSystemInformation.cpp" />
+      <description>This demo shows how to build an application to browse the local file system using a GuiTreeView control.</description>
+    </demo>
+    <demo name="Scroll.ColorPicker">
+      <date>2012/8/6</date>
+      <image src="DXGUI_56.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a color picker using tracker control.</description>
+    </demo>
+    <demo name="Tooltip.RichTextAndResource">
+      <date>2013/2/23</date>
+      <image src="DXGUI_61.jpg" />
+      <cpp src="XmlResource.xml" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to load a rich text document and related images from resource files and show it in tooltips of buttons.</description>
+    </demo>
+    <demo name="DataGrid.ChemicalElements">
+      <date>2013/6/3</date>
+      <image src="DXGUI_64.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to display data in a GuiVirtualDataGrid control using different styles for different cells.</description>
+    </demo>
+    <demo name="DataGrid.FileExplorer">
+      <date>2013/6/11</date>
+      <image src="DXGUI_65.jpg" />
+      <image src="DXGUI_66.jpg" />
+      <image src="DXGUI_67.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="../CommonLibrary/FileSystemInformation.h" />
+      <cpp src="../CommonLibrary/FileSystemInformation.cpp" />
+      <description>This demo shows how to use GuiVirtualDataGrid with IStructuredDataProvider to do strong typed sorting and filtering.</description>
+    </demo>
+    <demo name="DatePicker.DateAndLocale">
+      <date>2013/6/12</date>
+      <image src="DXGUI_68.jpg" />
+      <image src="DXGUI_69.jpg" />
+      <image src="DXGUI_70.jpg" />
+      <image src="DXGUI_71.jpg" />
+      <image src="DXGUI_72.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use GuiDatePicker and GuiDateComboBox to select a date under different locales and date formats.</description>
+    </demo>
+    <demo name="DataGrid.TableEditor">
+      <date>2013/6/22</date>
+      <image src="DXGUI_73.jpg" />
+      <image src="DXGUI_74.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use GuiStringGrid to perform simple table editing.</description>
+    </demo>
+  </category>
+  <category name="Template">
+    <description>The &quot;Template&quot; category contains demos that show how to build template or skin for each type of controls.</description>
+    <demo name="Window.CustomizedBorder">
+      <date>2012/9/24</date>
+      <image src="DXGUI_57.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a window with a customized border and a skin.</description>
+    </demo>
+  </category>
+  <category name="Rendering">
+    <description>The &quot;Rendering&quot; category contains demos that show how to access the low level rendering API like Direct2D or GDI at runtime.</description>
+    <demo name="RawAPI.GDI">
+      <date>2012/11/4</date>
+      <image src="DXGUI_59.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use GDI api to draw a clock in a window.</description>
+    </demo>
+    <demo name="RawAPI.Direct2D">
+      <date>2012/11/5</date>
+      <image src="DXGUI_58.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to use Direct2D api to draw a clock in a window.</description>
+    </demo>
+    <demo name="TextLayout.RichText">
+      <date>2012/11/24</date>
+      <image src="DXGUI_60.jpg"/>
+      <cpp src="Main.cpp"/>
+      <description>This demo shows how to put a rich text document with embedded images in a window.</description>
+    </demo>
+  </category>
+  <category name="Persistant">
+    <description>The &quot;Template&quot; category contains demos that show how to persistant a GUI using reflection, XML and resource.</description>
+    <demo name="DirectCode.SimpleWindow">
+      <date>2013/3/12</date>
+      <image src="DXGUI_62.jpg" />
+      <image src="DXGUI_63.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to build a window with a customized border and a skin.</description>
+    </demo>
+    <demo name="LoadFromXml.Controls">
+      <date>2013/11/14</date>
+      <image src="DXGUI_84.jpg" />
+      <image src="DXGUI_85.jpg" />
+      <image src="DXGUI_86.jpg" />
+      <image src="DXGUI_87.jpg" />
+      <image src="DXGUI_88.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="XmlWindowResource.xml"/>
+      <description>This demo shows how to load windows or controls from an XML resource.</description>
+    </demo>
+    <demo name="DirectCode.Scripting">
+      <date>2014/3/26</date>
+      <image src="DXGUI_89.jpg" />
+      <image src="DXGUI_90.jpg" />
+      <cpp src="Main.cpp" />
+      <description>This demo shows how to create GUI using Workflow script.</description>
+    </demo>
+    <demo name="LoadFromXml.DataBinding">
+      <date>2014/4/11</date>
+      <image src="DXGUI_91.jpg" />
+      <image src="DXGUI_92.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="Codegen.bat" />
+      <cpp src="XmlWindowResourceDataBinding.xml" />
+      <cpp src="(Generated)Demo.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.cpp" />
+      <cpp src="(Generated)DemoPartialClasses.h" />
+      <cpp src="(Generated)DemoPartialClasses.cpp" />
+      <description>This demo shows how to create GUI using an XML resource, perform data binding using Workflow script expression, and generate C++ code from the XML.</description>
+    </demo>
+    <demo name="LoadFromXml.ViewModel">
+      <date>2014/4/17</date>
+      <image src="DXGUI_93.jpg" />
+      <cpp src="Main.cpp" />
+      <cpp src="Codegen.bat" />
+      <cpp src="XmlWindowResourceViewModel.xml" />
+      <cpp src="(Generated)Demo.h" />
+      <cpp src="(Generated, Modifiable)CalculatorControl.h" />
+      <cpp src="(Generated, Modifiable)CalculatorControl.cpp" />
+      <cpp src="(Generated, Modifiable)MainWindow.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.cpp" />
+      <cpp src="(Generated)DemoPartialClasses.h" />
+      <cpp src="(Generated)DemoPartialClasses.cpp" />
+      <description>This demo shows how to apply MVVM (Model-View-ViewModel) pattern using the XML window resource and GacGen.exe.</description>
+    </demo>
+    <demo name="LoadFromXml.ListViewModel">
+      <date>2014/5/1</date>
+      <image src="DXGUI_94.jpg"/>
+      <cpp src="Main.cpp" />
+      <cpp src="Codegen.bat" />
+      <cpp src="XmlWindowResourceListViewModel.xml" />
+      <cpp src="(Generated)Demo.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.cpp" />
+      <cpp src="(Generated)DemoPartialClasses.h" />
+      <cpp src="(Generated)DemoPartialClasses.cpp" />
+      <description>This demo shows how to do item source binding to list/list view/tree view controls.</description>
+    </demo>
+    <demo name="LoadFromXml.ItemTemplate">
+      <date>2014/5/8</date>
+      <image src="DXGUI_95.jpg"/>
+      <cpp src="Main.cpp" />
+      <cpp src="Codegen.bat" />
+      <cpp src="XmlWindowResourceItemTemplate.xml" />
+      <cpp src="(Generated)Demo.h" />
+      <cpp src="(Generated, Modifiable)SeasonItemTemplate.h" />
+      <cpp src="(Generated, Modifiable)SeasonItemTemplate.cpp" />
+      <cpp src="(Generated, Modifiable)MainWindow.h" />
+      <cpp src="(Generated, Modifiable)MainWindow.cpp" />
+      <cpp src="(Generated)DemoPartialClasses.h" />
+      <cpp src="(Generated)DemoPartialClasses.cpp" />
+      <description>This demo shows how to apply a customized item template (skin) to a list control using XML.</description>
+    </demo>
+    <demo name="LoadFromXml.ControlTemplate">
+      <date>2014/10/30</date>
+      <image src="DXGUI_96.jpg"/>
+      <image src="DXGUI_97.jpg"/>
+      <cpp src="Main.cpp" />
+      <cpp src="Codegen.bat" />
+      <cpp src="XmlWindowResourceControlTemplate.xml" />
+      <cpp src="XmlWindowResourceControlTemplates.xml" />
+      <cpp src="(Generated, Modifiable)HScrollTemplate.h" />
+      <cpp src="(Generated, Modifiable)HScrollTemplate.cpp" />
+      <cpp src="(Generated, Modifiable)VScrollTemplate.h" />
+      <cpp src="(Generated, Modifiable)VScrollTemplate.cpp" />
+      <cpp src="(Generated, Modifiable)HTrackerTemplate.h" />
+      <cpp src="(Generated, Modifiable)HTrackerTemplate.cpp" />
+      <cpp src="(Generated, Modifiable)VTrackerTemplate.h" />
+      <cpp src="(Generated, Modifiable)VTrackerTemplate.cpp" />
+      <description>This demo shows how to apply a customized control template (skin) to all controls using XML, including a customized border window.</description>
+    </demo>
+  </category>
+</demos>

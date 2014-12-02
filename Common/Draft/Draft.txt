@@ -1,0 +1,10 @@
+Persistant:
+	Class Loader:	// with pattern matching using the class name
+	Namespace:		// e.g. define c:X = presentation::controls::GuiX so that c:Button becomes GuiButton class
+	Binder:			// used in property assignment like <a="X">, <res:a="OKButtonName">, <bind:a="horizontalScroll.Value>, etc
+	Resource:
+		Multiple resources propritized referenced by a class definition
+		Locale awared
+		Using GuiResource
+
+// this line is added by VIM with Team Explorer Everywhere under Ubuntu

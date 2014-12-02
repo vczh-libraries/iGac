@@ -1,0 +1,98 @@
+//
+//  CocoaScreenService.cpp
+//  GacTest
+//
+//  Created by Robert Bu on 12/2/14.
+//  Copyright (c) 2014 Robert Bu. All rights reserved.
+//
+
+#include "CocoaScreenService.h"
+
+#include "../AppleHelper.h"
+#include "../OSXNativeWindow.h"
+
+namespace vl {
+    
+    namespace presentation {
+        
+        namespace osx {
+
+            CocoaScreen::CocoaScreen(NSScreen* _screen):
+                screen(_screen)
+            {
+                
+            }
+            
+            Rect CocoaScreen::GetBounds()
+            {
+                NSRect r = [screen frame];
+                return Rect(r.origin.x,
+                            r.origin.y,
+                            r.origin.x + r.size.width,
+                            r.origin.y + r.size.height);
+            }
+            
+            Rect CocoaScreen::GetClientBounds()
+            {
+                return GetBounds();
+            }
+            
+            WString CocoaScreen::GetName()
+            {
+                return L"?";
+            }
+            
+            bool CocoaScreen::IsPrimary()
+            {
+                return screen == [NSScreen mainScreen];
+            }
+            
+            CocoaScreenService::CocoaScreenService()
+            {
+                RefreshScreenInformation();
+            }
+
+            void CocoaScreenService::RefreshScreenInformation()
+            {
+                screens.Clear();
+                
+                NSArray* nsscreens = [NSScreen screens];
+                [nsscreens enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+                {
+                    screens.Add((new CocoaScreen((NSScreen*)obj)));
+                }];
+            }
+            
+            vint CocoaScreenService::GetScreenCount()
+            {
+                return screens.Count();
+            }
+            
+            INativeScreen* CocoaScreenService::GetScreen(vint index)
+            {
+                return screens[index].Obj();
+            }
+            
+            INativeScreen* CocoaScreenService::GetScreen(INativeWindow* window)
+            {
+                CocoaNativeWindow* wnd = dynamic_cast<CocoaNativeWindow*>(window);
+                if(wnd)
+                {
+                    NSContainer* container = wnd->GetNativeContainer();
+                    
+                    for(vint i=0;i<screens.Count();i++)
+                    {
+                        if(screens[i]->screen == [container->window screen])
+                        {
+                            return screens[i].Obj();
+                        }
+                    }
+                }
+                return 0;
+            }
+            
+        }
+
+    }
+
+}

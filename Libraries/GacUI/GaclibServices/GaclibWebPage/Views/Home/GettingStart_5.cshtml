@@ -1,0 +1,330 @@
+﻿@model GaclibWebPage.Models.GettingStartPageModel
+
+@{
+    ViewBag.Title = "GacLib - Getting Started - Step 5";
+}
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shCore.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shBrushCpp.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shBrushXml.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/SyntaxHighlighter/scripts/shBrushPlain.js")"></script>
+<link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/SyntaxHighlighter/styles/shCore.css")" />
+<link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/SyntaxHighlighter/styles/shThemeRDark.css")" />
+<tr>
+    <td align="left" valign="top" colspan="6">
+        <h1>Step 5. @Model.TutorialTitles[4]</h1>
+        <p>
+            The following code can be found in <strong>Libraries\GacUI\GacUIDemo\HelloWorldXml\HelloWorldViewModel.vcxproj</strong> if you <a href="@Url.Action("Download")">DOWNLOAD</a> the latest source code.
+        </p>
+        <p>Let's start from an empty xml window resource:</p>
+        <div class="cpp">
+            <pre class="brush: xml; gutter: false;">
+&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Resource&gt;
+  &lt;Folder name="GacGenConfig"&gt;
+    &lt;Text name="Include"&gt;..\..\..\Public\Source\GacUIReflection.h&lt;/Text&gt;
+    &lt;Text name="Name"&gt;HelloWorld&lt;/Text&gt;
+    &lt;Text name="Prefix"&gt;&lt;/Text&gt;
+  &lt;/Folder&gt;
+  &lt;Folder name="MainWindow"&gt;
+  &lt;/Folder&gt;
+&lt;/Resource&gt;
+            </pre>
+        </div>
+        <p>
+            The xml window resource contains two folder. The <strong>GacGenConfig</strong> folder is always necessary. This folder contains some configuration for <string>GacGen.exe</string> to generate code. All other resource folders and resource items' name can be changed as you like.
+        </p>
+        <p>
+            To apply the MVVM pattern, we should first define a view model. GacGen.exe supports generating struct/class/interface for view model with reflection automatically enabled. Here we start to define a view model for a "Sign Up" window. Add the following definition inside the <strong>MainWindow</strong> resource folder:
+        </p>
+        <div class="cpp">
+            <pre class="brush: xml; gutter: false;">
+&lt;InstanceSchema name="ViewModelResource"&gt;
+    &lt;Schemas&gt;
+    &lt;Interface ref.Class="helloworld::IViewModel"&gt;
+        &lt;Property Name="UserName" Type="string"/&gt;
+        &lt;Property Name="UserNameError" Type="string" Readonly="true" Observable="true"/&gt;
+        &lt;Property Name="Password" Type="string"/&gt;
+        &lt;Property Name="PasswordError" Type="string" Readonly="true" Observable="true"/&gt;
+        &lt;Method Name="Commit" Type="bool"&gt;
+        &lt;Argument Name="signIn" Type="bool"/&gt;
+        &lt;/Method&gt;
+    &lt;/Interface&gt;
+    &lt;/Schemas&gt;
+&lt;/InstanceSchema&gt;
+            </pre>
+        </div>
+        <p>
+            By executing the following Codegen.bat:
+        </p>
+        <div class="cpp">
+            <pre class="brush: text; gutter: false;">
+..\..\..\Public\Source\GacGen.exe HelloWorldViewModel.xml
+copy HelloWorldViewModel.xml ..\..\Resources\HelloWorldViewModel.xml
+pause
+            </pre>
+        </div>
+        <p>
+            The following reflectable interface will be generated in <strong>HelloWorldPartialClasses.h</strong>:
+        </p>
+        <div class="cpp">
+            <pre class="brush: cpp; gutter: false;">
+namespace helloworld
+{
+	class IViewModel : public virtual vl::reflection::IDescriptable, public vl::reflection::Description<iviewmodel>
+	{
+	public:
+		virtual WString GetUserName() = 0;
+		virtual void SetUserName(WString value) = 0;
+
+		virtual WString GetUserNameError() = 0;
+		vl::Event&lt;void()&gt; UserNameErrorChanged;
+
+		virtual WString GetPassword() = 0;
+		virtual void SetPassword(WString value) = 0;
+
+		virtual WString GetPasswordError() = 0;
+		vl::Event&lt;void()&gt; PasswordErrorChanged;
+
+		virtual bool Commit(bool signIn) = 0;
+	};
+}
+            </pre>
+        </div>
+        <p>
+            Then we begin to add a window which requires <strong>helloworld::IViewModel</strong> to be a required parameter:
+        </p>
+        <div class="cpp">
+            <pre class="brush: xml; gutter: false;">
+    &lt;Instance name="MainWindowResource"&gt;
+      &lt;Instance ref.Class="helloworld::SignUpWindow"&gt;
+        &lt;ref.Parameter Name="ViewModel" Class="helloworld::IViewModel"/&gt;
+        &lt;Window Text="Let's Sign Up!"&gt;
+          
+        &lt;/Window&gt;
+      &lt;/Instance&gt;
+    &lt;/Instance&gt;
+            </pre>
+        </div>
+        <p>
+            Fill the window with controls!
+        </p>
+        <div class="cpp">
+            <pre class="brush: xml; gutter: false;">
+        &lt;Window Text="Let's Sign Up!" ClientSize="x:320 y:280"&gt;
+          &lt;att.BoundsComposition-set PreferredMinSize="x:320 y:280"/&gt;
+          &lt;Table CellPadding="5" AlignmentToParent="left:0 top:0 right:0 bottom:0"&gt;
+            &lt;att.Rows&gt;
+              &lt;CellOption&gt;composeType:Absolute absolute:90&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:Absolute absolute:12&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:Percentage percentage:1.0&lt;/CellOption&gt;
+            &lt;/att.Rows&gt;
+            &lt;att.Columns&gt;
+              &lt;CellOption&gt;composeType:MinSize&lt;/CellOption&gt;
+              &lt;CellOption&gt;composeType:Percentage percentage:1.0&lt;/CellOption&gt;
+            &lt;/att.Columns&gt;
+            &lt;Cell Site="row:0 column:0 columnSpan:2"&gt;
+              &lt;SolidLabel Text="www.gaclib.net" HorizontalAlignment="Center" VerticalAlignment="Center"&gt;
+                &lt;att.Font&gt;fontFamily:{Segoe UI} size:40 antialias:true&lt;/att.Font&gt;
+              &lt;/SolidLabel&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:1 column:0"&gt;
+              &lt;SolidLabel Text="Username: " VerticalAlignment="Center"&gt;
+                &lt;att.Font&gt;fontFamily:{Segoe UI} size:12 antialias:true&lt;/att.Font&gt;
+              &lt;/SolidLabel&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:1 column:1"&gt;
+              &lt;SinglelineTextBox&gt;
+                &lt;att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:0 y:24"/&gt;
+              &lt;/SinglelineTextBox&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:2 column:1"&gt;
+              &lt;SolidLabel Color="#FF0000" WrapLine="true" WrapLineHeightCalculation="true"&gt;
+                &lt;att.Font&gt;fontFamily:{Segoe UI} size:12 antialias:true&lt;/att.Font&gt;
+              &lt;/SolidLabel&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:3 column:0"&gt;
+              &lt;SolidLabel Text="Password: " VerticalAlignment="Center"&gt;
+                &lt;att.Font&gt;fontFamily:{Segoe UI} size:12 antialias:true&lt;/att.Font&gt;
+              &lt;/SolidLabel&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:3 column:1"&gt;
+              &lt;SinglelineTextBox PasswordChar="*"&gt;
+                &lt;att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:0 y:24"/&gt;
+              &lt;/SinglelineTextBox&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:4 column:1"&gt;
+              &lt;SolidLabel Color="#FF0000" WrapLine="true" WrapLineHeightCalculation="true"&gt;
+                &lt;att.Font&gt;fontFamily:{Segoe UI} size:12 antialias:true&lt;/att.Font&gt;
+              &lt;/SolidLabel&gt;
+            &lt;/Cell&gt;
+            &lt;Cell Site="row:6 column:1"&gt;
+              &lt;Button Text="Sign Up!"&gt;
+                &lt;att.BoundsComposition-set AlignmentToParent="left:-1 top:0 right:0 bottom:0" PreferredMinSize="x:100 y:24"/&gt;
+              &lt;/Button&gt;
+            &lt;/Cell&gt;
+            
+          &lt;/Table&gt;
+        &lt;/Window&gt;
+            </pre>
+        </div>
+        <p>
+            If you implement an empty <strong>helloworld::IViewModel</strong> and run the window, you will get:<br/><br/>
+            <img src="@Url.Content("~/Content/GettingStart/ViewModel_1.jpg")" alt="ViewModel_1" />
+        </p>
+        <p>
+            To complete the program, we just need to do 2 more things. The first one is implement the view model, the second one is to do data binding in the xml. So let us see how do we implement the view model first.
+        </p>
+        <p>
+            We should create a class inherits from <strong>helloworld::IViewModel</strong>:
+        </p>
+        <div class="cpp">
+            <pre class="brush: cpp; gutter: false;">
+class ViewModel : public Object, public virtual IViewModel
+{
+private:
+	WString userName;
+	WString password;
+	Regex regexLcLetters;
+	Regex regexUcLetters;
+	Regex regexNumbers;
+
+public:
+	ViewModel()
+		:regexLcLetters(L"[a-z]")
+		, regexUcLetters(L"[A-Z]")
+		, regexNumbers(L"[0-9]")
+	{
+	}
+
+	WString GetUserName()override
+	{
+		return userName;
+	}
+
+	void SetUserName(const WString& value)override
+	{
+		userName = value;
+		UserNameErrorChanged();
+	}
+
+	WString GetUserNameError()override
+	{
+		if (userName == L"")
+		{
+			return L"User name should not be empty.";
+		}
+		return L"";
+	}
+
+	WString GetPassword()override
+	{
+		return password;
+	}
+
+	void SetPassword(const WString& value)override
+	{
+		password = value;
+		PasswordErrorChanged();
+	}
+
+	WString GetPasswordError()override
+	{
+		if (password == L"")
+		{
+			return L"Password should not be empty.";
+		}
+		bool containsLowerCases = regexLcLetters.Match(password);
+		bool containsUpperCases = regexUcLetters.Match(password);
+		bool containsNumbers = regexNumbers.Match(password);
+		if (!containsLowerCases || !containsUpperCases || !containsNumbers)
+		{
+			return L"Password should contains at least one lower case letter, one upper case letter and one digit.";
+		}
+		return L"";
+	}
+
+	bool Commit(bool signIn)override
+	{
+		return !signIn;
+	}
+};
+            </pre>
+        </div>
+        <p>
+            When the <strong>UserName</strong> property is changed, we raise the <strong>UserNameErrorChanged</strong> event, so the the data binding can display the error according to this event automatically. So as the <strong>Password</strong> property.
+        </p>
+        <p>
+            Then, we apply the view model to the <strong>helloworld::SignUpWindow</strong> class:
+        </p>
+        <div class="cpp">
+            <pre class="brush: cpp; gutter: false;">
+void GuiMain()
+{
+	List&lt;WString&gt; errors;
+	GetInstanceLoaderManager()->SetResource(L"Resource", GuiResource::LoadFromXml(L"..\\Resources\\HelloWorldViewModel.xml", errors));
+	SignUpWindow window(new ViewModel);
+	window.ForceCalculateSizeImmediately();
+	window.MoveToScreenCenter();
+	GetApplication()->Run(&window);
+}
+            </pre>
+        </div>
+        <p>
+            And do the data binding. Here shows lines that need to be modified:
+        </p>
+        <div class="cpp">
+            <pre class="brush: xml; gutter: false;">
+......
+        &lt;Window Text="Let's Sign Up!" ClientSize="x:320 y:280"&gt;
+          &lt;att.ViewModel-set UserName-bind="textBoxUserName.Text" Password-bind="textBoxPassword.Text"/&gt;
+......
+            &lt;Cell Site="row:1 column:1"&gt;
+              &lt;SinglelineTextBox ref.Name="textBoxUserName"&gt;
+......
+            &lt;Cell Site="row:2 column:1"&gt;
+              &lt;SolidLabel Color="#FF0000" WrapLine="true" WrapLineHeightCalculation="true" Text-bind="ViewModel.UserNameError"&gt;
+......
+            &lt;Cell Site="row:3 column:1"&gt;
+              &lt;SinglelineTextBox ref.Name="textBoxPassword" PasswordChar="*"&gt;
+......
+            &lt;Cell Site="row:4 column:1"&gt;
+              &lt;SolidLabel Color="#FF0000" WrapLine="true" WrapLineHeightCalculation="true" Text-bind="ViewModel.PasswordError"&gt;
+......
+            &lt;Cell Site="row:6 column:1"&gt;
+              &lt;Button ref.Name="buttonSignUp" Text="Sign Up!"&gt;
+                &lt;att.Enabled-bind&gt;
+                  buttonSignUp.Text != "Success!" and ViewModel.UserNameError == "" and ViewModel.PasswordError == ""
+                &lt;/att.Enabled-bind&gt;
+                &lt;ev.Clicked-eval&gt;
+                  if (ViewModel.Commit(false))
+                  {
+                      buttonSignUp.Text = "Success!";
+                      buttonSignUp.Enabled = false;
+                  }
+                &lt;/ev.Clicked-eval&gt;
+......
+            </pre>
+        </div>
+        <p>
+            Execute Codegen.bat! The magic happens!<br /><br />
+            <img src="@Url.Content("~/Content/GettingStart/ViewModel_2.jpg")" alt="ViewModel_1" /><br /><br />
+            <img src="@Url.Content("~/Content/GettingStart/ViewModel_3.jpg")" alt="ViewModel_1" /><br /><br />
+            <img src="@Url.Content("~/Content/GettingStart/ViewModel_4.jpg")" alt="ViewModel_1" />
+        </p>
+        <h1>See also ...</h1>
+        <ul>
+            @for (int index = 0; index < Model.TutorialTitles.Length; index++)
+            {
+                <li>Step @(index + 1). <a href="@Url.Action("GettingStart_" + (index + 1).ToString(), "Home")">@Model.TutorialTitles[index]</a></li>
+            }
+        </ul>
+    </td>
+</tr>
+<script type="text/javascript">
+    SyntaxHighlighter.all()
+</script>

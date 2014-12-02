@@ -1,0 +1,119 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHttpServer", "SimpleHttpServer\SimpleHttpServer.csproj", "{90FDD5BD-20BA-4734-A96A-E2762D9C4F66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldTestServer", "HelloWorldTestServer\HelloWorldTestServer.csproj", "{595ABFE0-A837-4AFF-9F2C-2C63B48DEB00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{78DD8177-6324-4611-83F6-23F175B8BA25}"
+	ProjectSection(SolutionItems) = preProject
+		Configuration\Debug.bat = Configuration\Debug.bat
+		Configuration\Release.bat = Configuration\Release.bat
+		Configuration\ServiceConfiguration.xml = Configuration\ServiceConfiguration.xml
+		Configuration\StorageConfiguration.Template.xml = Configuration\StorageConfiguration.Template.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployClient", "DeployClient\DeployClient.csproj", "{52B85518-0424-411D-908F-10830FCCB479}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployServer", "DeployServer\DeployServer.csproj", "{0E860176-0645-4E3B-983A-978A434F18BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeployLibrary", "DeployLibrary\DeployLibrary.csproj", "{69CF43A4-3524-498D-8CD2-9E76FC009D44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureStorageFacadeLibrary", "..\..\..\Libraries\GacUI\GaclibServices\AzureStorageFacadeLibrary\AzureStorageFacadeLibrary.csproj", "{17116ED4-93B7-436F-8A99-B70627E2097A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NestleServices", "NestleServices", "{434872B7-BB7C-495F-907E-FD380644F972}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestleSpider", "NestleServices\NestleSpider\NestleSpider.csproj", "{E6BA129D-CF2E-47FC-823B-89E6EF331673}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestleSearch", "NestleServices\NestleSearch\NestleSearch.csproj", "{93932148-200F-4CF7-A204-AE88031833B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NestleDatabase", "NestleServices\NestleDatabase\NestleDatabase.csproj", "{F2F38349-01CA-4627-978D-572FF483F357}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SimpleHttpServer\\SimpleHttpServer.csproj
+		SccProjectName1 = SimpleHttpServer
+		SccLocalPath1 = SimpleHttpServer
+		SccProjectUniqueName2 = HelloWorldTestServer\\HelloWorldTestServer.csproj
+		SccProjectName2 = HelloWorldTestServer
+		SccLocalPath2 = HelloWorldTestServer
+		SccProjectUniqueName3 = DeployClient\\DeployClient.csproj
+		SccProjectName3 = DeployClient
+		SccLocalPath3 = DeployClient
+		SccProjectUniqueName4 = DeployServer\\DeployServer.csproj
+		SccProjectName4 = DeployServer
+		SccLocalPath4 = DeployServer
+		SccProjectUniqueName5 = DeployLibrary\\DeployLibrary.csproj
+		SccProjectName5 = DeployLibrary
+		SccLocalPath5 = DeployLibrary
+		SccProjectUniqueName6 = ..\\..\\..\\Libraries\\GacUI\\GaclibServices\\AzureStorageFacadeLibrary\\AzureStorageFacadeLibrary.csproj
+		SccProjectName6 = ../../../Libraries/GacUI/GaclibServices/AzureStorageFacadeLibrary
+		SccLocalPath6 = ..\\..\\..\\Libraries\\GacUI\\GaclibServices\\AzureStorageFacadeLibrary
+		SccProjectUniqueName7 = NestleServices\\NestleSpider\\NestleSpider.csproj
+		SccProjectTopLevelParentUniqueName7 = SimpleHttpServer.sln
+		SccProjectName7 = NestleServices/NestleSpider
+		SccLocalPath7 = NestleServices\\NestleSpider
+		SccProjectUniqueName8 = NestleServices\\NestleSearch\\NestleSearch.csproj
+		SccProjectTopLevelParentUniqueName8 = SimpleHttpServer.sln
+		SccProjectName8 = NestleServices/NestleSearch
+		SccLocalPath8 = NestleServices\\NestleSearch
+		SccProjectUniqueName9 = NestleServices\\NestleDatabase\\NestleDatabase.csproj
+		SccProjectTopLevelParentUniqueName9 = SimpleHttpServer.sln
+		SccProjectName9 = NestleServices/NestleDatabase
+		SccLocalPath9 = NestleServices\\NestleDatabase
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90FDD5BD-20BA-4734-A96A-E2762D9C4F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FDD5BD-20BA-4734-A96A-E2762D9C4F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90FDD5BD-20BA-4734-A96A-E2762D9C4F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90FDD5BD-20BA-4734-A96A-E2762D9C4F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{595ABFE0-A837-4AFF-9F2C-2C63B48DEB00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{595ABFE0-A837-4AFF-9F2C-2C63B48DEB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{595ABFE0-A837-4AFF-9F2C-2C63B48DEB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{595ABFE0-A837-4AFF-9F2C-2C63B48DEB00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52B85518-0424-411D-908F-10830FCCB479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52B85518-0424-411D-908F-10830FCCB479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52B85518-0424-411D-908F-10830FCCB479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52B85518-0424-411D-908F-10830FCCB479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E860176-0645-4E3B-983A-978A434F18BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E860176-0645-4E3B-983A-978A434F18BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E860176-0645-4E3B-983A-978A434F18BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E860176-0645-4E3B-983A-978A434F18BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CF43A4-3524-498D-8CD2-9E76FC009D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CF43A4-3524-498D-8CD2-9E76FC009D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CF43A4-3524-498D-8CD2-9E76FC009D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CF43A4-3524-498D-8CD2-9E76FC009D44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17116ED4-93B7-436F-8A99-B70627E2097A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17116ED4-93B7-436F-8A99-B70627E2097A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17116ED4-93B7-436F-8A99-B70627E2097A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17116ED4-93B7-436F-8A99-B70627E2097A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6BA129D-CF2E-47FC-823B-89E6EF331673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6BA129D-CF2E-47FC-823B-89E6EF331673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6BA129D-CF2E-47FC-823B-89E6EF331673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6BA129D-CF2E-47FC-823B-89E6EF331673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93932148-200F-4CF7-A204-AE88031833B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93932148-200F-4CF7-A204-AE88031833B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93932148-200F-4CF7-A204-AE88031833B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93932148-200F-4CF7-A204-AE88031833B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2F38349-01CA-4627-978D-572FF483F357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2F38349-01CA-4627-978D-572FF483F357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2F38349-01CA-4627-978D-572FF483F357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2F38349-01CA-4627-978D-572FF483F357}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E6BA129D-CF2E-47FC-823B-89E6EF331673} = {434872B7-BB7C-495F-907E-FD380644F972}
+		{93932148-200F-4CF7-A204-AE88031833B4} = {434872B7-BB7C-495F-907E-FD380644F972}
+		{F2F38349-01CA-4627-978D-572FF483F357} = {434872B7-BB7C-495F-907E-FD380644F972}
+	EndGlobalSection
+EndGlobal

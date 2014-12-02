@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <link rel="shortcut icon" href="@Url.Content("~/Content/favicon.ico")"/>
+    <link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/PageStyle.css")" />
+    <link rel="Stylesheet" type="text/css" href="@Url.Content("~/Content/DocStyle.css")" />
+    <title>GacLib - Document - @ViewBag.Title</title>
+</head>
+<body>
+    <table width="100%">
+        <col width="10%"/>
+        <col width="90%"/>
+        <tr>
+            <td class="NavigateHeader" colspan="2" align="left">
+                <a class="LogoLink" href="@Url.Action("Index", "Home")">
+                     <img src="@Url.Content("~/Content/GacLib_LogoAndTitle.gif")" alt="GacLib -- GPU Accelerated C++ User Interface"/>
+                </a>
+            </td>
+        </tr>
+        <tr>
+@RenderBody()
+        </tr>
+    </table>
+</body>
+</html>

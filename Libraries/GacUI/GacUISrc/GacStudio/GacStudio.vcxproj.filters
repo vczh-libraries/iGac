@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Studio">
+      <UniqueIdentifier>{aaa9fcb3-48ea-46ae-9ea6-0b7655c15bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{f572cc54-144f-4ca1-bff2-2268163a25bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\CommandImages">
+      <UniqueIdentifier>{5dc0ce44-f6be-472d-9789-74fc034802ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ProjectImages">
+      <UniqueIdentifier>{95245d7f-7e27-4a0c-b76f-ba9cb4a2691e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\FileImages">
+      <UniqueIdentifier>{43132756-5ca4-4b30-8e92-1596444db029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\UserInterfaces">
+      <UniqueIdentifier>{b8517627-a37e-4522-b250-de6f7807919b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ViewModels">
+      <UniqueIdentifier>{e3bad062-1f39-4ddc-b4bf-5ac80ef5ddec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Public\Source\GacUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Public\Source\GacUIReflection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Public\Source\GacUIWindows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Public\Source\Vlpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\GacStudioUIPartialClasses.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\GsMainWindow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\GsNewProjectWindow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\GsNewFileWindow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Public\Source\VlppWorkflow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\GsAboutWindow.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Studio\StudioModel.cpp">
+      <Filter>Studio</Filter>
+    </ClCompile>
+    <ClCompile Include="Studio\SolutionModel.cpp">
+      <Filter>Studio</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Public\Source\GacUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Public\Source\GacUIReflection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Public\Source\GacUIWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Public\Source\Vlpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GacStudioUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GacStudioUIPartialClasses.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GsMainWindow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GsNewProjectWindow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GsNewFileWindow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Public\Source\VlppWorkflow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\GsAboutWindow.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Studio\StudioModel.h">
+      <Filter>Studio</Filter>
+    </ClInclude>
+    <ClInclude Include="Studio\SolutionModel.h">
+      <Filter>Studio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="UI\Resources.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
+    <Xml Include="UI\CommandImages\Folder.xml">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Xml>
+    <Xml Include="UI\ProjectImages\Folder.xml">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Xml>
+    <Xml Include="UI\FileImages\Folder.xml">
+      <Filter>Resource Files\FileImages</Filter>
+    </Xml>
+    <Xml Include="UI\UserInterfaces\MainWindow.xml">
+      <Filter>Resource Files\UserInterfaces</Filter>
+    </Xml>
+    <Xml Include="UI\UserInterfaces\NewProjectWindow.xml">
+      <Filter>Resource Files\UserInterfaces</Filter>
+    </Xml>
+    <Xml Include="UI\UserInterfaces\NewFileWindow.xml">
+      <Filter>Resource Files\UserInterfaces</Filter>
+    </Xml>
+    <Xml Include="UI\ViewModels\SolutionModel.xml">
+      <Filter>Resource Files\ViewModels</Filter>
+    </Xml>
+    <Xml Include="UI\UserInterfaces\AboutWindow.xml">
+      <Filter>Resource Files\UserInterfaces</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UI\Codegen.bat">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="UI\CommandImages\New.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\CommandImages\Open.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\CommandImages\Save.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\CommandImages\SaveAll.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\CommandImages\NewProject.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\Dialog.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\Parser.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\AllSmall.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\DialogSmall.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\ParserSmall.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Dialog.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Parser.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Image.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Control.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Document.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\RichDocument.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\XmlDocument.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Class.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\Template.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\CommandImages\Gaclib.png">
+      <Filter>Resource Files\CommandImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\DatabaseSmall.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\ProjectImages\Database.png">
+      <Filter>Resource Files\ProjectImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\SQLDatabase.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+    <Image Include="UI\FileImages\GraphDatabase.png">
+      <Filter>Resource Files\FileImages</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

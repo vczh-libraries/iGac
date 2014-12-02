@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<storage>
+  <account>vczhservices</account>
+  <key></key>
+  <container>vczh-services-connection</container>
+  <localDirectory>.\ServiceFolder</localDirectory>
+</storage>

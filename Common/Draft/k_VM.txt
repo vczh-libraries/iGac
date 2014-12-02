@@ -1,0 +1,120 @@
+========================================================
+VM Instructions
+========================================================
+type:
+	i8/i16/i32/i64				// integral
+	u8/u16/u32/u64				// integral
+	f32/f64						// numeric
+	gc_handle/function/pointer/label
+	void						// only for call instructions that indicating there is not return value
+	<user-defined-type>
+
+instruction:
+	name <immediate_1> <immediate-2> ... (stack_arg_1, stack_arg_2, ...)->stack_result
+
+// all instructions that write data to the stack
+// should ensure that the value type of the value
+// that pushed into the stack is defined or inferable
+// gc_checkpoint should only appear when the stack is empty
+// only empty stack state can jump to empty stack state
+// or one-bool stack can jmp to empty stack state conditionally
+
+========================================================
+Data Instructions
+========================================================
+
+push <type> <constant>								// push data to stack
+pop													// pop data from stack
+convert <type>										// convert the top value
+copy ()->value										// copy the top value and push
+address_var <var-name> ()->pointer					// get the address of a variable
+address_static_var <var-name> ()->pointer			// get the address of a global variable
+address_data ()->pointer							// get the address of the global data buffer
+address_const ()->pointer							// get the address of the constant data buffer
+address_label <func-name> <var-name> ()->pointer	// get the address
+ptr_read <type> (pointer)->data
+ptr_write (pointer, data)
+ptr_move <type> (dst, src)
+ptr_copy (dst, src, size)
+ptr_alloc (size)->pointer
+ptr_free (pointer)
+
+========================================================
+Arithmetic Instructions
+========================================================
+
+bit: (op1, op2)->result				// type should be the same
+	and, or, xor, not
+integral: (op1, op2)->result		// type should be the same
+	mod, shl, shr
+numeric: (op1, op2)->result			// type should be the same
+	add, sub, mul, div
+compare: (op1, op2)->bool			// type should be the same
+	// for numeric/char/pointer
+	lt, gt, le, ge, eq, ne
+
+========================================================
+Jumping Instructions
+========================================================
+
+jump <label>
+jump_virtual (label)
+jump_if <label> (bool-value)
+jump_if_virtual (bool-value, label)
+call <function> <argument-count> ()->return_value?
+call_virtual <return-type> <argument-count> (function)->return_value?
+
+========================================================
+GC Instructions
+========================================================
+
+// pin and unpin manage a counter
+
+gc_deref (handle)->pointer
+gc_deref_array (handle, item-index)->pointer
+gc_pin (handle)
+gc_unpin (handle)
+gc_alloc <table>->handle
+gc_alloc_repeat <repeat-type> (repeat-count)->handle
+gc_length (handle)->u64
+gc_checkpoint
+
+========================================================
+Exception Instructions
+========================================================
+
+ex_get ()->handle		// push the current exception to the stack
+ex_throw (handle)		// find the nearest trap and execute
+ex_trap (label)			// push a trap label pointing to the catch statement
+ex_untrap				// pop a trap label
+ex_rethrow				// find the nearest trap and execute without replacing the exception
+
+========================================================
+Structure
+========================================================
+
+struct UserDefinedType
+	field : <type>
+	field2 : <type>
+end
+
+repeat UserDefinedType
+	header : <type>
+	repeat : <type>
+end
+
+var GlobalVariable : <type>
+
+func UserDefinedFunction : <type>
+	arg1 : <type>
+	arg2 : <type>
+var
+	var1 : <type>
+	var2 : <type>
+begin
+	<instruction>
+end
+
+========================================================
+Binary Structure
+========================================================
