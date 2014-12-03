@@ -8,7 +8,7 @@
 
 #include "CocoaScreenService.h"
 
-#include "../AppleHelper.h"
+#include "../CocoaHelper.h"
 #include "../CocoaWindow.h"
 
 namespace vl {

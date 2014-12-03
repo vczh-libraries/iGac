@@ -14,7 +14,7 @@
 // _NSGetProgname
 #import <crt_externs.h>
 
-#include "AppleHelper.h"
+#include "CocoaHelper.h"
 
 @interface CocoaWindowDelegate : NSObject<NSWindowDelegate>
 
@@ -51,6 +51,11 @@
 - (void)windowDidExitFullScreen:(NSNotification *)notification
 {
     _sizeState = vl::presentation::INativeWindow::Restored;
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+    
 }
 
 @end
@@ -98,10 +103,6 @@ namespace vl {
                 NSWindowController* controller = [[NSWindowController alloc] initWithWindow:window];
                 [window orderFrontRegardless];
                 
-                
-                CocoaRootView* rootView = [[CocoaRootView alloc] init];
-                [window setContentView:rootView];
-              
                 [window setAcceptsMouseMovedEvents:YES];
                 [window setLevel:NSMainMenuWindowLevel + 1];
                 
@@ -116,8 +117,12 @@ namespace vl {
                 nativeContainer->window = window;
                 nativeContainer->controller = controller;
                 
-                CocoaWindowDelegate* delegate = [[CocoaWindowDelegate alloc] init];
-                [window setDelegate:delegate];
+                
+                nativeContainer->rootView = [[CocoaRootView alloc] init];
+                [window setContentView:nativeContainer->rootView];
+                
+                nativeContainer->delegate = [[CocoaWindowDelegate alloc] init];
+                [window setDelegate:nativeContainer->delegate];
             }
 
             Rect CocoaWindow::GetBounds()

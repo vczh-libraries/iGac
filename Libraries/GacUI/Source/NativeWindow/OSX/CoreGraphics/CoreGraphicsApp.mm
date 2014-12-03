@@ -8,7 +8,7 @@
 
 #include "CoreGraphicsApp.h"
 
-#include "../OSXNativeController.h"
+#include "../CocoaNativeController.h"
 
 using namespace vl;
 using namespace vl::presentation;

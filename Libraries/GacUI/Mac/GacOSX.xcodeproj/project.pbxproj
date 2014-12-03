@@ -67,10 +67,10 @@
 		884BAC451A2ED9D1007DF242 /* GuiGraphicsResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8B91A2ED9D0007DF242 /* GuiGraphicsResourceManager.cpp */; };
 		884BAC461A2ED9D1007DF242 /* GuiGraphicsTextElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8BB1A2ED9D0007DF242 /* GuiGraphicsTextElement.cpp */; };
 		884BAC4E1A2ED9D1007DF242 /* GuiNativeWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8D01A2ED9D0007DF242 /* GuiNativeWindow.cpp */; };
-		884BAC4F1A2ED9D1007DF242 /* AppleHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8D41A2ED9D0007DF242 /* AppleHelper.mm */; };
+		884BAC4F1A2ED9D1007DF242 /* CocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8D41A2ED9D0007DF242 /* CocoaHelper.mm */; };
 		884BAC501A2ED9D1007DF242 /* CocoaWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8D61A2ED9D0007DF242 /* CocoaWindow.mm */; };
 		884BAC511A2ED9D1007DF242 /* CoreGraphicsApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8D81A2ED9D0007DF242 /* CoreGraphicsApp.mm */; };
-		884BAC521A2ED9D1007DF242 /* OSXNativeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8DB1A2ED9D0007DF242 /* OSXNativeController.mm */; };
+		884BAC521A2ED9D1007DF242 /* CocoaNativeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8DB1A2ED9D0007DF242 /* CocoaNativeController.mm */; };
 		884BAC531A2ED9D1007DF242 /* CocoaCallbackService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8DE1A2ED9D0007DF242 /* CocoaCallbackService.mm */; };
 		884BAC541A2ED9D1007DF242 /* CocoaInputService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8E01A2ED9D0007DF242 /* CocoaInputService.mm */; };
 		884BAC551A2ED9D1007DF242 /* CocoaResourceService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BA8E21A2ED9D0007DF242 /* CocoaResourceService.mm */; };
@@ -314,14 +314,14 @@
 		884BA8CE1A2ED9D0007DF242 /* makefile.gacui.makegen */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = makefile.gacui.makegen; sourceTree = "<group>"; };
 		884BA8D01A2ED9D0007DF242 /* GuiNativeWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiNativeWindow.cpp; sourceTree = "<group>"; };
 		884BA8D11A2ED9D0007DF242 /* GuiNativeWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiNativeWindow.h; sourceTree = "<group>"; };
-		884BA8D31A2ED9D0007DF242 /* AppleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleHelper.h; sourceTree = "<group>"; };
-		884BA8D41A2ED9D0007DF242 /* AppleHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppleHelper.mm; sourceTree = "<group>"; };
+		884BA8D31A2ED9D0007DF242 /* CocoaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaHelper.h; sourceTree = "<group>"; };
+		884BA8D41A2ED9D0007DF242 /* CocoaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaHelper.mm; sourceTree = "<group>"; };
 		884BA8D51A2ED9D0007DF242 /* CocoaWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWindow.h; sourceTree = "<group>"; };
 		884BA8D61A2ED9D0007DF242 /* CocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaWindow.mm; sourceTree = "<group>"; };
 		884BA8D81A2ED9D0007DF242 /* CoreGraphicsApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreGraphicsApp.mm; sourceTree = "<group>"; };
 		884BA8D91A2ED9D0007DF242 /* CoreGraphicsApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreGraphicsApp.h; sourceTree = "<group>"; };
-		884BA8DA1A2ED9D0007DF242 /* OSXNativeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXNativeController.h; sourceTree = "<group>"; };
-		884BA8DB1A2ED9D0007DF242 /* OSXNativeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXNativeController.mm; sourceTree = "<group>"; };
+		884BA8DA1A2ED9D0007DF242 /* CocoaNativeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaNativeController.h; sourceTree = "<group>"; };
+		884BA8DB1A2ED9D0007DF242 /* CocoaNativeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaNativeController.mm; sourceTree = "<group>"; };
 		884BA8DC1A2ED9D0007DF242 /* OSXPredef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXPredef.h; sourceTree = "<group>"; };
 		884BA8DE1A2ED9D0007DF242 /* CocoaCallbackService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaCallbackService.mm; sourceTree = "<group>"; };
 		884BA8DF1A2ED9D0007DF242 /* CocoaCallbackService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCallbackService.h; sourceTree = "<group>"; };
@@ -822,10 +822,10 @@
 			isa = PBXGroup;
 			children = (
 				884BA8DC1A2ED9D0007DF242 /* OSXPredef.h */,
-				884BA8D31A2ED9D0007DF242 /* AppleHelper.h */,
-				884BA8D41A2ED9D0007DF242 /* AppleHelper.mm */,
-				884BA8DA1A2ED9D0007DF242 /* OSXNativeController.h */,
-				884BA8DB1A2ED9D0007DF242 /* OSXNativeController.mm */,
+				884BA8D31A2ED9D0007DF242 /* CocoaHelper.h */,
+				884BA8D41A2ED9D0007DF242 /* CocoaHelper.mm */,
+				884BA8DA1A2ED9D0007DF242 /* CocoaNativeController.h */,
+				884BA8DB1A2ED9D0007DF242 /* CocoaNativeController.mm */,
 				884BA8D51A2ED9D0007DF242 /* CocoaWindow.h */,
 				884BA8D61A2ED9D0007DF242 /* CocoaWindow.mm */,
 				884BA8D71A2ED9D0007DF242 /* CoreGraphics */,
@@ -1322,7 +1322,7 @@
 				884BAC531A2ED9D1007DF242 /* CocoaCallbackService.mm in Sources */,
 				884BAC101A2ED9D1007DF242 /* GuiWindowControls.cpp in Sources */,
 				884BAC311A2ED9D1007DF242 /* GuiTextAutoComplete.cpp in Sources */,
-				884BAC4F1A2ED9D1007DF242 /* AppleHelper.mm in Sources */,
+				884BAC4F1A2ED9D1007DF242 /* CocoaHelper.mm in Sources */,
 				884BAC7B1A2ED9D1007DF242 /* GuiResourceTypeResolvers.cpp in Sources */,
 				884BAC261A2ED9D1007DF242 /* GuiWin8ButtonStyles.cpp in Sources */,
 				884BAF211A2ED9D7007DF242 /* Parsing.cpp in Sources */,
@@ -1385,7 +1385,7 @@
 				884BAF471A2ED9D7007DF242 /* Threading.cpp in Sources */,
 				884BAC741A2ED9D1007DF242 /* GuiReflectionTemplates.cpp in Sources */,
 				884BAF1C1A2ED9D7007DF242 /* GlobalStorage.cpp in Sources */,
-				884BAC521A2ED9D1007DF242 /* OSXNativeController.mm in Sources */,
+				884BAC521A2ED9D1007DF242 /* CocoaNativeController.mm in Sources */,
 				884BAC321A2ED9D1007DF242 /* GuiTextColorizer.cpp in Sources */,
 				884BAC891A2ED9D1007DF242 /* WfAnalyzer_ValidateStructure.cpp in Sources */,
 				884BAC441A2ED9D1007DF242 /* GuiGraphicsHost.cpp in Sources */,
@@ -1470,7 +1470,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -1505,7 +1505,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
