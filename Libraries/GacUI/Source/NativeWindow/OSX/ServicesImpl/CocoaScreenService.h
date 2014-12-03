@@ -11,7 +11,7 @@
 
 #include "../../GuiNativeWindow.h"
 
-#include <Cocoa/Cocoa.h>
+#import <Cocoa/Cocoa.h>
 
 namespace vl {
     

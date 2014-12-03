@@ -19,15 +19,15 @@ namespace vl {
         
         namespace osx {
             
-            class CocoaNativeWindow;
+            class CocoaWindow;
             
-            class CocoaNativeWindow : public Object, public INativeWindow
+            class CocoaWindow : public Object, public INativeWindow
             {
             protected:
                 NSContainer* nativeContainer;
                 
                 Point                                           caretPoint;
-                CocoaNativeWindow*                              parentWindow;
+                CocoaWindow*                              parentWindow;
                 bool                                            alwaysPassFocusToParent;
                 collections::List<INativeWindowListener*>       listeners;
                 vint                                            mouseLastX;
@@ -42,8 +42,8 @@ namespace vl {
                 void _CreateWindow();
                 
             public:
-                CocoaNativeWindow();
-                virtual ~CocoaNativeWindow();
+                CocoaWindow();
+                virtual ~CocoaWindow();
                 
                 NSContainer* GetNativeContainer() const;
                 

@@ -6,23 +6,23 @@
 //  Copyright (c) 2014 Robert Bu. All rights reserved.
 //
 
-#include "OSXNativeWindow.h"
+#include "CocoaWindow.h"
 
-#include <Cocoa/Cocoa.h>
-#include <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 // _NSGetProgname
-#include <crt_externs.h>
+#import <crt_externs.h>
 
 #include "AppleHelper.h"
 
-@interface OSXWindowDelegate : NSObject<NSWindowDelegate>
+@interface CocoaWindowDelegate : NSObject<NSWindowDelegate>
 
 @property (nonatomic, readonly) vl::presentation::INativeWindow::WindowSizeState sizeState;
 
 @end
 
-@implementation OSXWindowDelegate
+@implementation CocoaWindowDelegate
 
 - (id)init
 {
@@ -55,19 +55,28 @@
 
 @end
 
+
+@interface CocoaRootView: NSView
+
+@end
+
+@implementation CocoaRootView
+
+@end
+
 namespace vl {
     
     namespace presentation {
         
         namespace osx {
             
-            CocoaNativeWindow::CocoaNativeWindow():
+            CocoaWindow::CocoaWindow():
                 nativeContainer(0)
             {
                 _CreateWindow();
             }
             
-            CocoaNativeWindow::~CocoaNativeWindow()
+            CocoaWindow::~CocoaWindow()
             {
                 if(nativeContainer)
                 {
@@ -76,7 +85,7 @@ namespace vl {
                 }
             }
             
-            void CocoaNativeWindow::_CreateWindow()
+            void CocoaWindow::_CreateWindow()
             {
                 NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
                 
@@ -88,18 +97,30 @@ namespace vl {
                                                                    defer:NO];
                 NSWindowController* controller = [[NSWindowController alloc] initWithWindow:window];
                 [window orderFrontRegardless];
+                
+                
+                CocoaRootView* rootView = [[CocoaRootView alloc] init];
+                [window setContentView:rootView];
               
                 [window setAcceptsMouseMovedEvents:YES];
+                [window setLevel:NSMainMenuWindowLevel + 1];
+                
+                // hide on diactivate
+                //[window setHidesOnDeactivate:YES];
+                
+                // disable auto restore...
+                // which actually sucks for our usage
+                [window setRestorable:NO];
                 
                 nativeContainer = new NSContainer();
                 nativeContainer->window = window;
                 nativeContainer->controller = controller;
                 
-                OSXWindowDelegate* delegate = [[OSXWindowDelegate alloc] init];
+                CocoaWindowDelegate* delegate = [[CocoaWindowDelegate alloc] init];
                 [window setDelegate:delegate];
             }
 
-            Rect CocoaNativeWindow::GetBounds()
+            Rect CocoaWindow::GetBounds()
             {
                 NSRect nsbounds = [nativeContainer->window frame];
                 
@@ -108,24 +129,25 @@ namespace vl {
                             nsbounds.origin.y - nsbounds.size.height,
                             nsbounds.size.width + nsbounds.origin.x,
                             nsbounds.origin.y);
-                
             }
 
-            void CocoaNativeWindow::SetBounds(const Rect& bounds) 
+            void CocoaWindow::SetBounds(const Rect& bounds) 
             {
                 NSRect nsbounds = NSMakeRect(bounds.Left(),
                                              bounds.Bottom(),
                                              bounds.Width(),
                                              bounds.Height());
                 [nativeContainer->window setFrame:nsbounds display:YES];
+                
+                Show();
             }
 
-            Size CocoaNativeWindow::GetClientSize() 
+            Size CocoaWindow::GetClientSize() 
             {
                 return GetClientBoundsInScreen().GetSize();
             }
 
-            void CocoaNativeWindow::SetClientSize(Size size) 
+            void CocoaWindow::SetClientSize(Size size) 
             {
                 NSRect nsbounds = [nativeContainer->window frame];
                 nsbounds.size.width = size.x;
@@ -134,7 +156,7 @@ namespace vl {
                 [nativeContainer->window setFrame:nsbounds display:YES];
             }
 
-            Rect CocoaNativeWindow::GetClientBoundsInScreen() 
+            Rect CocoaWindow::GetClientBoundsInScreen() 
             {
                 NSRect clientBounds = [[nativeContainer->window contentView] bounds];
                 NSRect nsbounds = [nativeContainer->window frame];
@@ -145,46 +167,46 @@ namespace vl {
                             nsbounds.origin.y + clientBounds.origin.y);
             }
 
-            WString CocoaNativeWindow::GetTitle() 
+            WString CocoaWindow::GetTitle() 
             {
                 NSString* title = [nativeContainer->window title];
                 return NSStringToWString(title);
             }
 
-            void CocoaNativeWindow::SetTitle(WString title) 
+            void CocoaWindow::SetTitle(WString title) 
             {
                 [nativeContainer->window setTitle:WStringToNSString(title)];
             }
 
-            INativeCursor* CocoaNativeWindow::GetWindowCursor() 
+            INativeCursor* CocoaWindow::GetWindowCursor() 
             {
                 return 0;
             }
 
-            void CocoaNativeWindow::SetWindowCursor(INativeCursor* cursor) 
+            void CocoaWindow::SetWindowCursor(INativeCursor* cursor) 
             {
                 // todo
             }
 
-            Point CocoaNativeWindow::GetCaretPoint()
+            Point CocoaWindow::GetCaretPoint()
             {
                 return caretPoint;
             }
             
-            void CocoaNativeWindow::SetCaretPoint(Point point)
+            void CocoaWindow::SetCaretPoint(Point point)
             {
                 caretPoint = point;
                 // todo
             }
 
-            INativeWindow* CocoaNativeWindow::GetParent() 
+            INativeWindow* CocoaWindow::GetParent() 
             {
                 return parentWindow;
             }
 
-            void CocoaNativeWindow::SetParent(INativeWindow* parent) 
+            void CocoaWindow::SetParent(INativeWindow* parent) 
             {
-                parentWindow = dynamic_cast<CocoaNativeWindow*>(parent);
+                parentWindow = dynamic_cast<CocoaWindow*>(parent);
                 if(parentWindow)
                 {
                     [nativeContainer->window setParentWindow:0];
@@ -195,78 +217,79 @@ namespace vl {
                 }
             }
 
-            bool CocoaNativeWindow::GetAlwaysPassFocusToParent() 
+            bool CocoaWindow::GetAlwaysPassFocusToParent() 
             {
                 return alwaysPassFocusToParent;
             }
 
-            void CocoaNativeWindow::SetAlwaysPassFocusToParent(bool value) 
+            void CocoaWindow::SetAlwaysPassFocusToParent(bool value) 
             {
                 alwaysPassFocusToParent = value;
             }
 
-            void CocoaNativeWindow::EnableCustomFrameMode() 
+            void CocoaWindow::EnableCustomFrameMode() 
             {
                 customFrameMode = true;
             }
 
-            void CocoaNativeWindow::DisableCustomFrameMode() 
+            void CocoaWindow::DisableCustomFrameMode() 
             {
                 customFrameMode = false;
             }
 
-            bool CocoaNativeWindow::IsCustomFrameModeEnabled() 
+            bool CocoaWindow::IsCustomFrameModeEnabled() 
             {
                 return customFrameMode;
             }
 
-            INativeWindow::WindowSizeState CocoaNativeWindow::GetSizeState()
+            INativeWindow::WindowSizeState CocoaWindow::GetSizeState()
             {
-                OSXWindowDelegate* delegate = (OSXWindowDelegate*)[nativeContainer->window delegate];
+                CocoaWindowDelegate* delegate = (CocoaWindowDelegate*)[nativeContainer->window delegate];
                 return [delegate sizeState];
             }
 
-            void CocoaNativeWindow::Show() 
+            void CocoaWindow::Show() 
             {
                 // todo
                 [nativeContainer->controller showWindow:nil];
                 [nativeContainer->window makeKeyAndOrderFront:nil];
             }
 
-            void CocoaNativeWindow::ShowDeactivated() 
+            void CocoaWindow::ShowDeactivated() 
             {
                 // todo
             }
 
-            void CocoaNativeWindow::ShowRestored() 
+            void CocoaWindow::ShowRestored() 
             {
                 // todo
             }
 
-            void CocoaNativeWindow::ShowMaximized() 
+            void CocoaWindow::ShowMaximized() 
             {
                 // todo
                 [nativeContainer->window toggleFullScreen:nil];
             }
 
-            void CocoaNativeWindow::ShowMinimized() 
+            void CocoaWindow::ShowMinimized() 
             {
                 [nativeContainer->window miniaturize:nil];
             }
 
-            void CocoaNativeWindow::Hide() 
+            void CocoaWindow::Hide() 
             {
                 // todo
                 // there's no "hide" status in OSX
                 // or maybe just make the bounds (0,0,0,0)
+                [nativeContainer->window orderOut:nil];
             }
 
-            bool CocoaNativeWindow::IsVisible() 
+            bool CocoaWindow::IsVisible() 
             {
                 return [nativeContainer->window isVisible];
             }
 
-            void CocoaNativeWindow::Enable() 
+            void CocoaWindow::Enable() 
             {
                 // todo
                 [nativeContainer->window makeKeyWindow];
@@ -274,7 +297,7 @@ namespace vl {
                 enabled = true;
             }
 
-            void CocoaNativeWindow::Disable() 
+            void CocoaWindow::Disable() 
             {
                 // todo
                 [nativeContainer->window orderOut:nil];
@@ -282,85 +305,84 @@ namespace vl {
                 enabled = false;
             }
 
-            bool CocoaNativeWindow::IsEnabled() 
+            bool CocoaWindow::IsEnabled() 
             {
                 return enabled;
             }
 
-            void CocoaNativeWindow::SetFocus() 
+            void CocoaWindow::SetFocus() 
             {
                 [nativeContainer->window makeKeyWindow];
             }
 
-            bool CocoaNativeWindow::IsFocused() 
+            bool CocoaWindow::IsFocused() 
             {
                 return [nativeContainer->window isKeyWindow];
             }
 
-            void CocoaNativeWindow::SetActivate() 
+            void CocoaWindow::SetActivate() 
             {
                 [nativeContainer->window makeKeyAndOrderFront:nil];
             }
 
-            bool CocoaNativeWindow::IsActivated() 
+            bool CocoaWindow::IsActivated() 
             {
                 // todo
                 return [nativeContainer->window isKeyWindow];
             }
 
-            void CocoaNativeWindow::ShowInTaskBar() 
+            void CocoaWindow::ShowInTaskBar() 
             {
-                // not configurable in runtime
+                // not configurable at runtime
             }
 
-            void CocoaNativeWindow::HideInTaskBar() 
+            void CocoaWindow::HideInTaskBar() 
             {
-                // not configurable in runtime
+                // not configurable at runtime
             }
 
-            bool CocoaNativeWindow::IsAppearedInTaskBar() 
-            {
-                return true;
-            }
-
-            void CocoaNativeWindow::EnableActivate() 
-            {
-                // not configurable
-            }
-
-            void CocoaNativeWindow::DisableActivate() 
-            {
-                // not configurable
-            }
-
-            bool CocoaNativeWindow::IsEnabledActivate() 
+            bool CocoaWindow::IsAppearedInTaskBar() 
             {
                 return true;
             }
 
+            void CocoaWindow::EnableActivate() 
+            {
+                // not configurable
+            }
+
+            void CocoaWindow::DisableActivate() 
+            {
+                // not configurable
+            }
+
+            bool CocoaWindow::IsEnabledActivate() 
+            {
+                return true;
+            }
             
-            bool CocoaNativeWindow::RequireCapture() 
+            bool CocoaWindow::RequireCapture() 
             {
                 return true;
             }
 
-            bool CocoaNativeWindow::ReleaseCapture() 
+            bool CocoaWindow::ReleaseCapture() 
             {
                 return true;
             }
 
-            bool CocoaNativeWindow::IsCapturing() 
+            bool CocoaWindow::IsCapturing() 
             {
                 return true;
             }
 
-            bool CocoaNativeWindow::GetMaximizedBox() 
+            bool CocoaWindow::GetMaximizedBox() 
             {
                 NSWindowCollectionBehavior behavior = [nativeContainer->window collectionBehavior];
                 return behavior & NSWindowCollectionBehaviorFullScreenPrimary;
             }
 
-            void CocoaNativeWindow::SetMaximizedBox(bool visible) 
+            void CocoaWindow::SetMaximizedBox(bool visible) 
             {
                 NSWindowCollectionBehavior behavior = [nativeContainer->window collectionBehavior];
                 if(visible)
@@ -370,13 +392,13 @@ namespace vl {
                 [nativeContainer->window setCollectionBehavior:behavior];
             }
 
-            bool CocoaNativeWindow::GetMinimizedBox() 
+            bool CocoaWindow::GetMinimizedBox() 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 return styleMask & NSMiniaturizableWindowMask;
             }
 
-            void CocoaNativeWindow::SetMinimizedBox(bool visible) 
+            void CocoaWindow::SetMinimizedBox(bool visible) 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 if(visible)
@@ -386,13 +408,13 @@ namespace vl {
                 [nativeContainer->window setStyleMask:styleMask];
             }
 
-            bool CocoaNativeWindow::GetBorder() 
+            bool CocoaWindow::GetBorder() 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 return !(styleMask & NSBorderlessWindowMask);
             }
 
-            void CocoaNativeWindow::SetBorder(bool visible) 
+            void CocoaWindow::SetBorder(bool visible) 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 if(visible)
@@ -402,13 +424,13 @@ namespace vl {
                 [nativeContainer->window setStyleMask:styleMask];
             }
 
-            bool CocoaNativeWindow::GetSizeBox() 
+            bool CocoaWindow::GetSizeBox() 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 return styleMask & NSResizableWindowMask;
             }
 
-            void CocoaNativeWindow::SetSizeBox(bool visible) 
+            void CocoaWindow::SetSizeBox(bool visible) 
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 if(visible)
@@ -418,43 +440,43 @@ namespace vl {
                 [nativeContainer->window setStyleMask:styleMask];
             }
 
-            bool CocoaNativeWindow::GetIconVisible() 
+            bool CocoaWindow::GetIconVisible() 
             {
                 // no such thing
                 return false;
             }
 
-            void CocoaNativeWindow::SetIconVisible(bool visible) 
+            void CocoaWindow::SetIconVisible(bool visible) 
             {
                 (void)visible;
             }
 
-            bool CocoaNativeWindow::GetTitleBar() 
+            bool CocoaWindow::GetTitleBar() 
             {
                 return GetBorder();
             }
 
-            void CocoaNativeWindow::SetTitleBar(bool visible) 
+            void CocoaWindow::SetTitleBar(bool visible) 
             {
                 SetBorder(visible);
             }
 
-            bool CocoaNativeWindow::GetTopMost() 
+            bool CocoaWindow::GetTopMost() 
             {
                 return [nativeContainer->window isKeyWindow];
             }
 
-            void CocoaNativeWindow::SetTopMost(bool topmost) 
+            void CocoaWindow::SetTopMost(bool topmost) 
             {
                 [nativeContainer->window makeKeyAndOrderFront:nil];
             }
 
-            void CocoaNativeWindow::SupressAlt()
+            void CocoaWindow::SupressAlt()
             {
                 
             }
 
-            bool CocoaNativeWindow::InstallListener(INativeWindowListener* listener) 
+            bool CocoaWindow::InstallListener(INativeWindowListener* listener) 
             {
                 if(listeners.Contains(listener))
                 {
@@ -467,7 +489,7 @@ namespace vl {
                 }
             }
 
-            bool CocoaNativeWindow::UninstallListener(INativeWindowListener* listener) 
+            bool CocoaWindow::UninstallListener(INativeWindowListener* listener) 
             {
                 if(listeners.Contains(listener))
                 {
@@ -480,12 +502,12 @@ namespace vl {
                 }
             }
 
-            void CocoaNativeWindow::RedrawContent() 
+            void CocoaWindow::RedrawContent() 
             {
                 [nativeContainer->window display];
             }
 
-            NSContainer* CocoaNativeWindow::GetNativeContainer() const
+            NSContainer* CocoaWindow::GetNativeContainer() const
             {
                 return nativeContainer;
             }

@@ -5,22 +5,18 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>0BBE65E6-EE15-414F-A9D1-9B647F802764</string>
+	<string>703672CA-A488-43E1-9359-054B9C046CEC</string>
 	<key>IDESourceControlProjectName</key>
-	<string>GacTest</string>
+	<string>GacOSX</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2327b42d-5241-43d6-9e2a-de5ac946f064</key>
-		<string>https://gac.svn.codeplex.com/svn</string>
 		<key>4BCB2F5800075511265333839288D34D1089DD90</key>
 		<string>https://github.com/darkfall/Gaclib_OSX.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Libraries/GacUI/Mac/GacTest.xcodeproj</string>
+	<string>Libraries/GacUI/Mac/GacOSX.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2327b42d-5241-43d6-9e2a-de5ac946f064</key>
-		<string>../../../../../../svn</string>
 		<key>4BCB2F5800075511265333839288D34D1089DD90</key>
 		<string>../../../../..</string>
 	</dict>
@@ -39,14 +35,6 @@
 			<string>4BCB2F5800075511265333839288D34D1089DD90</string>
 			<key>IDESourceControlWCCName</key>
 			<string>gac</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2327b42d-5241-43d6-9e2a-de5ac946f064</string>
-			<key>IDESourceControlWCCName</key>
-			<string>svn</string>
 		</dict>
 	</array>
 </dict>

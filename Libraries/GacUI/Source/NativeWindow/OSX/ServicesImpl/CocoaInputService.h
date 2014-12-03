@@ -11,6 +11,8 @@
 
 #include "../../GuiNativeWindow.h"
 
+#import <Quartz/Quartz.h>
+
 namespace vl {
     
     namespace presentation {
@@ -24,6 +26,8 @@ namespace vl {
             protected:
                 collections::Dictionary<WString, vint> keys;
                 collections::Array<WString> keyNames;
+                
+                CGEventSourceRef eventSource;
                 
             public:
                 CocoaInputService();

@@ -9,7 +9,7 @@
 #include "CocoaScreenService.h"
 
 #include "../AppleHelper.h"
-#include "../OSXNativeWindow.h"
+#include "../CocoaWindow.h"
 
 namespace vl {
     
@@ -75,7 +75,7 @@ namespace vl {
             
             INativeScreen* CocoaScreenService::GetScreen(INativeWindow* window)
             {
-                CocoaNativeWindow* wnd = dynamic_cast<CocoaNativeWindow*>(window);
+                CocoaWindow* wnd = dynamic_cast<CocoaWindow*>(window);
                 if(wnd)
                 {
                     NSContainer* container = wnd->GetNativeContainer();

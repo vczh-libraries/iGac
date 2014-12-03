@@ -8,7 +8,7 @@
 
 #include "OSXNativeController.h"
 
-#include "OSXNativeWindow.h"
+#include "CocoaWindow.h"
 #include "AppleHelper.h"
 
 #include "ServicesImpl/CocoaInputService.h"
@@ -17,6 +17,14 @@
 #include "ServicesImpl/CocoaResourceService.h"
 
 #include <Cocoa/Cocoa.h>
+
+
+@interface CocoaApplicationDelegate: NSObject<NSApplicationDelegate>
+
+
+
+@end
+
 
 namespace vl {
     
@@ -29,7 +37,7 @@ namespace vl {
             class OSXController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
             protected:
-                Dictionary<NSContainer*, CocoaNativeWindow*>		windows;
+                Dictionary<NSContainer*, CocoaWindow*>		windows;
                 INativeWindow*                                      mainWindow;
                 
                 CocoaCallbackService    callbackService;
@@ -53,7 +61,7 @@ namespace vl {
                 
                 INativeWindow* CreateNativeWindow()
                 {
-                    CocoaNativeWindow* window = new CocoaNativeWindow();
+                    CocoaWindow* window = new CocoaWindow();
                     callbackService.InvokeNativeWindowCreated(window);
                     windows.Add(window->GetNativeContainer(), window);
                     return window;
@@ -61,7 +69,7 @@ namespace vl {
                 
                 void DestroyNativeWindow(INativeWindow* window)
                 {
-                    CocoaNativeWindow* cocoaWindow = dynamic_cast<CocoaNativeWindow*>(window);
+                    CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
                     if(window != 0 && windows.Keys().Contains(cocoaWindow->GetNativeContainer()))
                     {
                         callbackService.InvokeNativeWindowDestroyed(window);
@@ -81,19 +89,18 @@ namespace vl {
                     mainWindow->Show();
                     
                     // todo
-                    while(true)
+                    for (;;)
                     {
-                        for (;;)
+                        NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
+                                                            untilDate:[NSDate distantPast]
+                                                               inMode:NSDefaultRunLoopMode
+                                                              dequeue:YES];
+                        if (event != nil)
                         {
-                            NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
-                                                                untilDate:[NSDate distantPast]
-                                                                   inMode:NSDefaultRunLoopMode
-                                                                  dequeue:YES];
-                            if (event == nil)
-                                break;
-                            
                             [NSApp sendEvent:event];
-                            
+                        }
+                        else
+                        {
                             sleep(1);
                         }
                     }

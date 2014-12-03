@@ -56,7 +56,7 @@ namespace vl {
                 //                    renderTargets.Remove(renderTarget);
             }
     
-        
+            
 #define IMPLEMENT_ELEMENT_RENDERER(TRENDERER)\
     TRENDERER::TRENDERER()\
     {\

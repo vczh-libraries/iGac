@@ -10,7 +10,6 @@
 
 #include "../OSXNativeController.h"
 
-
 using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::osx;

@@ -12,17 +12,14 @@
 // for use with bridge files only
 // contains objc headers
 
-#include <Foundation/Foundation.h>
-
-#include "TargetConditionals.h"
-#include <Availability.h>
-
-#include "../../GuiTypes.h"
+#import <Foundation/Foundation.h>
+#import "TargetConditionals.h"
+#import <Availability.h>
 
 #if defined(TARGET_OS_MAC) && TARGET_OS_MAC == 1 && TARGET_IPHONE_SIMULATOR == 0
 
 #define GAC_OS_OSX
-#include <Cocoa/Cocoa.h>
+#import <Cocoa/Cocoa.h>
 
 #endif
 
@@ -32,7 +29,7 @@
 
 #endif
 
-
+#include "../../GuiTypes.h"
 #include "OSXPredef.h"
 
 namespace vl {
@@ -53,10 +50,10 @@ namespace vl {
 #ifdef GAC_OS_OSX
             
             void SetupOSXApplication();
-            void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, int bpp));
+            void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
-            NSString* WStringToNSString(const WString& str);
-            WString NSStringToWString(NSString* str);
+            NSString*   WStringToNSString(const WString& str);
+            WString     NSStringToWString(NSString* str);
             
             struct NSContainer
             {

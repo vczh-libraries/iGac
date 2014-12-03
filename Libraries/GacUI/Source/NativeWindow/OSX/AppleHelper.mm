@@ -84,7 +84,7 @@ namespace vl {
 #ifdef GAC_OS_OSX
             
             
-            void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, int bpp))
+            void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp))
             {
                 CGDisplayModeRef cgmode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
                 
@@ -126,7 +126,7 @@ namespace vl {
                     
                     callback((unsigned int)CGDisplayModeGetWidth(cgmode),
                              (unsigned int)CGDisplayModeGetHeight(cgmode),
-                             bpp);
+                             (unsigned int)bpp);
                 }
                 CFRelease(modes);
             }
@@ -169,7 +169,8 @@ namespace vl {
                 NSMenu* bar = [[NSMenu alloc] init];
                 [NSApp setMainMenu:bar];
                 
-                NSMenuItem* appMenuItem = [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+                NSMenuItem* appMenuItem =
+                [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
                 NSMenu* appMenu = [[NSMenu alloc] init];
                 [appMenuItem setSubmenu:appMenu];
                 
@@ -215,6 +216,16 @@ namespace vl {
                                       action:@selector(arrangeInFront:)
                                keyEquivalent:@""];
                 
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+                if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+                {
+                    [windowMenu addItem:[NSMenuItem separatorItem]];
+                    [[windowMenu addItemWithTitle:@"Enter Full Screen"
+                                           action:@selector(toggleFullScreen:)
+                                    keyEquivalent:@"f"]
+                     setKeyEquivalentModifierMask:NSControlKeyMask | NSCommandKeyMask];
+                }
+#endif
                 
                 // Prior to Snow Leopard, we need to use this oddly-named semi-private API
                 // to get the application menu working properly.
@@ -225,8 +236,11 @@ namespace vl {
             void SetupOSXApplication()
             {
                 [NSApplication sharedApplication];
+                
+                CreateMenuBar();
+                
                 [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-               // CreateMenuBar();
+                [NSApp finishLaunching];
             }
 #endif
             

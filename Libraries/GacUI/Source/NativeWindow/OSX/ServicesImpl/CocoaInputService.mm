@@ -17,6 +17,10 @@ namespace vl {
             CocoaInputService::CocoaInputService()
             {
                 InitializeKeyMapping();
+                
+                eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
+                // default is 0.25s
+                CGEventSourceSetLocalEventsSuppressionInterval(eventSource, 0.0);
             }
             
             CocoaInputService::~CocoaInputService()
