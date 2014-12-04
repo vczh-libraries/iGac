@@ -14,6 +14,7 @@ using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
 
+
 void SetupOSXCoreGraphicsRenderer()
 {
     INativeController* controller = CreateOSXNativeController();

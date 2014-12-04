@@ -26,6 +26,18 @@ void GuiMain()
     window->SetClientSize(vl::presentation::Size(640, 480));
     window->MoveToScreenCenter();
     
+    GuiControl* label = g::NewLabel();
+    label->SetText(L"Welcome to GacUI Library!");
+    {
+        FontProperties font;
+        font.fontFamily = L"Segoe UI";
+        font.size = 40;
+        font.antialias = true;
+        label->SetFont(font);
+    }
+    window->AddChild(label);
+    
+    
     GetApplication()->Run(window);
     delete window;
 }

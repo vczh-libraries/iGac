@@ -62,7 +62,7 @@
 		884BBB9C1A304C1D007DF242 /* GuiGraphicsSpecializedComposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5861A304C1B007DF242 /* GuiGraphicsSpecializedComposition.cpp */; };
 		884BBB9D1A304C1D007DF242 /* GuiGraphicsStackComposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5881A304C1B007DF242 /* GuiGraphicsStackComposition.cpp */; };
 		884BBB9E1A304C1D007DF242 /* GuiGraphicsTableComposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB58A1A304C1B007DF242 /* GuiGraphicsTableComposition.cpp */; };
-		884BBB9F1A304C1D007DF242 /* CoreGraphicsRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BB58F1A304C1B007DF242 /* CoreGraphicsRenderer.mm */; };
+		884BBB9F1A304C1D007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BB58F1A304C1B007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */; };
 		884BBBA01A304C1D007DF242 /* GuiGraphicsDocumentElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5901A304C1B007DF242 /* GuiGraphicsDocumentElement.cpp */; };
 		884BBBA11A304C1D007DF242 /* GuiGraphicsElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5931A304C1B007DF242 /* GuiGraphicsElement.cpp */; };
 		884BBBA21A304C1D007DF242 /* GuiGraphicsHost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5961A304C1B007DF242 /* GuiGraphicsHost.cpp */; };
@@ -187,6 +187,7 @@
 		884BC15D1A304D1A007DF242 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15C1A304D1A007DF242 /* Foundation.framework */; };
 		884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
 		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
+		884BC1671A305D44007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -302,8 +303,8 @@
 		884BB5891A304C1B007DF242 /* GuiGraphicsStackComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsStackComposition.h; sourceTree = "<group>"; };
 		884BB58A1A304C1B007DF242 /* GuiGraphicsTableComposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiGraphicsTableComposition.cpp; sourceTree = "<group>"; };
 		884BB58B1A304C1B007DF242 /* GuiGraphicsTableComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsTableComposition.h; sourceTree = "<group>"; };
-		884BB58E1A304C1B007DF242 /* CoreGraphicsRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreGraphicsRenderer.h; sourceTree = "<group>"; };
-		884BB58F1A304C1B007DF242 /* CoreGraphicsRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreGraphicsRenderer.mm; sourceTree = "<group>"; };
+		884BB58E1A304C1B007DF242 /* GuiGraphicsCoreGraphicsRenderers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphicsRenderers.h; sourceTree = "<group>"; };
+		884BB58F1A304C1B007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphicsRenderers.mm; sourceTree = "<group>"; };
 		884BB5901A304C1B007DF242 /* GuiGraphicsDocumentElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiGraphicsDocumentElement.cpp; sourceTree = "<group>"; };
 		884BB5911A304C1B007DF242 /* GuiGraphicsDocumentElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsDocumentElement.h; sourceTree = "<group>"; };
 		884BB5921A304C1B007DF242 /* GuiGraphicsDocumentInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsDocumentInterfaces.h; sourceTree = "<group>"; };
@@ -533,6 +534,8 @@
 		884BC15C1A304D1A007DF242 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		884BC15E1A304D1E007DF242 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		884BC1601A304D22007DF242 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphics.mm; sourceTree = "<group>"; };
+		884BC1661A305D44007DF242 /* GuiGraphicsCoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphics.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -818,8 +821,10 @@
 		884BB58D1A304C1B007DF242 /* CoreGraphics */ = {
 			isa = PBXGroup;
 			children = (
-				884BB58E1A304C1B007DF242 /* CoreGraphicsRenderer.h */,
-				884BB58F1A304C1B007DF242 /* CoreGraphicsRenderer.mm */,
+				884BB58E1A304C1B007DF242 /* GuiGraphicsCoreGraphicsRenderers.h */,
+				884BB58F1A304C1B007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */,
+				884BC1661A305D44007DF242 /* GuiGraphicsCoreGraphics.h */,
+				884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */,
 			);
 			path = CoreGraphics;
 			sourceTree = "<group>";
@@ -1384,7 +1389,7 @@
 				884BBBEE1A304C1D007DF242 /* WfAnalyzer_ValidateSemantic.cpp in Sources */,
 				884BC0361A304C23007DF242 /* ParsingAutomaton_JPDA.cpp in Sources */,
 				884BBB921A304C1D007DF242 /* GuiTextControls.cpp in Sources */,
-				884BBB9F1A304C1D007DF242 /* CoreGraphicsRenderer.mm in Sources */,
+				884BBB9F1A304C1D007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
 				884BBBD61A304C1D007DF242 /* GuiDocument.cpp in Sources */,
 				884BBB9C1A304C1D007DF242 /* GuiGraphicsSpecializedComposition.cpp in Sources */,
 				884BBBEB1A304C1D007DF242 /* WfAnalyzer_Misc.cpp in Sources */,
@@ -1443,6 +1448,7 @@
 				884BC0391A304C23007DF242 /* ParsingDefinitions.cpp in Sources */,
 				884BC0531A304C23007DF242 /* FileStream.cpp in Sources */,
 				884BBB801A304C1D007DF242 /* GuiWin7ScrollableStyles.cpp in Sources */,
+				884BC1671A305D44007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */,
 				884BC03C1A304C23007DF242 /* ParsingState.cpp in Sources */,
 				884BBB8A1A304C1D007DF242 /* GuiWin8TabStyles.cpp in Sources */,
 				884BBB8D1A304C1D007DF242 /* GuiControlTemplateStyles.cpp in Sources */,

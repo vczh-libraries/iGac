@@ -16,56 +16,14 @@
 
 #include "CocoaHelper.h"
 
+using namespace vl::presentation;
+
 @interface CocoaWindowDelegate : NSObject<NSWindowDelegate>
 
-@property (nonatomic, readonly) vl::presentation::INativeWindow::WindowSizeState sizeState;
+@property (nonatomic, readonly) INativeWindow::WindowSizeState sizeState;
+@property (assign) INativeWindow* nativeWindow;
 
-@end
-
-@implementation CocoaWindowDelegate
-
-- (id)init
-{
-    if(self = [super init])
-    {
-        _sizeState = vl::presentation::INativeWindow::Restored;
-    }
-    return self;
-}
-
-- (void)windowDidMiniaturize:(NSNotification *)notification
-{
-    _sizeState = vl::presentation::INativeWindow::Minimized;
-}
-
-- (void)windowDidDeminiaturize:(NSNotification *)notification
-{
-    _sizeState = vl::presentation::INativeWindow::Restored;
-}
-
-- (void)windowDidEnterFullScreen:(NSNotification *)notification
-{
-    _sizeState = vl::presentation::INativeWindow::Maximized;
-}
-
-- (void)windowDidExitFullScreen:(NSNotification *)notification
-{
-    _sizeState = vl::presentation::INativeWindow::Restored;
-}
-
-- (void)windowWillClose:(NSNotification *)notification
-{
-    
-}
-
-@end
-
-
-@interface CocoaRootView: NSView
-
-@end
-
-@implementation CocoaRootView
+- (id)initWithNativeWindow:(INativeWindow*)window;
 
 @end
 
@@ -117,11 +75,7 @@ namespace vl {
                 nativeContainer->window = window;
                 nativeContainer->controller = controller;
                 
-                
-                nativeContainer->rootView = [[CocoaRootView alloc] init];
-                [window setContentView:nativeContainer->rootView];
-                
-                nativeContainer->delegate = [[CocoaWindowDelegate alloc] init];
+                nativeContainer->delegate = [[CocoaWindowDelegate alloc] initWithNativeWindow:this];
                 [window setDelegate:nativeContainer->delegate];
             }
 
@@ -153,23 +107,18 @@ namespace vl {
             }
 
             void CocoaWindow::SetClientSize(Size size) 
-            {
-                NSRect nsbounds = [nativeContainer->window frame];
-                nsbounds.size.width = size.x;
-                nsbounds.size.height = size.y;
-                
-                [nativeContainer->window setFrame:nsbounds display:YES];
+            {   [nativeContainer->window setContentSize:NSMakeSize(size.x, size.y)];
+                [nativeContainer->window display];
             }
 
             Rect CocoaWindow::GetClientBoundsInScreen() 
             {
-                NSRect clientBounds = [[nativeContainer->window contentView] bounds];
                 NSRect nsbounds = [nativeContainer->window frame];
-                
-                return Rect(nsbounds.origin.x + clientBounds.origin.x,
-                            nsbounds.origin.y - clientBounds.size.height + clientBounds.origin.y,
-                            nsbounds.origin.x + clientBounds.size.width + clientBounds.origin.x,
-                            nsbounds.origin.y + clientBounds.origin.y);
+                NSRect contentFrame = [nativeContainer->window contentRectForFrameRect:[nativeContainer->window frame]];
+                return Rect(nsbounds.origin.x + contentFrame.origin.x,
+                            nsbounds.origin.y - contentFrame.size.height + contentFrame.origin.y,
+                            nsbounds.origin.x + contentFrame.size.width + contentFrame.origin.x,
+                            nsbounds.origin.y + contentFrame.origin.y);
             }
 
             WString CocoaWindow::GetTitle() 
@@ -505,7 +454,7 @@ namespace vl {
                     return false;
                 }
             }
-
+            
             void CocoaWindow::RedrawContent() 
             {
                 [nativeContainer->window display];
@@ -515,7 +464,76 @@ namespace vl {
             {
                 return nativeContainer;
             }
+            
+            void CocoaWindow::SetGraphicsHandler(Interface* handler)
+            {
+                graphicsHandler = handler;
+            }
+            
+            Interface* CocoaWindow::GetGraphicsHandler() const
+            {
+                return graphicsHandler;
+            }
+            
+            
+            void CocoaWindow::InvokeMoved()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moved();
+                }
+            }
 
+            
+            NSContainer* GetNSNativeContainer(INativeWindow* window)
+            {
+                return (dynamic_cast<CocoaWindow*>(window))->GetNativeContainer();
+            }
         }
     }
 }
+
+
+@implementation CocoaWindowDelegate
+
+- (id)initWithNativeWindow:(INativeWindow*)window
+{
+    if(self = [super init])
+    {
+        _nativeWindow = window;
+        _sizeState = vl::presentation::INativeWindow::Restored;
+    }
+    return self;
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)notification
+{
+    _sizeState = vl::presentation::INativeWindow::Minimized;
+}
+
+- (void)windowDidDeminiaturize:(NSNotification *)notification
+{
+    _sizeState = vl::presentation::INativeWindow::Restored;
+}
+
+- (void)windowDidEnterFullScreen:(NSNotification *)notification
+{
+    _sizeState = vl::presentation::INativeWindow::Maximized;
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)notification
+{
+    _sizeState = vl::presentation::INativeWindow::Restored;
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+    
+}
+
+- (void)windowDidResize:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeMoved();
+}
+
+@end

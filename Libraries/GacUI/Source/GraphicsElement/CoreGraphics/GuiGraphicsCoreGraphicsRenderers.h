@@ -12,6 +12,10 @@
 #include "../GuiGraphicsElement.h"
 #include "../../GraphicsComposition/GuiGraphicsComposition.h"
 
+#include "GuiGraphicsCoreGraphics.h"
+
+#import <Foundation/Foundation.h>
+
 namespace vl {
     
     namespace presentation {
@@ -19,11 +23,6 @@ namespace vl {
         namespace elements_coregraphics {
             
             using namespace elements;
-            
-            class ICoreGraphicsRenderTarget : public elements::IGuiGraphicsRenderTarget
-            {
-                
-            };
             
 #define DEFINE_ELEMENT_RENDERER(TELEMENT, TRENDERER, TBRUSHPROPERTY)\
     DEFINE_GUI_GRAPHICS_RENDERER(TELEMENT, TRENDERER, ICoreGraphicsRenderTarget)\
@@ -57,21 +56,39 @@ namespace vl {
                 DEFINE_ELEMENT_RENDERER(GuiGradientBackgroundElement, GuiGradientBackgroundElementRenderer, ColorPair)
             };
             
-            class CGResourceManager: public GuiGraphicsResourceManager, public INativeControllerListener
+            class GuiSolidLabelElementRenderer : public Object, public IGuiGraphicsRenderer
             {
+                DEFINE_GUI_GRAPHICS_RENDERER(GuiSolidLabelElement, GuiSolidLabelElementRenderer, ICoreGraphicsRenderTarget)
+                
             protected:
+                Color               oldColor;
+                FontProperties      oldFont;
+                WString             oldText;
+                vint                oldMaxWidth;
+                NSString*           nsText;
+                NSFont*             nsFont;
+             
+                void CreateFont();
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
                 
             public:
-                CGResourceManager();
-                IGuiGraphicsRenderTarget* GetRenderTarget(INativeWindow* window) override;
+                GuiSolidLabelElementRenderer();
                 
-                void RecreateRenderTarget(INativeWindow* window) override;
-                
-                IGuiGraphicsLayoutProvider* GetLayoutProvider() override;
-                
-                void NativeWindowCreated(INativeWindow* window) override;
-
-                void NativeWindowDestroying(INativeWindow* window) override;
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
+            };
+            
+            
+            class FontNotFoundException: public Exception
+            {
+            public:
+                FontNotFoundException(const WString& _message=WString::Empty):
+                    Exception(_message)
+                {
+                    
+                }
             };
             
         }

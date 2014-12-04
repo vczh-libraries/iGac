@@ -23,14 +23,22 @@ namespace vl {
             
             class CocoaInputService : public Object, public INativeInputService
             {
-            protected:
-                collections::Dictionary<WString, vint> keys;
-                collections::Array<WString> keyNames;
+            public:
+                typedef void (*TimerFunc)();
                 
-                CGEventSourceRef eventSource;
+            protected:
+                collections::Dictionary<WString, vint>  keys;
+                collections::Array<WString>             keyNames;
+                
+                CGEventSourceRef                        eventSource;
+                bool                                    isTimerEnabled;
+                TimerFunc                               timerFunc;
+                
+            protected:
+                void StartGCDTimer();
                 
             public:
-                CocoaInputService();
+                CocoaInputService(TimerFunc timer);
                 virtual ~CocoaInputService();
                 
                 void InitializeKeyMapping();

@@ -14,7 +14,8 @@ namespace vl {
         
         namespace osx {
             
-            CocoaInputService::CocoaInputService()
+            CocoaInputService::CocoaInputService(TimerFunc timer):
+                timerFunc(timer)
             {
                 InitializeKeyMapping();
                 
@@ -52,21 +53,34 @@ namespace vl {
                 return false;
             }
             
+            void CocoaInputService::StartGCDTimer()
+            {
+                double delayInMilliseconds = 16;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInMilliseconds * NSEC_PER_MSEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+                {
+                    if(IsTimerEnabled())
+                    {
+                        timerFunc();
+                        StartGCDTimer();
+                    }
+                });
+            }
+            
             void CocoaInputService::StartTimer()
             {
-                
-                
+                StartGCDTimer();
+                isTimerEnabled = true;
             }
             
             void CocoaInputService::StopTimer()
             {
-                
-                
+                isTimerEnabled = false;
             }
             
             bool CocoaInputService::IsTimerEnabled()
             {
-                 return false;
+                 return isTimerEnabled;
             }
             
             bool CocoaInputService::IsKeyPressing(vint code)

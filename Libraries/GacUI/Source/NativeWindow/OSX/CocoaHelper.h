@@ -33,7 +33,6 @@
 #include "OSXPredef.h"
 
 @class CocoaWindowDelegate;
-@class CocoaRootView;
 
 namespace vl {
     
@@ -62,7 +61,6 @@ namespace vl {
                 NSWindow* window;
                 NSWindowController* controller;
                 CocoaWindowDelegate* delegate;
-                CocoaRootView* rootView;
             };
             
             

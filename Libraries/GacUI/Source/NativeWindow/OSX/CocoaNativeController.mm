@@ -142,6 +142,8 @@ namespace vl {
             
             using namespace collections;
             
+            void GlobalTimerFunc();
+            
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
             protected:
@@ -157,7 +159,8 @@ namespace vl {
                 
             public:
                 CocoaController():
-                    mainWindow(0)
+                    mainWindow(0),
+                    inputService(&GlobalTimerFunc)
                 {
                     [NSApplication sharedApplication];
                     
@@ -290,6 +293,12 @@ namespace vl {
                 
                 //=======================================================================
                 
+                void InvokeGlobalTimer()
+                {
+                    
+                    callbackService.InvokeGlobalTimer();
+                }
+                
             };
             
             INativeController* CreateOSXNativeController()
@@ -302,6 +311,11 @@ namespace vl {
                 delete controller;
             }
     
+            void GlobalTimerFunc()
+            {
+                dynamic_cast<CocoaController*>(GetCurrentController())->InvokeGlobalTimer();
+            }
+            
         }
         
     }
