@@ -27,7 +27,7 @@ void GuiMain()
     window->MoveToScreenCenter();
     
     GuiControl* label = g::NewLabel();
-    label->SetText(L"Welcome to GacUI Library!");
+    label->SetText(L"Welcome to GacUI Library! 安师大撒旦");
     {
         FontProperties font;
         font.fontFamily = L"Segoe UI";

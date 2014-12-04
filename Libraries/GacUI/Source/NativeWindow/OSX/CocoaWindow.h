@@ -11,7 +11,7 @@
 
 #include "../GuiNativeWindow.h"
 
-#include "OSXPredef.h"
+#include "CocoaPredef.h"
 
 namespace vl {
     

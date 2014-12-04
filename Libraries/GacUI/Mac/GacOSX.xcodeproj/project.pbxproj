@@ -329,7 +329,7 @@
 		884BB5B71A304C1B007DF242 /* CocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaWindow.mm; sourceTree = "<group>"; };
 		884BB5B91A304C1B007DF242 /* CoreGraphicsApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreGraphicsApp.h; sourceTree = "<group>"; };
 		884BB5BA1A304C1B007DF242 /* CoreGraphicsApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreGraphicsApp.mm; sourceTree = "<group>"; };
-		884BB5BB1A304C1B007DF242 /* OSXPredef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXPredef.h; sourceTree = "<group>"; };
+		884BB5BB1A304C1B007DF242 /* CocoaPredef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaPredef.h; sourceTree = "<group>"; };
 		884BB5BD1A304C1B007DF242 /* CocoaCallbackService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCallbackService.h; sourceTree = "<group>"; };
 		884BB5BE1A304C1B007DF242 /* CocoaCallbackService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaCallbackService.mm; sourceTree = "<group>"; };
 		884BB5BF1A304C1B007DF242 /* CocoaInputService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaInputService.h; sourceTree = "<group>"; };
@@ -842,6 +842,7 @@
 		884BB5B11A304C1B007DF242 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				884BB5BB1A304C1B007DF242 /* CocoaPredef.h */,
 				884BB5B21A304C1B007DF242 /* CocoaHelper.h */,
 				884BB5B31A304C1B007DF242 /* CocoaHelper.mm */,
 				884BB5B41A304C1B007DF242 /* CocoaNativeController.h */,
@@ -849,7 +850,6 @@
 				884BB5B61A304C1B007DF242 /* CocoaWindow.h */,
 				884BB5B71A304C1B007DF242 /* CocoaWindow.mm */,
 				884BB5B81A304C1B007DF242 /* CoreGraphics */,
-				884BB5BB1A304C1B007DF242 /* OSXPredef.h */,
 				884BB5BC1A304C1B007DF242 /* ServicesImpl */,
 			);
 			path = OSX;

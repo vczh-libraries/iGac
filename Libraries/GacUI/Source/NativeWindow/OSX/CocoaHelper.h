@@ -30,7 +30,7 @@
 #endif
 
 #include "../../GuiTypes.h"
-#include "OSXPredef.h"
+#include "CocoaPredef.h"
 
 @class CocoaWindowDelegate;
 
