@@ -107,7 +107,7 @@ namespace vl {
                 [window setLevel:NSMainMenuWindowLevel + 1];
                 
                 // hide on diactivate
-                //[window setHidesOnDeactivate:YES];
+                [window setHidesOnDeactivate:YES];
                 
                 // disable auto restore...
                 // which actually sucks for our usage
@@ -256,7 +256,6 @@ namespace vl {
             void CocoaWindow::Show() 
             {
                 // todo
-                [nativeContainer->controller showWindow:nil];
                 [nativeContainer->window makeKeyAndOrderFront:nil];
             }
 

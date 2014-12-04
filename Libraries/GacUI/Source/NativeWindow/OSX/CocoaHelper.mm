@@ -14,10 +14,6 @@
 #import <Foundation/Foundation.h>
 #import <Cocoa/Cocoa.h>
 
-// _NSGetProgname
-#import <crt_externs.h>
-
-
 #endif
 
 namespace vl {
@@ -131,115 +127,6 @@ namespace vl {
                 CFRelease(modes);
             }
             
-            
-            static NSString* FindAppName()
-            {
-                size_t i;
-                NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
-                
-                // Keys to search for as potential application names
-                NSString* GacNameKeys[] = {
-                    @"CFBundleDisplayName",
-                    @"CFBundleName",
-                    @"CFBundleExecutable",
-                };
-                
-                for (i = 0;  i < sizeof(GacNameKeys) / sizeof(GacNameKeys[0]);  i++)
-                {
-                    id name = [infoDictionary objectForKey:GacNameKeys[i]];
-                    if (name &&
-                        [name isKindOfClass:[NSString class]] &&
-                        ![name isEqualToString:@""])
-                    {
-                        return name;
-                    }
-                }
-                
-                char** progname = _NSGetProgname();
-                if (progname && *progname)
-                    return [NSString stringWithUTF8String:*progname];
-                
-                // Really shouldn't get here
-                return @"Gac Application";
-            }
-            
-            void CreateMenuBar(void)
-            {
-                NSString* appName = FindAppName();
-                
-                NSMenu* bar = [[NSMenu alloc] init];
-                [NSApp setMainMenu:bar];
-                
-                NSMenuItem* appMenuItem =
-                [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
-                NSMenu* appMenu = [[NSMenu alloc] init];
-                [appMenuItem setSubmenu:appMenu];
-                
-                [appMenu addItemWithTitle:[NSString stringWithFormat:@"About %@", appName]
-                                   action:@selector(orderFrontStandardAboutPanel:)
-                            keyEquivalent:@""];
-                [appMenu addItem:[NSMenuItem separatorItem]];
-                NSMenu* servicesMenu = [[NSMenu alloc] init];
-                [NSApp setServicesMenu:servicesMenu];
-                [[appMenu addItemWithTitle:@"Services"
-                                    action:NULL
-                             keyEquivalent:@""] setSubmenu:servicesMenu];
-                [appMenu addItem:[NSMenuItem separatorItem]];
-                [appMenu addItemWithTitle:[NSString stringWithFormat:@"Hide %@", appName]
-                                   action:@selector(hide:)
-                            keyEquivalent:@"h"];
-                [[appMenu addItemWithTitle:@"Hide Others"
-                                    action:@selector(hideOtherApplications:)
-                             keyEquivalent:@"h"]
-                 setKeyEquivalentModifierMask:NSAlternateKeyMask | NSCommandKeyMask];
-                [appMenu addItemWithTitle:@"Show All"
-                                   action:@selector(unhideAllApplications:)
-                            keyEquivalent:@""];
-                [appMenu addItem:[NSMenuItem separatorItem]];
-                [appMenu addItemWithTitle:[NSString stringWithFormat:@"Quit %@", appName]
-                                   action:@selector(terminate:)
-                            keyEquivalent:@"q"];
-                
-                NSMenuItem* windowMenuItem =
-                [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
-                NSMenu* windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
-                [NSApp setWindowsMenu:windowMenu];
-                [windowMenuItem setSubmenu:windowMenu];
-                
-                [windowMenu addItemWithTitle:@"Minimize"
-                                      action:@selector(performMiniaturize:)
-                               keyEquivalent:@"m"];
-                [windowMenu addItemWithTitle:@"Zoom"
-                                      action:@selector(performZoom:)
-                               keyEquivalent:@""];
-                [windowMenu addItem:[NSMenuItem separatorItem]];
-                [windowMenu addItemWithTitle:@"Bring All to Front"
-                                      action:@selector(arrangeInFront:)
-                               keyEquivalent:@""];
-                
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
-                if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
-                {
-                    [windowMenu addItem:[NSMenuItem separatorItem]];
-                    [[windowMenu addItemWithTitle:@"Enter Full Screen"
-                                           action:@selector(toggleFullScreen:)
-                                    keyEquivalent:@"f"]
-                     setKeyEquivalentModifierMask:NSControlKeyMask | NSCommandKeyMask];
-                }
-#endif
-                
-                [NSApp setMainMenu:appMenu];
-            }
-        
-            void SetupOSXApplication()
-            {
-                [NSApplication sharedApplication];
-                
-                CreateMenuBar();
-                
-                [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-                [NSApp finishLaunching];
-            }
 #endif
             
         

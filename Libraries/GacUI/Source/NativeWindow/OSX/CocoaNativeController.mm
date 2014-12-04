@@ -18,10 +18,118 @@
 
 #include <Cocoa/Cocoa.h>
 
+// _NSGetProgname
+#import <crt_externs.h>
 
 @interface CocoaApplicationDelegate: NSObject<NSApplicationDelegate>
 
 
+@end
+
+@implementation CocoaApplicationDelegate {
+    NSMenu* mainMenu;
+}
+
+- (NSString*)findAppName
+{
+    size_t i;
+    NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    
+    // Keys to search for as potential application names
+    NSString* GacNameKeys[] = {
+        @"CFBundleDisplayName",
+        @"CFBundleName",
+        @"CFBundleExecutable",
+    };
+    
+    for (i = 0;  i < sizeof(GacNameKeys) / sizeof(GacNameKeys[0]);  i++)
+    {
+        id name = [infoDictionary objectForKey:GacNameKeys[i]];
+        if (name &&
+            [name isKindOfClass:[NSString class]] &&
+            ![name isEqualToString:@""])
+        {
+            return name;
+        }
+    }
+    
+    char** progname = _NSGetProgname();
+    if (progname && *progname)
+        return [NSString stringWithUTF8String:*progname];
+    
+    // Really shouldn't get here
+    return @"Gac Application";
+}
+
+- (void)createMenu
+{
+    NSString* appName = [self findAppName];
+    
+    mainMenu = [[NSMenu alloc] init];
+    [NSApp setMainMenu:mainMenu];
+    
+    NSMenuItem* appMenuItem = [mainMenu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenu* appMenu = [[NSMenu alloc] init];
+    [appMenuItem setSubmenu:appMenu];
+    
+    [appMenu addItemWithTitle:[NSString stringWithFormat:@"About %@", appName]
+                       action:@selector(orderFrontStandardAboutPanel:)
+                keyEquivalent:@""];
+    [appMenu addItem:[NSMenuItem separatorItem]];
+    NSMenu* servicesMenu = [[NSMenu alloc] init];
+    [NSApp setServicesMenu:servicesMenu];
+    [[appMenu addItemWithTitle:@"Services"
+                        action:NULL
+                 keyEquivalent:@""] setSubmenu:servicesMenu];
+    [appMenu addItem:[NSMenuItem separatorItem]];
+    [appMenu addItemWithTitle:[NSString stringWithFormat:@"Hide %@", appName]
+                       action:@selector(hide:)
+                keyEquivalent:@"h"];
+    [[appMenu addItemWithTitle:@"Hide Others"
+                        action:@selector(hideOtherApplications:)
+                 keyEquivalent:@"h"]
+     setKeyEquivalentModifierMask:NSAlternateKeyMask | NSCommandKeyMask];
+    [appMenu addItemWithTitle:@"Show All"
+                       action:@selector(unhideAllApplications:)
+                keyEquivalent:@""];
+    [appMenu addItem:[NSMenuItem separatorItem]];
+    [appMenu addItemWithTitle:[NSString stringWithFormat:@"Quit %@", appName]
+                       action:@selector(terminate:)
+                keyEquivalent:@"q"];
+    
+    NSMenuItem* windowMenuItem =
+    [mainMenu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenu* windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
+    [NSApp setWindowsMenu:windowMenu];
+    [windowMenuItem setSubmenu:windowMenu];
+    
+    [windowMenu addItemWithTitle:@"Minimize"
+                          action:@selector(performMiniaturize:)
+                   keyEquivalent:@"m"];
+    [windowMenu addItemWithTitle:@"Zoom"
+                          action:@selector(performZoom:)
+                   keyEquivalent:@""];
+    [windowMenu addItem:[NSMenuItem separatorItem]];
+    [windowMenu addItemWithTitle:@"Bring All to Front"
+                          action:@selector(arrangeInFront:)
+                   keyEquivalent:@""];
+    
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+    {
+        [windowMenu addItem:[NSMenuItem separatorItem]];
+        [[windowMenu addItemWithTitle:@"Enter Full Screen"
+                               action:@selector(toggleFullScreen:)
+                        keyEquivalent:@"f"]
+         setKeyEquivalentModifierMask:NSControlKeyMask | NSCommandKeyMask];
+    }
+#endif
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+    [self createMenu];
+}
 
 @end
 
@@ -34,25 +142,35 @@ namespace vl {
             
             using namespace collections;
             
-            class OSXController : public Object, public virtual INativeController, public virtual INativeWindowService
+            class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
             protected:
                 Dictionary<NSContainer*, CocoaWindow*>		windows;
-                INativeWindow*                                      mainWindow;
+                INativeWindow*                              mainWindow;
                 
                 CocoaCallbackService    callbackService;
                 CocoaInputService       inputService;
                 CocoaResourceService    resourceService;
                 CocoaScreenService      screenService;
                 
+                CocoaApplicationDelegate*  appDelegate;
+                
             public:
-                OSXController():
+                CocoaController():
                     mainWindow(0)
                 {
-                
+                    [NSApplication sharedApplication];
+                    
+                    appDelegate = [[CocoaApplicationDelegate alloc] init];
+                    [[NSApplication sharedApplication] setDelegate:appDelegate];
+                    
+                    // dock icon
+                    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+                    
+                    [NSApp finishLaunching];
                 }
                 
-                ~OSXController()
+                ~CocoaController()
                {
                     inputService.StopTimer();
                     inputService.StopHookMouse();
@@ -176,13 +294,14 @@ namespace vl {
             
             INativeController* CreateOSXNativeController()
             {
-                return new OSXController();
+                return new CocoaController();
             }
             
             void DestroyOSXNativeController(INativeController* controller)
             {
                 delete controller;
             }
+    
         }
         
     }

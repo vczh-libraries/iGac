@@ -52,7 +52,6 @@ namespace vl {
             
 #ifdef GAC_OS_OSX
             
-            void SetupOSXApplication();
             void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
             NSString*   WStringToNSString(const WString& str);

@@ -14,9 +14,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "884BA3281A2ED8D9007DF242"
-               BuildableName = "GacOSX"
+               BlueprintIdentifier = "884BAFED1A304BA1007DF242"
+               BuildableName = "GacOSX.app"
                BlueprintName = "GacOSX"
+               ReferencedContainer = "container:GacOSX.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "884BB0001A304BA1007DF242"
+               BuildableName = "GacOSXTests.xctest"
+               BlueprintName = "GacOSXTests"
                ReferencedContainer = "container:GacOSX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,12 +42,22 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "884BB0001A304BA1007DF242"
+               BuildableName = "GacOSXTests.xctest"
+               BlueprintName = "GacOSXTests"
+               ReferencedContainer = "container:GacOSX.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "884BA3281A2ED8D9007DF242"
-            BuildableName = "GacOSX"
+            BlueprintIdentifier = "884BAFED1A304BA1007DF242"
+            BuildableName = "GacOSX.app"
             BlueprintName = "GacOSX"
             ReferencedContainer = "container:GacOSX.xcodeproj">
          </BuildableReference>
@@ -51,8 +75,8 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "884BA3281A2ED8D9007DF242"
-            BuildableName = "GacOSX"
+            BlueprintIdentifier = "884BAFED1A304BA1007DF242"
+            BuildableName = "GacOSX.app"
             BlueprintName = "GacOSX"
             ReferencedContainer = "container:GacOSX.xcodeproj">
          </BuildableReference>
@@ -69,8 +93,8 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "884BA3281A2ED8D9007DF242"
-            BuildableName = "GacOSX"
+            BlueprintIdentifier = "884BAFED1A304BA1007DF242"
+            BuildableName = "GacOSX.app"
             BlueprintName = "GacOSX"
             ReferencedContainer = "container:GacOSX.xcodeproj">
          </BuildableReference>

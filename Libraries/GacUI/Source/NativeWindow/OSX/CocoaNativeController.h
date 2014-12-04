@@ -18,6 +18,7 @@ namespace vl {
         namespace osx {
             
             extern INativeController*   CreateOSXNativeController();
+            extern void                 SetupOSXApplication();
             extern void                 DestroyOSXNativeController(INativeController* controller);
             
         }
