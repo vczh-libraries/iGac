@@ -11,21 +11,47 @@
 
 #include "../../GuiNativeWindow.h"
 
+@class NSCursor;
+
 namespace vl {
   
     namespace presentation {
         
         namespace osx {
             
+            class CocoaCursor: public INativeCursor
+            {
+            protected:
+                NSCursor*           cursor;
+                bool                isSystemCursor;
+                SystemCursorType    systemCursorType;
+                
+            public:
+                CocoaCursor(NSCursor* cursor);
+                CocoaCursor(SystemCursorType type);
+                
+                ////
+                
+                bool                IsSystemCursor() override;
+                SystemCursorType    GetSystemCursorType() override;
+                
+                ///
+                void                InitSystemCursors();
+                NSCursor*           GetNativeCursor() const;
+                void                Set();
+            };
+            
             class CocoaResourceService : public Object, public INativeResourceService
             {
             protected:
-                FontProperties defaultFont;
+                collections::Array<Ptr<CocoaCursor>>    systemCursors;
+                FontProperties                          defaultFont;
                 
             public:
                 CocoaResourceService();
                 virtual ~CocoaResourceService();
                 
+                /////
                 INativeCursor*          GetSystemCursor(INativeCursor::SystemCursorType type) override;
                 INativeCursor*          GetDefaultSystemCursor() override;
                 FontProperties          GetDefaultFont() override;

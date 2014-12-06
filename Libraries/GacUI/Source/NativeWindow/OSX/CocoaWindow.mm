@@ -15,6 +15,7 @@
 #import <crt_externs.h>
 
 #include "CocoaHelper.h"
+#include "ServicesImpl/CocoaResourceService.h"
 
 using namespace vl::presentation;
 
@@ -34,7 +35,16 @@ namespace vl {
         namespace osx {
             
             CocoaWindow::CocoaWindow():
-                nativeContainer(0)
+                nativeContainer(0),
+                parentWindow(0),
+                alwaysPassFocusToParent(false),
+                mouseLastX(0),
+                mouseLastY(0),
+                mouseHoving(false),
+                graphicsHandler(0),
+                customFrameMode(false),
+                supressingAlt(false),
+                enabled(false)
             {
                 _CreateWindow();
             }
@@ -77,6 +87,8 @@ namespace vl {
                 
                 nativeContainer->delegate = [[CocoaWindowDelegate alloc] initWithNativeWindow:this];
                 [window setDelegate:nativeContainer->delegate];
+                
+                currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
             }
 
             Rect CocoaWindow::GetBounds()
@@ -134,12 +146,16 @@ namespace vl {
 
             INativeCursor* CocoaWindow::GetWindowCursor() 
             {
-                return 0;
+                return currentCursor;
             }
 
             void CocoaWindow::SetWindowCursor(INativeCursor* cursor) 
             {
-                // todo
+                currentCursor = cursor;
+                
+                dynamic_cast<CocoaCursor*>(cursor)->Set();
+                
+                [nativeContainer->window invalidateCursorRectsForView:nativeContainer->window.contentView];
             }
 
             Point CocoaWindow::GetCaretPoint()
@@ -151,6 +167,7 @@ namespace vl {
             {
                 caretPoint = point;
                 // todo
+                
             }
 
             INativeWindow* CocoaWindow::GetParent() 
@@ -204,13 +221,12 @@ namespace vl {
 
             void CocoaWindow::Show() 
             {
-                // todo
                 [nativeContainer->window makeKeyAndOrderFront:nil];
             }
 
             void CocoaWindow::ShowDeactivated() 
             {
-                // todo
+                [nativeContainer->window orderOut:nil];
             }
 
             void CocoaWindow::ShowRestored() 
@@ -231,9 +247,7 @@ namespace vl {
 
             void CocoaWindow::Hide() 
             {
-                // todo
-                // there's no "hide" status in OSX
-                // or maybe just make the bounds (0,0,0,0)
+                // HidesOnDeactivate
                 [nativeContainer->window orderOut:nil];
             }
 
@@ -484,10 +498,290 @@ namespace vl {
                 }
             }
 
+            bool CocoaWindow::InvokeClosing()
+            {
+                bool cancel = false;
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Closing(cancel);
+                }
+                return cancel;
+            }
+            
+            void CocoaWindow::InvokeAcivate()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Activated();
+                }
+            }
+            
+            void CocoaWindow::InvokeDeactivate()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Deactivated();
+                }
+            }
+            
+            void CocoaWindow::InvokeGotFocus()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->GotFocus();
+                }
+            }
+            
+            void CocoaWindow::InvokeLostFocus()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->LostFocus();
+                }
+            }
             
             NSContainer* GetNSNativeContainer(INativeWindow* window)
             {
                 return (dynamic_cast<CocoaWindow*>(window))->GetNativeContainer();
+            }
+            
+            NativeWindowMouseInfo CreateMouseInfo(NSWindow* window, NSEvent* event)
+            {
+                NativeWindowMouseInfo info;
+                
+                if(event.type == NSScrollWheel && [event respondsToSelector:@selector(scrollingDeltaY)])
+                {
+                    double deltaY;
+                    
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+                    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+                    {
+                        deltaY = [event scrollingDeltaY];
+                        
+                        if ([event hasPreciseScrollingDeltas])
+                        {
+                            deltaY *= 0.1;
+                        }
+                    }
+                    else
+#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
+                    {
+                        deltaY = [event deltaY];
+                    }
+                    
+                    info.wheel = (int)deltaY;
+                }
+                
+                info.left = event.type == NSLeftMouseDown;
+                info.right = event.type == NSRightMouseDown;
+                // assuming its middle mouse
+                info.middle = (event.type == NSOtherMouseDown);
+                
+                info.ctrl = event.modifierFlags & NSControlKeyMask;
+                info.shift = event.modifierFlags & NSShiftKeyMask;
+                
+                const NSRect contentRect = [window.contentView frame];
+                const NSPoint p = [event locationInWindow];
+                
+                info.x = p.x;
+                info.y = contentRect.size.height - p.y;
+                
+                return info;
+                
+            }
+            
+            NativeWindowKeyInfo CreateKeyInfo(NSWindow* window, NSEvent* event)
+            {
+                NativeWindowKeyInfo info;
+             
+                info.ctrl = event.modifierFlags & NSControlKeyMask;
+                info.shift = event.modifierFlags & NSShiftKeyMask;
+                info.alt = event.modifierFlags & NSAlternateKeyMask;
+                
+                info.code = NSEventKeyCodeToGacKeyCode(event.keyCode);
+                
+                return info;
+            }
+            
+            void CocoaWindow::HandleEventInternal(NSEvent* event)
+            {
+                switch([event type])
+                {
+                    case NSCursorUpdate:
+//                        SetWindowCursor(currentCursor);
+                        break;
+                        
+                    case NSLeftMouseDown:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        if(event.clickCount == 2)
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->LeftButtonDoubleClick(info);
+                            }
+                        }
+                        else
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->LeftButtonDown(info);
+                            }
+                        }
+                        break;
+                    }
+                        
+                    case NSLeftMouseUp:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->LeftButtonUp(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSRightMouseDown:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        if(event.clickCount == 2)
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->RightButtonDoubleClick(info);
+                            }
+                        }
+                        else
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->RightButtonDown(info);
+                            }
+                        }
+                        break;
+                    }
+                        
+                    case NSRightMouseUp:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->RightButtonUp(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSMouseMoved:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        info.nonClient = !mouseHoving;
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->MouseMoving(info);
+                        }
+                        mouseLastX = info.x;
+                        mouseLastY = info.y;
+                        break;
+                    }
+                        
+                    case NSMouseEntered:
+                    {
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->MouseEntered();
+                        }
+                        mouseHoving = true;
+                        break;
+                    }
+                        
+                    case NSMouseExited:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->MouseLeaved();
+                        }
+                        mouseHoving = false;
+                        break;
+                    }
+                        
+                    case NSOtherMouseDown:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        if(event.clickCount == 2)
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->MiddleButtonDoubleClick(info);
+                            }
+                        }
+                        else
+                        {
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->MiddleButtonDown(info);
+                            }
+                        }
+                        break;
+                    }
+                        
+                    case NSOtherMouseUp:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->MiddleButtonUp(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSScrollWheel:
+                    {
+                        NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->HorizontalWheel(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSKeyDown:
+                    {
+                        NativeWindowKeyInfo info = CreateKeyInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->KeyDown(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSKeyUp:
+                    {
+                        NativeWindowKeyInfo info = CreateKeyInfo(nativeContainer->window, event);
+                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->KeyUp(info);
+                        }
+                        break;
+                    }
+                        
+                    case NSFlagsChanged: // modifier flags
+                        break;
+                        
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -526,14 +820,44 @@ namespace vl {
     _sizeState = vl::presentation::INativeWindow::Restored;
 }
 
-- (void)windowWillClose:(NSNotification *)notification
+- (void)windowDidMove:(NSNotification *)notification
 {
-    
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeMoved();
+}
+
+- (void)windowDidBecomeKey:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeGotFocus();
+
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeLostFocus();
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeAcivate();
+
+}
+
+- (void)windowDidResignMain:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeDeactivate();
+
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+    // !cancel
+    return !(dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosing();
 }
 
 - (void)windowDidResize:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeMoved();
+
 }
 
 @end

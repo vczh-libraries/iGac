@@ -9,7 +9,30 @@
 #ifndef __GAC_OSX_PREDEF_H__
 #define __GAC_OSX_PREDEF_H__
 
+
+
 namespace vl {
+    
+    class NotImplementedException: public Exception
+    {
+    public:
+        NotImplementedException(const WString& message):
+            Exception(message)
+        {
+            
+        }
+    };
+    
+    class NotSupportedException: public Exception
+    {
+    public:
+        NotSupportedException(const WString& message):
+        Exception(message)
+        {
+            
+        }
+    };
+    
     
     namespace presentation {
         

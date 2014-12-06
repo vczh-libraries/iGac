@@ -34,6 +34,6 @@ vl::WString GetSysVerString()
 
 void LaunchURL(const vl::WString& url)
 {
-    [[NSWorkspace sharedWorkspace] openFile:WStringToNSString(url)
-                            withApplication:@"Safari.app"];
+    NSURL* nsurl = [NSURL URLWithString:WStringToNSString(url)];
+    [[NSWorkspace sharedWorkspace] openURL:nsurl];
 }

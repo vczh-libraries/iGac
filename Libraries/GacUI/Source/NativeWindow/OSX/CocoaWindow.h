@@ -13,6 +13,8 @@
 
 #include "CocoaPredef.h"
 
+@class NSEvent;
+
 namespace vl {
     
     namespace presentation {
@@ -22,7 +24,7 @@ namespace vl {
             class CocoaWindow : public Object, public INativeWindow
             {
             protected:
-                NSContainer* nativeContainer;
+                NSContainer*                                    nativeContainer;
                 
                 Point                                           caretPoint;
                 CocoaWindow*                                    parentWindow;
@@ -35,6 +37,7 @@ namespace vl {
                 bool                                            customFrameMode;
                 bool                                            supressingAlt;
                 bool                                            enabled;
+                INativeCursor*                                  currentCursor;
                 
             protected:
                 void _CreateWindow();
@@ -116,6 +119,12 @@ namespace vl {
                 
             
                 ///
+                void                HandleEventInternal(NSEvent* event);
+                bool                InvokeClosing();
+                void                InvokeAcivate();
+                void                InvokeDeactivate();
+                void                InvokeGotFocus();
+                void                InvokeLostFocus();
                 void                InvokeMoved();
             };
             

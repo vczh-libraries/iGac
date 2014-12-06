@@ -49,7 +49,7 @@ namespace vl {
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
                 Color c = element->GetColor();
-                CGContextSetRGBFillColor(context, c.r, c.g, c.b, c.a);
+                CGContextSetRGBFillColor(context, c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f);
                 
                 CGRect rect = CGRectMake(bounds.Left(), bounds.Top(), bounds.Width(), bounds.Height());
                 CGContextFillRect(context, rect);
@@ -68,6 +68,13 @@ namespace vl {
             IMPLEMENT_ELEMENT_RENDERER(GuiGradientBackgroundElementRenderer)
             {
                 
+            }
+            
+            GuiSolidLabelElementRenderer::GuiSolidLabelElementRenderer():
+            oldText(L""),
+            oldMaxWidth(-1)
+            {
+                nsParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
             }
             
             void GuiSolidLabelElementRenderer::CreateFont()
@@ -98,11 +105,69 @@ namespace vl {
                 {
                     throw FontNotFoundException(L"Font " + font.fontFamily + L" cannot be found.");
                 }
-                    
+                
+                nsAttributes = [NSMutableDictionary dictionaryWithDictionary:@{ NSFontAttributeName: nsFont }];
+                
+                if(font.underline)
+                {
+                    [nsAttributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSUnderlineStyleAttributeName];
+                }
+                
+                if(font.strikeline)
+                {
+                    [nsAttributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
+                }
+                
+                [nsAttributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
+                CreateColor();
+            }
+            
+            void GuiSolidLabelElementRenderer::CreateColor()
+            {
+                Color color = element->GetColor();
+                [nsAttributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
+                                 forKey:NSForegroundColorAttributeName];
+            }
+            
+            void GuiSolidLabelElementRenderer::UpdateParagraphStyle()
+            {
+                switch(element->GetHorizontalAlignment())
+                {
+                    case Alignment::Left:
+                        [nsParagraphStyle setAlignment:NSLeftTextAlignment];
+                        break;
+                        
+                    case Alignment::Right:
+                        [nsParagraphStyle setAlignment:NSRightTextAlignment];
+                        break;
+                        
+                    case Alignment::Center:
+                        [nsParagraphStyle setAlignment:NSCenterTextAlignment];
+                        break;
+                }
+                
+                if(element->GetEllipse())
+                {
+                    [nsParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+                }
+                else
+                {
+                    [nsParagraphStyle setLineBreakMode:NSLineBreakByClipping];
+                }
+            }
+            
+            void GuiSolidLabelElementRenderer::UpdateMinSize()
+            {
+                CGRect rect = [nsText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
+                                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                                attributes:nsAttributes];
+                
+                minSize = Size(rect.size.width, rect.size.height);
             }
             
             void GuiSolidLabelElementRenderer::InitializeInternal()
             {
+                
             }
             
             void GuiSolidLabelElementRenderer::FinalizeInternal()
@@ -113,30 +178,15 @@ namespace vl {
             void GuiSolidLabelElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
             {
                 CreateFont();
-            }
-            
-            GuiSolidLabelElementRenderer::GuiSolidLabelElementRenderer():
-                oldText(L""),
-                oldMaxWidth(-1)
-            {
+                CreateColor();
+                UpdateMinSize();
             }
             
             void GuiSolidLabelElementRenderer::Render(Rect bounds)
             {
                 vint x=0;
                 vint y=0;
-                switch(element->GetHorizontalAlignment())
-                {
-                    case Alignment::Left:
-                        x=bounds.Left();
-                        break;
-                    case Alignment::Center:
-                        x=bounds.Left()+(bounds.Width()-minSize.x)/2;
-                        break;
-                    case Alignment::Right:
-                        x=bounds.Right()-minSize.x;
-                        break;
-                }
+                
                 switch(element->GetVerticalAlignment())
                 {
                     case Alignment::Top:
@@ -152,20 +202,24 @@ namespace vl {
                 
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
-                Color c = element->GetColor();
-                CGFloat components[] = { static_cast<CGFloat>(c.r), static_cast<CGFloat>(c.g), static_cast<CGFloat>(c.b), static_cast<CGFloat>(c.a) };
-                CGContextSetFillColor(context, components);
-                
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
                     [nsFont set];
                     [nsText drawAtPoint:NSMakePoint(bounds.Left(), bounds.Top())
-                         withAttributes:@{ NSFontAttributeName: nsFont }];
+                         withAttributes:nsAttributes];
                 }
                 else
                 {
-                    // ct requires here
-                    // todo
+                    CGRect textBounds = CGRectMake(bounds.Left(),
+                                                   bounds.Top(),
+                                                   bounds.Width(),
+                                                   bounds.Height());
+                    if(element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
+                    {
+                        textBounds = CGRectMake(textBounds.origin.x, y, bounds.Width(), minSize.y);
+                    }
+                    
+                    [nsText drawInRect:textBounds withAttributes:nsAttributes];
                 }
             }
             
@@ -176,7 +230,7 @@ namespace vl {
                     Color color = element->GetColor();
                     if(oldColor != color)
                     {
-                        
+                        CreateColor();
                     }
                     
                     FontProperties font = element->GetFont();
@@ -185,8 +239,13 @@ namespace vl {
                         CreateFont();
                     }
                 }
+                
+                UpdateParagraphStyle();
+                
                 oldText = element->GetText();
                 nsText = osx::WStringToNSString(element->GetText());
+                
+                UpdateMinSize();
             }
             
         }

@@ -211,6 +211,7 @@ namespace vl {
                     { 145, L"Scroll Lock" }
                 };
                 
+                keyNames.Resize(146);
                 for(vint i=0; i<146; ++i)
                 {
                     keys.Set(KeyMappings[i].keyName, KeyMappings[i].keyCode);
@@ -228,10 +229,10 @@ namespace vl {
                                 (CGEventMaskBit(kCGEventKeyDown)) |
                                 (CGEventMaskBit(kCGEventKeyUp));
                 inputTapPort =  CGEventTapCreate(kCGSessionEventTap,
-                                                 kCGTailAppendEventTap,
+                                                 kCGHeadInsertEventTap,
                                                  kCGEventTapOptionDefault,
                                                  eventMask,
-                                                 (CGEventTapCallBack)mouseTapFunc,
+                                                 &InputTapFunc,
                                                  this);
                 if (inputTapPort == NULL)
                 {
@@ -248,6 +249,8 @@ namespace vl {
                     {
                         CFRunLoopRef runLoop =  CFRunLoopGetCurrent();
                         CFRunLoopAddSource(runLoop, inputTapRunLoopSource, kCFRunLoopDefaultMode);
+                        
+                        CGEventTapEnable(inputTapPort, true);
                     }
                 }
 
@@ -258,6 +261,9 @@ namespace vl {
                 if(type == kCGEventKeyDown ||
                    type == kCGEventKeyUp)
                 {
+                    // this won't work is OSX Accessibility is turned on for our app (think about the case of Steam)
+                    // so maybe a better way is just hooking window level events and send to InputService
+                    // however that won't be global key states...
                     CGKeyCode keyCode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
                     
                     wprintf(L"%s event\n", GetKeyName(NSEventKeyCodeToGacKeyCode(keyCode)).Buffer());

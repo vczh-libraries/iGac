@@ -8,9 +8,12 @@
 
 #include "CocoaBaseView.h"
 
+#include "CocoaWindow.h"
+#include "ServicesImpl/CocoaResourceService.h"
+
 @implementation CocoaBaseView
 
-- (id)initWithCocoaWindow:(CocoaWindow *)window
+- (id)initWithCocoaWindow:(vl::presentation::osx::CocoaWindow *)window
 {
     if(self = [super init])
     {
@@ -19,6 +22,12 @@
     }
     
     return self;
+}
+
+- (id)init
+{
+    assert(false);
+    return nil;
 }
 
 - (BOOL)isOpaque
@@ -38,12 +47,12 @@
 
 - (void)cursorUpdate:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)mouseDown:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)mouseDragged:(NSEvent *)event
@@ -53,25 +62,17 @@
 
 - (void)mouseUp:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)mouseMoved:(NSEvent *)event
 {
-//    if (window->cursorMode == GLFW_CURSOR_DISABLED)
-//        _glfwInputCursorMotion(window, [event deltaX], [event deltaY]);
-//    else
-//    {
-//        const NSRect contentRect = [window->ns.view frame];
-//        const NSPoint p = [event locationInWindow];
-//        
-//        _glfwInputCursorMotion(window, p.x, contentRect.size.height - p.y);
-//    }
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)rightMouseDown:(NSEvent *)event
 {
-   
+   cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)rightMouseDragged:(NSEvent *)event
@@ -81,12 +82,12 @@
 
 - (void)rightMouseUp:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)otherMouseDown:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)otherMouseDragged:(NSEvent *)event
@@ -96,17 +97,17 @@
 
 - (void)otherMouseUp:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)mouseExited:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)mouseEntered:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)viewDidChangeBackingProperties
@@ -122,9 +123,10 @@
     }
     
     NSTrackingAreaOptions options = NSTrackingMouseEnteredAndExited |
-    NSTrackingActiveInKeyWindow |
-    NSTrackingCursorUpdate |
-    NSTrackingInVisibleRect;
+                                    NSTrackingActiveInKeyWindow |
+                                    NSTrackingCursorUpdate |
+                                    NSTrackingInVisibleRect |
+                                    NSTrackingMouseMoved;
     
     trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
                                                 options:options
@@ -137,71 +139,29 @@
 
 - (void)keyDown:(NSEvent *)event
 {
-    
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)flagsChanged:(NSEvent *)event
 {
-//    int action;
-//    const unsigned int modifierFlags =
-//    [event modifierFlags] & NSDeviceIndependentModifierFlagsMask;
-//    const int key = translateKey([event keyCode]);
-//    const int mods = translateFlags(modifierFlags);
-//    
-//    if (modifierFlags == window->ns.modifierFlags)
-//    {
-//        if (window->keys[key] == GLFW_PRESS)
-//            action = GLFW_RELEASE;
-//        else
-//            action = GLFW_PRESS;
-//    }
-//    else if (modifierFlags > window->ns.modifierFlags)
-//        action = GLFW_PRESS;
-//    else
-//        action = GLFW_RELEASE;
-//    
-//    window->ns.modifierFlags = modifierFlags;
-//    
-//    _glfwInputKey(window, key, [event keyCode], action, mods);
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)keyUp:(NSEvent *)event
 {
-//    const int key = translateKey([event keyCode]);
-//    const int mods = translateFlags([event modifierFlags]);
-//    _glfwInputKey(window, key, [event keyCode], GLFW_RELEASE, mods);
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)scrollWheel:(NSEvent *)event
 {
-//    double deltaX, deltaY;
-//    
-//#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
-//    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
-//    {
-//        deltaX = [event scrollingDeltaX];
-//        deltaY = [event scrollingDeltaY];
-//        
-//        if ([event hasPreciseScrollingDeltas])
-//        {
-//            deltaX *= 0.1;
-//            deltaY *= 0.1;
-//        }
-//    }
-//    else
-//#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
-//    {
-//        deltaX = [event deltaX];
-//        deltaY = [event deltaY];
-//    }
-//    
-//    if (fabs(deltaX) > 0.0 || fabs(deltaY) > 0.0)
-//        _glfwInputScroll(window, deltaX, deltaY);
+    cocoaWindow->HandleEventInternal(event);
 }
 
 - (void)resetCursorRects
 {
-//    [self addCursorRect:[self bounds] cursor:getModeCursor(window)];
+    vl::presentation::osx::CocoaCursor* cursor = dynamic_cast<vl::presentation::osx::CocoaCursor*>(cocoaWindow->GetWindowCursor());
+    
+    [self addCursorRect:[self bounds] cursor:cursor->GetNativeCursor()];
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender

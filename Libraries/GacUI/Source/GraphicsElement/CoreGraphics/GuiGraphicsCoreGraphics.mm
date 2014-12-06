@@ -13,18 +13,18 @@
 #include "../../NativeWindow/OSX/CocoaHelper.h"
 #include "../../NativeWindow/OSX/CocoaWindow.h"
 #include "../../NativeWindow/OSX/CocoaNativeController.h"
+#include "../../NativeWindow/OSX/CocoaBaseView.h"
 
 #import <Cocoa/Cocoa.h>
 
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
 
-@interface CoreGraphicsView: NSView
+@interface CoreGraphicsView: CocoaBaseView
 
-@property (assign) CocoaWindow* cocoaWindow;
 @property (readonly) CGLayer* drawingLayer;
 
-//- (id)initWithCocoaWindow:(CocoaWindow*)cocoaWindow;
+- (id)initWithCocoaWindow:(CocoaWindow*)cocoaWindow;
 
 - (CGContextRef)getLayerContext;
 
@@ -43,15 +43,19 @@ inline CGContextRef GetCurrentCGContext()
 
 @implementation CoreGraphicsView
 
-- (id)init
+- (id)initWithCocoaWindow:(CocoaWindow *)window
 {
-    if(self = [super init])
+    if(self = [super initWithCocoaWindow:window])
     {
-       // _cocoaWindow = cocoaWindow;
-        
         [self resize:[self frame].size];
     }
     return self;
+}
+
+- (id)init
+{
+    assert(false);
+    return nil;
 }
 
 - (void)resize:(CGSize)size
@@ -142,10 +146,16 @@ namespace vl {
             class CoreGraphicsRenderTarget: public ICoreGraphicsRenderTarget
             {
             protected:
-                CoreGraphicsView* nativeView;
+                CoreGraphicsView*       nativeView;
+                List<Rect>              clippers;
+                vint                    clipperCoverWholeTargetCounter;
+                INativeWindow*          window;
                 
             public:
-                CoreGraphicsRenderTarget(INativeWindow* window)
+                CoreGraphicsRenderTarget(INativeWindow* _window):
+                    nativeView(0),
+                    clipperCoverWholeTargetCounter(0),
+                    window(_window)
                 {
                     nativeView = GetCoreGraphicsView(window);
                 
@@ -163,10 +173,12 @@ namespace vl {
                     
                     [NSGraphicsContext saveGraphicsState];
                     ;
-                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:(CGContextRef)GetCGContext() flipped:true]];
+                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:(CGContextRef)GetCGContext()
+                                                                                                    flipped:true]];
                     
                     CGContextRef context = (CGContextRef)GetCGContext();
-                    CGContextClearRect(context, [nativeView frame]);
+                    CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
+                    CGContextFillRect(context, [nativeView frame]);
                     
                     CGContextSaveGState(context);
                     // flip the context, since gac's origin is upper-left (0, 0)
@@ -187,22 +199,68 @@ namespace vl {
                 
                 void PushClipper(Rect clipper)
                 {
-                    
+                    if(clipperCoverWholeTargetCounter > 0)
+                    {
+                        clipperCoverWholeTargetCounter++;
+                    }
+                    else
+                    {
+                        Rect previousClipper = GetClipper();
+                        Rect currentClipper;
+                        
+                        currentClipper.x1 = (previousClipper.x1>clipper.x1?previousClipper.x1:clipper.x1);
+                        currentClipper.y1 = (previousClipper.y1>clipper.y1?previousClipper.y1:clipper.y1);
+                        currentClipper.x2 = (previousClipper.x2<clipper.x2?previousClipper.x2:clipper.x2);
+                        currentClipper.y2 = (previousClipper.y2<clipper.y2?previousClipper.y2:clipper.y2);
+                        
+                        if(currentClipper.x1 < currentClipper.x2 && currentClipper.y1 < currentClipper.y2)
+                        {
+                            clippers.Add(currentClipper);
+                            
+                            CGContextRef context = (CGContextRef)GetCGContext();
+                            
+                            CGContextSaveGState((CGContextRef)GetCGContext());
+                            
+                            CGRect rect = CGRectMake(clipper.Left(), clipper.Top(), clipper.Width(), clipper.Height());
+                            CGContextClipToRect(context, rect);
+                            
+                            CGRect clipCGRect = CGContextGetClipBoundingBox(context);
+                        }
+                        else
+                        {
+                            clipperCoverWholeTargetCounter++;
+                        }
+                    }
                 }
                 
                 void PopClipper()
                 {
-                    
+                    if(clipperCoverWholeTargetCounter>0)
+                    {
+                        clipperCoverWholeTargetCounter--;
+                    }
+                    else if(clippers.Count()>0)
+                    {
+                        clippers.RemoveAt(clippers.Count()-1);
+                        CGContextRestoreGState((CGContextRef)GetCGContext());
+                    }
                 }
                 
                 Rect GetClipper()
                 {
-                    return Rect();
+                    if(clippers.Count()==0)
+                    {
+                        return Rect(Point(0, 0), window->GetClientSize());
+                    }
+                    else
+                    {
+                        return clippers[clippers.Count()-1];
+                    }
                 }
                 
                 bool IsClipperCoverWholeTarget()
                 {
-                    return false;
+                    return clipperCoverWholeTargetCounter > 0;
                 }
                 
                 
@@ -298,7 +356,7 @@ namespace vl {
                 CoreGraphicsCocoaNativeWindowListener(INativeWindow* _window):
                     window(_window)
                 {
-                    nativeView = [[CoreGraphicsView alloc] init];
+                    nativeView = [[CoreGraphicsView alloc] initWithCocoaWindow:dynamic_cast<CocoaWindow*>(_window)];
                 }
                 
                 void RebuildLayer(Size size)

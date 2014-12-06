@@ -56,6 +56,7 @@ namespace vl {
             
             void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
+            NSCursor* MakeCursorFromData(unsigned char* data, int hotspot_x, int hotspot_y);
             
             struct NSContainer
             {

@@ -266,6 +266,46 @@ namespace vl {
                 return table[keycode];
             }
             
+            NSCursor* MakeCursorFromData(unsigned char* data, int hotspot_x, int hotspot_y)
+            {
+                NSCursor *c = NULL;
+                NSBitmapImageRep* bmp = [[NSBitmapImageRep alloc]
+                                         initWithBitmapDataPlanes:0
+                                         pixelsWide:16
+                                         pixelsHigh:16
+                                         bitsPerSample:8
+                                         samplesPerPixel:2
+                                         hasAlpha:YES
+                                         isPlanar:NO
+                                         colorSpaceName:NSCalibratedWhiteColorSpace
+                                         bytesPerRow:(16*2)
+                                         bitsPerPixel:16];
+                
+                if (bmp)
+                {
+                    unsigned char* p = [bmp bitmapData];
+                    if (p)
+                    {
+                        int i;
+                        for (i = 0; i < 16*16; ++i)
+                        {
+                            // tried 4 bits per sample and memcpy, didn't work
+                            p[2*i] = (data[i]&0xF0) | data[i]>>4;
+                            p[2*i+1] = (data[i]<<4) | (data[i]&0xf);
+                        }
+                        
+                        NSImage *img = [[NSImage alloc] init];
+                        if (img)
+                        {
+                            [img addRepresentation:bmp];
+                            NSPoint hs = { (CGFloat)hotspot_x, (CGFloat)hotspot_y };
+                            c = [[NSCursor alloc] initWithImage:img hotSpot:hs];
+                        }
+                    }
+                }
+                return c;
+            }
+            
 #endif
             
         

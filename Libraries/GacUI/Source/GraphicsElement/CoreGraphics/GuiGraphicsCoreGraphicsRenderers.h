@@ -14,7 +14,7 @@
 
 #include "GuiGraphicsCoreGraphics.h"
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 namespace vl {
     
@@ -61,14 +61,21 @@ namespace vl {
                 DEFINE_GUI_GRAPHICS_RENDERER(GuiSolidLabelElement, GuiSolidLabelElementRenderer, ICoreGraphicsRenderTarget)
                 
             protected:
-                Color               oldColor;
-                FontProperties      oldFont;
-                WString             oldText;
-                vint                oldMaxWidth;
-                NSString*           nsText;
-                NSFont*             nsFont;
+                Color                       oldColor;
+                FontProperties              oldFont;
+                WString                     oldText;
+                vint                        oldMaxWidth;
+                
+                NSString*                   nsText;
+                NSFont*                     nsFont;
+                NSMutableDictionary*        nsAttributes;
+                NSMutableParagraphStyle*    nsParagraphStyle;
              
                 void CreateFont();
+                void CreateColor();
+                void UpdateParagraphStyle();
+                void UpdateMinSize();
+                
                 void InitializeInternal();
                 void FinalizeInternal();
                 void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);

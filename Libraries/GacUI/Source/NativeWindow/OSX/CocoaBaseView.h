@@ -11,15 +11,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-class CocoaWindow;
+namespace vl { namespace presentation { namespace osx { class CocoaWindow; } } };
 
-@interface CocoaBaseView: NSView
+@interface CocoaBaseView: NSView // <NSTextInputClient> // todo IME handling via TextInputClient
 {
     NSTrackingArea* trackingArea;
-    CocoaWindow* cocoaWindow;
+    vl::presentation::osx::CocoaWindow* cocoaWindow;
 }
 
-- (id)initWithCocoaWindow:(CocoaWindow*)window;
+- (id)initWithCocoaWindow:(vl::presentation::osx::CocoaWindow*)window;
 
 @end
 
