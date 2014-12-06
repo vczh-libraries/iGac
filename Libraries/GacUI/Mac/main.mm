@@ -30,6 +30,6 @@ void RunWindow()
 
 void GuiMain()
 {
-    RunWindow<HelloWorldWindow>();
+    RunWindow<HyperlinkWindow>();
 }
 

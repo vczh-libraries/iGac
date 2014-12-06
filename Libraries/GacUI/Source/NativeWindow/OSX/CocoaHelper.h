@@ -49,12 +49,13 @@ namespace vl {
             unsigned int GetMainScreenWidth();
             unsigned int GetMainScreenHeight();
             
+            NSString*   WStringToNSString(const WString& str);
+            WString     NSStringToWString(NSString* str);
+            
 #ifdef GAC_OS_OSX
             
             void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
-            NSString*   WStringToNSString(const WString& str);
-            WString     NSStringToWString(NSString* str);
             
             struct NSContainer
             {
@@ -62,6 +63,8 @@ namespace vl {
                 NSWindowController* controller;
                 CocoaWindowDelegate* delegate;
             };
+            
+            vint NSEventKeyCodeToGacKeyCode(unsigned short keycode);
             
             
 #endif

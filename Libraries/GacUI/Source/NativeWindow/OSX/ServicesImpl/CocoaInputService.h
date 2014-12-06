@@ -19,12 +19,23 @@ namespace vl {
         
         namespace osx {
             
+            class EventTapException: public Exception
+            {
+            public:
+                EventTapException(const WString& _message=WString::Empty):
+                Exception(_message)
+                {
+                    
+                }
+            };
+            
             // todo
             
             class CocoaInputService : public Object, public INativeInputService
             {
             public:
                 typedef void (*TimerFunc)();
+                typedef void (*MouseTapFunc)(CGEventType type, CGEventRef event);
                 
             protected:
                 collections::Dictionary<WString, vint>  keys;
@@ -32,16 +43,27 @@ namespace vl {
                 
                 CGEventSourceRef                        eventSource;
                 bool                                    isTimerEnabled;
+                bool                                    isHookingMouse;
+                
+                MouseTapFunc                            mouseTapFunc;
                 TimerFunc                               timerFunc;
+                
+                CFMachPortRef                           inputTapPort;
+                CFRunLoopSourceRef                      inputTapRunLoopSource;
+                
+                vint8_t                                 globalKeyStates[256];
                 
             protected:
                 void StartGCDTimer();
+                // for global key states & mouse hooking
+                void HookInput();
                 
             public:
-                CocoaInputService(TimerFunc timer);
+                CocoaInputService(MouseTapFunc mouseTap, TimerFunc timer);
                 virtual ~CocoaInputService();
                 
                 void InitializeKeyMapping();
+                void InvokeInputHook(CGEventType type, CGEventRef event);
                 
                 // INativeInputService
                 

@@ -50,6 +50,55 @@ namespace vl {
                     return false;
                 }
             }
+            
+            void CocoaCallbackService::InvokeMouseHook(CGEventType type, CGEventRef event)
+            {
+                CGPoint cgLoc = CGEventGetLocation(event);
+                Point location(cgLoc.x, cgLoc.y);
+                switch(type)
+                {
+                    case kCGEventMouseMoved:
+                    {
+                        for(vint i=0;i<listeners.Count();i++)
+                        {
+                            listeners[i]->MouseMoving(location);
+                        }
+                        break;
+                    }
+                    case kCGEventLeftMouseDown:
+                    {
+                        for(vint i=0;i<listeners.Count();i++)
+                        {
+                            listeners[i]->LeftButtonDown(location);
+                        }
+                        break;
+                    }
+                    case kCGEventLeftMouseUp:
+                    {
+                        for(vint i=0;i<listeners.Count();i++)
+                        {
+                            listeners[i]->LeftButtonUp(location);
+                        }
+                        break;
+                    }
+                    case kCGEventRightMouseDown:
+                    {
+                        for(vint i=0;i<listeners.Count();i++)
+                        {
+                            listeners[i]->RightButtonDown(location);
+                        }
+                        break;
+                    }
+                    case kCGEventRightMouseUp:
+                    {
+                        for(vint i=0;i<listeners.Count();i++)
+                        {
+                            listeners[i]->RightButtonUp(location);
+                        }
+                        break;
+                    }
+                }
+            }
     
             void CocoaCallbackService::InvokeGlobalTimer()
             {

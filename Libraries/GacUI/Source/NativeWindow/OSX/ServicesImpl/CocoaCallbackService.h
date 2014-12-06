@@ -11,6 +11,8 @@
 
 #include "../../GuiNativeWindow.h"
 
+#import <Quartz/Quartz.h>
+
 namespace vl {
     
     namespace presentation {
@@ -31,6 +33,7 @@ namespace vl {
                 bool    UninstallListener(INativeControllerListener* listener) override;
                 
                 //
+                void    InvokeMouseHook(CGEventType type, CGEventRef event);
                 void    InvokeGlobalTimer();
                 void    InvokeClipboardUpdated();
                 void    InvokeNativeWindowCreated(INativeWindow* window);

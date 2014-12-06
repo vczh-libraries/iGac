@@ -143,6 +143,7 @@ namespace vl {
             using namespace collections;
             
             void GlobalTimerFunc();
+            void MouseTapFunc(CGEventType type, CGEventRef event);
             
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
@@ -160,7 +161,7 @@ namespace vl {
             public:
                 CocoaController():
                     mainWindow(0),
-                    inputService(&GlobalTimerFunc)
+                    inputService(&MouseTapFunc, &GlobalTimerFunc)
                 {
                     [NSApplication sharedApplication];
                     
@@ -314,6 +315,12 @@ namespace vl {
             void GlobalTimerFunc()
             {
                 dynamic_cast<CocoaController*>(GetCurrentController())->InvokeGlobalTimer();
+            }
+            
+            void MouseTapFunc(CGEventType type, CGEventRef event)
+            {
+                INativeCallbackService* cb = dynamic_cast<CocoaController*>(GetCurrentController())->CallbackService();
+                dynamic_cast<CocoaCallbackService*>(cb)->InvokeMouseHook(type, event);
             }
             
         }

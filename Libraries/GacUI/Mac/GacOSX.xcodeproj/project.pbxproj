@@ -189,6 +189,7 @@
 		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
 		884BC1671A305D44007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */; };
 		884BC1941A329B34007DF242 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
+		884BC1971A32A62D007DF242 /* CocoaBaseView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1951A32A62D007DF242 /* CocoaBaseView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -541,6 +542,8 @@
 		884BC1911A329998007DF242 /* label_basic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = label_basic.h; sourceTree = SOURCE_ROOT; };
 		884BC1921A329B34007DF242 /* osx_shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_shared.mm; sourceTree = SOURCE_ROOT; };
 		884BC1931A329B34007DF242 /* osx_shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osx_shared.h; sourceTree = SOURCE_ROOT; };
+		884BC1951A32A62D007DF242 /* CocoaBaseView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaBaseView.mm; sourceTree = "<group>"; };
+		884BC1961A32A62D007DF242 /* CocoaBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaBaseView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -858,6 +861,8 @@
 				884BB5B51A304C1B007DF242 /* CocoaNativeController.mm */,
 				884BB5B61A304C1B007DF242 /* CocoaWindow.h */,
 				884BB5B71A304C1B007DF242 /* CocoaWindow.mm */,
+				884BC1961A32A62D007DF242 /* CocoaBaseView.h */,
+				884BC1951A32A62D007DF242 /* CocoaBaseView.mm */,
 				884BB5B81A304C1B007DF242 /* CoreGraphics */,
 				884BB5BC1A304C1B007DF242 /* ServicesImpl */,
 			);
@@ -1341,6 +1346,7 @@
 				884BC0581A304C23007DF242 /* Threading.cpp in Sources */,
 				884BBBAD1A304C1D007DF242 /* GuiNativeWindow.cpp in Sources */,
 				884BBB851A304C1D007DF242 /* GuiWin8ControlStyles.cpp in Sources */,
+				884BC1971A32A62D007DF242 /* CocoaBaseView.mm in Sources */,
 				884BC02B1A304C23007DF242 /* Locale.cpp in Sources */,
 				884BBB991A304C1D007DF242 /* GuiGraphicsComposition.cpp in Sources */,
 				884BBBDB1A304C1D007DF242 /* GuiResource.cpp in Sources */,

@@ -1550,6 +1550,44 @@ Native Window Provider
  * 0x40 : unassigned
  * VKEY_A - VKEY_Z are the same as ASCII 'A' - 'Z' (0x41 - 0x5A)
  */
+#define VKEY_0              0x30
+#define VKEY_1              0x31
+#define VKEY_2              0x32
+#define VKEY_3              0x33
+#define VKEY_4              0x34
+#define VKEY_5              0x35
+#define VKEY_6              0x36
+#define VKEY_7              0x37
+#define VKEY_8              0x38
+#define VKEY_9              0x39
+
+#define VKEY_A              0x41
+#define VKEY_B              0x42
+#define VKEY_C              0x43
+#define VKEY_D              0x44
+#define VKEY_E              0x45
+#define VKEY_F              0x46
+#define VKEY_G              0x47
+#define VKEY_H              0x48
+#define VKEY_I              0x49
+#define VKEY_J              0x4A
+#define VKEY_K              0x4B
+#define VKEY_L              0x4C
+#define VKEY_M              0x4D
+#define VKEY_N              0x4E
+#define VKEY_O              0x4F
+#define VKEY_P              0x50
+#define VKEY_Q              0x51
+#define VKEY_R              0x52
+#define VKEY_S              0x53
+#define VKEY_T              0x54
+#define VKEY_U              0x55
+#define VKEY_V              0x56
+#define VKEY_W              0x57
+#define VKEY_X              0x58
+#define VKEY_Y              0x59
+#define VKEY_Z              0x5A
+
 
 #define VKEY_LWIN           0x5B
 #define VKEY_RWIN           0x5C
