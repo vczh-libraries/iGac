@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>GacOSX_Label_HyperLink.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +23,16 @@
 			<true/>
 		</dict>
 		<key>884BB0001A304BA1007DF242</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>884BC1701A3298F1007DF242</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>884BC1821A3298F1007DF242</key>
 		<dict>
 			<key>primary</key>
 			<true/>

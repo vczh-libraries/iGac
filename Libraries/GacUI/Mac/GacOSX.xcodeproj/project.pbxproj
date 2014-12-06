@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		884BB0121A304C04007DF242 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884BB0111A304C04007DF242 /* Info.plist */; };
-		884BB0141A304C0A007DF242 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.cpp */; };
+		884BB0141A304C0A007DF242 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.mm */; };
 		884BBB6A1A304C1D007DF242 /* GuiApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5171A304C1B007DF242 /* GuiApplication.cpp */; };
 		884BBB6B1A304C1D007DF242 /* GuiBasicControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB5191A304C1B007DF242 /* GuiBasicControls.cpp */; };
 		884BBB6C1A304C1D007DF242 /* GuiContainerControls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB51B1A304C1B007DF242 /* GuiContainerControls.cpp */; };
@@ -188,12 +188,13 @@
 		884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
 		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
 		884BC1671A305D44007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */; };
+		884BC1941A329B34007DF242 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		884BAFEE1A304BA1007DF242 /* GacOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GacOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		884BB0111A304C04007DF242 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		884BB0131A304C0A007DF242 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		884BB0131A304C0A007DF242 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = SOURCE_ROOT; };
 		884BB5171A304C1B007DF242 /* GuiApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiApplication.cpp; sourceTree = "<group>"; };
 		884BB5181A304C1B007DF242 /* GuiApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiApplication.h; sourceTree = "<group>"; };
 		884BB5191A304C1B007DF242 /* GuiBasicControls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiBasicControls.cpp; sourceTree = "<group>"; };
@@ -536,6 +537,10 @@
 		884BC1601A304D22007DF242 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		884BC1651A305D44007DF242 /* GuiGraphicsCoreGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphics.mm; sourceTree = "<group>"; };
 		884BC1661A305D44007DF242 /* GuiGraphicsCoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphics.h; sourceTree = "<group>"; };
+		884BC16B1A32986D007DF242 /* label_hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = label_hyperlink.h; sourceTree = SOURCE_ROOT; };
+		884BC1911A329998007DF242 /* label_basic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = label_basic.h; sourceTree = SOURCE_ROOT; };
+		884BC1921A329B34007DF242 /* osx_shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_shared.mm; sourceTree = SOURCE_ROOT; };
+		884BC1931A329B34007DF242 /* osx_shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osx_shared.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -581,7 +586,11 @@
 		884BAFF01A304BA1007DF242 /* GacOSX */ = {
 			isa = PBXGroup;
 			children = (
-				884BB0131A304C0A007DF242 /* main.cpp */,
+				884BB0131A304C0A007DF242 /* main.mm */,
+				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
+				884BC1911A329998007DF242 /* label_basic.h */,
+				884BC1921A329B34007DF242 /* osx_shared.mm */,
+				884BC1931A329B34007DF242 /* osx_shared.h */,
 				884BAFF11A304BA1007DF242 /* Supporting Files */,
 			);
 			path = GacOSX;
@@ -1374,6 +1383,7 @@
 				884BBB741A304C1D007DF242 /* GuiListControls.cpp in Sources */,
 				884BBBE51A304C1D007DF242 /* WfAnalyzer_Errors.cpp in Sources */,
 				884BC02E1A304C23007DF242 /* ParsingJson_Parser.cpp in Sources */,
+				884BC1941A329B34007DF242 /* osx_shared.mm in Sources */,
 				884BC0481A304C23007DF242 /* RegexData.cpp in Sources */,
 				884BC04D1A304C23007DF242 /* RegexWriter.cpp in Sources */,
 				884BBBAE1A304C1D007DF242 /* CocoaHelper.mm in Sources */,
@@ -1381,7 +1391,7 @@
 				884BC0451A304C23007DF242 /* GuiTypeDescriptorPredefined.cpp in Sources */,
 				884BBBD51A304C1D007DF242 /* GuiReflectionTemplates.cpp in Sources */,
 				884BC0221A304C23007DF242 /* Basic.cpp in Sources */,
-				884BB0141A304C0A007DF242 /* main.cpp in Sources */,
+				884BB0141A304C0A007DF242 /* main.mm in Sources */,
 				884BBB891A304C1D007DF242 /* GuiWin8StylesCommon.cpp in Sources */,
 				884BBB711A304C1D007DF242 /* GuiDataGridControls.cpp in Sources */,
 				884BC0571A304C23007DF242 /* String.cpp in Sources */,
