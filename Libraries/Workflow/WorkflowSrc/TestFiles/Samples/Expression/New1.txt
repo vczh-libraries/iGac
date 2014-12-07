@@ -1,1 +1,0 @@
-new Delegate{func Invoke():void {}} 

@@ -1,6 +1,0 @@
-module test;
-
-func main():void
-{
-	raise $"1 + 2 = $(1+)";
-}

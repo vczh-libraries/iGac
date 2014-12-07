@@ -1,6 +1,0 @@
-module test;
-
-func main():void
-{
-	var x = func lambda(lambda:int):void {};
-}

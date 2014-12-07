@@ -1,6 +1,0 @@
-module test;
-
-namespace system
-{
-	var String : string = null;
-}

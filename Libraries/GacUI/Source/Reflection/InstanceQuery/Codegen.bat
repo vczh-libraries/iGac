@@ -1,1 +1,0 @@
-..\..\..\..\..\Common\Tools\ParserGen.exe GuiInstanceQuery_Parser.parser.txt

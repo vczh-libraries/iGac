@@ -1,1 +1,0 @@
-if (var a : Button = GetControl()) {return "Yes!";}

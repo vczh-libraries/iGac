@@ -1,9 +1,0 @@
-module test;
-
-func main():void
-{
-	var x : string = func self(y:int):string
-	{
-		return y;
-	};
-}

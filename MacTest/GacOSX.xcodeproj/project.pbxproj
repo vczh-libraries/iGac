@@ -1,0 +1,467 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		884BB0121A304C04007DF242 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884BB0111A304C04007DF242 /* Info.plist */; };
+		884BB0141A304C0A007DF242 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.mm */; };
+		884BC1591A304D10007DF242 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1581A304D10007DF242 /* Cocoa.framework */; };
+		884BC15D1A304D1A007DF242 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15C1A304D1A007DF242 /* Foundation.framework */; };
+		884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
+		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
+		884BC1941A329B34007DF242 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
+		884BC1A31A344F6B007DF242 /* GacUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1991A344F6B007DF242 /* GacUI.cpp */; };
+		884BC1A41A344F6B007DF242 /* GacUIReflection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */; };
+		884BC1A51A344F6B007DF242 /* GacUIWindows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */; };
+		884BC1A61A344F6B007DF242 /* Vlpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19F1A344F6B007DF242 /* Vlpp.cpp */; };
+		884BC1A71A344F6B007DF242 /* VlppWorkflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */; };
+		884BC1C61A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1AC1A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm */; };
+		884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1AE1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */; };
+		884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1B21A344FE2007DF242 /* CocoaBaseView.mm */; };
+		884BC1C91A344FE2007DF242 /* CocoaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1B41A344FE2007DF242 /* CocoaHelper.mm */; };
+		884BC1CA1A344FE2007DF242 /* CocoaNativeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1B61A344FE2007DF242 /* CocoaNativeController.mm */; };
+		884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1B91A344FE2007DF242 /* CocoaWindow.mm */; };
+		884BC1CC1A344FE2007DF242 /* CoreGraphicsApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1BC1A344FE2007DF242 /* CoreGraphicsApp.mm */; };
+		884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1BF1A344FE2007DF242 /* CocoaCallbackService.mm */; };
+		884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C11A344FE2007DF242 /* CocoaInputService.mm */; };
+		884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */; };
+		884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		884BAFEE1A304BA1007DF242 /* GacOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GacOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		884BB0111A304C04007DF242 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		884BB0131A304C0A007DF242 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = SOURCE_ROOT; };
+		884BC1581A304D10007DF242 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		884BC15A1A304D13007DF242 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		884BC15C1A304D1A007DF242 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		884BC15E1A304D1E007DF242 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		884BC1601A304D22007DF242 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		884BC16B1A32986D007DF242 /* label_hyperlink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = label_hyperlink.h; sourceTree = SOURCE_ROOT; };
+		884BC1911A329998007DF242 /* label_basic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = label_basic.h; sourceTree = SOURCE_ROOT; };
+		884BC1921A329B34007DF242 /* osx_shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_shared.mm; sourceTree = SOURCE_ROOT; };
+		884BC1931A329B34007DF242 /* osx_shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osx_shared.h; sourceTree = SOURCE_ROOT; };
+		884BC1991A344F6B007DF242 /* GacUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUI.cpp; sourceTree = "<group>"; };
+		884BC19A1A344F6B007DF242 /* GacUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUI.h; sourceTree = "<group>"; };
+		884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUIReflection.cpp; sourceTree = "<group>"; };
+		884BC19C1A344F6B007DF242 /* GacUIReflection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUIReflection.h; sourceTree = "<group>"; };
+		884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUIWindows.cpp; sourceTree = "<group>"; };
+		884BC19E1A344F6B007DF242 /* GacUIWindows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUIWindows.h; sourceTree = "<group>"; };
+		884BC19F1A344F6B007DF242 /* Vlpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vlpp.cpp; sourceTree = "<group>"; };
+		884BC1A01A344F6B007DF242 /* Vlpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vlpp.h; sourceTree = "<group>"; };
+		884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VlppWorkflow.cpp; sourceTree = "<group>"; };
+		884BC1A21A344F6B007DF242 /* VlppWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VlppWorkflow.h; sourceTree = "<group>"; };
+		884BC1AB1A344FE2007DF242 /* GuiGraphicsCoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphics.h; sourceTree = "<group>"; };
+		884BC1AC1A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphics.mm; sourceTree = "<group>"; };
+		884BC1AD1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphicsRenderers.h; sourceTree = "<group>"; };
+		884BC1AE1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphicsRenderers.mm; sourceTree = "<group>"; };
+		884BC1B11A344FE2007DF242 /* CocoaBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaBaseView.h; sourceTree = "<group>"; };
+		884BC1B21A344FE2007DF242 /* CocoaBaseView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaBaseView.mm; sourceTree = "<group>"; };
+		884BC1B31A344FE2007DF242 /* CocoaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaHelper.h; sourceTree = "<group>"; };
+		884BC1B41A344FE2007DF242 /* CocoaHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaHelper.mm; sourceTree = "<group>"; };
+		884BC1B51A344FE2007DF242 /* CocoaNativeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaNativeController.h; sourceTree = "<group>"; };
+		884BC1B61A344FE2007DF242 /* CocoaNativeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaNativeController.mm; sourceTree = "<group>"; };
+		884BC1B71A344FE2007DF242 /* CocoaPredef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaPredef.h; sourceTree = "<group>"; };
+		884BC1B81A344FE2007DF242 /* CocoaWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaWindow.h; sourceTree = "<group>"; };
+		884BC1B91A344FE2007DF242 /* CocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaWindow.mm; sourceTree = "<group>"; };
+		884BC1BB1A344FE2007DF242 /* CoreGraphicsApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreGraphicsApp.h; sourceTree = "<group>"; };
+		884BC1BC1A344FE2007DF242 /* CoreGraphicsApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreGraphicsApp.mm; sourceTree = "<group>"; };
+		884BC1BE1A344FE2007DF242 /* CocoaCallbackService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaCallbackService.h; sourceTree = "<group>"; };
+		884BC1BF1A344FE2007DF242 /* CocoaCallbackService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaCallbackService.mm; sourceTree = "<group>"; };
+		884BC1C01A344FE2007DF242 /* CocoaInputService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaInputService.h; sourceTree = "<group>"; };
+		884BC1C11A344FE2007DF242 /* CocoaInputService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaInputService.mm; sourceTree = "<group>"; };
+		884BC1C21A344FE2007DF242 /* CocoaResourceService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaResourceService.h; sourceTree = "<group>"; };
+		884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaResourceService.mm; sourceTree = "<group>"; };
+		884BC1C41A344FE2007DF242 /* CocoaScreenService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaScreenService.h; sourceTree = "<group>"; };
+		884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaScreenService.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		884BAFEB1A304BA1007DF242 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */,
+				884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */,
+				884BC15D1A304D1A007DF242 /* Foundation.framework in Frameworks */,
+				884BC1591A304D10007DF242 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		884BAFE51A304BA1007DF242 = {
+			isa = PBXGroup;
+			children = (
+				884BC1601A304D22007DF242 /* Quartz.framework */,
+				884BC15E1A304D1E007DF242 /* CoreGraphics.framework */,
+				884BC15C1A304D1A007DF242 /* Foundation.framework */,
+				884BC15A1A304D13007DF242 /* CoreFoundation.framework */,
+				884BC1581A304D10007DF242 /* Cocoa.framework */,
+				884BC1981A344F6B007DF242 /* GacRelease */,
+				884BC1A81A344FE2007DF242 /* Mac */,
+				884BAFF01A304BA1007DF242 /* GacOSX */,
+				884BAFEF1A304BA1007DF242 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		884BAFEF1A304BA1007DF242 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				884BAFEE1A304BA1007DF242 /* GacOSX.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		884BAFF01A304BA1007DF242 /* GacOSX */ = {
+			isa = PBXGroup;
+			children = (
+				884BB0131A304C0A007DF242 /* main.mm */,
+				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
+				884BC1911A329998007DF242 /* label_basic.h */,
+				884BC1921A329B34007DF242 /* osx_shared.mm */,
+				884BC1931A329B34007DF242 /* osx_shared.h */,
+				884BAFF11A304BA1007DF242 /* Supporting Files */,
+			);
+			path = GacOSX;
+			sourceTree = "<group>";
+		};
+		884BAFF11A304BA1007DF242 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				884BB0111A304C04007DF242 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		884BC1981A344F6B007DF242 /* GacRelease */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1991A344F6B007DF242 /* GacUI.cpp */,
+				884BC19A1A344F6B007DF242 /* GacUI.h */,
+				884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */,
+				884BC19C1A344F6B007DF242 /* GacUIReflection.h */,
+				884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */,
+				884BC19E1A344F6B007DF242 /* GacUIWindows.h */,
+				884BC19F1A344F6B007DF242 /* Vlpp.cpp */,
+				884BC1A01A344F6B007DF242 /* Vlpp.h */,
+				884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */,
+				884BC1A21A344F6B007DF242 /* VlppWorkflow.h */,
+			);
+			name = GacRelease;
+			path = ../GacRelease;
+			sourceTree = "<group>";
+		};
+		884BC1A81A344FE2007DF242 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1A91A344FE2007DF242 /* GraphicsElement */,
+				884BC1AF1A344FE2007DF242 /* NativeWindow */,
+			);
+			name = Mac;
+			path = ../Mac;
+			sourceTree = "<group>";
+		};
+		884BC1A91A344FE2007DF242 /* GraphicsElement */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1AA1A344FE2007DF242 /* CoreGraphics */,
+			);
+			path = GraphicsElement;
+			sourceTree = "<group>";
+		};
+		884BC1AA1A344FE2007DF242 /* CoreGraphics */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1AB1A344FE2007DF242 /* GuiGraphicsCoreGraphics.h */,
+				884BC1AC1A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm */,
+				884BC1AD1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.h */,
+				884BC1AE1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */,
+			);
+			path = CoreGraphics;
+			sourceTree = "<group>";
+		};
+		884BC1AF1A344FE2007DF242 /* NativeWindow */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1B01A344FE2007DF242 /* OSX */,
+			);
+			path = NativeWindow;
+			sourceTree = "<group>";
+		};
+		884BC1B01A344FE2007DF242 /* OSX */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1B11A344FE2007DF242 /* CocoaBaseView.h */,
+				884BC1B21A344FE2007DF242 /* CocoaBaseView.mm */,
+				884BC1B31A344FE2007DF242 /* CocoaHelper.h */,
+				884BC1B41A344FE2007DF242 /* CocoaHelper.mm */,
+				884BC1B51A344FE2007DF242 /* CocoaNativeController.h */,
+				884BC1B61A344FE2007DF242 /* CocoaNativeController.mm */,
+				884BC1B71A344FE2007DF242 /* CocoaPredef.h */,
+				884BC1B81A344FE2007DF242 /* CocoaWindow.h */,
+				884BC1B91A344FE2007DF242 /* CocoaWindow.mm */,
+				884BC1BA1A344FE2007DF242 /* CoreGraphics */,
+				884BC1BD1A344FE2007DF242 /* ServicesImpl */,
+			);
+			path = OSX;
+			sourceTree = "<group>";
+		};
+		884BC1BA1A344FE2007DF242 /* CoreGraphics */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1BB1A344FE2007DF242 /* CoreGraphicsApp.h */,
+				884BC1BC1A344FE2007DF242 /* CoreGraphicsApp.mm */,
+			);
+			path = CoreGraphics;
+			sourceTree = "<group>";
+		};
+		884BC1BD1A344FE2007DF242 /* ServicesImpl */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1BE1A344FE2007DF242 /* CocoaCallbackService.h */,
+				884BC1BF1A344FE2007DF242 /* CocoaCallbackService.mm */,
+				884BC1C01A344FE2007DF242 /* CocoaInputService.h */,
+				884BC1C11A344FE2007DF242 /* CocoaInputService.mm */,
+				884BC1C21A344FE2007DF242 /* CocoaResourceService.h */,
+				884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */,
+				884BC1C41A344FE2007DF242 /* CocoaScreenService.h */,
+				884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */,
+			);
+			path = ServicesImpl;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		884BAFED1A304BA1007DF242 /* GacOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 884BB00B1A304BA1007DF242 /* Build configuration list for PBXNativeTarget "GacOSX" */;
+			buildPhases = (
+				884BAFEA1A304BA1007DF242 /* Sources */,
+				884BAFEB1A304BA1007DF242 /* Frameworks */,
+				884BAFEC1A304BA1007DF242 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GacOSX;
+			productName = GacOSX;
+			productReference = 884BAFEE1A304BA1007DF242 /* GacOSX.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		884BAFE61A304BA1007DF242 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Robert Bu";
+				TargetAttributes = {
+					884BAFED1A304BA1007DF242 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
+			};
+			buildConfigurationList = 884BAFE91A304BA1007DF242 /* Build configuration list for PBXProject "GacOSX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 884BAFE51A304BA1007DF242;
+			productRefGroup = 884BAFEF1A304BA1007DF242 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				884BAFED1A304BA1007DF242 /* GacOSX */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		884BAFEC1A304BA1007DF242 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				884BB0121A304C04007DF242 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		884BAFEA1A304BA1007DF242 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				884BC1CA1A344FE2007DF242 /* CocoaNativeController.mm in Sources */,
+				884BC1A41A344F6B007DF242 /* GacUIReflection.cpp in Sources */,
+				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
+				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
+				884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */,
+				884BC1C91A344FE2007DF242 /* CocoaHelper.mm in Sources */,
+				884BC1941A329B34007DF242 /* osx_shared.mm in Sources */,
+				884BC1CC1A344FE2007DF242 /* CoreGraphicsApp.mm in Sources */,
+				884BC1C61A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */,
+				884BB0141A304C0A007DF242 /* main.mm in Sources */,
+				884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */,
+				884BC1A71A344F6B007DF242 /* VlppWorkflow.cpp in Sources */,
+				884BC1A61A344F6B007DF242 /* Vlpp.cpp in Sources */,
+				884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */,
+				884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */,
+				884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */,
+				884BC1A31A344F6B007DF242 /* GacUI.cpp in Sources */,
+				884BC1A51A344F6B007DF242 /* GacUIWindows.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		884BB0091A304BA1007DF242 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		884BB00A1A304BA1007DF242 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		884BB00C1A304BA1007DF242 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/darkfall/Documents/gac/Common/Tools/PdbDump/PdbDump,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../GacRelease;
+			};
+			name = Debug;
+		};
+		884BB00D1A304BA1007DF242 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/darkfall/Documents/gac/Common/Tools/PdbDump/PdbDump,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = ../GacRelease;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		884BAFE91A304BA1007DF242 /* Build configuration list for PBXProject "GacOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				884BB0091A304BA1007DF242 /* Debug */,
+				884BB00A1A304BA1007DF242 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		884BB00B1A304BA1007DF242 /* Build configuration list for PBXNativeTarget "GacOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				884BB00C1A304BA1007DF242 /* Debug */,
+				884BB00D1A304BA1007DF242 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 884BAFE61A304BA1007DF242 /* Project object */;
+}

@@ -1,3 +1,0 @@
-ModuleA
-ModuleB
-ModuleC

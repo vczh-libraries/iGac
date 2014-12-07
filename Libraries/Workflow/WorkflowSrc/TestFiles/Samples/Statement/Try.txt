@@ -1,1 +1,0 @@
-try{Fuck();} catch(ex){ Log(ex); raise; } finally {Shit();} 

@@ -1,1 +1,0 @@
-attach(Clicked, OnClicked) 

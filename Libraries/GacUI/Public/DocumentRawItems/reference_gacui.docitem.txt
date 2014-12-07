@@ -1,6 +1,0 @@
-/title:GacUI Library Reference
-/uniqueId:reference:gacui
-/parentUniqueId:
-/content
-/+h1/GacUI Library Reference/-h1//para/
-This reference contains descriptions to all classes and functions in GacUI Library.

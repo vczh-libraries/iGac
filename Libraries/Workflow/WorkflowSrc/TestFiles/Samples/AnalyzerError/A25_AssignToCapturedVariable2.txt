@@ -1,7 +1,0 @@
-module test;
-
-func main():void
-{
-	var a=1;
-	var x:func():int = [a=2];
-}

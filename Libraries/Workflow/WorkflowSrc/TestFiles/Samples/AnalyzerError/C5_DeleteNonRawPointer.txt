@@ -1,7 +1,0 @@
-module test;
-using system::*;
-
-func main():void
-{
-	delete null of Function^;
-}

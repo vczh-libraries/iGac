@@ -1,6 +1,0 @@
-module test;
-
-func main():void
-{
-	var x : func(int):int = [$1=2];
-}

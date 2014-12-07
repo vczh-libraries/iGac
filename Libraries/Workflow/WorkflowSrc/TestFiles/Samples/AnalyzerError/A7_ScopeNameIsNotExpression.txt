@@ -1,6 +1,0 @@
-module test;
-
-namespace ns
-{
-	var x = ns;
-}

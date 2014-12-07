@@ -1,5 +1,0 @@
-HelloWorld
-Function
-Variable
-Namespace
-NestedNamespace

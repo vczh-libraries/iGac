@@ -1,6 +1,0 @@
-module test;
-
-func main():void
-{
-	var x = [$1 of int] of func(string):int;
-}

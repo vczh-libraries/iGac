@@ -1,6 +1,0 @@
-module test;
-
-func main(a : int):void
-{
-	a=2;
-}

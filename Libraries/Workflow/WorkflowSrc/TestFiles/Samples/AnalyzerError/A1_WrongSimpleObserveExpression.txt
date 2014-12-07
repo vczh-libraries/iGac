@@ -1,6 +1,0 @@
-module test;
-
-func main():void
-{
-	bind(a.observe(b.c));
-}

@@ -1,6 +1,0 @@
-module test;
-
-func main() : void
-{
-	if(var x : int = 100){}
-}

@@ -1,8 +1,0 @@
-module test;
-
-namespace system
-{
-	func String():void
-	{
-	}
-}
