@@ -296,7 +296,6 @@ namespace vl {
                 
                 void InvokeGlobalTimer()
                 {
-                    
                     callbackService.InvokeGlobalTimer();
                 }
                 

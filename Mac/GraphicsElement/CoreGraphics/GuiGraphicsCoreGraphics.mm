@@ -222,8 +222,6 @@ namespace vl {
                             
                             CGRect rect = CGRectMake(clipper.Left(), clipper.Top(), clipper.Width(), clipper.Height());
                             CGContextClipToRect(context, rect);
-                            
-                            CGRect clipCGRect = CGContextGetClipBoundingBox(context);
                         }
                         else
                         {

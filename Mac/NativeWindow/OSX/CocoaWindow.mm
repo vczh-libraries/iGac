@@ -477,7 +477,7 @@ namespace vl {
             
             void CocoaWindow::RedrawContent() 
             {
-                [nativeContainer->window display];
+                [nativeContainer->window.contentView display];
             }
 
             NSContainer* CocoaWindow::GetNativeContainer() const

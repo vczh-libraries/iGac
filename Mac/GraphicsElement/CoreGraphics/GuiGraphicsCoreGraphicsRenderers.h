@@ -51,6 +51,15 @@ namespace vl {
             {
                 typedef collections::Pair<Color, Color> ColorPair;
                 DEFINE_ELEMENT_RENDERER(GuiGradientBackgroundElement, GuiGradientBackgroundElementRenderer, ColorPair)
+                
+                virtual ~GuiGradientBackgroundElementRenderer();
+                
+            protected:
+                collections::Pair<Color, Color>     oldColor;
+                CGGradientRef                       cgGradient;
+                CGColorSpaceRef                     cgColorSpace;
+                
+                void CreateCGGradient();
             };
             
             class GuiSolidLabelElementRenderer : public Object, public IGuiGraphicsRenderer

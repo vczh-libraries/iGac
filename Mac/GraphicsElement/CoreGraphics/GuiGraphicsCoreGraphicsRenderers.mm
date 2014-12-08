@@ -44,30 +44,209 @@ namespace vl {
                 return (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
             }
             
+            inline void SetCGContextFillColor(CGContextRef context, const Color& c)
+            {
+                CGContextSetRGBFillColor(context, c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f);
+            }
+            
+            inline void SetCGContextStrokeColor(CGContextRef context, const Color& c)
+            {
+                CGContextSetRGBStrokeColor(context, c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f);
+            }
+            
+            inline CGRect ConvertToCGRect(const Rect& rect, float extends = 0.0f)
+            {
+                return CGRectMake(rect.Left() - extends, rect.Top() - extends, rect.Width() + extends * 2, rect.Height() + extends * 2);
+            }
+            
             IMPLEMENT_ELEMENT_RENDERER(GuiSolidBackgroundElementRenderer)
             {
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
-                Color c = element->GetColor();
-                CGContextSetRGBFillColor(context, c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f);
-                
-                CGRect rect = CGRectMake(bounds.Left(), bounds.Top(), bounds.Width(), bounds.Height());
-                CGContextFillRect(context, rect);
+                SetCGContextFillColor(context, element->GetColor());
+            
+                CGContextFillRect(context, ConvertToCGRect(bounds));
             }
             
             IMPLEMENT_ELEMENT_RENDERER(GuiSolidBorderElementRenderer)
             {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
+                SetCGContextStrokeColor(context, element->GetColor());
+                
+                switch(element->GetShape())
+                {
+                    case ElementShape::Rectangle:
+                        CGContextStrokeRect(context, ConvertToCGRect(bounds, -0.5f));
+                        break;
+                        
+                    case ElementShape::Ellipse:
+                        CGContextStrokeEllipseInRect(context, ConvertToCGRect(bounds));
+                        break;
+                }
             }
             
             IMPLEMENT_ELEMENT_RENDERER(GuiRoundBorderElementRenderer)
             {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                
+                SetCGContextStrokeColor(context, element->GetColor());
+
+                CGRect rect = ConvertToCGRect(bounds, -0.5f);
+                CGFloat radius = (CGFloat)element->GetRadius();
+                
+                CGFloat minx = CGRectGetMinX(rect), midx = CGRectGetMidX(rect), maxx = CGRectGetMaxX(rect);
+                CGFloat miny = CGRectGetMinY(rect), midy = CGRectGetMidY(rect), maxy = CGRectGetMaxY(rect);
+                
+                CGContextMoveToPoint(context, minx, midy);
+                CGContextAddArcToPoint(context, minx, miny, midx, miny, radius);
+                CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius);
+                CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius);
+                CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius);
+                CGContextClosePath(context);
+                CGContextDrawPath(context, kCGPathFillStroke);
+            }
+            
+            GuiGradientBackgroundElementRenderer::GuiGradientBackgroundElementRenderer():
+            cgGradient(0),
+            cgColorSpace(0)
+            {
+                cgColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+            }
+            
+            GuiGradientBackgroundElementRenderer::~GuiGradientBackgroundElementRenderer()
+            {
+                CGColorSpaceRelease(cgColorSpace);
+                if(cgGradient)
+                    CGGradientRelease(cgGradient);
+            }
+            
+            
+            void GuiGradientBackgroundElementRenderer::InitializeInternal()
+            {
                 
             }
             
-            IMPLEMENT_ELEMENT_RENDERER(GuiGradientBackgroundElementRenderer)
+            void GuiGradientBackgroundElementRenderer::FinalizeInternal()
             {
                 
+            }
+            
+            void GuiGradientBackgroundElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                CreateCGGradient();
+            }
+            
+            void GuiGradientBackgroundElementRenderer::Render(Rect bounds)
+            {
+                CGPoint points[2];
+                
+                switch(element->GetDirection())
+                {
+                    case GuiGradientBackgroundElement::Horizontal:
+                    {
+                        points[0].x = (CGFloat)bounds.x1;
+                        points[0].y = (CGFloat)bounds.y1;
+                        points[1].x = (CGFloat)bounds.x2;
+                        points[1].y = (CGFloat)bounds.y1;
+                        break;
+                    }
+                        
+                    case GuiGradientBackgroundElement::Vertical:
+                    {
+                        points[0].x = (CGFloat)bounds.x1;
+                        points[0].y = (CGFloat)bounds.y1;
+                        points[1].x = (CGFloat)bounds.x1;
+                        points[1].y = (CGFloat)bounds.y2;
+                        break;
+                    }
+                        
+                    case GuiGradientBackgroundElement::Slash:
+                    {
+                        points[0].x = (CGFloat)bounds.x2;
+                        points[0].y = (CGFloat)bounds.y1;
+                        points[1].x = (CGFloat)bounds.x1;
+                        points[1].y = (CGFloat)bounds.y2;
+                        break;
+                    }
+                        
+                    case GuiGradientBackgroundElement::Backslash:
+                    {
+                        points[0].x = (CGFloat)bounds.x1;
+                        points[0].y = (CGFloat)bounds.y1;
+                        points[1].x = (CGFloat)bounds.x2;
+                        points[1].y = (CGFloat)bounds.y2;
+                        break;
+                    }
+                }
+                
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+
+                switch(element->GetShape())
+                {
+                    case ElementShape::Rectangle:
+                        CGContextSaveGState(context);
+                        
+                        CGContextBeginPath(context);
+                        CGContextAddRect(context, ConvertToCGRect(bounds));
+                        CGContextClip(context);
+                        
+                        CGContextDrawLinearGradient(context, cgGradient, points[0], points[1], kCGGradientDrawsBeforeStartLocation);
+                        
+                        CGContextRestoreGState(context);
+                        break;
+                        
+                    case ElementShape::Ellipse:
+                    {
+                        CGContextSaveGState(context);
+                        
+                        CGMutablePathRef path = CGPathCreateMutable();
+                        float cx = (bounds.x1 + bounds.x2) / 2,
+                              cy = (bounds.y1 + bounds.y2) / 2;
+                        
+                        CGAffineTransform t = CGAffineTransformMakeTranslation(cx, cy);
+                        t = CGAffineTransformConcat(CGAffineTransformMakeScale(1.0, bounds.Height() / bounds.Width()), t);
+                        
+                        CGPathAddArc(path, &t, 0, 0, bounds.Width()/2, 0, 6.28318531, false);
+                        
+                        CGContextAddPath(context, path);
+                        CGContextClip(context);
+                        
+                        CGContextDrawLinearGradient(context, cgGradient, points[0], points[1], kCGGradientDrawsBeforeStartLocation);
+
+                        CGContextRestoreGState(context);
+                        break;
+                    }
+                }
+            }
+            
+            void GuiGradientBackgroundElementRenderer::OnElementStateChanged()
+            {
+                if(renderTarget)
+                {
+                    collections::Pair<Color, Color> color = collections::Pair<Color, Color>(element->GetColor1(), element->GetColor2());
+                    if(color != oldColor)
+                    {
+                        CreateCGGradient();
+                    }
+                }
+            }
+            
+            void GuiGradientBackgroundElementRenderer::CreateCGGradient()
+            {
+                oldColor = collections::Pair<Color, Color>(element->GetColor1(), element->GetColor2());
+                if(cgGradient)
+                {
+                    CGGradientRelease(cgGradient);
+                }
+                
+                CGFloat locations[2] = { 0.0f, 1.0f };
+                CGFloat components[8] = {
+                    oldColor.key.r / 255.0f, oldColor.key.g / 255.0f, oldColor.key.b / 255.0f, oldColor.key.a / 255.0f,
+                    oldColor.value.r / 255.0f, oldColor.value.g / 255.0f, oldColor.value.b / 255.0f, oldColor.value.a / 255.0f
+                };
+                
+                cgGradient = CGGradientCreateWithColorComponents(cgColorSpace, components, locations, 2);
             }
             
             GuiSolidLabelElementRenderer::GuiSolidLabelElementRenderer():
