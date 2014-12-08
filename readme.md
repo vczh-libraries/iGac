@@ -1,1 +1,1 @@
-#### OSX native adapter for GacLib (https://www.gaclib.net) by Vczh
+#### OSX native adapter for GacLib (http://www.gaclib.net) by Vczh

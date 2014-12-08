@@ -75,6 +75,8 @@
 		884BC1DA1A353C9B007DF242 /* Vlpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vlpp.h; sourceTree = "<group>"; };
 		884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VlppWorkflow.cpp; sourceTree = "<group>"; };
 		884BC1DC1A353C9B007DF242 /* VlppWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VlppWorkflow.h; sourceTree = "<group>"; };
+		884BC1E21A354F5E007DF242 /* button_enable_disable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = button_enable_disable.h; sourceTree = SOURCE_ROOT; };
+		884BC1E31A354F69007DF242 /* gac_include.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gac_include.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,8 @@
 				884BB0131A304C0A007DF242 /* main.mm */,
 				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
 				884BC1911A329998007DF242 /* label_basic.h */,
+				884BC1E21A354F5E007DF242 /* button_enable_disable.h */,
+				884BC1E31A354F69007DF242 /* gac_include.h */,
 				884BC1921A329B34007DF242 /* osx_shared.mm */,
 				884BC1931A329B34007DF242 /* osx_shared.h */,
 				884BAFF11A304BA1007DF242 /* Supporting Files */,

@@ -2,15 +2,7 @@
 #ifndef GacOSX_label_hyperlink_h
 #define GacOSX_label_hyperlink_h
 
-#include "GacUI.h"
-
-using namespace vl;
-using namespace vl::presentation;
-using namespace vl::presentation::elements;
-using namespace vl::presentation::compositions;
-using namespace vl::presentation::controls;
-using namespace vl::presentation::theme;
-using namespace vl::presentation::templates;
+#include "gac_include.h"
 
 class HyperlinkWindow : public GuiWindow
 {

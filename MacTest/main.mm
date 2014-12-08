@@ -12,6 +12,7 @@
 
 #include "label_basic.h"
 #include "label_hyperlink.h"
+#include "button_enable_disable.h"
 
 int main(int argc, const char * argv[])
 {
@@ -20,16 +21,8 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
-template<typename T>
-void RunWindow()
-{
-    GuiWindow* window = new T();
-    GetApplication()->Run(window);
-    delete window;
-}
-
 void GuiMain()
 {
-    RunWindow<HyperlinkWindow>();
+    RunGacWindow<EnableDisableWindow>();
 }
 
