@@ -104,13 +104,19 @@ namespace vl {
 
             void CocoaWindow::SetBounds(const Rect& bounds) 
             {
-                NSRect nsbounds = NSMakeRect(bounds.Left(),
-                                             bounds.Bottom(),
-                                             bounds.Width(),
-                                             bounds.Height());
+                Rect newBounds = bounds;
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moving(newBounds, true);
+                }
+                NSRect nsbounds = NSMakeRect(newBounds.Left(),
+                                             newBounds.Bottom(),
+                                             newBounds.Width(),
+                                             newBounds.Height());
                 [nativeContainer->window setFrame:nsbounds display:YES];
                 
-                Show();
+
+                //Show();
             }
 
             Size CocoaWindow::GetClientSize() 
