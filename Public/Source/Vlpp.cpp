@@ -11,6 +11,7 @@ Basic.cpp
 #include <Windows.h>
 #elif defined VCZH_GCC
 #include <time.h>
+#include <chrono>
 #endif
 
 namespace vl
@@ -108,8 +109,11 @@ DateTime
 		dt.minute = timeinfo->tm_min;
 		dt.second = timeinfo->tm_sec;
 		dt.milliseconds = 0;
+        
+        
+        using namespace std::chrono;
 		dt.filetime = (vuint64_t)timer;
-		dt.totalMilliseconds = (vuint64_t)(timer*1000);
+		dt.totalMilliseconds =  duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 		return dt;
 	}
 #endif

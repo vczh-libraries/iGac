@@ -41,12 +41,17 @@ inline CGContextRef GetCurrentCGContext()
 }
 
 @implementation CoreGraphicsView
+{
+    NSDate* lastTime;
+}
 
 - (id)initWithCocoaWindow:(CocoaWindow *)window
 {
     if(self = [super initWithCocoaWindow:window])
     {
         [self resize:[self frame].size];
+        
+        lastTime = [NSDate date];
     }
     return self;
 }
@@ -71,6 +76,11 @@ inline CGContextRef GetCurrentCGContext()
 - (void)drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = GetCurrentCGContext();
+    
+    NSTimeInterval i = [lastTime timeIntervalSinceNow];
+ //   printf("%f\n", i);
+    
+    lastTime = [NSDate date];
     
     CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
@@ -171,7 +181,7 @@ namespace vl {
                     SetCurrentRenderTarget(this);
                     
                     [NSGraphicsContext saveGraphicsState];
-                    ;
+                    
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:(CGContextRef)GetCGContext()
                                                                                                     flipped:true]];
                     
@@ -456,7 +466,6 @@ void CoreGraphicsMain()
     //    elements_coregraphics::GuiImageFrameElementRenderer::Register();
     //    elements_coregraphics::GuiPolygonElementRenderer::Register();
     //    elements_coregraphics::GuiColorizedTextElementRenderer::Register();
-    //    elements_coregraphics::GuiDirect2DElementRenderer::Register();
     elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
     
     {

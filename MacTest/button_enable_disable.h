@@ -27,6 +27,7 @@ private:
     {
         buttonTarget->SetEnabled(false);
     }
+    
 public:
     EnableDisableWindow()
     :GuiWindow(GetCurrentTheme()->CreateWindowStyle())

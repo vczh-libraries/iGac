@@ -40,7 +40,7 @@ namespace vl {
                 // default is 0.25s
                 CGEventSourceSetLocalEventsSuppressionInterval(eventSource, 0.0);
                 
-                memset(globalKeyStates, 0, sizeof(vint8_t) * 128);
+                memset(globalKeyStates, 0, sizeof(vint8_t) * 256);
                 
                 HookInput();
             }

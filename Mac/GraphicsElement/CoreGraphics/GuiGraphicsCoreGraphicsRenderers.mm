@@ -215,6 +215,8 @@ namespace vl {
                         CGContextDrawLinearGradient(context, cgGradient, points[0], points[1], kCGGradientDrawsBeforeStartLocation);
 
                         CGContextRestoreGState(context);
+                        
+                        CGPathRelease(path);
                         break;
                     }
                 }
@@ -234,6 +236,7 @@ namespace vl {
             
             void GuiGradientBackgroundElementRenderer::CreateCGGradient()
             {
+                printf("Create - %f\n", [[NSDate date] timeIntervalSince1970]);
                 oldColor = collections::Pair<Color, Color>(element->GetColor1(), element->GetColor2());
                 if(cgGradient)
                 {

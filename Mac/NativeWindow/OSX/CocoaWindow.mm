@@ -477,7 +477,8 @@ namespace vl {
             
             void CocoaWindow::RedrawContent() 
             {
-                [nativeContainer->window.contentView display];
+                [nativeContainer->window.contentView setNeedsDisplay:YES];
+                [nativeContainer->window display];
             }
 
             NSContainer* CocoaWindow::GetNativeContainer() const
@@ -494,7 +495,6 @@ namespace vl {
             {
                 return graphicsHandler;
             }
-            
             
             void CocoaWindow::InvokeMoved()
             {

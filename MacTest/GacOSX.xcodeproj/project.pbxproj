@@ -180,13 +180,13 @@
 		884BC1B01A344FE2007DF242 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				884BC1B71A344FE2007DF242 /* CocoaPredef.h */,
 				884BC1B11A344FE2007DF242 /* CocoaBaseView.h */,
 				884BC1B21A344FE2007DF242 /* CocoaBaseView.mm */,
 				884BC1B31A344FE2007DF242 /* CocoaHelper.h */,
 				884BC1B41A344FE2007DF242 /* CocoaHelper.mm */,
 				884BC1B51A344FE2007DF242 /* CocoaNativeController.h */,
 				884BC1B61A344FE2007DF242 /* CocoaNativeController.mm */,
-				884BC1B71A344FE2007DF242 /* CocoaPredef.h */,
 				884BC1B81A344FE2007DF242 /* CocoaWindow.h */,
 				884BC1B91A344FE2007DF242 /* CocoaWindow.mm */,
 				884BC1BA1A344FE2007DF242 /* CoreGraphics */,
