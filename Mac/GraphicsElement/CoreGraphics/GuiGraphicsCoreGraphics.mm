@@ -42,7 +42,7 @@ inline CGContextRef GetCurrentCGContext()
 
 @implementation CoreGraphicsView
 {
-    NSDate* lastTime;
+
 }
 
 - (id)initWithCocoaWindow:(CocoaWindow *)window
@@ -50,8 +50,6 @@ inline CGContextRef GetCurrentCGContext()
     if(self = [super initWithCocoaWindow:window])
     {
         [self resize:[self frame].size];
-        
-        lastTime = [NSDate date];
     }
     return self;
 }
@@ -77,11 +75,6 @@ inline CGContextRef GetCurrentCGContext()
 {
     CGContextRef context = GetCurrentCGContext();
     
-    NSTimeInterval i = [lastTime timeIntervalSinceNow];
- //   printf("%f\n", i);
-    
-    lastTime = [NSDate date];
-    
     CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
 
@@ -101,9 +94,113 @@ namespace vl {
             using namespace osx;
             using namespace collections;
             
+            class CachedCoreTextFontPackageAllocator
+            {
+                DEFINE_CACHED_RESOURCE_ALLOCATOR(FontProperties, Ptr<CoreTextFontPackage>)
+                
+            public:
+                
+                static Ptr<CoreTextFontPackage> CreateCoreTextFontPackage(const FontProperties& font)
+                {
+                    NSFontManager* fontManager = [NSFontManager sharedFontManager];
+                    
+                    NSFontTraitMask traitMask = 0;
+                    if(font.bold)
+                        traitMask |= NSBoldFontMask;
+                    if(font.italic)
+                        traitMask |= NSItalicFontMask;
+                    
+                    Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
+                    
+                    coreTextFont->font = [fontManager fontWithFamily:WStringToNSString(font.fontFamily)
+                                                              traits:traitMask
+                                                              weight:0
+                                                                size:font.size];
+                    
+                    // this is just a pretty naive fall back here
+                    // but its safe to assume that this is availabe in every OS X
+                    if(!coreTextFont->font)
+                    {
+                        coreTextFont->font = [fontManager fontWithFamily:@"Lucida Grande" traits:traitMask weight:0 size:font.size];
+                    }
+                    
+                    if(!coreTextFont->font)
+                    {
+                        throw FontNotFoundException(L"Font " + font.fontFamily + L" cannot be found.");
+                    }
+                    
+                    coreTextFont->attributes = [NSMutableDictionary dictionaryWithDictionary:@{ NSFontAttributeName: coreTextFont->font }];
+                    
+                    if(font.underline)
+                    {
+                        [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSUnderlineStyleAttributeName];
+                    }
+                    
+                    
+                    if(font.strikeline)
+                    {
+                        [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
+                    }
+                    
+                    return coreTextFont;
+                }
+                
+                Ptr<CoreTextFontPackage> CreateInternal(const FontProperties& font)
+                {
+                    return CreateCoreTextFontPackage(font);
+                }
+            };
             
-            CoreGraphicsView* GetCoreGraphicsView(INativeWindow* window);
-            void RecreateCoreGraphicsLayer(INativeWindow* window);
+            class CachedCharMeasurerAllocator
+            {
+                DEFINE_CACHED_RESOURCE_ALLOCATOR(FontProperties, Ptr<text::CharMeasurer>)
+                
+            protected:
+                class CoreGraphicsCharMeasurer: public text::CharMeasurer
+                {
+                protected:
+                    Ptr<CoreTextFontPackage>  coreTextFont;
+                    
+                public:
+                    CoreGraphicsCharMeasurer(Ptr<CoreTextFontPackage> font):
+                    text::CharMeasurer(font->font.pointSize),
+                        coreTextFont(font)
+                    {
+                        
+                    }
+                    
+                    Size MeasureInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
+                    {
+                        WString str(character);
+                        NSString* nsStr = WStringToNSString(str);
+                        
+                        CGRect rect = [nsStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
+                                                          options:NSStringDrawingUsesLineFragmentOrigin
+                                                       attributes:coreTextFont->attributes];
+                        
+                        return Size(rect.size.width, rect.size.height);
+                    }
+                    
+                    vint MeasureWidthInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
+                    {
+                        return MeasureInternal(character, renderTarget).x;
+                    }
+                    
+                    vint GetRowHeightInternal(IGuiGraphicsRenderTarget* renderTarget)
+                    {
+                        return MeasureInternal(L' ', renderTarget).y;
+                    }
+                };
+                
+                Ptr<text::CharMeasurer> CreateInternal(const FontProperties& font)
+                {
+                    return new CoreGraphicsCharMeasurer(CachedCoreTextFontPackageAllocator::CreateCoreTextFontPackage(font));
+                }
+            };
+            
+            
+            CoreGraphicsView*   GetCoreGraphicsView(INativeWindow* window);
+            void                RecreateCoreGraphicsLayer(INativeWindow* window);
             
             class CoreGraphicsObjectProvider: public ICoreGrpahicsObjectProvider
             {
@@ -279,13 +376,16 @@ namespace vl {
                 
             };
             
-            class CGResourceManager: public GuiGraphicsResourceManager, public INativeControllerListener
+            class CoreGraphicsResourceManager: public GuiGraphicsResourceManager, public INativeControllerListener, public ICoreGraphicsResourceManager
             {
             protected:
                 SortedList<Ptr<CoreGraphicsRenderTarget>>   renderTargets;
                 
+                CachedCoreTextFontPackageAllocator          coreTextFonts;
+                CachedCharMeasurerAllocator                 charMeasurers;
+                
             public:
-                CGResourceManager()
+                CoreGraphicsResourceManager()
                 {
                     g_coreGraphicsObjectProvider = new CoreGraphicsObjectProvider;
                 }
@@ -320,11 +420,34 @@ namespace vl {
                     renderTargets.Remove(renderTarget);
                     GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, 0);
                 }
+                
+                Ptr<elements::text::CharMeasurer> CreateCharMeasurer(const FontProperties& font)
+                {
+                    return charMeasurers.Create(font);
+                }
+                
+                Ptr<CoreTextFontPackage> CreateCoreTextFont(const FontProperties& font)
+                {
+                    return coreTextFonts.Create(font);
+                }
+                
+                void DestroyCharMeasurer(const FontProperties& font)
+                {
+                    charMeasurers.Destroy(font);
+                }
+                
+                void DestroyCoreTextFont(const FontProperties& font)
+                {
+                    coreTextFonts.Destroy(font);
+                }
+                
+                
             };
             
             namespace {
                 
-                ICoreGraphicsRenderTarget* g_currentRenderTarget;
+                ICoreGraphicsRenderTarget*      g_currentRenderTarget;
+                ICoreGraphicsResourceManager*   g_coreGraphicsResourceManager;
                 
             }
             
@@ -336,6 +459,16 @@ namespace vl {
             ICoreGraphicsRenderTarget* GetCurrentRenderTarget()
             {
                 return g_currentRenderTarget;
+            }
+            
+            ICoreGraphicsResourceManager* GetCoreGraphicsResourceManager()
+            {
+                return g_coreGraphicsResourceManager;
+            }
+            
+            void SetCoreGraphicsResourceManager(ICoreGraphicsResourceManager* rm)
+            {
+                g_coreGraphicsResourceManager = rm;
             }
         }
     }
@@ -451,21 +584,21 @@ void CoreGraphicsMain()
     g_cocoaListener = new CoreGraphicsCocoaNativeControllerListener();
     GetCurrentController()->CallbackService()->InstallListener(g_cocoaListener);
     
-    
-    vl::presentation::elements_coregraphics::CGResourceManager resourceManager;
+    CoreGraphicsResourceManager resourceManager;
     SetGuiGraphicsResourceManager(&resourceManager);
+    SetCoreGraphicsResourceManager(&resourceManager);
     GetCurrentController()->CallbackService()->InstallListener(&resourceManager);
     
     elements_coregraphics::GuiSolidBorderElementRenderer::Register();
     elements_coregraphics::GuiRoundBorderElementRenderer::Register();
-    //    elements_coregraphics::Gui3DBorderElementRenderer::Register();
-    //    elements_coregraphics::Gui3DSplitterElementRenderer::Register();
+    elements_coregraphics::Gui3DBorderElementRenderer::Register();
+    elements_coregraphics::Gui3DSplitterElementRenderer::Register();
     elements_coregraphics::GuiSolidBackgroundElementRenderer::Register();
     elements_coregraphics::GuiGradientBackgroundElementRenderer::Register();
     elements_coregraphics::GuiSolidLabelElementRenderer::Register();
-    //    elements_coregraphics::GuiImageFrameElementRenderer::Register();
-    //    elements_coregraphics::GuiPolygonElementRenderer::Register();
-    //    elements_coregraphics::GuiColorizedTextElementRenderer::Register();
+    elements_coregraphics::GuiImageFrameElementRenderer::Register();
+    elements_coregraphics::GuiPolygonElementRenderer::Register();
+    elements_coregraphics::GuiColorizedTextElementRenderer::Register();
     elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
     
     {

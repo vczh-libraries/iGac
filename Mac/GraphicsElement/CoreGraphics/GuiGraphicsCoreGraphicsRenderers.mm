@@ -65,7 +65,16 @@ namespace vl {
                 
                 SetCGContextFillColor(context, element->GetColor());
             
-                CGContextFillRect(context, ConvertToCGRect(bounds));
+                switch(element->GetShape())
+                {
+                    case ElementShape::Rectangle:
+                        CGContextFillRect(context, ConvertToCGRect(bounds));
+                        break;
+                        
+                    case ElementShape::Ellipse:
+                        CGContextFillEllipseInRect(context, ConvertToCGRect(bounds));
+                        break;
+                }
             }
             
             IMPLEMENT_ELEMENT_RENDERER(GuiSolidBorderElementRenderer)
@@ -106,6 +115,8 @@ namespace vl {
                 CGContextClosePath(context);
                 CGContextDrawPath(context, kCGPathFillStroke);
             }
+            
+            ////
             
             GuiGradientBackgroundElementRenderer::GuiGradientBackgroundElementRenderer():
             cgGradient(0),
@@ -236,7 +247,6 @@ namespace vl {
             
             void GuiGradientBackgroundElementRenderer::CreateCGGradient()
             {
-                printf("Create - %f\n", [[NSDate date] timeIntervalSince1970]);
                 oldColor = collections::Pair<Color, Color>(element->GetColor1(), element->GetColor2());
                 if(cgGradient)
                 {
@@ -244,13 +254,16 @@ namespace vl {
                 }
                 
                 CGFloat locations[2] = { 0.0f, 1.0f };
-                CGFloat components[8] = {
+                CGFloat components[8] =
+                {
                     oldColor.key.r / 255.0f, oldColor.key.g / 255.0f, oldColor.key.b / 255.0f, oldColor.key.a / 255.0f,
                     oldColor.value.r / 255.0f, oldColor.value.g / 255.0f, oldColor.value.b / 255.0f, oldColor.value.a / 255.0f
                 };
                 
                 cgGradient = CGGradientCreateWithColorComponents(cgColorSpace, components, locations, 2);
             }
+            
+            ///////
             
             GuiSolidLabelElementRenderer::GuiSolidLabelElementRenderer():
             oldText(L""),
@@ -262,52 +275,17 @@ namespace vl {
             void GuiSolidLabelElementRenderer::CreateFont()
             {
                 FontProperties font = element->GetFont();
+                GetCoreGraphicsResourceManager()->DestroyCoreTextFont(oldFont);
+                coreTextFont = GetCoreGraphicsResourceManager()->CreateCoreTextFont(font);
                 
-                NSFontManager* fontManager = [NSFontManager sharedFontManager];
-                
-                NSFontTraitMask traitMask = 0;
-                if(font.bold)
-                    traitMask |= NSBoldFontMask;
-                if(font.italic)
-                    traitMask |= NSItalicFontMask;
-                
-                nsFont = [fontManager fontWithFamily:WStringToNSString(font.fontFamily)
-                                              traits:traitMask
-                                              weight:0
-                                                size:font.size];
-                
-                // this is just a pretty naive fall back here
-                // but its safe to assume that this is availabe in every OS X
-                if(!nsFont)
-                {
-                    nsFont = [fontManager fontWithFamily:@"Lucida Grande" traits:traitMask weight:0 size:font.size];
-                }
-                
-                if(!nsFont)
-                {
-                    throw FontNotFoundException(L"Font " + font.fontFamily + L" cannot be found.");
-                }
-                
-                nsAttributes = [NSMutableDictionary dictionaryWithDictionary:@{ NSFontAttributeName: nsFont }];
-                
-                if(font.underline)
-                {
-                    [nsAttributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSUnderlineStyleAttributeName];
-                }
-                
-                if(font.strikeline)
-                {
-                    [nsAttributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
-                }
-                
-                [nsAttributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
+                [coreTextFont->attributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
                 CreateColor();
             }
             
             void GuiSolidLabelElementRenderer::CreateColor()
             {
                 Color color = element->GetColor();
-                [nsAttributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
+                [coreTextFont->attributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
                                  forKey:NSForegroundColorAttributeName];
             }
             
@@ -342,14 +320,14 @@ namespace vl {
             {
                 CGRect rect = [nsText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:nsAttributes];
+                                                attributes:coreTextFont->attributes];
                 
                 minSize = Size(rect.size.width, rect.size.height);
             }
             
             void GuiSolidLabelElementRenderer::InitializeInternal()
             {
-                
+                CreateFont();
             }
             
             void GuiSolidLabelElementRenderer::FinalizeInternal()
@@ -382,13 +360,11 @@ namespace vl {
                         break;
                 }
                 
-                CGContextRef context = GetCurrentCGContextFromRenderTarget();
-                
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
-                    [nsFont set];
+                    [coreTextFont->font set];
                     [nsText drawAtPoint:NSMakePoint(bounds.Left(), bounds.Top())
-                         withAttributes:nsAttributes];
+                         withAttributes:coreTextFont->attributes];
                 }
                 else
                 {
@@ -401,7 +377,7 @@ namespace vl {
                         textBounds = CGRectMake(textBounds.origin.x, y, bounds.Width(), minSize.y);
                     }
                     
-                    [nsText drawInRect:textBounds withAttributes:nsAttributes];
+                    [nsText drawInRect:textBounds withAttributes:coreTextFont->attributes];
                 }
             }
             
@@ -428,6 +404,270 @@ namespace vl {
                 nsText = osx::WStringToNSString(element->GetText());
                 
                 UpdateMinSize();
+            }
+            
+            ///////
+            
+            GuiPolygonElementRenderer::GuiPolygonElementRenderer():
+            cgBorderPath(0),
+            cgColorSpace(0)
+            {
+                cgColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+            }
+            
+            GuiPolygonElementRenderer::~GuiPolygonElementRenderer()
+            {
+                CGColorSpaceRelease(cgColorSpace);
+                DestroyGeometry();
+            }
+            
+            void GuiPolygonElementRenderer::InitializeInternal()
+            {
+                CreateGeometry();
+            }
+            
+            void GuiPolygonElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void GuiPolygonElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                CreateGeometry();
+            }
+            
+            void GuiPolygonElementRenderer::CreateGeometry()
+            {
+                oldPoints.Resize(element->GetPointCount());
+                if(oldPoints.Count() > 0)
+                {
+                    memcpy(&oldPoints[0], &element->GetPoint(0), sizeof(Point)*element->GetPointCount());
+                }
+                
+                cgBorderPath = CGPathCreateMutable();
+                for(vint i=0; i < oldPoints.Count(); ++i)
+                {
+                    Point p = oldPoints[i];
+                    if(i == 0)
+                        CGPathMoveToPoint(cgBorderPath, 0, p.x + 0.5f, p.y + 0.5f);
+                    else
+                        CGPathAddLineToPoint(cgBorderPath, 0, p.x + 0.5f, p.y + 0.5f);
+                }
+                if(oldPoints.Count() > 0)
+                {
+                    Point p = oldPoints[0];
+                    CGPathAddLineToPoint(cgBorderPath, 0, p.x + 0.5f, p.y + 0.5f);
+                }
+            }
+            
+            void GuiPolygonElementRenderer::DestroyGeometry()
+            {
+                if(cgBorderPath)
+                    CGPathRelease(cgBorderPath);
+            }
+            
+            void GuiPolygonElementRenderer::Render(Rect bounds)
+            {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+
+                CGContextSaveGState(context);
+                
+                vint offsetX = (bounds.Width() - minSize.x) / 2 + bounds.x1;
+                vint offsetY = (bounds.Height() - minSize.y) / 2 + bounds.y1;
+                CGContextTranslateCTM(context, offsetX, offsetY);
+                
+                CGContextAddPath(context, cgBorderPath);
+                
+                SetCGContextFillColor(context, element->GetBackgroundColor());
+                CGContextFillPath(context);
+                
+                SetCGContextStrokeColor(context, element->GetBorderColor());
+                CGContextStrokePath(context);
+                
+
+                CGContextRestoreGState(context);
+               
+            }
+            
+            void GuiPolygonElementRenderer::OnElementStateChanged()
+            {
+                minSize = element->GetSize();
+                
+                bool polygonModified = false;
+                if(oldPoints.Count() != element->GetPointCount())
+                {
+                    polygonModified=true;
+                }
+                else
+                {
+                    for(vint i = 0; i<oldPoints.Count(); i++)
+                    {
+                        if(oldPoints[i] != element->GetPoint(i))
+                        {
+                            polygonModified=true;
+                            break;
+                        }
+                    }
+                }
+                if(polygonModified)
+                {
+                    DestroyGeometry();
+                    CreateGeometry();
+                }
+            }
+            
+            ///
+            
+            GuiImageFrameElementRenderer::GuiImageFrameElementRenderer()
+            {
+
+            }
+            
+            void GuiImageFrameElementRenderer::InitializeInternal()
+            {
+                
+            }
+            
+            void GuiImageFrameElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void GuiImageFrameElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                
+            }
+            
+            void GuiImageFrameElementRenderer::Render(Rect bounds)
+            {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+
+            }
+            
+            void GuiImageFrameElementRenderer::OnElementStateChanged()
+            {
+                
+            }
+            
+            //
+            
+            GuiColorizedTextElementRenderer::GuiColorizedTextElementRenderer()
+            {
+                
+            }
+            
+            void GuiColorizedTextElementRenderer::InitializeInternal()
+            {
+                
+                coreTextFont = 0;
+                element->SetCallback(this);
+            }
+            
+            void GuiColorizedTextElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void GuiColorizedTextElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                
+            }
+            
+            void GuiColorizedTextElementRenderer::Render(Rect bounds)
+            {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                
+            }
+            
+            void GuiColorizedTextElementRenderer::OnElementStateChanged()
+            {
+                
+            }
+            
+            void GuiColorizedTextElementRenderer::FontChanged()
+            {
+                ICoreGraphicsResourceManager* rm = GetCoreGraphicsResourceManager();
+                if(coreTextFont)
+                {
+                    rm->DestroyCharMeasurer(oldFont);
+                    rm->DestroyCoreTextFont(oldFont);
+                }
+                oldFont = element->GetFont();
+                coreTextFont = rm->CreateCoreTextFont(oldFont);
+                element->GetLines().SetCharMeasurer(rm->CreateCharMeasurer(oldFont).Obj());
+            }
+            
+            void GuiColorizedTextElementRenderer::ColorChanged()
+            {
+            }
+            
+            ///
+        
+            
+            Gui3DBorderElementRenderer::Gui3DBorderElementRenderer()
+            {
+                
+            }
+            
+            void Gui3DBorderElementRenderer::InitializeInternal()
+            {
+                
+            }
+            
+            void Gui3DBorderElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void Gui3DBorderElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                
+            }
+            
+            void Gui3DBorderElementRenderer::Render(Rect bounds)
+            {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                
+            }
+            
+            void Gui3DBorderElementRenderer::OnElementStateChanged()
+            {
+                
+            }
+            
+            
+            ///
+            
+            
+            Gui3DSplitterElementRenderer::Gui3DSplitterElementRenderer()
+            {
+                
+            }
+            
+            void Gui3DSplitterElementRenderer::InitializeInternal()
+            {
+                
+            }
+            
+            void Gui3DSplitterElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void Gui3DSplitterElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                
+            }
+            
+            void Gui3DSplitterElementRenderer::Render(Rect bounds)
+            {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                
+            }
+            
+            void Gui3DSplitterElementRenderer::OnElementStateChanged()
+            {
+                
             }
             
         }

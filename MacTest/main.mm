@@ -13,6 +13,8 @@
 #include "label_basic.h"
 #include "label_hyperlink.h"
 #include "button_enable_disable.h"
+#include "button_check_and_radio.h"
+#include "tab_textbox_page.h"
 
 int main(int argc, const char * argv[])
 {
@@ -23,6 +25,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<EnableDisableWindow>();
+    RunGacWindow<TextBoxPageWindow>();
 }
 

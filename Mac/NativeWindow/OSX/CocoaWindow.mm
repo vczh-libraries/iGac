@@ -115,7 +115,6 @@ namespace vl {
                                              newBounds.Height());
                 [nativeContainer->window setFrame:nsbounds display:YES];
                 
-
                 //Show();
             }
 
@@ -259,7 +258,7 @@ namespace vl {
 
             bool CocoaWindow::IsVisible() 
             {
-                return [nativeContainer->window isVisible];
+                return [nativeContainer->window isMainWindow] && [nativeContainer->window isVisible];
             }
 
             void CocoaWindow::Enable() 

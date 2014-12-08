@@ -73,9 +73,8 @@ namespace vl {
                 vint                        oldMaxWidth;
                 
                 NSString*                   nsText;
-                NSFont*                     nsFont;
-                NSMutableDictionary*        nsAttributes;
                 NSMutableParagraphStyle*    nsParagraphStyle;
+                Ptr<CoreTextFontPackage>    coreTextFont;
              
                 void CreateFont();
                 void CreateColor();
@@ -93,6 +92,104 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
+            class GuiPolygonElementRenderer: public Object, public IGuiGraphicsRenderer
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(GuiPolygonElement, GuiPolygonElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                collections::Array<Point>   oldPoints;
+                
+                CGMutablePathRef            cgBorderPath;
+                CGMutablePathRef            cgBackgroundPath;
+                CGColorSpaceRef             cgColorSpace;
+                
+                void CreateGeometry();
+                void DestroyGeometry();
+                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                
+            public:
+                GuiPolygonElementRenderer();
+                ~GuiPolygonElementRenderer();
+                
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
+            };
+            
+            class GuiImageFrameElementRenderer : public Object, public IGuiGraphicsRenderer
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(GuiImageFrameElement, GuiImageFrameElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                
+            public:
+                GuiImageFrameElementRenderer();
+                
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
+            
+            class GuiColorizedTextElementRenderer : public Object, public IGuiGraphicsRenderer, public GuiColorizedTextElement::ICallback
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                Ptr<CoreTextFontPackage>        coreTextFont;
+                FontProperties                  oldFont;
+                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                
+                void ColorChanged() override;
+                void FontChanged() override;
+                
+            public:
+                GuiColorizedTextElementRenderer();
+                
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
+            
+            class Gui3DBorderElementRenderer : public Object, public IGuiGraphicsRenderer
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                
+            public:
+                Gui3DBorderElementRenderer();
+                
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
+            
+            class Gui3DSplitterElementRenderer : public Object, public IGuiGraphicsRenderer
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(Gui3DSplitterElement, Gui3DSplitterElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                
+            public:
+                Gui3DSplitterElementRenderer();
+                
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
             
             class FontNotFoundException: public Exception
             {

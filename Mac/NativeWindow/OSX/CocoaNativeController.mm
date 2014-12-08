@@ -15,6 +15,7 @@
 #include "ServicesImpl/CocoaCallbackService.h"
 #include "ServicesImpl/CocoaScreenService.h"
 #include "ServicesImpl/CocoaResourceService.h"
+#include "ServicesImpl/CocoaAsyncService.h"
 
 #include <Cocoa/Cocoa.h>
 
@@ -151,12 +152,13 @@ namespace vl {
                 Dictionary<NSContainer*, CocoaWindow*>		windows;
                 INativeWindow*                              mainWindow;
                 
-                CocoaCallbackService    callbackService;
-                CocoaInputService       inputService;
-                CocoaResourceService    resourceService;
-                CocoaScreenService      screenService;
+                CocoaCallbackService        callbackService;
+                CocoaInputService           inputService;
+                CocoaResourceService        resourceService;
+                CocoaScreenService          screenService;
+                CocoaAsyncService           asyncService;
                 
-                CocoaApplicationDelegate*  appDelegate;
+                CocoaApplicationDelegate*   appDelegate;
                 
             public:
                 CocoaController():
@@ -249,7 +251,7 @@ namespace vl {
                 
                 INativeAsyncService* AsyncService()
                 {
-                    return 0;
+                    return &asyncService;
                 }
                 
                 INativeClipboardService* ClipboardService()
@@ -296,6 +298,7 @@ namespace vl {
                 
                 void InvokeGlobalTimer()
                 {
+                    asyncService.ExecuteAsyncTasks();
                     callbackService.InvokeGlobalTimer();
                 }
                 

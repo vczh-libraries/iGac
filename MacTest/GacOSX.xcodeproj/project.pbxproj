@@ -29,6 +29,7 @@
 		884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D51A353C9B007DF242 /* GacUIReflection.cpp */; };
 		884BC1E01A353C9B007DF242 /* Vlpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D91A353C9B007DF242 /* Vlpp.cpp */; };
 		884BC1E11A353C9B007DF242 /* VlppWorkflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */; };
+		884BC1E81A35B704007DF242 /* CocoaAsyncService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,10 @@
 		884BC1DC1A353C9B007DF242 /* VlppWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VlppWorkflow.h; sourceTree = "<group>"; };
 		884BC1E21A354F5E007DF242 /* button_enable_disable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = button_enable_disable.h; sourceTree = SOURCE_ROOT; };
 		884BC1E31A354F69007DF242 /* gac_include.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gac_include.h; sourceTree = SOURCE_ROOT; };
+		884BC1E41A3595E6007DF242 /* button_check_and_radio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = button_check_and_radio.h; sourceTree = SOURCE_ROOT; };
+		884BC1E51A359C0C007DF242 /* tab_textbox_page.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tab_textbox_page.h; sourceTree = SOURCE_ROOT; };
+		884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CocoaAsyncService.cpp; sourceTree = "<group>"; };
+		884BC1E71A35B704007DF242 /* CocoaAsyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaAsyncService.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +129,8 @@
 				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
 				884BC1911A329998007DF242 /* label_basic.h */,
 				884BC1E21A354F5E007DF242 /* button_enable_disable.h */,
+				884BC1E41A3595E6007DF242 /* button_check_and_radio.h */,
+				884BC1E51A359C0C007DF242 /* tab_textbox_page.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
 				884BC1921A329B34007DF242 /* osx_shared.mm */,
 				884BC1931A329B34007DF242 /* osx_shared.h */,
@@ -215,6 +222,8 @@
 				884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */,
 				884BC1C41A344FE2007DF242 /* CocoaScreenService.h */,
 				884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */,
+				884BC1E71A35B704007DF242 /* CocoaAsyncService.h */,
+				884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */,
 			);
 			path = ServicesImpl;
 			sourceTree = "<group>";
@@ -315,6 +324,7 @@
 				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
 				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
 				884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */,
+				884BC1E81A35B704007DF242 /* CocoaAsyncService.cpp in Sources */,
 				884BC1C91A344FE2007DF242 /* CocoaHelper.mm in Sources */,
 				884BC1DD1A353C9B007DF242 /* GacUI.cpp in Sources */,
 				884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */,
