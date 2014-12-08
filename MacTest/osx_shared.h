@@ -9,7 +9,8 @@
 #ifndef __GacOSX__osx_shared__
 #define __GacOSX__osx_shared__
 
-#include "../Source/GuiTypes.h"
+#include "GacUI.h"
+
 
 extern vl::WString GetSysVerString();
 extern void LaunchURL(const vl::WString& url);

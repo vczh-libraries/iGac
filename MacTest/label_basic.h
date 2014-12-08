@@ -9,9 +9,17 @@
 #ifndef GacOSX_label_basic_h
 #define GacOSX_label_basic_h
 
-#include "../Source/GacUI.h"
+#include "GacUI.h"
 
 #include "osx_shared.h"
+
+using namespace vl;
+using namespace vl::presentation;
+using namespace vl::presentation::elements;
+using namespace vl::presentation::compositions;
+using namespace vl::presentation::controls;
+using namespace vl::presentation::theme;
+using namespace vl::presentation::templates;
 
 class HelloWorldWindow : public GuiWindow
 {

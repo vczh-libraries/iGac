@@ -14,11 +14,6 @@
 		884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
 		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
 		884BC1941A329B34007DF242 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
-		884BC1A31A344F6B007DF242 /* GacUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1991A344F6B007DF242 /* GacUI.cpp */; };
-		884BC1A41A344F6B007DF242 /* GacUIReflection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */; };
-		884BC1A51A344F6B007DF242 /* GacUIWindows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */; };
-		884BC1A61A344F6B007DF242 /* Vlpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC19F1A344F6B007DF242 /* Vlpp.cpp */; };
-		884BC1A71A344F6B007DF242 /* VlppWorkflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */; };
 		884BC1C61A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1AC1A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm */; };
 		884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1AE1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm */; };
 		884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1B21A344FE2007DF242 /* CocoaBaseView.mm */; };
@@ -30,6 +25,10 @@
 		884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C11A344FE2007DF242 /* CocoaInputService.mm */; };
 		884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */; };
 		884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */; };
+		884BC1DD1A353C9B007DF242 /* GacUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D31A353C9B007DF242 /* GacUI.cpp */; };
+		884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D51A353C9B007DF242 /* GacUIReflection.cpp */; };
+		884BC1E01A353C9B007DF242 /* Vlpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D91A353C9B007DF242 /* Vlpp.cpp */; };
+		884BC1E11A353C9B007DF242 /* VlppWorkflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,16 +44,6 @@
 		884BC1911A329998007DF242 /* label_basic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = label_basic.h; sourceTree = SOURCE_ROOT; };
 		884BC1921A329B34007DF242 /* osx_shared.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx_shared.mm; sourceTree = SOURCE_ROOT; };
 		884BC1931A329B34007DF242 /* osx_shared.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osx_shared.h; sourceTree = SOURCE_ROOT; };
-		884BC1991A344F6B007DF242 /* GacUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUI.cpp; sourceTree = "<group>"; };
-		884BC19A1A344F6B007DF242 /* GacUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUI.h; sourceTree = "<group>"; };
-		884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUIReflection.cpp; sourceTree = "<group>"; };
-		884BC19C1A344F6B007DF242 /* GacUIReflection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUIReflection.h; sourceTree = "<group>"; };
-		884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUIWindows.cpp; sourceTree = "<group>"; };
-		884BC19E1A344F6B007DF242 /* GacUIWindows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUIWindows.h; sourceTree = "<group>"; };
-		884BC19F1A344F6B007DF242 /* Vlpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vlpp.cpp; sourceTree = "<group>"; };
-		884BC1A01A344F6B007DF242 /* Vlpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vlpp.h; sourceTree = "<group>"; };
-		884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VlppWorkflow.cpp; sourceTree = "<group>"; };
-		884BC1A21A344F6B007DF242 /* VlppWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VlppWorkflow.h; sourceTree = "<group>"; };
 		884BC1AB1A344FE2007DF242 /* GuiGraphicsCoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphics.h; sourceTree = "<group>"; };
 		884BC1AC1A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphics.mm; sourceTree = "<group>"; };
 		884BC1AD1A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphicsRenderers.h; sourceTree = "<group>"; };
@@ -78,6 +67,14 @@
 		884BC1C31A344FE2007DF242 /* CocoaResourceService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaResourceService.mm; sourceTree = "<group>"; };
 		884BC1C41A344FE2007DF242 /* CocoaScreenService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaScreenService.h; sourceTree = "<group>"; };
 		884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaScreenService.mm; sourceTree = "<group>"; };
+		884BC1D31A353C9B007DF242 /* GacUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUI.cpp; sourceTree = "<group>"; };
+		884BC1D41A353C9B007DF242 /* GacUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUI.h; sourceTree = "<group>"; };
+		884BC1D51A353C9B007DF242 /* GacUIReflection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUIReflection.cpp; sourceTree = "<group>"; };
+		884BC1D61A353C9B007DF242 /* GacUIReflection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUIReflection.h; sourceTree = "<group>"; };
+		884BC1D91A353C9B007DF242 /* Vlpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vlpp.cpp; sourceTree = "<group>"; };
+		884BC1DA1A353C9B007DF242 /* Vlpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vlpp.h; sourceTree = "<group>"; };
+		884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VlppWorkflow.cpp; sourceTree = "<group>"; };
+		884BC1DC1A353C9B007DF242 /* VlppWorkflow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VlppWorkflow.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +100,7 @@
 				884BC15C1A304D1A007DF242 /* Foundation.framework */,
 				884BC15A1A304D13007DF242 /* CoreFoundation.framework */,
 				884BC1581A304D10007DF242 /* Cocoa.framework */,
-				884BC1981A344F6B007DF242 /* GacRelease */,
+				884BC1D11A353C9B007DF242 /* Public */,
 				884BC1A81A344FE2007DF242 /* Mac */,
 				884BAFF01A304BA1007DF242 /* GacOSX */,
 				884BAFEF1A304BA1007DF242 /* Products */,
@@ -137,24 +134,6 @@
 				884BB0111A304C04007DF242 /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		884BC1981A344F6B007DF242 /* GacRelease */ = {
-			isa = PBXGroup;
-			children = (
-				884BC1991A344F6B007DF242 /* GacUI.cpp */,
-				884BC19A1A344F6B007DF242 /* GacUI.h */,
-				884BC19B1A344F6B007DF242 /* GacUIReflection.cpp */,
-				884BC19C1A344F6B007DF242 /* GacUIReflection.h */,
-				884BC19D1A344F6B007DF242 /* GacUIWindows.cpp */,
-				884BC19E1A344F6B007DF242 /* GacUIWindows.h */,
-				884BC19F1A344F6B007DF242 /* Vlpp.cpp */,
-				884BC1A01A344F6B007DF242 /* Vlpp.h */,
-				884BC1A11A344F6B007DF242 /* VlppWorkflow.cpp */,
-				884BC1A21A344F6B007DF242 /* VlppWorkflow.h */,
-			);
-			name = GacRelease;
-			path = ../GacRelease;
 			sourceTree = "<group>";
 		};
 		884BC1A81A344FE2007DF242 /* Mac */ = {
@@ -236,6 +215,30 @@
 			path = ServicesImpl;
 			sourceTree = "<group>";
 		};
+		884BC1D11A353C9B007DF242 /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1D21A353C9B007DF242 /* Source */,
+			);
+			name = Public;
+			path = ../Public;
+			sourceTree = "<group>";
+		};
+		884BC1D21A353C9B007DF242 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				884BC1D31A353C9B007DF242 /* GacUI.cpp */,
+				884BC1D41A353C9B007DF242 /* GacUI.h */,
+				884BC1D51A353C9B007DF242 /* GacUIReflection.cpp */,
+				884BC1D61A353C9B007DF242 /* GacUIReflection.h */,
+				884BC1D91A353C9B007DF242 /* Vlpp.cpp */,
+				884BC1DA1A353C9B007DF242 /* Vlpp.h */,
+				884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */,
+				884BC1DC1A353C9B007DF242 /* VlppWorkflow.h */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -305,23 +308,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				884BC1CA1A344FE2007DF242 /* CocoaNativeController.mm in Sources */,
-				884BC1A41A344F6B007DF242 /* GacUIReflection.cpp in Sources */,
 				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
 				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
 				884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */,
 				884BC1C91A344FE2007DF242 /* CocoaHelper.mm in Sources */,
+				884BC1DD1A353C9B007DF242 /* GacUI.cpp in Sources */,
+				884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */,
+				884BC1E11A353C9B007DF242 /* VlppWorkflow.cpp in Sources */,
 				884BC1941A329B34007DF242 /* osx_shared.mm in Sources */,
+				884BC1E01A353C9B007DF242 /* Vlpp.cpp in Sources */,
 				884BC1CC1A344FE2007DF242 /* CoreGraphicsApp.mm in Sources */,
 				884BC1C61A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */,
 				884BB0141A304C0A007DF242 /* main.mm in Sources */,
 				884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */,
-				884BC1A71A344F6B007DF242 /* VlppWorkflow.cpp in Sources */,
-				884BC1A61A344F6B007DF242 /* Vlpp.cpp in Sources */,
 				884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */,
 				884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */,
 				884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */,
-				884BC1A31A344F6B007DF242 /* GacUI.cpp in Sources */,
-				884BC1A51A344F6B007DF242 /* GacUIWindows.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,7 +420,7 @@
 					/Users/darkfall/Documents/gac/Common/Tools/PdbDump/PdbDump,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../GacRelease;
+				USER_HEADER_SEARCH_PATHS = ../Public/Source;
 			};
 			name = Debug;
 		};
@@ -436,7 +438,7 @@
 					/Users/darkfall/Documents/gac/Common/Tools/PdbDump/PdbDump,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = ../GacRelease;
+				USER_HEADER_SEARCH_PATHS = ../Public/Source;
 			};
 			name = Release;
 		};

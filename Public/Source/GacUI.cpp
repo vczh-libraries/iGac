@@ -408,14 +408,21 @@ GuiApplicationMain
 				{
 					WString osVersion=GetCurrentController()->GetOSVersion();
 					vint index=osVersion.IndexOf(L';');
-					WString osMainVersion=osVersion.Sub(0, index);
-					if(osMainVersion==L"Windows 8" || osMainVersion==L"Windows Server 2012")
+					if (index == -1)
 					{
 						theme=new win8::Win8Theme;
 					}
 					else
 					{
-						theme=new win7::Win7Theme;
+						WString osMainVersion=osVersion.Sub(0, index);
+						if(osMainVersion==L"Windows 8" || osMainVersion==L"Windows Server 2012")
+						{
+							theme=new win8::Win8Theme;
+						}
+						else
+						{
+							theme=new win7::Win7Theme;
+						}
 					}
 				}
 
@@ -24838,7 +24845,7 @@ Helper Functions
 					WString pattern;
 					if(attSemicolon)
 					{
-						pattern = WString(attValue, attSemicolon - attValue);
+						pattern = WString(attValue, vint(attSemicolon - attValue));
 						attValue = attSemicolon + 1;
 					}
 					else

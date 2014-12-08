@@ -311,7 +311,7 @@ WfLexicalScopeManager
 						const wchar_t* delimiter = wcsstr(reading, L"::");
 						if (delimiter)
 						{
-							fragment = WString(reading, delimiter - reading);
+							fragment = WString(reading, vint(delimiter - reading));
 							reading = delimiter + 2;
 						}
 						else
@@ -6285,7 +6285,7 @@ GetTypeFromTypeInfo
 								const wchar_t* delimiter = wcsstr(reading, L"::");
 								if (delimiter)
 								{
-									fragments.Add(WString(reading, delimiter - reading));
+									fragments.Add(WString(reading, vint(delimiter - reading)));
 									reading = delimiter + 2;
 								}
 								else
@@ -9782,7 +9782,7 @@ ValidateStructure(Expression)
 							{
 								Ptr<WfStringExpression> expression = new WfStringExpression;
 								expression->codeRange = node->codeRange;
-								expression->value.value = WString(reading, begin - reading);
+								expression->value.value = WString(reading, vint(begin - reading));
 								expressions.Add(expression);
 							}
 							else
@@ -9818,7 +9818,7 @@ ValidateStructure(Expression)
 							}
 							else
 							{
-								WString input(begin + 2, end - begin - 3);
+								WString input(begin + 2, vint(end - begin - 3));
 								List<Ptr<ParsingError>> errors;
 								if (auto expression = WfParseExpression(input, manager->parsingTable, errors))
 								{

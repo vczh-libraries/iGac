@@ -21,6 +21,13 @@ Interfaces:
 #define VCZH_PRESENTATION_REFLECTION_GUIINSTANCEHELPERTYPES
 
 
+using namespace vl::presentation;
+using namespace vl::presentation::elements;
+using namespace vl::presentation::compositions;
+using namespace vl::presentation::controls;
+using namespace vl::presentation::theme;
+using namespace vl::presentation::templates;
+
 namespace vl
 {
 	namespace presentation
@@ -912,7 +919,7 @@ namespace vl
 	{
 		namespace description
 		{
-
+            
 #ifndef VCZH_DEBUG_NO_REFLECTION
 
 /***********************************************************************

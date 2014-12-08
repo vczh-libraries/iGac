@@ -9100,7 +9100,7 @@ EnumValueSerializer
 					{
 						const wchar_t* sep=wcschr(reading, L'|');
 						if(!sep) sep=reading+wcslen(reading);
-						WString item(reading, sep-reading);
+						WString item(reading, vint(sep-reading));
 						reading=*sep?sep+1:sep;
 
 						vint index=candidates.Keys().IndexOf(item);
@@ -10170,7 +10170,7 @@ StructValueSerializer
 						const wchar_t* space=FindSpace(reading);
 						if(space)
 						{
-							field=WString(reading, space-reading);
+							field=WString(reading, vint(space-reading));
 							reading=space+1;
 						}
 						else
@@ -10215,7 +10215,7 @@ StructValueSerializer
 						const wchar_t* comma=wcschr(reading, L':');
 						if(!comma) return false;
 
-						vint index=fieldSerializers.Keys().IndexOf(WString(reading, comma-reading));
+						vint index=fieldSerializers.Keys().IndexOf(WString(reading, vint(comma-reading)));
 						if(index==-1) return false;
 						reading=comma+1;
 

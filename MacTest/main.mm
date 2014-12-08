@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include "../Source/GacUI.h"
+#include "GacUI.h"
 
 #include "label_basic.h"
 #include "label_hyperlink.h"
