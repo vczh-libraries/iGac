@@ -29,7 +29,10 @@
 		884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D51A353C9B007DF242 /* GacUIReflection.cpp */; };
 		884BC1E01A353C9B007DF242 /* Vlpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1D91A353C9B007DF242 /* Vlpp.cpp */; };
 		884BC1E11A353C9B007DF242 /* VlppWorkflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1DB1A353C9B007DF242 /* VlppWorkflow.cpp */; };
-		884BC1E81A35B704007DF242 /* CocoaAsyncService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */; };
+		884BC1E81A35B704007DF242 /* CocoaAsyncService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1E61A35B704007DF242 /* CocoaAsyncService.mm */; };
+		884BC1EB1A373CB6007DF242 /* CocoaImageService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1E91A373CB6007DF242 /* CocoaImageService.mm */; };
+		884BC1EE1A373CBE007DF242 /* CocoaDialogService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EC1A373CBE007DF242 /* CocoaDialogService.mm */; };
+		884BC1F11A373CC9007DF242 /* CocoaClipboardService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +83,14 @@
 		884BC1E31A354F69007DF242 /* gac_include.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gac_include.h; sourceTree = SOURCE_ROOT; };
 		884BC1E41A3595E6007DF242 /* button_check_and_radio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = button_check_and_radio.h; sourceTree = SOURCE_ROOT; };
 		884BC1E51A359C0C007DF242 /* tab_textbox_page.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tab_textbox_page.h; sourceTree = SOURCE_ROOT; };
-		884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CocoaAsyncService.cpp; sourceTree = "<group>"; };
+		884BC1E61A35B704007DF242 /* CocoaAsyncService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaAsyncService.mm; sourceTree = "<group>"; };
 		884BC1E71A35B704007DF242 /* CocoaAsyncService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaAsyncService.h; sourceTree = "<group>"; };
+		884BC1E91A373CB6007DF242 /* CocoaImageService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaImageService.mm; sourceTree = "<group>"; };
+		884BC1EA1A373CB6007DF242 /* CocoaImageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaImageService.h; sourceTree = "<group>"; };
+		884BC1EC1A373CBE007DF242 /* CocoaDialogService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaDialogService.mm; sourceTree = "<group>"; };
+		884BC1ED1A373CBE007DF242 /* CocoaDialogService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaDialogService.h; sourceTree = "<group>"; };
+		884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaClipboardService.mm; sourceTree = "<group>"; };
+		884BC1F01A373CC9007DF242 /* CocoaClipboardService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaClipboardService.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,7 +232,13 @@
 				884BC1C41A344FE2007DF242 /* CocoaScreenService.h */,
 				884BC1C51A344FE2007DF242 /* CocoaScreenService.mm */,
 				884BC1E71A35B704007DF242 /* CocoaAsyncService.h */,
-				884BC1E61A35B704007DF242 /* CocoaAsyncService.cpp */,
+				884BC1E61A35B704007DF242 /* CocoaAsyncService.mm */,
+				884BC1EA1A373CB6007DF242 /* CocoaImageService.h */,
+				884BC1E91A373CB6007DF242 /* CocoaImageService.mm */,
+				884BC1ED1A373CBE007DF242 /* CocoaDialogService.h */,
+				884BC1EC1A373CBE007DF242 /* CocoaDialogService.mm */,
+				884BC1F01A373CC9007DF242 /* CocoaClipboardService.h */,
+				884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */,
 			);
 			path = ServicesImpl;
 			sourceTree = "<group>";
@@ -324,7 +339,8 @@
 				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
 				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
 				884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */,
-				884BC1E81A35B704007DF242 /* CocoaAsyncService.cpp in Sources */,
+				884BC1E81A35B704007DF242 /* CocoaAsyncService.mm in Sources */,
+				884BC1EE1A373CBE007DF242 /* CocoaDialogService.mm in Sources */,
 				884BC1C91A344FE2007DF242 /* CocoaHelper.mm in Sources */,
 				884BC1DD1A353C9B007DF242 /* GacUI.cpp in Sources */,
 				884BC1DE1A353C9B007DF242 /* GacUIReflection.cpp in Sources */,
@@ -338,6 +354,8 @@
 				884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */,
 				884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */,
 				884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */,
+				884BC1F11A373CC9007DF242 /* CocoaClipboardService.mm in Sources */,
+				884BC1EB1A373CB6007DF242 /* CocoaImageService.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

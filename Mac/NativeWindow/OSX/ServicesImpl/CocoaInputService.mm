@@ -223,7 +223,7 @@ namespace vl {
             {
                 int eventMask = (CGEventMaskBit(kCGEventMouseMoved)) |
                                 (CGEventMaskBit(kCGEventLeftMouseDown)) |
-                                (CGEventMaskBit(kCGEventKeyUp)) |
+                                (CGEventMaskBit(kCGEventLeftMouseUp)) |
                                 (CGEventMaskBit(kCGEventRightMouseDown)) |
                                 (CGEventMaskBit(kCGEventRightMouseUp)) |
                                 (CGEventMaskBit(kCGEventKeyDown)) |
@@ -274,7 +274,9 @@ namespace vl {
                 else
                 {
                     if(isHookingMouse)
+                    {
                         mouseTapFunc(type, event);
+                    }
                 }
             }
             

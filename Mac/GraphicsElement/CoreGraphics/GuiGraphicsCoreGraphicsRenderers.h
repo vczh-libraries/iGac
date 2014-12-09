@@ -131,17 +131,38 @@ namespace vl {
             public:
                 GuiImageFrameElementRenderer();
                 
-                void Render(Rect bounds)override;
-                void OnElementStateChanged()override;
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
             };
             
             class GuiColorizedTextElementRenderer : public Object, public IGuiGraphicsRenderer, public GuiColorizedTextElement::ICallback
             {
                 DEFINE_GUI_GRAPHICS_RENDERER(GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget)
                 
+            public:
+                struct ColorItemResource
+                {
+                    Color   text;
+                    Color   background;
+                };
+                
+                struct ColorEntryResource
+                {
+                    ColorItemResource			normal;
+                    ColorItemResource			selectedFocused;
+                    ColorItemResource			selectedUnfocused;
+                    
+                    bool						operator==(const ColorEntryResource& value){return false;}
+                    bool						operator!=(const ColorEntryResource& value){return true;}
+                };
+                
+                typedef collections::Array<ColorEntryResource>			ColorArray;
+                
             protected:
                 Ptr<CoreTextFontPackage>        coreTextFont;
                 FontProperties                  oldFont;
+                ColorArray                      colors;
+                NSMutableArray*                 nsTexts;
                 
                 void InitializeInternal();
                 void FinalizeInternal();
@@ -153,8 +174,8 @@ namespace vl {
             public:
                 GuiColorizedTextElementRenderer();
                 
-                void Render(Rect bounds)override;
-                void OnElementStateChanged()override;
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
             };
             
             class Gui3DBorderElementRenderer : public Object, public IGuiGraphicsRenderer
@@ -170,8 +191,8 @@ namespace vl {
             public:
                 Gui3DBorderElementRenderer();
                 
-                void Render(Rect bounds)override;
-                void OnElementStateChanged()override;
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
             };
             
             class Gui3DSplitterElementRenderer : public Object, public IGuiGraphicsRenderer
@@ -187,8 +208,8 @@ namespace vl {
             public:
                 Gui3DSplitterElementRenderer();
                 
-                void Render(Rect bounds)override;
-                void OnElementStateChanged()override;
+                void Render(Rect bounds) override;
+                void OnElementStateChanged() override;
             };
             
             class FontNotFoundException: public Exception

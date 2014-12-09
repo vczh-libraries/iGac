@@ -120,6 +120,8 @@ namespace vl {
             
                 ///
                 void                HandleEventInternal(NSEvent* event);
+                void                InvokeClosed();
+                void                InvokeOpened();
                 bool                InvokeClosing();
                 void                InvokeAcivate();
                 void                InvokeDeactivate();

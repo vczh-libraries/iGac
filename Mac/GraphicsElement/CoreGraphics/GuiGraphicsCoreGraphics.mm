@@ -174,11 +174,9 @@ namespace vl {
                         WString str(character);
                         NSString* nsStr = WStringToNSString(str);
                         
-                        CGRect rect = [nsStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
-                                                          options:NSStringDrawingUsesLineFragmentOrigin
-                                                       attributes:coreTextFont->attributes];
+                        CGSize size = [nsStr sizeWithAttributes:coreTextFont->attributes];
+                        return Size(size.width, size.height);
                         
-                        return Size(rect.size.width, rect.size.height);
                     }
                     
                     vint MeasureWidthInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)

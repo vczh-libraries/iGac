@@ -90,7 +90,7 @@ namespace vl {
                         break;
                         
                     case ElementShape::Ellipse:
-                        CGContextStrokeEllipseInRect(context, ConvertToCGRect(bounds));
+                        CGContextStrokeEllipseInRect(context, ConvertToCGRect(bounds, -0.5f));
                         break;
                 }
             }
@@ -286,7 +286,7 @@ namespace vl {
             {
                 Color color = element->GetColor();
                 [coreTextFont->attributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
-                                 forKey:NSForegroundColorAttributeName];
+                                             forKey:NSForegroundColorAttributeName];
             }
             
             void GuiSolidLabelElementRenderer::UpdateParagraphStyle()
@@ -352,9 +352,11 @@ namespace vl {
                     case Alignment::Top:
                         y=bounds.Top();
                         break;
+                        
                     case Alignment::Center:
                         y=bounds.Top()+(bounds.Height()-minSize.y)/2;
                         break;
+                        
                     case Alignment::Bottom:
                         y=bounds.Bottom()-minSize.y;
                         break;
@@ -575,8 +577,113 @@ namespace vl {
             
             void GuiColorizedTextElementRenderer::Render(Rect bounds)
             {
+                // todo, make this thing faster
+                // NSAttributedString can be prebuild here
+                
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
+                if(renderTarget)
+                {
+                    wchar_t passwordChar = element->GetPasswordChar();
+                    Point viewPosition = element->GetViewPosition();
+                    Rect viewBounds(viewPosition, bounds.GetSize());
+                    
+                    vint startRow = element->GetLines().GetTextPosFromPoint(Point(viewBounds.x1, viewBounds.y1)).row;
+                    vint endRow = element->GetLines().GetTextPosFromPoint(Point(viewBounds.x2, viewBounds.y2)).row;
+                    
+                    TextPos selectionBegin = element->GetCaretBegin() < element->GetCaretEnd() ? element->GetCaretBegin() : element->GetCaretEnd();
+                    TextPos selectionEnd = element->GetCaretBegin() > element->GetCaretEnd() ? element->GetCaretBegin() : element->GetCaretEnd();
+                    
+                    bool focused = element->GetFocused();
+                    
+                    for(vint row = startRow; row <= endRow; row++)
+                    {
+                        Rect startRect = element->GetLines().GetRectFromTextPos(TextPos(row, 0));
+                        Point startPoint = startRect.LeftTop();
+                        
+                        vint startColumn = element->GetLines().GetTextPosFromPoint(Point(viewBounds.x1, startPoint.y)).column;
+                        vint endColumn = element->GetLines().GetTextPosFromPoint(Point(viewBounds.x2, startPoint.y)).column;
+                        
+                        text::TextLine& line = element->GetLines().GetLine(row);
+                        
+                        vint x = startColumn == 0 ? 0 : line.att[startColumn-1].rightOffset;
+                        for(vint column = startColumn; column <= endColumn; column++)
+                        {
+                            bool inSelection=false;
+                            if(selectionBegin.row == selectionEnd.row)
+                            {
+                                inSelection = (row == selectionBegin.row && selectionBegin.column <= column && column < selectionEnd.column);
+                            }
+                            else if(row == selectionBegin.row)
+                            {
+                                inSelection = selectionBegin.column <= column;
+                            }
+                            else if(row == selectionEnd.row)
+                            {
+                                inSelection = column<selectionEnd.column;
+                            }
+                            else
+                            {
+                                inSelection = selectionBegin.row < row && row < selectionEnd.row;
+                            }
+                            
+                            bool crlf = (column == line.dataLength);
+                            vint colorIndex = crlf ? 0 : line.att[column].colorIndex;
+                            if(colorIndex >= colors.Count())
+                            {
+                                colorIndex = 0;
+                            }
+                            ColorItemResource& color = !inSelection ? colors[colorIndex].normal : (focused ? colors[colorIndex].selectedFocused : colors[colorIndex].selectedUnfocused);
+                           
+                            vint x2 = crlf ? x + startRect.Height() / 2 : line.att[column].rightOffset;
+                            vint tx = x - viewPosition.x + bounds.x1;
+                            vint ty = startPoint.y - viewPosition.y + bounds.y1;
+                            
+                            if(color.background.a > 0)
+                            {
+                                SetCGContextFillColor(context, color.background);
+                                CGContextFillRect(context, CGRectMake(tx, ty, tx + (x2 - x), ty + startRect.Height()));
+                                
+                            }
+                            if(!crlf)
+                            {
+                                Color textColor = color.text;
+                                [coreTextFont->attributes setObject:[NSColor colorWithRed:textColor.r/255.0f
+                                                                                    green:textColor.g/255.0f
+                                                                                     blue:textColor.b/255.0f
+                                                                                    alpha:textColor.a/255.0f]
+                                                             forKey:NSForegroundColorAttributeName];
+                                
+                                NSRect rect = NSMakeRect(tx, ty, tx+1, ty+1);
+                                
+                                WString s = passwordChar ? passwordChar : line.text[column];
+                                NSString* str = WStringToNSString(s);
+                                
+                                [str drawInRect:rect withAttributes:coreTextFont->attributes];
+                            }
+                            x = x2;
+                        }
+                    }
+                    
+                    if(element->GetCaretVisible() && element->GetLines().IsAvailable(element->GetCaretEnd()))
+                    {
+                        Point caretPoint = element->GetLines().GetPointFromTextPos(element->GetCaretEnd());
+                        vint height = element->GetLines().GetRowHeight();
+                        Point p1(caretPoint.x - viewPosition.x + bounds.x1, caretPoint.y - viewPosition.y + bounds.y1+1);
+                        Point p2(caretPoint.x - viewPosition.x + bounds.x1, caretPoint.y + height - viewPosition.y + bounds.y1-1);
+                        
+                        SetCGContextStrokeColor(context, element->GetCaretColor());
+                        
+                        CGPoint points[2];
+                        points[0] = CGPointMake(p1.x + 0.5f, p1.y);
+                        points[1] = CGPointMake(p2.x + 0.5f, p2.y);
+                        CGContextStrokeLineSegments(context, points, 2);
+                        
+                        points[0] = CGPointMake(p1.x - 0.5f, p1.y);
+                        points[1] = CGPointMake(p2.x - 0.5f, p2.y);
+                        CGContextStrokeLineSegments(context, points, 2);
+                    }
+                }
             }
             
             void GuiColorizedTextElementRenderer::OnElementStateChanged()
@@ -599,6 +706,23 @@ namespace vl {
             
             void GuiColorizedTextElementRenderer::ColorChanged()
             {
+                colors.Resize(element->GetColors().Count());
+                for(vint i = 0; i < colors.Count(); i++)
+                {
+                    text::ColorEntry entry=element->GetColors().Get(i);
+                    ColorEntryResource newEntry;
+                    
+                    newEntry.normal.text=entry.normal.text;
+                    newEntry.normal.background=entry.normal.background;
+                    
+                    newEntry.selectedFocused.text=entry.selectedFocused.text;
+                    newEntry.selectedFocused.background=entry.selectedFocused.background;
+                    
+                    newEntry.selectedUnfocused.text=entry.selectedUnfocused.text;
+                    newEntry.selectedUnfocused.background=entry.selectedUnfocused.background;
+                    
+                    colors[i]=newEntry;
+                }
             }
             
             ///

@@ -16,6 +16,9 @@
 #include "ServicesImpl/CocoaScreenService.h"
 #include "ServicesImpl/CocoaResourceService.h"
 #include "ServicesImpl/CocoaAsyncService.h"
+#include "ServicesImpl/CocoaClipboardService.h"
+#include "ServicesImpl/CocoaDialogService.h"
+#include "ServicesImpl/CocoaImageService.h"
 
 #include <Cocoa/Cocoa.h>
 
@@ -157,6 +160,7 @@ namespace vl {
                 CocoaResourceService        resourceService;
                 CocoaScreenService          screenService;
                 CocoaAsyncService           asyncService;
+                CocoaClipboardService       clipboardService;
                 
                 CocoaApplicationDelegate*   appDelegate;
                 
@@ -233,7 +237,12 @@ namespace vl {
                 
                 INativeWindow* GetWindow(Point location)
                 {
-                    // todo
+                    for(vint i=0; i<windows.Count(); ++i)
+                    {
+                        Rect r = windows.Values()[i]->GetClientBoundsInScreen();
+                        if(r.Contains(location))
+                            return windows.Values()[i];
+                    }
                     return 0;
                 }
                 
@@ -256,7 +265,7 @@ namespace vl {
                 
                 INativeClipboardService* ClipboardService()
                 {
-                    return 0;
+                    return &clipboardService;
                 }
                 
                 INativeImageService* ImageService()

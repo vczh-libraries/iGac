@@ -66,7 +66,9 @@ namespace vl {
             };
             
             vint NSEventKeyCodeToGacKeyCode(unsigned short keycode);
-            
+            Rect FlipRect(NSWindow* window, Rect rect);
+            NSScreen* GetWindowScreen(NSWindow* window);
+            CGFloat FlipY(NSWindow* window, CGFloat y);
             
 #endif
             

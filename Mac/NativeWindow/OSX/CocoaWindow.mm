@@ -28,6 +28,39 @@ using namespace vl::presentation;
 
 @end
 
+@interface CocoaNSWindow : NSWindow
+
+@end
+
+@implementation CocoaNSWindow
+
+- (BOOL)canBecomeKeyWindow
+{
+    return YES;
+}
+
+- (BOOL)canBecomeMainWindow
+{
+    return YES;
+}
+
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)becomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)resignFirstResponder
+{
+    return YES;
+}
+
+@end
+
 namespace vl {
     
     namespace presentation {
@@ -64,10 +97,10 @@ namespace vl {
                 
                 NSRect windowRect = NSMakeRect(0, 0, 0, 0);
                 
-                NSWindow* window = [[NSWindow alloc] initWithContentRect:windowRect
-                                                               styleMask:windowStyle
-                                                                 backing:NSBackingStoreBuffered
-                                                                   defer:NO];
+                NSWindow* window = [[CocoaNSWindow alloc] initWithContentRect:windowRect
+                                                                    styleMask:windowStyle
+                                                                      backing:NSBackingStoreBuffered
+                                                                        defer:NO];
                 NSWindowController* controller = [[NSWindowController alloc] initWithWindow:window];
                 [window orderFrontRegardless];
                 
@@ -90,16 +123,16 @@ namespace vl {
                 
                 currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
             }
-
+            
             Rect CocoaWindow::GetBounds()
             {
                 NSRect nsbounds = [nativeContainer->window frame];
                 
-                // frame.origin is lower-left
-                return Rect(nsbounds.origin.x,
-                            nsbounds.origin.y - nsbounds.size.height,
-                            nsbounds.size.width + nsbounds.origin.x,
-                            nsbounds.origin.y);
+                return FlipRect(nativeContainer->window,
+                                Rect(nsbounds.origin.x,
+                                     nsbounds.origin.y,
+                                     nsbounds.size.width + nsbounds.origin.x,
+                                     nsbounds.size.height + nsbounds.origin.y));
             }
 
             void CocoaWindow::SetBounds(const Rect& bounds) 
@@ -110,12 +143,13 @@ namespace vl {
                     listeners[i]->Moving(newBounds, true);
                 }
                 NSRect nsbounds = NSMakeRect(newBounds.Left(),
-                                             newBounds.Bottom(),
+                                             FlipY(nativeContainer->window, newBounds.Bottom()),
                                              newBounds.Width(),
                                              newBounds.Height());
+                
                 [nativeContainer->window setFrame:nsbounds display:YES];
                 
-                //Show();
+                Show();
             }
 
             Size CocoaWindow::GetClientSize() 
@@ -130,12 +164,16 @@ namespace vl {
 
             Rect CocoaWindow::GetClientBoundsInScreen() 
             {
-                NSRect nsbounds = [nativeContainer->window frame];
-                NSRect contentFrame = [nativeContainer->window contentRectForFrameRect:[nativeContainer->window frame]];
-                return Rect(nsbounds.origin.x + contentFrame.origin.x,
-                            nsbounds.origin.y - contentFrame.size.height + contentFrame.origin.y,
-                            nsbounds.origin.x + contentFrame.size.width + contentFrame.origin.x,
-                            nsbounds.origin.y + contentFrame.origin.y);
+                NSRect contentFrame = [nativeContainer->window convertRectToScreen:[nativeContainer->window.contentView frame]];
+                
+                if(!([nativeContainer->window screen]))
+                    contentFrame = [nativeContainer->window frame];
+                
+                return FlipRect(nativeContainer->window,
+                                Rect(contentFrame.origin.x,
+                                     contentFrame.origin.y,
+                                     contentFrame.size.width + contentFrame.origin.x,
+                                     contentFrame.size.height + contentFrame.origin.y));
             }
 
             WString CocoaWindow::GetTitle() 
@@ -182,15 +220,18 @@ namespace vl {
 
             void CocoaWindow::SetParent(INativeWindow* parent) 
             {
-                parentWindow = dynamic_cast<CocoaWindow*>(parent);
-                if(parentWindow)
+                CocoaWindow* cocoaParent = dynamic_cast<CocoaWindow*>(parent);
+                if(!cocoaParent)
                 {
-                    [nativeContainer->window setParentWindow:0];
+                    if(parentWindow)
+                        [parentWindow->GetNativeContainer()->window removeChildWindow:nativeContainer->window];
                 }
                 else
                 {
-                    [nativeContainer->window setParentWindow:parentWindow->GetNativeContainer()->window];
+              //      [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
+                   // [nativeContainer->window setParentWindow:parentWindow->GetNativeContainer()->window];
                 }
+                parentWindow = cocoaParent;
             }
 
             bool CocoaWindow::GetAlwaysPassFocusToParent() 
@@ -231,7 +272,7 @@ namespace vl {
 
             void CocoaWindow::ShowDeactivated() 
             {
-                [nativeContainer->window orderOut:nil];
+              //  [nativeContainer->window orderOut:nil];
             }
 
             void CocoaWindow::ShowRestored() 
@@ -362,6 +403,8 @@ namespace vl {
                 else
                     behavior ^= NSWindowCollectionBehaviorFullScreenPrimary;
                 [nativeContainer->window setCollectionBehavior:behavior];
+                
+                [[nativeContainer->window standardWindowButton:NSWindowZoomButton] setHidden:!visible];
             }
 
             bool CocoaWindow::GetMinimizedBox() 
@@ -378,6 +421,8 @@ namespace vl {
                 else
                     styleMask ^= NSMiniaturizableWindowMask;
                 [nativeContainer->window setStyleMask:styleMask];
+                
+                [[nativeContainer->window standardWindowButton:NSWindowMiniaturizeButton] setHidden:!visible];
             }
 
             bool CocoaWindow::GetBorder() 
@@ -390,9 +435,9 @@ namespace vl {
             {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 if(visible)
-                    styleMask |= NSBorderlessWindowMask;
-                else
                     styleMask ^= NSBorderlessWindowMask;
+                else
+                    styleMask = NSBorderlessWindowMask;
                 [nativeContainer->window setStyleMask:styleMask];
             }
 
@@ -500,6 +545,22 @@ namespace vl {
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->Moved();
+                }
+            }
+            
+            void CocoaWindow::InvokeOpened()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Opened();
+                }
+            }
+            
+            void CocoaWindow::InvokeClosed()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Closed();
                 }
             }
 
@@ -794,6 +855,9 @@ namespace vl {
 
 
 @implementation CocoaWindowDelegate
+{
+    bool firstTime;
+}
 
 - (id)initWithNativeWindow:(INativeWindow*)window
 {
@@ -801,9 +865,12 @@ namespace vl {
     {
         _nativeWindow = window;
         _sizeState = vl::presentation::INativeWindow::Restored;
+        
+        firstTime = true;
     }
     return self;
 }
+
 
 - (void)windowDidMiniaturize:(NSNotification *)notification
 {
@@ -832,8 +899,14 @@ namespace vl {
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
+    // this is a hack... but works for now
+    if(firstTime)
+    {
+        (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeOpened();
+        firstTime = false;
+    }
+    
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeGotFocus();
-
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification
@@ -844,7 +917,6 @@ namespace vl {
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeAcivate();
-
 }
 
 - (void)windowDidResignMain:(NSNotification *)notification
@@ -857,6 +929,12 @@ namespace vl {
 {
     // !cancel
     return !(dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosing();
+}
+
+- (void)windowWillClose:(NSNotification *)notification
+{
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosed();
+
 }
 
 - (void)windowDidResize:(NSNotification *)notification

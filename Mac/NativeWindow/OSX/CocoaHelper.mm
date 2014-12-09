@@ -304,6 +304,36 @@ namespace vl {
                 return c;
             }
             
+            
+            Rect FlipRect(NSWindow* window, Rect rect)
+            {
+                return Rect(rect.x1,
+                            [[window screen] frame].size.height - (rect.Top() + rect.Height()),
+                            rect.x2,
+                            [[window screen] frame].size.height - (rect.Bottom() - rect.Height()));
+            }
+            
+            
+            NSScreen* GetWindowScreen(NSWindow* window)
+            {
+                NSScreen* s = [window screen];
+                while(!s && [window parentWindow])
+                {
+                    s = [[window parentWindow] screen];
+                }
+                if(!s)
+                    s = [NSScreen mainScreen];
+                
+                return s;
+            }
+            
+            
+            CGFloat FlipY(NSWindow* window, CGFloat y)
+            {
+                NSScreen* s = GetWindowScreen(window);
+                return s.frame.size.height - y;
+            }
+
 #endif
             
         
