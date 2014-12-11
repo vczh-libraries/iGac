@@ -30,6 +30,7 @@ using namespace vl::presentation;
 
 @interface CocoaNSWindow : NSWindow
 
+
 @end
 
 @implementation CocoaNSWindow
@@ -79,7 +80,9 @@ namespace vl {
                 supressingAlt(false),
                 enabled(false)
             {
-                _CreateWindow();
+                CreateWindow();
+                
+                InitKeyNameMappings();
             }
             
             CocoaWindow::~CocoaWindow()
@@ -91,7 +94,7 @@ namespace vl {
                 }
             }
             
-            void CocoaWindow::_CreateWindow()
+            void CocoaWindow::CreateWindow()
             {
                 NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
                 
@@ -228,8 +231,7 @@ namespace vl {
                 }
                 else
                 {
-              //      [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
-                   // [nativeContainer->window setParentWindow:parentWindow->GetNativeContainer()->window];
+                    [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
                 }
                 parentWindow = cocoaParent;
             }
@@ -653,7 +655,6 @@ namespace vl {
                 info.y = contentRect.size.height - p.y;
                 
                 return info;
-                
             }
             
             NativeWindowKeyInfo CreateKeyInfo(NSWindow* window, NSEvent* event)
@@ -663,10 +664,110 @@ namespace vl {
                 info.ctrl = event.modifierFlags & NSControlKeyMask;
                 info.shift = event.modifierFlags & NSShiftKeyMask;
                 info.alt = event.modifierFlags & NSAlternateKeyMask;
+                info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
                 
                 info.code = NSEventKeyCodeToGacKeyCode(event.keyCode);
                 
                 return info;
+            }
+            
+            void CocoaWindow::InitKeyNameMappings()
+            {
+                asciiLowerMap[VKEY_0] = '0';
+                asciiLowerMap[VKEY_0] = '1';
+                asciiLowerMap[VKEY_2] = '2';
+                asciiLowerMap[VKEY_3] = '3';
+                asciiLowerMap[VKEY_4] = '4';
+                asciiLowerMap[VKEY_5] = '5';
+                asciiLowerMap[VKEY_6] = '6';
+                asciiLowerMap[VKEY_7] = '7';
+                asciiLowerMap[VKEY_8] = '8';
+                asciiLowerMap[VKEY_9] = '9';
+                asciiLowerMap[VKEY_OEM_1] = ';';
+                asciiLowerMap[VKEY_OEM_6] = '[';
+                asciiLowerMap[VKEY_OEM_4] = ']';
+                asciiLowerMap[VKEY_OEM_7] = '\'';
+                asciiLowerMap[VKEY_OEM_COMMA] = ',';
+                asciiLowerMap[VKEY_OEM_PERIOD] = '.';
+                asciiLowerMap[VKEY_OEM_2] = '/';
+                asciiLowerMap[VKEY_OEM_5] = '\\';
+                asciiLowerMap[VKEY_OEM_MINUS] = '-';
+                asciiLowerMap[VKEY_OEM_PLUS] = '=';
+                asciiLowerMap[VKEY_OEM_3] = '`';
+                asciiLowerMap[VKEY_SPACE] = ' ';
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiLowerMap[i] = 'a' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = '0' + (i-VKEY_NUMPAD0);
+                
+                
+                asciiUpperMap[VKEY_0] = ')';
+                asciiUpperMap[VKEY_1] = '!';
+                asciiUpperMap[VKEY_2] = '@';
+                asciiUpperMap[VKEY_3] = '#';
+                asciiUpperMap[VKEY_4] = '$';
+                asciiUpperMap[VKEY_5] = '%';
+                asciiUpperMap[VKEY_6] = '^';
+                asciiUpperMap[VKEY_7] = '&';
+                asciiUpperMap[VKEY_8] = '*';
+                asciiUpperMap[VKEY_9] = '(';
+                asciiUpperMap[VKEY_OEM_1] = ':';
+                asciiUpperMap[VKEY_OEM_6] = '{';
+                asciiUpperMap[VKEY_OEM_4] = '}';
+                asciiUpperMap[VKEY_OEM_7] = '\"';
+                asciiUpperMap[VKEY_OEM_COMMA] = '<';
+                asciiUpperMap[VKEY_OEM_PERIOD] = '>';
+                asciiUpperMap[VKEY_OEM_2] = '?';
+                asciiUpperMap[VKEY_OEM_5] = '|';
+                asciiUpperMap[VKEY_OEM_MINUS] = '_';
+                asciiUpperMap[VKEY_OEM_PLUS] = '+';
+                asciiUpperMap[VKEY_OEM_3] = '~';
+                asciiUpperMap[VKEY_SPACE] = ' ';
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiUpperMap[i] = 'A' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = '0' + (i-VKEY_NUMPAD0);
+            }
+            
+            bool CocoaWindow::ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event)
+            {
+                info.ctrl = event.modifierFlags & NSControlKeyMask;
+                info.shift = event.modifierFlags & NSShiftKeyMask;
+                info.alt = event.modifierFlags & NSAlternateKeyMask;
+                info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
+                
+                if(info.ctrl || info.alt)
+                    return false;
+                
+                vint code = NSEventKeyCodeToGacKeyCode(event.keyCode);
+                if(code >= 256)
+                    return false;
+                
+                if(info.capslock || info.shift) {
+                    return asciiUpperMap[code];
+                }
+                return asciiLowerMap[code];
+            }
+            
+            void CocoaWindow::InsertText(const WString& str)
+            {
+                NativeWindowCharInfo info;
+                
+                unsigned long modifierFlags = [NSEvent modifierFlags];
+                info.ctrl = modifierFlags & NSControlKeyMask;
+                info.shift = modifierFlags & NSShiftKeyMask;
+                info.alt = modifierFlags & NSAlternateKeyMask;
+                info.capslock = modifierFlags & NSAlphaShiftKeyMask;
+                
+                for(int i=0; i<str.Length(); ++i)
+                {
+                    info.code = str[i];
+
+                    for(int i=0; i<listeners.Count(); ++i)
+                    {
+                        listeners[i]->Char(info);
+                    }
+                }
             }
             
             void CocoaWindow::HandleEventInternal(NSEvent* event)

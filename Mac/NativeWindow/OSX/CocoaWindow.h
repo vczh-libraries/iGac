@@ -39,8 +39,12 @@ namespace vl {
                 bool                                            enabled;
                 INativeCursor*                                  currentCursor;
                 
+                wchar_t                                         asciiLowerMap[256];
+                wchar_t                                         asciiUpperMap[256];
+                
             protected:
-                void _CreateWindow();
+                void CreateWindow();
+                void InitKeyNameMappings();
                 
             public:
                 CocoaWindow();
@@ -128,6 +132,9 @@ namespace vl {
                 void                InvokeGotFocus();
                 void                InvokeLostFocus();
                 void                InvokeMoved();
+                void                InsertText(const WString& str);
+                
+                bool                ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
             };
             
             extern NSContainer* GetNSNativeContainer(INativeWindow* window);

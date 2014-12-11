@@ -9,6 +9,7 @@
 #include "CocoaBaseView.h"
 
 #include "CocoaWindow.h"
+#include "CocoaHelper.h"
 #include "ServicesImpl/CocoaResourceService.h"
 
 @implementation CocoaBaseView
@@ -140,6 +141,8 @@
 - (void)keyDown:(NSEvent *)event
 {
     cocoaWindow->HandleEventInternal(event);
+    
+    [self interpretKeyEvents:@[event]];
 }
 
 - (void)flagsChanged:(NSEvent *)event
@@ -193,6 +196,276 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
     [self setNeedsDisplay:YES];
+}
+
+// text input related
+
+// this can also be archived by interpreting the key events by ourself
+// but for compatibility, these are used here
+
+- (void)insertText:(id)string
+{
+    cocoaWindow->InsertText(vl::presentation::osx::NSStringToWString(string));
+}
+
+- (void)deleteBackward:(id)sender
+{
+    
+}
+
+- (void)deleteForward:(id)sender
+{
+    
+}
+
+- (void)deleteToBeginningOfLine:(id)sender
+{
+    
+}
+
+- (void)deleteToEndOfLine:(id)sender
+{
+    
+}
+
+- (void)deleteToBeginningOfParagraph:(id)sender
+{
+    
+}
+
+- (void)deleteToEndOfParagraph:(id)sender
+{
+    
+}
+
+- (void)deleteToMark:(id)sender
+{
+    
+}
+
+- (void)deleteWordBackward:(id)sender
+{
+    
+}
+
+- (void)deleteWordForward:(id)sender
+{
+    
+}
+
+- (void)insertBacktab:(id)sender
+{
+    
+}
+
+- (void)insertContainerBreak:(id)sender
+{
+    
+}
+
+- (void)insertLineBreak:(id)sender
+{
+    
+}
+
+- (void)insertNewline:(id)sender
+{
+    cocoaWindow->InsertText(L"\n");
+}
+
+- (void)insertNewlineIgnoringFieldEditor:(id)sender
+{
+    
+}
+
+- (void)insertDoubleQuoteIgnoringSubstitution:(id)sender
+{
+    
+}
+
+- (void)insertSingleQuoteIgnoringSubstitution:(id)sender
+{
+    
+}
+
+- (void)moveBackward:(id)sender
+{
+    
+}
+
+- (void)moveForward:(id)sender
+{
+    
+}
+
+- (void)moveLeft:(id)sender
+{
+    
+}
+
+- (void)moveRight:(id)sender
+{
+    
+}
+
+- (void)moveToEndOfLine:(id)sender
+{
+    
+}
+
+- (void)moveToRightEndOfLine:(id)sender
+{
+    
+}
+
+- (void)moveForwardAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveRightAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveLeftAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveDownAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveToBeginningOfDocument:(id)sender
+{
+    
+}
+
+- (void)moveToEndOfDocument:(id)sender
+{
+    
+}
+
+- (void)moveToBeginningOfParagraphAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveToEndOfDocumentAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveWordLeft:(id)sender
+{
+    
+}
+
+- (void)moveWordRight:(id)sender
+{
+    
+}
+
+- (void)moveWordRightAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)moveWordLeftAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)pageUp:(id)sender
+{
+    
+}
+
+- (void)pageDown:(id)sender
+{
+    
+}
+
+- (void)pageUpAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)pageDownAndModifySelection:(id)sender
+{
+    
+}
+
+- (void)selectAll:(id)sender
+{
+    
+}
+
+- (void)selectLine:(id)sender
+{
+    
+}
+
+- (void)scrollPageUp:(id)sender
+{
+    
+}
+
+- (void)scrollPageDown:(id)sender
+{
+    
+}
+
+- (void)selectParagraph:(id)sender
+{
+    
+}
+
+- (void)selectToMark:(id)sender
+{
+    
+}
+
+- (void)selectWord:(id)sender
+{
+    
+}
+
+- (void)capitalizeWord:(id)sender
+{
+    
+}
+
+- (void)changeCaseOfLetter:(id)sender
+{
+    
+}
+
+- (void)complete:(id)sender
+{
+    
+}
+
+- (void)yank:(id)sender
+{
+    
+}
+
+- (void)uppercaseWord:(id)sender
+{
+    
+}
+
+- (void)transpose:(id)sender
+{
+    
+}
+
+- (void)transposeWords:(id)sender
+{
+    
 }
 
 @end

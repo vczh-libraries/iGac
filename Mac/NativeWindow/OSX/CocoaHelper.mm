@@ -161,27 +161,27 @@ namespace vl {
                     /* 1b */ VKEY_OEM_MINUS,
                     /* 1c */ VKEY_8,
                     /* 1d */ VKEY_0,
-                    /* 1e */ VKEY_OEM_4,
+                    /* 1e */ VKEY_OEM_4, // }
                     /* 1f */ VKEY_O,
                     /* 20 */ VKEY_U,
-                    /* 21 */ VKEY_OEM_6,
+                    /* 21 */ VKEY_OEM_6, // {
                     /* 22 */ VKEY_I,
                     /* 23 */ VKEY_P,
                     /* 24 */ VKEY_RETURN,
                     /* 25 */ VKEY_L,
                     /* 26 */ VKEY_J,
-                    /* 27 */ VKEY_OEM_7,
+                    /* 27 */ VKEY_OEM_7, // '
                     /* 28 */ VKEY_K,
-                    /* 29 */ VKEY_OEM_1,
-                    /* 2a */ VKEY_OEM_5,
+                    /* 29 */ VKEY_OEM_1, // ;
+                    /* 2a */ VKEY_OEM_5, // '\'
                     /* 2b */ VKEY_OEM_COMMA,
-                    /* 2c */ VKEY_OEM_2,
+                    /* 2c */ VKEY_OEM_2, // /
                     /* 2d */ VKEY_N,
                     /* 2e */ VKEY_M,
                     /* 2f */ VKEY_OEM_PERIOD,
                     /* 30 */ VKEY_TAB,
                     /* 31 */ VKEY_SPACE,
-                    /* 32 */ VKEY_OEM_3,
+                    /* 32 */ VKEY_OEM_3, // `
                     /* 33 */ VKEY_BACK,
                     /* 34 */ 0,
                     /* 35 */ VKEY_ESCAPE,
