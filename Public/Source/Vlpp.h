@@ -14857,9 +14857,7 @@ namespace vl
 		static vint									WaitAny(WaitableObject** objects, vint count, bool* abandoned);
 		static vint									WaitAnyForTime(WaitableObject** objects, vint count, vint ms, bool* abandoned);
 #elif defined VCZH_GCC
-    public:
 		virtual bool								Wait() = 0;
-        virtual bool                                WaitForTime(vint ms) {return false;};
 #endif
 	};
 

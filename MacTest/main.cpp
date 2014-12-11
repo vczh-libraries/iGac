@@ -15,6 +15,8 @@
 #include "button_enable_disable.h"
 #include "button_check_and_radio.h"
 #include "tab_textbox_page.h"
+#include "textbox_editor.h"
+#include "textbox_colorizer.h"
 
 int main(int argc, const char * argv[])
 {

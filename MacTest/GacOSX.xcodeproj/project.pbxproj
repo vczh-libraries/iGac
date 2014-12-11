@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		884BB0121A304C04007DF242 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884BB0111A304C04007DF242 /* Info.plist */; };
-		884BB0141A304C0A007DF242 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.mm */; };
+		884BB0141A304C0A007DF242 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.cpp */; };
 		884BC1591A304D10007DF242 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1581A304D10007DF242 /* Cocoa.framework */; };
 		884BC15D1A304D1A007DF242 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15C1A304D1A007DF242 /* Foundation.framework */; };
 		884BC15F1A304D1E007DF242 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
@@ -38,7 +38,7 @@
 /* Begin PBXFileReference section */
 		884BAFEE1A304BA1007DF242 /* GacOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GacOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		884BB0111A304C04007DF242 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		884BB0131A304C0A007DF242 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = SOURCE_ROOT; };
+		884BB0131A304C0A007DF242 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
 		884BC1581A304D10007DF242 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		884BC15A1A304D13007DF242 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		884BC15C1A304D1A007DF242 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,6 +91,8 @@
 		884BC1ED1A373CBE007DF242 /* CocoaDialogService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaDialogService.h; sourceTree = "<group>"; };
 		884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaClipboardService.mm; sourceTree = "<group>"; };
 		884BC1F01A373CC9007DF242 /* CocoaClipboardService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaClipboardService.h; sourceTree = "<group>"; };
+		884BC1F21A395F41007DF242 /* textbox_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = textbox_editor.h; sourceTree = SOURCE_ROOT; };
+		884BC1F31A395F67007DF242 /* textbox_colorizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = textbox_colorizer.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,12 +136,14 @@
 		884BAFF01A304BA1007DF242 /* GacOSX */ = {
 			isa = PBXGroup;
 			children = (
-				884BB0131A304C0A007DF242 /* main.mm */,
+				884BB0131A304C0A007DF242 /* main.cpp */,
 				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
 				884BC1911A329998007DF242 /* label_basic.h */,
 				884BC1E21A354F5E007DF242 /* button_enable_disable.h */,
 				884BC1E41A3595E6007DF242 /* button_check_and_radio.h */,
 				884BC1E51A359C0C007DF242 /* tab_textbox_page.h */,
+				884BC1F21A395F41007DF242 /* textbox_editor.h */,
+				884BC1F31A395F67007DF242 /* textbox_colorizer.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
 				884BC1921A329B34007DF242 /* osx_shared.mm */,
 				884BC1931A329B34007DF242 /* osx_shared.h */,
@@ -349,7 +353,7 @@
 				884BC1E01A353C9B007DF242 /* Vlpp.cpp in Sources */,
 				884BC1CC1A344FE2007DF242 /* CoreGraphicsApp.mm in Sources */,
 				884BC1C61A344FE2007DF242 /* GuiGraphicsCoreGraphics.mm in Sources */,
-				884BB0141A304C0A007DF242 /* main.mm in Sources */,
+				884BB0141A304C0A007DF242 /* main.cpp in Sources */,
 				884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */,
 				884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */,
 				884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */,

@@ -26265,7 +26265,7 @@ GuiGrammarAutoComplete
 								input.editVersion=context.input.editVersion;
 								SubmitTask(input);
 							}
-							else if(context.input.editVersion=arguments.editVersion)
+							else if(context.input.editVersion==arguments.editVersion)
 							{
 								// if the current caret changing is not caused by editing
 								// submit a task with the previous input

@@ -21,12 +21,17 @@ Interfaces:
 #define VCZH_PRESENTATION_REFLECTION_GUIINSTANCEHELPERTYPES
 
 
+#if defined(__APPLE__) || defined(__APPLE_CC__)
+
+using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::elements;
 using namespace vl::presentation::compositions;
 using namespace vl::presentation::controls;
-using namespace vl::presentation::theme;
 using namespace vl::presentation::templates;
+using namespace vl::presentation::theme;
+
+#endif
 
 namespace vl
 {
@@ -919,7 +924,7 @@ namespace vl
 	{
 		namespace description
 		{
-            
+
 #ifndef VCZH_DEBUG_NO_REFLECTION
 
 /***********************************************************************

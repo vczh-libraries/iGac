@@ -179,7 +179,9 @@ namespace vl {
                 }
                 else
                 {
-                    return semaphore.WaitForTime(milliseconds);
+                    // todo
+                    return false;
+                    //return semaphore.WaitForTime(milliseconds);
                 }
             }
             

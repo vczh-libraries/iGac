@@ -8125,7 +8125,8 @@ ExecuteQueryVisitor
 
 			void Visit(GuiIqPrimaryQuery* node)override
 			{
-				if (&input)
+				auto inputExists = &input;
+				if (inputExists)
 				{
 					FOREACH(Ptr<GuiConstructorRepr>, setter, input)
 					{
