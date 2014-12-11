@@ -74,6 +74,7 @@ namespace vl {
                 
                 NSString*                   nsText;
                 NSMutableParagraphStyle*    nsParagraphStyle;
+                NSMutableDictionary*        nsAttributes;
                 Ptr<CoreTextFontPackage>    coreTextFont;
              
                 void CreateFont();
@@ -162,7 +163,7 @@ namespace vl {
                 Ptr<CoreTextFontPackage>        coreTextFont;
                 FontProperties                  oldFont;
                 ColorArray                      colors;
-                NSMutableArray*                 nsTexts;
+                NSMutableDictionary*            nsAttributes;
                 
                 void InitializeInternal();
                 void FinalizeInternal();
@@ -200,7 +201,6 @@ namespace vl {
                 DEFINE_GUI_GRAPHICS_RENDERER(Gui3DSplitterElement, Gui3DSplitterElementRenderer, ICoreGraphicsRenderTarget)
                 
             protected:
-                
                 void InitializeInternal();
                 void FinalizeInternal();
                 void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);

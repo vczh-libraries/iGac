@@ -37,7 +37,8 @@ namespace vl {
                 virtual void								SetBindedRenderTarget(INativeWindow* window, ICoreGraphicsRenderTarget* renderTarget) = 0;
             };
             
-            
+            // this is actually higher level stuff
+            // real CTFont stuff to do
             class CoreTextFontPackage
             {
             public:

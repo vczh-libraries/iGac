@@ -278,15 +278,17 @@ namespace vl {
                 GetCoreGraphicsResourceManager()->DestroyCoreTextFont(oldFont);
                 coreTextFont = GetCoreGraphicsResourceManager()->CreateCoreTextFont(font);
                 
-                [coreTextFont->attributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
+                nsAttributes = [NSMutableDictionary dictionaryWithDictionary:coreTextFont->attributes];
+                
+                [nsAttributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
                 CreateColor();
             }
             
             void GuiSolidLabelElementRenderer::CreateColor()
             {
                 Color color = element->GetColor();
-                [coreTextFont->attributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
-                                             forKey:NSForegroundColorAttributeName];
+                [nsAttributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
+                                 forKey:NSForegroundColorAttributeName];
             }
             
             void GuiSolidLabelElementRenderer::UpdateParagraphStyle()
@@ -320,7 +322,7 @@ namespace vl {
             {
                 CGRect rect = [nsText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:coreTextFont->attributes];
+                                                attributes:nsAttributes];
                 
                 minSize = Size(rect.size.width, rect.size.height);
             }
@@ -382,7 +384,7 @@ namespace vl {
                         textBounds = CGRectMake(textBounds.origin.x, y, bounds.Width(), minSize.y);
                     }
                     
-                    [nsText drawInRect:textBounds withAttributes:coreTextFont->attributes];
+                    [nsText drawInRect:textBounds withAttributes:nsAttributes];
                 }
             }
             
@@ -489,9 +491,7 @@ namespace vl {
                 SetCGContextStrokeColor(context, element->GetBorderColor());
                 CGContextStrokePath(context);
                 
-
                 CGContextRestoreGState(context);
-               
             }
             
             void GuiPolygonElementRenderer::OnElementStateChanged()
@@ -585,8 +585,11 @@ namespace vl {
                 
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
+                
                 if(renderTarget)
                 {
+                    CGContextSaveGState(context);
+                    
                     wchar_t passwordChar = element->GetPasswordChar();
                     Point viewPosition = element->GetViewPosition();
                     Rect viewBounds(viewPosition, bounds.GetSize());
@@ -646,23 +649,22 @@ namespace vl {
                             {
                                 SetCGContextFillColor(context, color.background);
                                 
-                                CGRect fillRect = CGRectMake(tx, ty + 2, (x2 - x), startRect.Height());
+                                CGRect fillRect = CGRectMake(tx, ty + 2, (x2 - x), startRect.Height() + 2);
                                 CGContextFillRect(context, fillRect);
                                 
                             }
                             if(!crlf)
                             {
                                 Color textColor = color.text;
-                                [coreTextFont->attributes setObject:[NSColor colorWithRed:textColor.r/255.0f
-                                                                                    green:textColor.g/255.0f
-                                                                                     blue:textColor.b/255.0f
-                                                                                    alpha:textColor.a/255.0f]
-                                                             forKey:NSForegroundColorAttributeName];
+                                
+                                [nsAttributes setObject:[NSColor colorWithRed:textColor.r/255.0f green:textColor.g/255.0f blue:textColor.b/255.0f alpha:textColor.a/255.0f]
+                                                 forKey:NSForegroundColorAttributeName];
                                 
                                 WString s = passwordChar ? passwordChar : line.text[column];
                                 NSString* str = WStringToNSString(s);
                                 
-                                [str drawAtPoint:NSMakePoint(tx, ty) withAttributes:coreTextFont->attributes];
+                                [str drawAtPoint:NSMakePoint(tx, ty)
+                                  withAttributes:nsAttributes];
                             }
                             x = x2;
                         }
@@ -688,9 +690,9 @@ namespace vl {
                         points[1] = CGPointMake(p2.x, p2.y);
                         CGContextStrokeLineSegments(context, points, 2);
                         
-                        
-                        CGContextSetLineWidth(context, 1.0f);
                     }
+                    
+                    CGContextRestoreGState(context);
                 }
             }
             
@@ -710,6 +712,8 @@ namespace vl {
                 oldFont = element->GetFont();
                 coreTextFont = rm->CreateCoreTextFont(oldFont);
                 element->GetLines().SetCharMeasurer(rm->CreateCharMeasurer(oldFont).Obj());
+                
+                nsAttributes = [NSMutableDictionary dictionaryWithDictionary:coreTextFont->attributes];
             }
             
             void GuiColorizedTextElementRenderer::ColorChanged()
