@@ -362,6 +362,9 @@ namespace vl {
                         break;
                 }
                 
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                SetCGContextFillColor(context, element->GetColor());
+                
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
                     [coreTextFont->font set];
@@ -592,7 +595,7 @@ namespace vl {
                     vint endRow = element->GetLines().GetTextPosFromPoint(Point(viewBounds.x2, viewBounds.y2)).row;
                     
                     TextPos selectionBegin = element->GetCaretBegin() < element->GetCaretEnd() ? element->GetCaretBegin() : element->GetCaretEnd();
-                    TextPos selectionEnd = element->GetCaretBegin() > element->GetCaretEnd() ? element->GetCaretBegin() : element->GetCaretEnd();
+                    TextPos selectionEnd = element->GetCaretBegin() > element->GetCaretEnd() ? element->GetCaretBegin() :element->GetCaretEnd();
                     
                     bool focused = element->GetFocused();
                     
@@ -642,7 +645,9 @@ namespace vl {
                             if(color.background.a > 0)
                             {
                                 SetCGContextFillColor(context, color.background);
-                                CGContextFillRect(context, CGRectMake(tx, ty, tx + (x2 - x), ty + startRect.Height()));
+                                
+                                CGRect fillRect = CGRectMake(tx, ty + 2, (x2 - x), startRect.Height());
+                                CGContextFillRect(context, fillRect);
                                 
                             }
                             if(!crlf)
@@ -654,12 +659,10 @@ namespace vl {
                                                                                     alpha:textColor.a/255.0f]
                                                              forKey:NSForegroundColorAttributeName];
                                 
-                                NSRect rect = NSMakeRect(tx, ty, tx+1, ty+1);
-                                
                                 WString s = passwordChar ? passwordChar : line.text[column];
                                 NSString* str = WStringToNSString(s);
                                 
-                                [str drawInRect:rect withAttributes:coreTextFont->attributes];
+                                [str drawAtPoint:NSMakePoint(tx, ty) withAttributes:coreTextFont->attributes];
                             }
                             x = x2;
                         }
@@ -669,19 +672,24 @@ namespace vl {
                     {
                         Point caretPoint = element->GetLines().GetPointFromTextPos(element->GetCaretEnd());
                         vint height = element->GetLines().GetRowHeight();
-                        Point p1(caretPoint.x - viewPosition.x + bounds.x1, caretPoint.y - viewPosition.y + bounds.y1+1);
-                        Point p2(caretPoint.x - viewPosition.x + bounds.x1, caretPoint.y + height - viewPosition.y + bounds.y1-1);
+                        Point p1(caretPoint.x - viewPosition.x + bounds.x1,
+                                 caretPoint.y - viewPosition.y + bounds.y1 + 2);
+                        
+                        Point p2(caretPoint.x - viewPosition.x + bounds.x1,
+                                 caretPoint.y + height - viewPosition.y + bounds.y1 + 2);
                         
                         SetCGContextStrokeColor(context, element->GetCaretColor());
                         
                         CGPoint points[2];
-                        points[0] = CGPointMake(p1.x + 0.5f, p1.y);
-                        points[1] = CGPointMake(p2.x + 0.5f, p2.y);
+                        
+                        CGContextSetLineWidth(context, 2.0f);
+                        
+                        points[0] = CGPointMake(p1.x, p1.y);
+                        points[1] = CGPointMake(p2.x, p2.y);
                         CGContextStrokeLineSegments(context, points, 2);
                         
-                        points[0] = CGPointMake(p1.x - 0.5f, p1.y);
-                        points[1] = CGPointMake(p2.x - 0.5f, p2.y);
-                        CGContextStrokeLineSegments(context, points, 2);
+                        
+                        CGContextSetLineWidth(context, 1.0f);
                     }
                 }
             }

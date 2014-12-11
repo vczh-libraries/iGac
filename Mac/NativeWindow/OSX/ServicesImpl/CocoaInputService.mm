@@ -248,7 +248,7 @@ namespace vl {
                     else
                     {
                         CFRunLoopRef runLoop =  CFRunLoopGetCurrent();
-                        CFRunLoopAddSource(runLoop, inputTapRunLoopSource, kCFRunLoopDefaultMode);
+                        CFRunLoopAddSource(runLoop, inputTapRunLoopSource, kCFRunLoopCommonModes);
                         
                         CGEventTapEnable(inputTapPort, true);
                     }

@@ -742,6 +742,9 @@ namespace vl {
                     }
                         
                     case NSMouseMoved:
+                    case NSLeftMouseDragged:
+                    case NSRightMouseDragged:
+                    case NSOtherMouseDragged:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
                         info.nonClient = !mouseHoving;
