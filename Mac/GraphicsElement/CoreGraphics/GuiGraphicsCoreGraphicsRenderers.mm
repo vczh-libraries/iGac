@@ -364,13 +364,28 @@ namespace vl {
                         break;
                 }
                 
+                switch(element->GetHorizontalAlignment())
+                {
+                    case Alignment::Left:
+                        x=bounds.Left();
+                        break;
+                        
+                    case Alignment::Center:
+                        x=bounds.Left() + (bounds.Width() - minSize.x) / 2;
+                        break;
+                        
+                    case Alignment::Right:
+                        x=bounds.Right() - minSize.x;
+                        break;
+                }
+                
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 SetCGContextFillColor(context, element->GetColor());
                 
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
                     [coreTextFont->font set];
-                    [nsText drawAtPoint:NSMakePoint(bounds.Left(), bounds.Top())
+                    [nsText drawAtPoint:NSMakePoint(x, y)
                          withAttributes:nsAttributes];
                 }
                 else

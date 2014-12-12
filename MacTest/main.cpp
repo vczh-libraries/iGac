@@ -17,6 +17,9 @@
 #include "tab_textbox_page.h"
 #include "textbox_editor.h"
 #include "textbox_colorizer.h"
+#include "listbox_name_editor.h"
+#include "listbox_name_selector.h"
+#include "listbox_virtual_mode.h"
 
 int main(int argc, const char * argv[])
 {
@@ -27,6 +30,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<TextBoxColorizerWindow>();
+    RunGacWindow<VirtualModeWindow>();
 }
 

@@ -93,6 +93,9 @@
 		884BC1F01A373CC9007DF242 /* CocoaClipboardService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaClipboardService.h; sourceTree = "<group>"; };
 		884BC1F21A395F41007DF242 /* textbox_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = textbox_editor.h; sourceTree = SOURCE_ROOT; };
 		884BC1F31A395F67007DF242 /* textbox_colorizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = textbox_colorizer.h; sourceTree = SOURCE_ROOT; };
+		884BC1F41A3B00E5007DF242 /* listbox_name_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_name_editor.h; sourceTree = SOURCE_ROOT; };
+		884BC1F51A3B012B007DF242 /* listbox_name_selector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_name_selector.h; sourceTree = SOURCE_ROOT; };
+		884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_virtual_mode.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,9 @@
 				884BC1E51A359C0C007DF242 /* tab_textbox_page.h */,
 				884BC1F21A395F41007DF242 /* textbox_editor.h */,
 				884BC1F31A395F67007DF242 /* textbox_colorizer.h */,
+				884BC1F41A3B00E5007DF242 /* listbox_name_editor.h */,
+				884BC1F51A3B012B007DF242 /* listbox_name_selector.h */,
+				884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
 				884BC1921A329B34007DF242 /* osx_shared.mm */,
 				884BC1931A329B34007DF242 /* osx_shared.h */,

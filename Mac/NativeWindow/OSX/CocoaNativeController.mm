@@ -252,7 +252,12 @@ namespace vl {
                                 continue;
                             }
                             
-                            if([window->GetNativeContainer()->window level] >= [result->GetNativeContainer()->window level])
+                            if(([window->GetNativeContainer()->window level] > [result->GetNativeContainer()->window level]))
+                            {
+                                minRect = r;
+                                result = window;
+                            }
+                            else if([window->GetNativeContainer()->window level] == [result->GetNativeContainer()->window level])
                             {
                                 // encapsulates
                                 if(r.x1 > minRect.x1 &&
@@ -260,6 +265,7 @@ namespace vl {
                                    r.x2 < minRect.x2 &&
                                    r.y2 < minRect.y2)
                                 {
+                                    
                                     minRect = r;
                                     result = window;
                                 }

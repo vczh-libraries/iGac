@@ -944,7 +944,6 @@ namespace vl {
                         NativeWindowCharInfo charInfo;
                         if(ConvertToPrintable(charInfo, event))
                         {
-                            wprintf(L"%c\n", charInfo.code);
                             for(vint i=0; i<listeners.Count(); ++i)
                             {
                                 listeners[i]->Char(charInfo);
