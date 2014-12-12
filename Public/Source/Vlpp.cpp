@@ -24147,6 +24147,12 @@ ThreadingLinux.cpp
 #include <sys/stat.h>
 #include <semaphore.h>
 
+
+#if defined(__APPLE__) || defined(__APPLE_CC__)
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
+
 namespace vl
 {
 	using namespace threading_internal;
@@ -24412,22 +24418,54 @@ Semaphore
 		if (initialCount > maxCount) return false;
 
 		internalData = new SemaphoreData;
-		if (name == L"")
-		{
-			if(sem_init(&internalData->semUnnamed, 0, (int)initialCount) != 0)
-			{
-				delete internalData;
-				return false;
-			}
-		}
-		else
-		{
-			if (!(internalData->semNamed = sem_open(wtoa(name).Buffer(), O_CREAT, 0777, maxCount)))
-			{
-				delete internalData;
-				return false;
-			}
-		}
+#if defined(__APPLE__)
+        
+        AString auuid;
+        if(name.Length() == 0)
+        {
+            CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
+            CFStringRef cfstr = CFUUIDCreateString(kCFAllocatorDefault, cfuuid);
+            auuid = CFStringGetCStringPtr(cfstr, kCFStringEncodingASCII);
+
+			CFRelease(cfstr);
+			CFRelease(cfuuid);
+        }
+        auuid = auuid.Insert(0, "/");
+        // OSX SEM_NAME_LENGTH = 31
+        if(auuid.Length() >= 30)
+            auuid = auuid.Sub(0, 30);
+        
+        if ((internalData->semNamed = sem_open(auuid.Buffer(), O_CREAT, O_RDWR, initialCount)) == SEM_FAILED)
+        {
+            delete internalData;
+            internalData = 0;
+            return false;
+        }
+        
+#else
+        if (name == L"")
+        {
+            if(sem_init(&internalData->semUnnamed, 0, (int)initialCount) == -1)
+            {
+                delete internalData;
+                internalData = 0;
+                return false;
+            }
+        }
+        else
+        {
+            AString astr = wtoa(name);
+            auuid = auuid.Insert(0, "/");
+            
+            if ((internalData->semNamed = sem_open(auuid.Buffer(), O_CREAT, 0777, initialCount)) == SEM_FAILED)
+            {
+                delete internalData;
+                internalData = 0;
+                return false;
+            }
+        }
+#endif
+        
 
 		Release(initialCount);
 		return true;
@@ -24441,7 +24479,8 @@ Semaphore
 		internalData = new SemaphoreData;
 		if (!(internalData->semNamed = sem_open(wtoa(name).Buffer(), 0)))
 		{
-			delete internalData;
+            delete internalData;
+            internalData = 0;
 			return false;
 		}
 

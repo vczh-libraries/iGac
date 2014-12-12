@@ -356,11 +356,11 @@ namespace vl {
                         break;
                         
                     case Alignment::Center:
-                        y=bounds.Top()+(bounds.Height()-minSize.y)/2;
+                        y=bounds.Top() + (bounds.Height() - minSize.y) / 2;
                         break;
                         
                     case Alignment::Bottom:
-                        y=bounds.Bottom()-minSize.y;
+                        y=bounds.Bottom() - minSize.y;
                         break;
                 }
                 
@@ -371,7 +371,7 @@ namespace vl {
                 {
                     [coreTextFont->font set];
                     [nsText drawAtPoint:NSMakePoint(bounds.Left(), bounds.Top())
-                         withAttributes:coreTextFont->attributes];
+                         withAttributes:nsAttributes];
                 }
                 else
                 {

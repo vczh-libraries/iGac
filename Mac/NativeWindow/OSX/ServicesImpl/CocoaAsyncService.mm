@@ -164,25 +164,29 @@ namespace vl {
             
             bool CocoaAsyncService::InvokeInMainThreadAndWait(const Func<void()>& proc, vint milliseconds)
             {
-                Semaphore semaphore;
-                semaphore.Create(0, 1);
+                Semaphore* semaphore = new Semaphore();
+                semaphore->Create(0, 1);
                 
+                TaskItem item(semaphore, proc);
                 SPIN_LOCK(taskListLock)
                 {
-                    TaskItem item(&semaphore, proc);
                     taskItems.Add(item);
                 }
                 
-                if(milliseconds < 0)
-                {
-                    return semaphore.Wait();
-                }
-                else
-                {
-                    // todo
-                    return false;
-                    //return semaphore.WaitForTime(milliseconds);
-                }
+                // todo, if semphoare fails to wait for some reason
+                // taskItems will corrupt
+                return semaphore->Wait();
+                
+//                if(milliseconds < 0)
+//                {
+//                    return semaphore.Wait();
+//                }
+//                else
+//                {
+//                    // todo
+//                    return false;
+//                    //return semaphore.WaitForTime(milliseconds);
+//                }
             }
             
             Ptr<INativeDelay> CocoaAsyncService::DelayExecute(const Func<void()>& proc, vint milliseconds)

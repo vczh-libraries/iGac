@@ -237,13 +237,36 @@ namespace vl {
                 
                 INativeWindow* GetWindow(Point location)
                 {
+                    CocoaWindow* result = 0;
+                    Rect minRect(0, 0, 99999, 99999);
                     for(vint i=0; i<windows.Count(); ++i)
                     {
-                        Rect r = windows.Values()[i]->GetClientBoundsInScreen();
+                        CocoaWindow* window = (CocoaWindow*)windows.Values()[i];
+                        Rect r = window->GetClientBoundsInScreen();
                         if(r.Contains(location))
-                            return windows.Values()[i];
+                        {
+                            if(!result)
+                            {
+                                result = window;
+                                minRect = r;
+                                continue;
+                            }
+                            
+                            if([window->GetNativeContainer()->window level] >= [result->GetNativeContainer()->window level])
+                            {
+                                // encapsulates
+                                if(r.x1 > minRect.x1 &&
+                                   r.y1 > minRect.y1 &&
+                                   r.x2 < minRect.x2 &&
+                                   r.y2 < minRect.y2)
+                                {
+                                    minRect = r;
+                                    result = window;
+                                }
+                            }
+                        }
                     }
-                    return 0;
+                    return result;
                 }
                 
                 //=======================================================================

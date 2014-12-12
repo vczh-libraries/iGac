@@ -661,7 +661,7 @@ namespace vl {
             {
                 NativeWindowKeyInfo info;
              
-                info.ctrl = event.modifierFlags & NSControlKeyMask;
+                info.ctrl = event.modifierFlags & NSCommandKeyMask;
                 info.shift = event.modifierFlags & NSShiftKeyMask;
                 info.alt = event.modifierFlags & NSAlternateKeyMask;
                 info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
@@ -673,65 +673,69 @@ namespace vl {
             
             void CocoaWindow::InitKeyNameMappings()
             {
-                asciiLowerMap[VKEY_0] = '0';
-                asciiLowerMap[VKEY_0] = '1';
-                asciiLowerMap[VKEY_2] = '2';
-                asciiLowerMap[VKEY_3] = '3';
-                asciiLowerMap[VKEY_4] = '4';
-                asciiLowerMap[VKEY_5] = '5';
-                asciiLowerMap[VKEY_6] = '6';
-                asciiLowerMap[VKEY_7] = '7';
-                asciiLowerMap[VKEY_8] = '8';
-                asciiLowerMap[VKEY_9] = '9';
-                asciiLowerMap[VKEY_OEM_1] = ';';
-                asciiLowerMap[VKEY_OEM_6] = '[';
-                asciiLowerMap[VKEY_OEM_4] = ']';
-                asciiLowerMap[VKEY_OEM_7] = '\'';
-                asciiLowerMap[VKEY_OEM_COMMA] = ',';
-                asciiLowerMap[VKEY_OEM_PERIOD] = '.';
-                asciiLowerMap[VKEY_OEM_2] = '/';
-                asciiLowerMap[VKEY_OEM_5] = '\\';
-                asciiLowerMap[VKEY_OEM_MINUS] = '-';
-                asciiLowerMap[VKEY_OEM_PLUS] = '=';
-                asciiLowerMap[VKEY_OEM_3] = '`';
-                asciiLowerMap[VKEY_SPACE] = ' ';
-                for(int i=VKEY_A; i<=VKEY_Z; ++i)
-                    asciiLowerMap[i] = 'a' + (i-VKEY_A);
-                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
-                    asciiLowerMap[i] = '0' + (i-VKEY_NUMPAD0);
+                memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
+                memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
                 
-                
-                asciiUpperMap[VKEY_0] = ')';
-                asciiUpperMap[VKEY_1] = '!';
-                asciiUpperMap[VKEY_2] = '@';
-                asciiUpperMap[VKEY_3] = '#';
-                asciiUpperMap[VKEY_4] = '$';
-                asciiUpperMap[VKEY_5] = '%';
-                asciiUpperMap[VKEY_6] = '^';
-                asciiUpperMap[VKEY_7] = '&';
-                asciiUpperMap[VKEY_8] = '*';
-                asciiUpperMap[VKEY_9] = '(';
-                asciiUpperMap[VKEY_OEM_1] = ':';
-                asciiUpperMap[VKEY_OEM_6] = '{';
-                asciiUpperMap[VKEY_OEM_4] = '}';
-                asciiUpperMap[VKEY_OEM_7] = '\"';
-                asciiUpperMap[VKEY_OEM_COMMA] = '<';
-                asciiUpperMap[VKEY_OEM_PERIOD] = '>';
-                asciiUpperMap[VKEY_OEM_2] = '?';
-                asciiUpperMap[VKEY_OEM_5] = '|';
-                asciiUpperMap[VKEY_OEM_MINUS] = '_';
-                asciiUpperMap[VKEY_OEM_PLUS] = '+';
-                asciiUpperMap[VKEY_OEM_3] = '~';
-                asciiUpperMap[VKEY_SPACE] = ' ';
+                asciiLowerMap[VKEY_0] = L'0';
+                asciiLowerMap[VKEY_0] = L'1';
+                asciiLowerMap[VKEY_2] = L'2';
+                asciiLowerMap[VKEY_3] = L'3';
+                asciiLowerMap[VKEY_4] = L'4';
+                asciiLowerMap[VKEY_5] = L'5';
+                asciiLowerMap[VKEY_6] = L'6';
+                asciiLowerMap[VKEY_7] = L'7';
+                asciiLowerMap[VKEY_8] = L'8';
+                asciiLowerMap[VKEY_9] = L'9';
+                asciiLowerMap[VKEY_OEM_1] = L';';
+                asciiLowerMap[VKEY_OEM_6] = L'[';
+                asciiLowerMap[VKEY_OEM_4] = L']';
+                asciiLowerMap[VKEY_OEM_7] = L'\'';
+                asciiLowerMap[VKEY_OEM_COMMA] = L',';
+                asciiLowerMap[VKEY_OEM_PERIOD] = L'.';
+                asciiLowerMap[VKEY_OEM_2] = L'/';
+                asciiLowerMap[VKEY_OEM_5] = L'\\';
+                asciiLowerMap[VKEY_OEM_MINUS] = L'-';
+                asciiLowerMap[VKEY_OEM_PLUS] = L'=';
+                asciiLowerMap[VKEY_OEM_3] = L'`';
+                asciiLowerMap[VKEY_SPACE] = L' ';
+                asciiLowerMap[VKEY_RETURN] = L'\n';
                 for(int i=VKEY_A; i<=VKEY_Z; ++i)
-                    asciiUpperMap[i] = 'A' + (i-VKEY_A);
+                    asciiLowerMap[i] = L'a' + (i-VKEY_A);
                 for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
-                    asciiLowerMap[i] = '0' + (i-VKEY_NUMPAD0);
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+                
+                asciiUpperMap[VKEY_0] = L')';
+                asciiUpperMap[VKEY_1] = L'!';
+                asciiUpperMap[VKEY_2] = L'@';
+                asciiUpperMap[VKEY_3] = L'#';
+                asciiUpperMap[VKEY_4] = L'$';
+                asciiUpperMap[VKEY_5] = L'%';
+                asciiUpperMap[VKEY_6] = L'^';
+                asciiUpperMap[VKEY_7] = L'&';
+                asciiUpperMap[VKEY_8] = L'*';
+                asciiUpperMap[VKEY_9] = L'(';
+                asciiUpperMap[VKEY_OEM_1] = L':';
+                asciiUpperMap[VKEY_OEM_6] = L'{';
+                asciiUpperMap[VKEY_OEM_4] = L'}';
+                asciiUpperMap[VKEY_OEM_7] = L'\"';
+                asciiUpperMap[VKEY_OEM_COMMA] = L'<';
+                asciiUpperMap[VKEY_OEM_PERIOD] = L'>';
+                asciiUpperMap[VKEY_OEM_2] = L'?';
+                asciiUpperMap[VKEY_OEM_5] = L'|';
+                asciiUpperMap[VKEY_OEM_MINUS] = L'_';
+                asciiUpperMap[VKEY_OEM_PLUS] = L'+';
+                asciiUpperMap[VKEY_OEM_3] = L'~';
+                asciiUpperMap[VKEY_SPACE] = L' ';
+                asciiUpperMap[VKEY_RETURN] = L'\n';
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiUpperMap[i] = L'A' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
             }
             
             bool CocoaWindow::ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event)
             {
-                info.ctrl = event.modifierFlags & NSControlKeyMask;
+                info.ctrl = event.modifierFlags & NSCommandKeyMask;
                 info.shift = event.modifierFlags & NSShiftKeyMask;
                 info.alt = event.modifierFlags & NSAlternateKeyMask;
                 info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
@@ -744,9 +748,13 @@ namespace vl {
                     return false;
                 
                 if(info.capslock || info.shift) {
-                    return asciiUpperMap[code];
+                    info.code = asciiUpperMap[code];
                 }
-                return asciiLowerMap[code];
+                info.code = asciiLowerMap[code];
+                if(info.code != 0)
+                    return true;
+                
+                return false;
             }
             
             void CocoaWindow::InsertText(const WString& str)
@@ -754,7 +762,7 @@ namespace vl {
                 NativeWindowCharInfo info;
                 
                 unsigned long modifierFlags = [NSEvent modifierFlags];
-                info.ctrl = modifierFlags & NSControlKeyMask;
+                info.ctrl = modifierFlags & NSCommandKeyMask;
                 info.shift = modifierFlags & NSShiftKeyMask;
                 info.alt = modifierFlags & NSAlternateKeyMask;
                 info.capslock = modifierFlags & NSAlphaShiftKeyMask;
@@ -931,6 +939,16 @@ namespace vl {
                         for(vint i=0; i<listeners.Count(); ++i)
                         {
                             listeners[i]->KeyDown(info);
+                        }
+                        
+                        NativeWindowCharInfo charInfo;
+                        if(ConvertToPrintable(charInfo, event))
+                        {
+                            wprintf(L"%c\n", charInfo.code);
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->Char(charInfo);
+                            }
                         }
                         break;
                     }
