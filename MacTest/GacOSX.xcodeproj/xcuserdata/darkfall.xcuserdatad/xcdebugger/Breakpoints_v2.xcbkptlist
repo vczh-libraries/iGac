@@ -26,12 +26,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Public/Source/GacUI.cpp"
-            timestampString = "439966947.666915"
+            timestampString = "440143690.362418"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25031"
-            endingLineNumber = "25031"
+            startingLineNumber = "25036"
+            endingLineNumber = "25036"
             landmarkName = "GuiDocumentCommonInterface::ProcessKey(vint code, bool shift, bool ctrl)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphicsRenderers.mm"
+            timestampString = "440139553.99705"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "566"
+            endingLineNumber = "566"
+            landmarkName = "GuiImageFrameElementRenderer::Render(Rect bounds)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

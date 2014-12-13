@@ -13551,7 +13551,7 @@ CommonScrollStyle
 				{
 					draggingHandle=true;
 					draggingStartLocation=Point(arguments.x, arguments.y);
-				}
+                }
 			}
 
 			void CommonScrollStyle::OnHandleMouseMove(compositions::GuiGraphicsComposition* sender, compositions::GuiMouseEventArgs& arguments)
@@ -13582,6 +13582,7 @@ CommonScrollStyle
 					vint offset2=vint(((double)(newPosition+1)/totalSize)*totalPixels);
 					vint delta1=abs((int)(offset1-newOffset));
 					vint delta2=abs((int)(offset2-newOffset));
+                    
 					if(delta1<delta2)
 					{
 						commandExecutor->SetPosition(newPosition);

@@ -9,6 +9,7 @@
 #include "GuiGraphicsCoreGraphicsRenderers.h"
 
 #include "../../NativeWindow/OSX/CocoaHelper.h"
+#include "../../NativeWindow/OSX/ServicesImpl/CocoaImageService.h"
 
 #import <Cocoa/Cocoa.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -346,8 +347,8 @@ namespace vl {
             
             void GuiSolidLabelElementRenderer::Render(Rect bounds)
             {
-                vint x=0;
-                vint y=0;
+                vint x =0;
+                vint y = 0;
                 
                 switch(element->GetVerticalAlignment())
                 {
@@ -562,11 +563,75 @@ namespace vl {
             {
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
 
+                if(element->GetImage())
+                {
+                    CocoaImageFrame* frame = static_cast<CocoaImageFrame*>(element->GetImage()->GetFrame(element->GetFrameIndex()));
+                    
+                    CGImageRef image = frame->GetCGImage();
+                    
+                    CGRect dest;
+                    if(element->GetStretch())
+                    {
+                        dest = CGRectMake((CGFloat)bounds.x1, (CGFloat)bounds.y1, (CGFloat)bounds.Width(), (CGFloat)bounds.Height());
+                    }
+                    else
+                    {
+                        vint x = 0;
+                        vint y = 0;
+                        
+                        switch(element->GetVerticalAlignment())
+                        {
+                            case Alignment::Top:
+                                y=bounds.Top();
+                                break;
+                                
+                            case Alignment::Center:
+                                y=bounds.Top() + (bounds.Height() - minSize.y) / 2;
+                                break;
+                                
+                            case Alignment::Bottom:
+                                y=bounds.Bottom() - minSize.y;
+                                break;
+                        }
+                        
+                        switch(element->GetHorizontalAlignment())
+                        {
+                            case Alignment::Left:
+                                x=bounds.Left();
+                                break;
+                                
+                            case Alignment::Center:
+                                x=bounds.Left() + (bounds.Width() - minSize.x) / 2;
+                                break;
+                                
+                            case Alignment::Right:
+                                x=bounds.Right() - minSize.x;
+                                break;
+                        }
+                        dest = CGRectMake((CGFloat)x, (CGFloat)y, (CGFloat)(x+minSize.x), (CGFloat)(y+minSize.y));
+                    }
+                    
+                    CGContextSaveGState(context);
+                    
+                    CGContextTranslateCTM(context, dest.origin.x, dest.origin.y + dest.size.height);
+                    CGContextScaleCTM(context, 1.0, -1.0);
+                    
+                    CGContextDrawImage(context, CGRectMake(0, 0, dest.size.width, dest.size.height), image);
+                    
+                    CGContextRestoreGState(context);
+                }
+                
             }
             
             void GuiImageFrameElementRenderer::OnElementStateChanged()
             {
-                
+                if(element->GetImage())
+                {
+                    INativeImageFrame* frame = element->GetImage()->GetFrame(element->GetFrameIndex());
+                    minSize = frame->GetSize();
+                }
+                else
+                    minSize = Size(0, 0);
             }
             
             //

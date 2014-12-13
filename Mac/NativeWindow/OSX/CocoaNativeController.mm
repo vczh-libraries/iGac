@@ -161,6 +161,7 @@ namespace vl {
                 CocoaScreenService          screenService;
                 CocoaAsyncService           asyncService;
                 CocoaClipboardService       clipboardService;
+                CocoaImageService           imageService;
                 
                 CocoaApplicationDelegate*   appDelegate;
                 
@@ -299,7 +300,7 @@ namespace vl {
                 
                 INativeImageService* ImageService()
                 {
-                    return 0;
+                    return &imageService;
                 }
                 
                 INativeScreenService* ScreenService()

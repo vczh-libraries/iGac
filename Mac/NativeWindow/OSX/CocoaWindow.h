@@ -37,6 +37,7 @@ namespace vl {
                 bool                                            customFrameMode;
                 bool                                            supressingAlt;
                 bool                                            enabled;
+                bool                                            capturing;
                 INativeCursor*                                  currentCursor;
                 
                 wchar_t                                         asciiLowerMap[256];

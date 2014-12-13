@@ -33,6 +33,7 @@
 		884BC1EB1A373CB6007DF242 /* CocoaImageService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1E91A373CB6007DF242 /* CocoaImageService.mm */; };
 		884BC1EE1A373CBE007DF242 /* CocoaDialogService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EC1A373CBE007DF242 /* CocoaDialogService.mm */; };
 		884BC1F11A373CC9007DF242 /* CocoaClipboardService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */; };
+		884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +97,9 @@
 		884BC1F41A3B00E5007DF242 /* listbox_name_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_name_editor.h; sourceTree = SOURCE_ROOT; };
 		884BC1F51A3B012B007DF242 /* listbox_name_selector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_name_selector.h; sourceTree = SOURCE_ROOT; };
 		884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listbox_virtual_mode.h; sourceTree = SOURCE_ROOT; };
+		884BC1F81A3BF3E8007DF242 /* listview_viewswitching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listview_viewswitching.h; sourceTree = SOURCE_ROOT; };
+		884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnixFileSystemInfo.cpp; sourceTree = SOURCE_ROOT; };
+		884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnixFileSystemInfo.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +154,9 @@
 				884BC1F41A3B00E5007DF242 /* listbox_name_editor.h */,
 				884BC1F51A3B012B007DF242 /* listbox_name_selector.h */,
 				884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */,
+				884BC1F81A3BF3E8007DF242 /* listview_viewswitching.h */,
+				884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */,
+				884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
 				884BC1921A329B34007DF242 /* osx_shared.mm */,
 				884BC1931A329B34007DF242 /* osx_shared.h */,
@@ -345,6 +352,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */,
 				884BC1CA1A344FE2007DF242 /* CocoaNativeController.mm in Sources */,
 				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
 				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,

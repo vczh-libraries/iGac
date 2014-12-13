@@ -62,6 +62,7 @@ using namespace vl::presentation;
 
 @end
 
+
 namespace vl {
     
     namespace presentation {
@@ -78,10 +79,11 @@ namespace vl {
                 graphicsHandler(0),
                 customFrameMode(false),
                 supressingAlt(false),
-                enabled(false)
+                enabled(false),
+                capturing(false)
             {
                 CreateWindow();
-                
+
                 InitKeyNameMappings();
             }
             
@@ -378,17 +380,21 @@ namespace vl {
             
             bool CocoaWindow::RequireCapture() 
             {
+                // todo
+                capturing = true;
                 return true;
             }
 
             bool CocoaWindow::ReleaseCapture() 
             {
+                // todo
+                capturing = false;
                 return true;
             }
 
             bool CocoaWindow::IsCapturing() 
             {
-                return true;
+                return capturing;
             }
 
             bool CocoaWindow::GetMaximizedBox() 
@@ -653,6 +659,12 @@ namespace vl {
                 
                 info.x = p.x;
                 info.y = contentRect.size.height - p.y;
+                
+                info.nonClient = false;
+                if(info.x < 0 || info.y < 0 ||
+                   info.x > contentRect.size.width || info.y > contentRect.size.height)
+                    info.nonClient = true;
+                
                 
                 return info;
             }
