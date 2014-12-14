@@ -25,7 +25,7 @@ private:
     
     void labelHyperlink_OnLeftButtonDown(GuiGraphicsComposition* sender, GuiMouseEventArgs& arguments)
     {
-        LaunchURL(L"http://darkfall.me");
+        osx::LaunchURL(L"http://darkfall.me");
     }
     
 public:

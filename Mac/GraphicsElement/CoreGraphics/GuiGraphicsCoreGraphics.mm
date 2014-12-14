@@ -122,6 +122,8 @@ namespace vl {
                     if(!coreTextFont->font)
                     {
                         coreTextFont->font = [fontManager fontWithFamily:@"Lucida Grande" traits:traitMask weight:0 size:font.size];
+                        
+                        wprintf(L"%ls\n", (L"Font " + font.fontFamily + L" cannot be found.").Buffer());
                     }
                     
                     if(!coreTextFont->font)
@@ -210,7 +212,9 @@ namespace vl {
                 
                 ICoreGraphicsRenderTarget* GetNativeCoreGraphicsRenderTarget(INativeWindow* window)
                 {
-                    // todo
+                    CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
+                    if(cocoaWindow)
+                        return dynamic_cast<ICoreGraphicsRenderTarget*>(cocoaWindow->GetGraphicsHandler());
                     return 0;
                 }
                 

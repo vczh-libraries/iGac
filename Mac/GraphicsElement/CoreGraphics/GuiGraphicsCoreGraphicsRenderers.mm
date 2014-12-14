@@ -425,7 +425,7 @@ namespace vl {
                 
                 oldText = element->GetText();
                 nsText = osx::WStringToNSString(element->GetText());
-                
+               
                 UpdateMinSize();
             }
             
@@ -502,10 +502,8 @@ namespace vl {
                 CGContextAddPath(context, cgBorderPath);
                 
                 SetCGContextFillColor(context, element->GetBackgroundColor());
-                CGContextFillPath(context);
-                
                 SetCGContextStrokeColor(context, element->GetBorderColor());
-                CGContextStrokePath(context);
+                CGContextDrawPath(context, kCGPathFillStroke);
                 
                 CGContextRestoreGState(context);
             }
@@ -844,6 +842,22 @@ namespace vl {
             {
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
+                CGPoint points[4];
+                points[0] = CGPointMake((CGFloat)bounds.x1+0.5f, (CGFloat)bounds.y1+0.5f);
+                points[1] = CGPointMake((CGFloat)bounds.x2-0.5f, (CGFloat)bounds.y1+0.5f);
+                points[0] = CGPointMake((CGFloat)bounds.x1+0.5f, (CGFloat)bounds.y1+0.5f);
+                points[3] = CGPointMake((CGFloat)bounds.x1+0.5f, (CGFloat)bounds.y2-0.5f);
+                
+                SetCGContextStrokeColor(context, element->GetColor1());
+                CGContextStrokeLineSegments(context, points, 4);
+                
+                points[1] = CGPointMake((CGFloat)bounds.x2-0.5f, (CGFloat)bounds.y2-0.5f);
+                points[1] = CGPointMake((CGFloat)bounds.x1+0.5f, (CGFloat)bounds.y2-0.5f);
+                points[1] = CGPointMake((CGFloat)bounds.x2-0.5f, (CGFloat)bounds.y2-0.5f);
+                points[1] = CGPointMake((CGFloat)bounds.x2-0.5f, (CGFloat)bounds.y1+0.5f);
+                
+                SetCGContextStrokeColor(context, element->GetColor2());
+                CGContextStrokeLineSegments(context, points, 4);
             }
             
             void Gui3DBorderElementRenderer::OnElementStateChanged()
@@ -879,6 +893,35 @@ namespace vl {
             {
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
                 
+                CGPoint points[4];
+                switch (element->GetDirection()) {
+                    case Gui3DSplitterElement::Horizontal:
+                    {
+                        vint y = bounds.y1 + bounds.Height() / 2 - 1;
+                        
+                        points[1] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+0.5f);
+                        points[1] = CGPointMake((CGFloat)bounds.x2, (CGFloat)y+0.5f);
+                        points[1] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+1.5f);
+                        points[1] = CGPointMake((CGFloat)bounds.x2, (CGFloat)y+1.5f);
+                        break;
+                    }
+                        
+                    case Gui3DSplitterElement::Vertical:
+                    {
+                        vint x = bounds.x1 + bounds.Width() / 2 - 1;
+                        
+                        points[1] = CGPointMake((CGFloat)x+0.5f, (CGFloat)bounds.y1);
+                        points[1] = CGPointMake((CGFloat)x+0.5f, (CGFloat)bounds.y2);
+                        points[1] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y1);
+                        points[1] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y2);
+                        break;
+                    }
+                }
+                
+                SetCGContextStrokeColor(context, element->GetColor1());
+                CGContextStrokeLineSegments(context, points, 2);
+                SetCGContextStrokeColor(context, element->GetColor2());
+                CGContextStrokeLineSegments(context, points+2, 2);
             }
             
             void Gui3DSplitterElementRenderer::OnElementStateChanged()

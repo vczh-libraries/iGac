@@ -11,13 +11,13 @@
 
 #include "gac_include.h"
 
-class VirtualModeDataSource : public list::ItemProviderBase, private list::TextItemStyleProvider::ITextItemView
+class ListBoxVirtualModeDataSource : public list::ItemProviderBase, private list::TextItemStyleProvider::ITextItemView
 {
 protected:
     vint             count;
     
 public:
-    VirtualModeDataSource()
+    ListBoxVirtualModeDataSource()
     :count(100000)
     {
     }
@@ -106,13 +106,13 @@ public:
  VirtualModeWindow
  ***********************************************************************/
 
-class VirtualModeWindow : public GuiWindow
+class ListBoxVirtualModeWindow : public GuiWindow
 {
 private:
     GuiVirtualTextList*                 listBox;
     GuiButton*                          buttonIncrease;
     GuiButton*                          buttonDecrease;
-    VirtualModeDataSource*              dataSource;
+    ListBoxVirtualModeDataSource*       dataSource;
     
     void buttonIncrease_Clicked(GuiGraphicsComposition* sender, GuiEventArgs& arguments)
     {
@@ -124,7 +124,7 @@ private:
         dataSource->SetCount(dataSource->Count()-100000);
     }
 public:
-    VirtualModeWindow()
+    ListBoxVirtualModeWindow()
     :GuiWindow(GetCurrentTheme()->CreateWindowStyle())
     {
         this->SetText(L"Controls.ListBox.VirtualMode");
@@ -148,7 +148,7 @@ public:
             table->AddChild(cell);
             cell->SetSite(0, 0, 3, 1);
             
-            dataSource=new VirtualModeDataSource;
+            dataSource=new ListBoxVirtualModeDataSource;
             listBox=new GuiVirtualTextList(GetCurrentTheme()->CreateTextListStyle(), GetCurrentTheme()->CreateTextListItemStyle(), dataSource);
             listBox->GetBoundsComposition()->SetAlignmentToParent(Margin(0, 0, 0, 0));
             listBox->SetHorizontalAlwaysVisible(false);
@@ -162,7 +162,7 @@ public:
             buttonIncrease=g::NewButton();
             buttonIncrease->SetText(L"Increase 100000 Items");
             buttonIncrease->GetBoundsComposition()->SetAlignmentToParent(Margin(0, 0, 0, 0));
-            buttonIncrease->Clicked.AttachMethod(this, &VirtualModeWindow::buttonIncrease_Clicked);
+            buttonIncrease->Clicked.AttachMethod(this, &ListBoxVirtualModeWindow::buttonIncrease_Clicked);
             cell->AddChild(buttonIncrease->GetBoundsComposition());
         }
         {
@@ -173,7 +173,7 @@ public:
             buttonDecrease=g::NewButton();
             buttonDecrease->SetText(L"Decrease 100000 Items");
             buttonDecrease->GetBoundsComposition()->SetAlignmentToParent(Margin(0, 0, 0, 0));
-            buttonDecrease->Clicked.AttachMethod(this, &VirtualModeWindow::buttonDecrease_Clicked);
+            buttonDecrease->Clicked.AttachMethod(this, &ListBoxVirtualModeWindow::buttonDecrease_Clicked);
             cell->AddChild(buttonDecrease->GetBoundsComposition());
         }
         

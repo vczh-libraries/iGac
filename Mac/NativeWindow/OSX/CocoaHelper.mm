@@ -62,16 +62,15 @@ namespace vl {
             
             NSString* WStringToNSString(const WString& str)
             {
-                NSString* nsstr = [[NSString alloc] initWithBytes: (char*)str.Buffer()
+                NSString* nsstr = [[NSString alloc] initWithBytes: (wchar_t*)str.Buffer()
                                                            length: str.Length() * sizeof(wchar_t)
-                                                         encoding: CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE)];
+                                                         encoding: NSUTF32LittleEndianStringEncoding];
                 return nsstr;
             }
             
             WString NSStringToWString(NSString* str)
             {
-                NSStringEncoding encode = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
-                NSData* data = [str dataUsingEncoding: encode];
+                NSData* data = [str dataUsingEncoding: NSUTF32LittleEndianStringEncoding];
                 
                 return WString((wchar_t*)[data bytes], vint([data length]/sizeof(wchar_t)));
             }

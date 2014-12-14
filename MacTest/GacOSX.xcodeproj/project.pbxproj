@@ -193,6 +193,10 @@
 		8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceItemTemplate.xml; sourceTree = "<group>"; };
 		8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceListViewModel.xml; sourceTree = "<group>"; };
 		8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceViewModel.xml; sourceTree = "<group>"; };
+		889839BD1A3D5E8700FBA63B /* listview_sorting_and_filtering.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview_sorting_and_filtering.h; sourceTree = SOURCE_ROOT; };
+		88DAE4DB1A3D65CC004E458F /* listview_virtual_mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview_virtual_mode.h; sourceTree = SOURCE_ROOT; };
+		88DAE4DC1A3D69CB004E458F /* treeview_file_explorer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treeview_file_explorer.h; sourceTree = SOURCE_ROOT; };
+		88DAE4DD1A3D819D004E458F /* scroll_colorpicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scroll_colorpicker.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,7 +253,11 @@
 				884BC1F51A3B012B007DF242 /* listbox_name_selector.h */,
 				884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */,
 				884BC1F81A3BF3E8007DF242 /* listview_viewswitching.h */,
+				889839BD1A3D5E8700FBA63B /* listview_sorting_and_filtering.h */,
+				88DAE4DB1A3D65CC004E458F /* listview_virtual_mode.h */,
+				88DAE4DC1A3D69CB004E458F /* treeview_file_explorer.h */,
 				8898395F1A3D363000FBA63B /* template_customized_border.h */,
+				88DAE4DD1A3D819D004E458F /* scroll_colorpicker.h */,
 				884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */,
 				884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,

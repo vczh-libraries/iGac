@@ -644,29 +644,6 @@ namespace vl {
             {
                 NativeWindowMouseInfo info;
                 
-                if(event.type == NSScrollWheel && [event respondsToSelector:@selector(scrollingDeltaY)])
-                {
-                    double deltaY;
-                    
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
-                    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
-                    {
-                        deltaY = [event scrollingDeltaY];
-                        
-                        if ([event hasPreciseScrollingDeltas])
-                        {
-                            deltaY *= 0.1;
-                        }
-                    }
-                    else
-#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
-                    {
-                        deltaY = [event deltaY];
-                    }
-                    
-                    info.wheel = (int)deltaY;
-                }
-                
                 info.left = event.type == NSLeftMouseDown;
                 info.right = event.type == NSRightMouseDown;
                 // assuming its middle mouse
@@ -1258,11 +1235,65 @@ namespace vl {
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nativeContainer->window, event);
                         
-                        for(vint i=0; i<listeners.Count(); ++i)
+                        
+                        if([event respondsToSelector:@selector(scrollingDeltaY)])
                         {
-                            listeners[i]->HorizontalWheel(info);
+                            double deltaY;
+                            
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+                            if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+                            {
+                                deltaY = [event scrollingDeltaY];
+                                
+                                if ([event hasPreciseScrollingDeltas])
+                                {
+                                    deltaY *= 0.2;
+                                }
+                            }
+                            else
+#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
+                            {
+                                deltaY = [event deltaY];
+                            }
+                            
+                            info.wheel = (int)deltaY;
+                            
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->VerticalWheel(info);
+                            }
+                            break;
                         }
-                        break;
+                        
+                        if([event respondsToSelector:@selector(scrollingDeltaX)])
+                        {
+                            double deltaX;
+                            
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1070
+                            if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_6)
+                            {
+                                deltaX = [event scrollingDeltaY];
+                                
+                                if ([event hasPreciseScrollingDeltas])
+                                {
+                                    deltaX *= 0.2;
+                                }
+                            }
+                            else
+#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
+                            {
+                                deltaX = [event deltaY];
+                            }
+                            
+                            info.wheel = (int)deltaX;
+                            
+                            for(vint i=0; i<listeners.Count(); ++i)
+                            {
+                                listeners[i]->HorizontalWheel(info);
+                            }
+                            break;
+                        }
+
                     }
                         
                     case NSKeyDown:

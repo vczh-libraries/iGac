@@ -19,7 +19,7 @@ public:
     :GuiWindow(GetCurrentTheme()->CreateWindowStyle())
     {
         WString title(L"GayUI OSX");
-        title += (GetSysVerString());
+        title += (osx::GetSysVerString());
         
         this->SetText(title);
         this->SetClientSize(vl::presentation::Size(640, 480));

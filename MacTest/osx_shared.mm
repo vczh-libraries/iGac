@@ -14,104 +14,109 @@
 
 #include "../Mac/NativeWindow/OSX/ServicesImpl/CocoaImageService.h"
 
-NSString* WStringToNSString(const vl::WString& str)
-{
-    NSString* nsstr = [[NSString alloc] initWithBytes: (char*)str.Buffer()
-                                               length: str.Length() * sizeof(wchar_t)
-                                             encoding: CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE)];
-    return nsstr;
-}
+namespace osx {
 
-vl::WString NSStringToWString(NSString* str)
-{
-    NSStringEncoding encode = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingUTF32LE);
-    NSData* data = [str dataUsingEncoding: encode];
-    
-    return vl::WString((wchar_t*)[data bytes], vl::vint([data length]/sizeof(wchar_t)));
-}
-
-vl::WString GetSysVerString()
-{
-    return NSStringToWString([[NSProcessInfo processInfo] operatingSystemVersionString]);
-}
-
-void LaunchURL(const vl::WString& url)
-{
-    NSURL* nsurl = [NSURL URLWithString:WStringToNSString(url)];
-    [[NSWorkspace sharedWorkspace] openURL:nsurl];
-}
-
-vl::WString GetFileDisplayName(const vl::WString& file)
-{
-    return NSStringToWString([[NSFileManager defaultManager] displayNameAtPath:WStringToNSString(file)]);
-}
-
-vl::WString GetFileDisplayType(const vl::WString& file)
-{
-    CFStringRef kind = nil;
-    NSString* path = WStringToNSString(file);
-    NSURL *url = [NSURL fileURLWithPath:[path stringByExpandingTildeInPath]];
-    LSCopyKindStringForURL((__bridge CFURLRef)url, (CFStringRef *)&kind);
-    return kind ? NSStringToWString((__bridge NSString*)kind) : L"";
-}
-
-vl::vint64_t GetFileSize(const vl::WString& file)
-{
-    NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: WStringToNSString(file) error:nil];
-    return (vl::vint64_t)[attributes fileSize];
-}
-
-vl::WString GetFileModificationTimeString(const vl::WString& file)
-{
-    NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: WStringToNSString(file) error:nil];
-    NSString* dateString = [NSDateFormatter localizedStringFromDate:[attributes fileModificationDate]
-                                                          dateStyle:NSDateFormatterShortStyle
-                                                          timeStyle:NSDateFormatterShortStyle];
-    return NSStringToWString(dateString);
-}
-
-vl::WString GetFileSizeString(vl::vint64_t fileSize)
-{
-    vl::WString unit;
-    double size=0;
-    if(fileSize >= 1024*1024*1024)
+    NSString* WStringToNSString(const vl::WString& str)
     {
-        unit=L" GB";
-        size=ceil((double)fileSize/(1024*1024))/1024;
+        NSString* nsstr = [[NSString alloc] initWithBytes: (char*)str.Buffer()
+                                                   length: str.Length() * sizeof(wchar_t)
+                                                 encoding: NSUTF32LittleEndianStringEncoding];
+        return nsstr;
     }
-    else if(fileSize>=1024*1024)
+
+    vl::WString NSStringToWString(NSString* str)
     {
-        unit=L" MB";
-        size=ceil((double)fileSize/(1024*1024));
+        NSData* data = [str dataUsingEncoding: NSUTF32LittleEndianStringEncoding];
+        
+        return vl::WString((wchar_t*)[data bytes], vl::vint([data length]/sizeof(wchar_t)));
     }
-    else if(fileSize>=1024)
+
+    vl::WString GetSysVerString()
     {
-        unit=L" KB";
-        size=ceil((double)fileSize/1024);
+        return NSStringToWString([[NSProcessInfo processInfo] operatingSystemVersionString]);
     }
-    else
+
+    void LaunchURL(const vl::WString& url)
     {
-        unit=L" Bytes";
-        size=(double)fileSize;
+        NSURL* nsurl = [NSURL URLWithString:WStringToNSString(url)];
+        [[NSWorkspace sharedWorkspace] openURL:nsurl];
+    }
+
+    vl::WString GetFileDisplayName(const vl::WString& file)
+    {
+        return NSStringToWString([[NSFileManager defaultManager] displayNameAtPath:WStringToNSString(file)]);
+    }
+
+    vl::WString UTF8StringToWString(const char* str, vl::vint len)
+    {
+        NSString* nsstr = [[NSString alloc] initWithUTF8String:str];
+        return NSStringToWString(nsstr);
+    }
+
+    vl::WString GetFileDisplayType(const vl::WString& file)
+    {
+        CFStringRef kind = nil;
+        NSString* path = WStringToNSString(file);
+        NSURL *url = [NSURL fileURLWithPath:[path stringByExpandingTildeInPath]];
+        LSCopyKindStringForURL((__bridge CFURLRef)url, (CFStringRef *)&kind);
+        return kind ? NSStringToWString((__bridge NSString*)kind) : L"???";
+    }
+
+    void FindDirectoriesAndFiles(const vl::WString& path, vl::collections::List<vl::WString>& directories, vl::collections::List<vl::WString>& files)
+    {
+        NSString* file;
+        NSString* nsPath = WStringToNSString(path);
+        NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtPath:nsPath];
+        
+        while (file = [enumerator nextObject])
+        {
+            // check if it's a directory
+            BOOL isDirectory = NO;
+            [[NSFileManager defaultManager] fileExistsAtPath: [NSString stringWithFormat:@"%@/%@", nsPath, file]
+                                                 isDirectory: &isDirectory];
+            if (!isDirectory)
+            {
+                if([file characterAtIndex:0] != '.')
+                    files.Add(NSStringToWString(file));
+            }
+            else
+            {
+                if([file characterAtIndex:0] != '.')
+                    directories.Add(NSStringToWString(file));
+
+                [enumerator skipDescendants];
+            }
+        }
     }
     
-    vl::WString sizeString = vl::ftow(size);
-    const wchar_t* reading = sizeString.Buffer();
-    const wchar_t* point = wcschr(sizeString.Buffer(), L'.');
-    if(point)
+    bool IsFileDirectory(const vl::WString& file)
     {
-        const wchar_t* max = reading + sizeString.Length();
-        point += 4;
-        if(point > max) point = max;
-        sizeString = sizeString.Left(point - reading);
+        BOOL result;
+        [[NSFileManager defaultManager] fileExistsAtPath: WStringToNSString(file)
+                                             isDirectory: &result];
+        return result;
+    }
+
+    vl::vint64_t GetFileSize(const vl::WString& file)
+    {
+        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: WStringToNSString(file) error:nil];
+        return (vl::vint64_t)[attributes fileSize];
+    }
+
+    vl::WString GetFileModificationTimeString(const vl::WString& file)
+    {
+        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: WStringToNSString(file) error:nil];
+        NSString* dateString = [NSDateFormatter localizedStringFromDate:[attributes fileModificationDate]
+                                                              dateStyle:NSDateFormatterShortStyle
+                                                              timeStyle:NSDateFormatterShortStyle];
+        return NSStringToWString(dateString);
+    }
+
+    vl::Ptr<vl::presentation::INativeImage> GetFileIconImage(const vl::WString& file, vl::presentation::Size size)
+    {
+        using namespace vl::presentation::osx;
+        CocoaImageService* service = (CocoaImageService*)vl::presentation::GetCurrentController()->ImageService();
+        return service->GetIconForFile(file, size);
     }
     
-    return sizeString + unit;
-}
-
-vl::Ptr<vl::presentation::INativeImage> GetFileIconImage(const vl::WString& file, vl::presentation::Size size)
-{
-    using namespace vl::presentation::osx;
-    CocoaImageService* service = (CocoaImageService*)vl::presentation::GetCurrentController()->ImageService();
-    return service->GetIconForFile(file, size);
 }

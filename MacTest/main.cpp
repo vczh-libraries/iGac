@@ -21,17 +21,22 @@
 #include "listbox_name_selector.h"
 #include "listbox_virtual_mode.h"
 #include "listview_viewswitching.h"
+#include "listview_sorting_and_filtering.h"
+#include "listview_virtual_mode.h"
 #include "template_customized_border.h"
+#include "treeview_file_explorer.h"
+#include "scroll_colorpicker.h"
 
 int main(int argc, const char * argv[])
 {
     SetupOSXCoreGraphicsRenderer();
+    
     
     return 0;
 }
 
 void GuiMain()
 {
-    RunGacWindow<CustomTemplateWindow>();
+    RunGacWindow<ColorPickerWindow>();
 }
 

@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphicsRenderers.mm"
-            timestampString = "440139553.99705"
+            timestampString = "440236525.963248"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "566"
-            endingLineNumber = "566"
+            startingLineNumber = "564"
+            endingLineNumber = "564"
             landmarkName = "GuiImageFrameElementRenderer::Render(Rect bounds)"
             landmarkType = "5">
          </BreakpointContent>

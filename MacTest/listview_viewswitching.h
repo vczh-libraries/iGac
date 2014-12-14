@@ -120,13 +120,13 @@ void FillList(GuiListView* listView, const WString& path, List<WString>& files)
         Ptr<list::ListViewItem> item=new list::ListViewItem;
         WString fullPath=path+L"/"+file;
              
-        item->SetLargeImage(new GuiImageData(GetFileIconImage(fullPath, Size(64, 64)), 0));
-        item->SetSmallImage(new GuiImageData(GetFileIconImage(fullPath, Size(24, 24)), 0));
+        item->SetLargeImage(new GuiImageData(osx::GetFileIconImage(fullPath, Size(48, 48)), 0));
+        item->SetSmallImage(new GuiImageData(osx::GetFileIconImage(fullPath, Size(24, 24)), 0));
         
-        item->SetText(GetFileDisplayName(fullPath));
+        item->SetText(osx::GetFileDisplayName(fullPath));
         
-        item->GetSubItems().Add(GetFileDisplayType(fullPath));
-        item->GetSubItems().Add(GetFileModificationTimeString(fullPath));
+        item->GetSubItems().Add(osx::GetFileDisplayType(fullPath));
+        item->GetSubItems().Add(osx::GetFileModificationTimeString(fullPath));
         item->GetSubItems().Add(GetFileSizeString(GetFileSize(fullPath)));
         
         listView->GetItems().Add(item);
