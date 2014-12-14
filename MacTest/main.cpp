@@ -37,6 +37,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<ColorPickerWindow>();
+    RunGacWindow<CheckAndRadioWindow>();
 }
 

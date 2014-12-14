@@ -283,6 +283,8 @@ namespace vl {
                 
                 [nsAttributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
                 CreateColor();
+                
+                oldFont = font;
             }
             
             void GuiSolidLabelElementRenderer::CreateColor()
@@ -406,25 +408,32 @@ namespace vl {
             
             void GuiSolidLabelElementRenderer::OnElementStateChanged()
             {
-                if(renderTarget)
+                Color color = element->GetColor();
+                if(oldColor != color)
                 {
-                    Color color = element->GetColor();
-                    if(oldColor != color)
-                    {
-                        CreateColor();
-                    }
-                    
-                    FontProperties font = element->GetFont();
-                    if(oldFont != font)
-                    {
-                        CreateFont();
-                    }
+                    CreateColor();
+                }
+                
+                FontProperties font = element->GetFont();
+                if(oldFont != font)
+                {
+                    CreateFont();
                 }
                 
                 UpdateParagraphStyle();
                 
                 oldText = element->GetText();
-                nsText = osx::WStringToNSString(element->GetText());
+                // well, this is really a hack. but works
+                // the issue here is even though osx has webdings font
+                // 'a' is mapped to unicode 'a', so its still, an 'a'
+                if(oldFont.fontFamily == L"Webdings" && oldText.Length() > 0 && oldText[0] == L'a')
+                {
+                    nsText = @"\u2713";
+                }
+                else
+                {
+                    nsText = osx::WStringToNSString(element->GetText());
+                }
                
                 UpdateMinSize();
             }
