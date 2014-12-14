@@ -32,13 +32,21 @@ namespace vl {
                 collections::List<INativeWindowListener*>       listeners;
                 vint                                            mouseLastX;
                 vint                                            mouseLastY;
+                vint                                            mouseDownX;
+                vint                                            mouseDownY;
                 vint                                            mouseHoving;
                 Interface*                                      graphicsHandler;
                 bool                                            customFrameMode;
                 bool                                            supressingAlt;
                 bool                                            enabled;
                 bool                                            capturing;
+                bool                                            resizing;
+                bool                                            moving;
+                INativeWindowListener::HitTestResult            resizingBorder;
+                
+                Rect                                            lastBorder;
                 INativeCursor*                                  currentCursor;
+                Rect                                            previousBounds;
                 
                 wchar_t                                         asciiLowerMap[256];
                 wchar_t                                         asciiUpperMap[256];
@@ -134,6 +142,12 @@ namespace vl {
                 void                InvokeLostFocus();
                 void                InvokeMoved();
                 void                InsertText(const WString& str);
+                void                SetResizingBorder(INativeWindowListener::HitTestResult border);
+                void                ResizingDragged();
+                void                MovingDragged();
+                void                HitTestMouseDown(vint x, vint y);
+                void                HitTestMouseMove(vint x, vint y);
+                void                HitTestMouseUp(vint x, vint y);
                 
                 bool                ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
             };

@@ -18,108 +18,75 @@ namespace vl {
         
         namespace osx {
             
-            // from WDC C++ Library w some modification
+            // hack hack hack
+            // note this guy may not work in a sandboxed app?
             
-            NSCursor* MakeSWELLSystemCursor(int cursorId)
+            NSCursor* LoadSystemCursor(INativeCursor::SystemCursorType cursorId)
             {
-                // bytemaps are (white<<4)|(alpha)
-                const unsigned char B = 0xF;
-                const unsigned char W = 0xFF;
-                const unsigned char G = 0xF8;
-                
-                static NSCursor* carr[3] = { 0, 0, 0 };
-                
-                NSCursor* pc = 0;
-                if (cursorId == INativeCursor::SizeAll) pc = carr[0];
-                else if (cursorId == INativeCursor::SizeNWSE) pc = carr[1];
-                else if (cursorId == INativeCursor::SizeNESW) pc = carr[2];
-                else return 0;
-                
-                if (!pc)
+                NSCursor* cursor;
+                NSString* cursorName;
+                switch(cursorId)
                 {
-                    if (cursorId == INativeCursor::SizeAll)
-                    {
-                        static unsigned char p[16*16] =
-                        {
-                            0, 0, 0, 0, 0, 0, G, W, W, G, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, G, W, B, B, W, G, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, W, B, B, B, B, W, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, G, B, B, B, B, B, B, G, 0, 0, 0, 0,
-                            0, 0, 0, G, 0, 0, W, B, B, W, 0, 0, G, 0, 0, 0,
-                            0, G, W, B, 0, 0, W, B, B, W, 0, 0, B, W, G, 0,
-                            G, W, B, B, W, W, W, B, B, W, W, W, B, B, W, G,
-                            W, B, B, B, B, B, B, B, B, B, B, B, B, B, B, W,
-                            W, B, B, B, B, B, B, B, B, B, B, B, B, B, B, W,
-                            G, W, B, B, W, W, W, B, B, W, W, W, B, B, W, G,
-                            0, G, W, B, 0, 0, W, B, B, W, 0, 0, B, W, G, 0,
-                            0, 0, 0, G, 0, 0, W, B, B, W, 0, 0, G, 0, 0, 0,
-                            0, 0, 0, 0, G, B, B, B, B, B, B, G, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, W, B, B, B, B, W, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, G, W, B, B, W, G, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, G, W, W, G, 0, 0, 0, 0, 0, 0,
-                        };
-                        pc = carr[0] = MakeCursorFromData(p, 8, 8);
-                    }
-                    else if (cursorId == INativeCursor::SizeNWSE ||
-                             cursorId == INativeCursor::SizeNESW)
-                    {
-                        static unsigned char p[16*16] =
-                        {
-                            W, W, W, W, W, W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            W, G, G, G, W, G, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            W, G, B, W, G, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            W, G, W, B, W, G, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            W, W, G, W, B, W, G, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            W, G, 0, G, W, B, W, G, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, G, W, B, W, G, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, G, W, B, W, G, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, G, W, B, W, G, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, G, W, B, W, G, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, G, W, B, W, G, 0, G, W,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, G, W, B, W, G, W, W,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, G, W, B, W, G, W,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, G, W, B, G, W,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, G, W, G, G, G, W,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, W, W, W, W, W, W,
-                        };
-                        if (cursorId == INativeCursor::SizeNESW)
-                        {
-                            int x, y;
-                            for (y = 0; y < 16; ++y)
-                            {
-                                for (x = 0; x < 8; ++x)
-                                {
-                                    unsigned char tmp = p[16*y+x];
-                                    p[16*y+x] = p[16*y+16-x-1];
-                                    p[16*y+16-x-1] = tmp;
-                                }
-                            }
-                            
-                            pc = carr[2] = MakeCursorFromData(p, 8, 8);
-                        }
-                        else
-                        {
-                            pc = carr[1] = MakeCursorFromData(p, 8, 8);
-                        }
+                    case INativeCursor::SmallWaiting:
+                    case INativeCursor::LargeWaiting:
+                        cursorName = @"busybutclickable";
+                        break;
                         
-                        if (cursorId == INativeCursor::SizeNESW) // swap back!
-                        {
-                            int x, y;
-                            for (y = 0; y < 16; ++y)
-                            {
-                                for (x = 0; x < 8; ++x)
-                                {
-                                    unsigned char tmp = p[16*y+x];
-                                    p[16*y+x] = p[16*y+16-x-1];
-                                    p[16*y+16-x-1] = tmp;
-                                }
-                            }
-                        }
-                    }
+                    case INativeCursor::Cross:
+                        cursorName = @"cross";
+                        break;
+                        
+                    case INativeCursor::Hand:
+                        cursorName = @"openhand";
+                        break;
+                        
+                    case INativeCursor::Help:
+                        cursorName = @"help";
+                        break;
+                        
+                    case INativeCursor::IBeam:
+                        cursorName = @"ibeamvertical";
+                        break;
+                        
+                    case INativeCursor::SizeAll:
+                        cursorName = @"move";
+                        break;
+                        
+                    case INativeCursor::SizeNESW:
+                        cursorName = @"resizenortheastsouthwest";
+                        break;
+                        
+                    case INativeCursor::SizeNWSE:
+                        cursorName = @"resizenorthwestsoutheast";
+                        break;
+                        
+                    case INativeCursor::SizeWE:
+                        cursorName = @"resizeleftright";
+                        break;
+                        
+                    case INativeCursor::SizeNS:
+                        cursorName = @"resizeupdown";
+                        break;
+                        
+                    default:
+                        cursorName = 0;
+                }
+                if(cursorName)
+                {
+                    NSString *cursorPath = [@"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/Resources/cursors" stringByAppendingPathComponent:cursorName];
+                    
+                    NSImage* image = [[NSImage alloc] initByReferencingFile:[cursorPath stringByAppendingPathComponent:@"cursor.pdf"]];
+                    
+                    NSDictionary* info = [NSDictionary dictionaryWithContentsOfFile:[cursorPath stringByAppendingPathComponent:@"info.plist"]];
+                    
+                    NSCursor* cursor = [[NSCursor alloc] initWithImage:image
+                                                               hotSpot:NSMakePoint([[info valueForKey:@"hotx"] doubleValue],
+                                                                                   [[info valueForKey:@"hoty"] doubleValue])];
+                    
+                    return cursor;
                 }
                 
-                
-                return pc;
+                return 0;
             }
             
             
@@ -146,8 +113,11 @@ namespace vl {
                 {
                     case INativeCursor::SmallWaiting:
                     case INativeCursor::LargeWaiting:
-                        cursor = [NSCursor arrowCursor];
-                        //                        throw NotSupportedException(L"Waiting cursor not supported by OSX (its managed by the system). This behavior maybe changed later as we could load a cursor from a image.");
+                    case INativeCursor::Help:
+                    case INativeCursor::SizeAll:
+                    case INativeCursor::SizeNESW:
+                    case INativeCursor::SizeNWSE:
+                        cursor = LoadSystemCursor(systemCursorType);
                         break;
                         
                     case INativeCursor::Arrow:
@@ -162,31 +132,19 @@ namespace vl {
                         cursor = [NSCursor openHandCursor];
                         break;
                         
-                    case INativeCursor::Help:
                         break;
                         
                     case INativeCursor::IBeam:
                         cursor = [NSCursor IBeamCursor];
                         break;
                         
-                    case INativeCursor::SizeAll:
-                        cursor = MakeSWELLSystemCursor(INativeCursor::SizeAll);
-                        break;
-                        
-                    case INativeCursor::SizeNESW:
-                        cursor = MakeSWELLSystemCursor(INativeCursor::SizeNESW);
-                        break;
-                        
-                    case INativeCursor::SizeNWSE:
-                        cursor = MakeSWELLSystemCursor(INativeCursor::SizeNWSE);
-                        break;
                         
                     case INativeCursor::SizeWE:
                         cursor = [NSCursor resizeLeftRightCursor];
                         break;
                         
                     case INativeCursor::SizeNS:
-                        cursor = [NSCursor resizeUpCursor];
+                        cursor = [NSCursor resizeUpDownCursor];
                         break;
                         
                 }

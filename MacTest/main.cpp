@@ -21,6 +21,7 @@
 #include "listbox_name_selector.h"
 #include "listbox_virtual_mode.h"
 #include "listview_viewswitching.h"
+#include "template_customized_border.h"
 
 int main(int argc, const char * argv[])
 {
@@ -31,6 +32,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<ViewSwitchingWindow>();
+    RunGacWindow<CustomTemplateWindow>();
 }
 

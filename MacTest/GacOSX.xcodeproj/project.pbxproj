@@ -34,6 +34,52 @@
 		884BC1EE1A373CBE007DF242 /* CocoaDialogService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EC1A373CBE007DF242 /* CocoaDialogService.mm */; };
 		884BC1F11A373CC9007DF242 /* CocoaClipboardService.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1EF1A373CC9007DF242 /* CocoaClipboardService.mm */; };
 		884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */; };
+		8898398F1A3D3C5C00FBA63B /* _Copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839611A3D3C5C00FBA63B /* _Copy.png */; };
+		889839901A3D3C5C00FBA63B /* _Cut.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839621A3D3C5C00FBA63B /* _Cut.png */; };
+		889839911A3D3C5C00FBA63B /* _Delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839631A3D3C5C00FBA63B /* _Delete.png */; };
+		889839921A3D3C5C00FBA63B /* _New.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839641A3D3C5C00FBA63B /* _New.png */; };
+		889839931A3D3C5C00FBA63B /* _Open.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839651A3D3C5C00FBA63B /* _Open.png */; };
+		889839941A3D3C5C00FBA63B /* _Paste.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839661A3D3C5C00FBA63B /* _Paste.png */; };
+		889839951A3D3C5C00FBA63B /* _Print.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839671A3D3C5C00FBA63B /* _Print.png */; };
+		889839961A3D3C5C00FBA63B /* _Redo.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839681A3D3C5C00FBA63B /* _Redo.png */; };
+		889839971A3D3C5C00FBA63B /* _Save.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839691A3D3C5C00FBA63B /* _Save.png */; };
+		889839981A3D3C5C00FBA63B /* _SaveAs.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898396A1A3D3C5C00FBA63B /* _SaveAs.png */; };
+		889839991A3D3C5C00FBA63B /* _Undo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898396B1A3D3C5C00FBA63B /* _Undo.png */; };
+		8898399A1A3D3C5C00FBA63B /* BigDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898396C1A3D3C5C00FBA63B /* BigDoc.png */; };
+		8898399B1A3D3C5C00FBA63B /* CalculatorDefinition.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8898396D1A3D3C5C00FBA63B /* CalculatorDefinition.txt */; };
+		8898399C1A3D3C5C00FBA63B /* Chemical.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8898396E1A3D3C5C00FBA63B /* Chemical.txt */; };
+		8898399D1A3D3C5C00FBA63B /* document2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898396F1A3D3C5C00FBA63B /* document2.xml */; };
+		8898399E1A3D3C5C00FBA63B /* Gif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 889839701A3D3C5C00FBA63B /* Gif.gif */; };
+		8898399F1A3D3C5C00FBA63B /* HelloWorld.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839711A3D3C5C00FBA63B /* HelloWorld.xml */; };
+		889839A01A3D3C5C00FBA63B /* HelloWorldViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839721A3D3C5C00FBA63B /* HelloWorldViewModel.xml */; };
+		889839A11A3D3C5C00FBA63B /* JsonSample.txt in Resources */ = {isa = PBXBuildFile; fileRef = 889839731A3D3C5C00FBA63B /* JsonSample.txt */; };
+		889839A21A3D3C5C00FBA63B /* OfficeExcel.ico in Resources */ = {isa = PBXBuildFile; fileRef = 889839741A3D3C5C00FBA63B /* OfficeExcel.ico */; };
+		889839A31A3D3C5C00FBA63B /* OfficeOneNote.ico in Resources */ = {isa = PBXBuildFile; fileRef = 889839751A3D3C5C00FBA63B /* OfficeOneNote.ico */; };
+		889839A41A3D3C5C00FBA63B /* OfficeOutlook.ico in Resources */ = {isa = PBXBuildFile; fileRef = 889839761A3D3C5C00FBA63B /* OfficeOutlook.ico */; };
+		889839A51A3D3C5C00FBA63B /* OfficePowerPoint.ico in Resources */ = {isa = PBXBuildFile; fileRef = 889839771A3D3C5C00FBA63B /* OfficePowerPoint.ico */; };
+		889839A61A3D3C5C00FBA63B /* OfficeWord.ico in Resources */ = {isa = PBXBuildFile; fileRef = 889839781A3D3C5C00FBA63B /* OfficeWord.ico */; };
+		889839A71A3D3C5C00FBA63B /* s_AlignCenter.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839791A3D3C5C00FBA63B /* s_AlignCenter.png */; };
+		889839A81A3D3C5C00FBA63B /* s_AlignLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397A1A3D3C5C00FBA63B /* s_AlignLeft.png */; };
+		889839A91A3D3C5C00FBA63B /* s_AlignRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397B1A3D3C5C00FBA63B /* s_AlignRight.png */; };
+		889839AA1A3D3C5C00FBA63B /* s_Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397C1A3D3C5C00FBA63B /* s_Background.png */; };
+		889839AB1A3D3C5C00FBA63B /* s_Bold.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397D1A3D3C5C00FBA63B /* s_Bold.png */; };
+		889839AC1A3D3C5C00FBA63B /* s_Color.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397E1A3D3C5C00FBA63B /* s_Color.png */; };
+		889839AD1A3D3C5C00FBA63B /* s_Font.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898397F1A3D3C5C00FBA63B /* s_Font.png */; };
+		889839AE1A3D3C5C00FBA63B /* s_Italic.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839801A3D3C5C00FBA63B /* s_Italic.png */; };
+		889839AF1A3D3C5C00FBA63B /* s_Strike.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839811A3D3C5C00FBA63B /* s_Strike.png */; };
+		889839B01A3D3C5C00FBA63B /* s_Underline.png in Resources */ = {isa = PBXBuildFile; fileRef = 889839821A3D3C5C00FBA63B /* s_Underline.png */; };
+		889839B11A3D3C5C00FBA63B /* XmlDoc.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839831A3D3C5C00FBA63B /* XmlDoc.xml */; };
+		889839B21A3D3C5C00FBA63B /* XmlDocDemo.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839841A3D3C5C00FBA63B /* XmlDocDemo.xml */; };
+		889839B31A3D3C5C00FBA63B /* XmlDocDemo_TooltipWindow.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 889839851A3D3C5C00FBA63B /* XmlDocDemo_TooltipWindow.jpg */; };
+		889839B41A3D3C5C00FBA63B /* XmlResource.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839861A3D3C5C00FBA63B /* XmlResource.xml */; };
+		889839B51A3D3C5C00FBA63B /* XmlWindowResource.xml in Resources */ = {isa = PBXBuildFile; fileRef = 889839871A3D3C5C00FBA63B /* XmlWindowResource.xml */; };
+		889839B61A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.bin in Resources */ = {isa = PBXBuildFile; fileRef = 889839881A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.bin */; };
+		889839B71A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.compressed in Resources */ = {isa = PBXBuildFile; fileRef = 889839891A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.compressed */; };
+		889839B81A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398A1A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.xml */; };
+		889839B91A3D3C5C00FBA63B /* XmlWindowResourceDataBinding.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398B1A3D3C5C00FBA63B /* XmlWindowResourceDataBinding.xml */; };
+		889839BA1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */; };
+		889839BB1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */; };
+		889839BC1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +146,53 @@
 		884BC1F81A3BF3E8007DF242 /* listview_viewswitching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listview_viewswitching.h; sourceTree = SOURCE_ROOT; };
 		884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnixFileSystemInfo.cpp; sourceTree = SOURCE_ROOT; };
 		884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnixFileSystemInfo.h; sourceTree = SOURCE_ROOT; };
+		8898395F1A3D363000FBA63B /* template_customized_border.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = template_customized_border.h; sourceTree = SOURCE_ROOT; };
+		889839611A3D3C5C00FBA63B /* _Copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Copy.png; sourceTree = "<group>"; };
+		889839621A3D3C5C00FBA63B /* _Cut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Cut.png; sourceTree = "<group>"; };
+		889839631A3D3C5C00FBA63B /* _Delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Delete.png; sourceTree = "<group>"; };
+		889839641A3D3C5C00FBA63B /* _New.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _New.png; sourceTree = "<group>"; };
+		889839651A3D3C5C00FBA63B /* _Open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Open.png; sourceTree = "<group>"; };
+		889839661A3D3C5C00FBA63B /* _Paste.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Paste.png; sourceTree = "<group>"; };
+		889839671A3D3C5C00FBA63B /* _Print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Print.png; sourceTree = "<group>"; };
+		889839681A3D3C5C00FBA63B /* _Redo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Redo.png; sourceTree = "<group>"; };
+		889839691A3D3C5C00FBA63B /* _Save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Save.png; sourceTree = "<group>"; };
+		8898396A1A3D3C5C00FBA63B /* _SaveAs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _SaveAs.png; sourceTree = "<group>"; };
+		8898396B1A3D3C5C00FBA63B /* _Undo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _Undo.png; sourceTree = "<group>"; };
+		8898396C1A3D3C5C00FBA63B /* BigDoc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BigDoc.png; sourceTree = "<group>"; };
+		8898396D1A3D3C5C00FBA63B /* CalculatorDefinition.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CalculatorDefinition.txt; sourceTree = "<group>"; };
+		8898396E1A3D3C5C00FBA63B /* Chemical.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Chemical.txt; sourceTree = "<group>"; };
+		8898396F1A3D3C5C00FBA63B /* document2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = document2.xml; sourceTree = "<group>"; };
+		889839701A3D3C5C00FBA63B /* Gif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = Gif.gif; sourceTree = "<group>"; };
+		889839711A3D3C5C00FBA63B /* HelloWorld.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = HelloWorld.xml; sourceTree = "<group>"; };
+		889839721A3D3C5C00FBA63B /* HelloWorldViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = HelloWorldViewModel.xml; sourceTree = "<group>"; };
+		889839731A3D3C5C00FBA63B /* JsonSample.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JsonSample.txt; sourceTree = "<group>"; };
+		889839741A3D3C5C00FBA63B /* OfficeExcel.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = OfficeExcel.ico; sourceTree = "<group>"; };
+		889839751A3D3C5C00FBA63B /* OfficeOneNote.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = OfficeOneNote.ico; sourceTree = "<group>"; };
+		889839761A3D3C5C00FBA63B /* OfficeOutlook.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = OfficeOutlook.ico; sourceTree = "<group>"; };
+		889839771A3D3C5C00FBA63B /* OfficePowerPoint.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = OfficePowerPoint.ico; sourceTree = "<group>"; };
+		889839781A3D3C5C00FBA63B /* OfficeWord.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = OfficeWord.ico; sourceTree = "<group>"; };
+		889839791A3D3C5C00FBA63B /* s_AlignCenter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_AlignCenter.png; sourceTree = "<group>"; };
+		8898397A1A3D3C5C00FBA63B /* s_AlignLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_AlignLeft.png; sourceTree = "<group>"; };
+		8898397B1A3D3C5C00FBA63B /* s_AlignRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_AlignRight.png; sourceTree = "<group>"; };
+		8898397C1A3D3C5C00FBA63B /* s_Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Background.png; sourceTree = "<group>"; };
+		8898397D1A3D3C5C00FBA63B /* s_Bold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Bold.png; sourceTree = "<group>"; };
+		8898397E1A3D3C5C00FBA63B /* s_Color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Color.png; sourceTree = "<group>"; };
+		8898397F1A3D3C5C00FBA63B /* s_Font.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Font.png; sourceTree = "<group>"; };
+		889839801A3D3C5C00FBA63B /* s_Italic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Italic.png; sourceTree = "<group>"; };
+		889839811A3D3C5C00FBA63B /* s_Strike.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Strike.png; sourceTree = "<group>"; };
+		889839821A3D3C5C00FBA63B /* s_Underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = s_Underline.png; sourceTree = "<group>"; };
+		889839831A3D3C5C00FBA63B /* XmlDoc.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlDoc.xml; sourceTree = "<group>"; };
+		889839841A3D3C5C00FBA63B /* XmlDocDemo.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlDocDemo.xml; sourceTree = "<group>"; };
+		889839851A3D3C5C00FBA63B /* XmlDocDemo_TooltipWindow.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = XmlDocDemo_TooltipWindow.jpg; sourceTree = "<group>"; };
+		889839861A3D3C5C00FBA63B /* XmlResource.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlResource.xml; sourceTree = "<group>"; };
+		889839871A3D3C5C00FBA63B /* XmlWindowResource.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResource.xml; sourceTree = "<group>"; };
+		889839881A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = XmlWindowResourceControlTemplate.precompiled.bin; sourceTree = "<group>"; };
+		889839891A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.compressed */ = {isa = PBXFileReference; lastKnownFileType = file; path = XmlWindowResourceControlTemplate.precompiled.compressed; sourceTree = "<group>"; };
+		8898398A1A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceControlTemplate.precompiled.xml; sourceTree = "<group>"; };
+		8898398B1A3D3C5C00FBA63B /* XmlWindowResourceDataBinding.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceDataBinding.xml; sourceTree = "<group>"; };
+		8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceItemTemplate.xml; sourceTree = "<group>"; };
+		8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceListViewModel.xml; sourceTree = "<group>"; };
+		8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceViewModel.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +236,7 @@
 		884BAFF01A304BA1007DF242 /* GacOSX */ = {
 			isa = PBXGroup;
 			children = (
+				889839601A3D3C5C00FBA63B /* Resources */,
 				884BB0131A304C0A007DF242 /* main.cpp */,
 				884BC16B1A32986D007DF242 /* label_hyperlink.h */,
 				884BC1911A329998007DF242 /* label_basic.h */,
@@ -155,6 +249,7 @@
 				884BC1F51A3B012B007DF242 /* listbox_name_selector.h */,
 				884BC1F61A3B0352007DF242 /* listbox_virtual_mode.h */,
 				884BC1F81A3BF3E8007DF242 /* listview_viewswitching.h */,
+				8898395F1A3D363000FBA63B /* template_customized_border.h */,
 				884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */,
 				884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
@@ -284,6 +379,59 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		889839601A3D3C5C00FBA63B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				889839611A3D3C5C00FBA63B /* _Copy.png */,
+				889839621A3D3C5C00FBA63B /* _Cut.png */,
+				889839631A3D3C5C00FBA63B /* _Delete.png */,
+				889839641A3D3C5C00FBA63B /* _New.png */,
+				889839651A3D3C5C00FBA63B /* _Open.png */,
+				889839661A3D3C5C00FBA63B /* _Paste.png */,
+				889839671A3D3C5C00FBA63B /* _Print.png */,
+				889839681A3D3C5C00FBA63B /* _Redo.png */,
+				889839691A3D3C5C00FBA63B /* _Save.png */,
+				8898396A1A3D3C5C00FBA63B /* _SaveAs.png */,
+				8898396B1A3D3C5C00FBA63B /* _Undo.png */,
+				8898396C1A3D3C5C00FBA63B /* BigDoc.png */,
+				8898396D1A3D3C5C00FBA63B /* CalculatorDefinition.txt */,
+				8898396E1A3D3C5C00FBA63B /* Chemical.txt */,
+				8898396F1A3D3C5C00FBA63B /* document2.xml */,
+				889839701A3D3C5C00FBA63B /* Gif.gif */,
+				889839711A3D3C5C00FBA63B /* HelloWorld.xml */,
+				889839721A3D3C5C00FBA63B /* HelloWorldViewModel.xml */,
+				889839731A3D3C5C00FBA63B /* JsonSample.txt */,
+				889839741A3D3C5C00FBA63B /* OfficeExcel.ico */,
+				889839751A3D3C5C00FBA63B /* OfficeOneNote.ico */,
+				889839761A3D3C5C00FBA63B /* OfficeOutlook.ico */,
+				889839771A3D3C5C00FBA63B /* OfficePowerPoint.ico */,
+				889839781A3D3C5C00FBA63B /* OfficeWord.ico */,
+				889839791A3D3C5C00FBA63B /* s_AlignCenter.png */,
+				8898397A1A3D3C5C00FBA63B /* s_AlignLeft.png */,
+				8898397B1A3D3C5C00FBA63B /* s_AlignRight.png */,
+				8898397C1A3D3C5C00FBA63B /* s_Background.png */,
+				8898397D1A3D3C5C00FBA63B /* s_Bold.png */,
+				8898397E1A3D3C5C00FBA63B /* s_Color.png */,
+				8898397F1A3D3C5C00FBA63B /* s_Font.png */,
+				889839801A3D3C5C00FBA63B /* s_Italic.png */,
+				889839811A3D3C5C00FBA63B /* s_Strike.png */,
+				889839821A3D3C5C00FBA63B /* s_Underline.png */,
+				889839831A3D3C5C00FBA63B /* XmlDoc.xml */,
+				889839841A3D3C5C00FBA63B /* XmlDocDemo.xml */,
+				889839851A3D3C5C00FBA63B /* XmlDocDemo_TooltipWindow.jpg */,
+				889839861A3D3C5C00FBA63B /* XmlResource.xml */,
+				889839871A3D3C5C00FBA63B /* XmlWindowResource.xml */,
+				889839881A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.bin */,
+				889839891A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.compressed */,
+				8898398A1A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.xml */,
+				8898398B1A3D3C5C00FBA63B /* XmlWindowResourceDataBinding.xml */,
+				8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */,
+				8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */,
+				8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */,
+			);
+			path = Resources;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -341,7 +489,53 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				889839AB1A3D3C5C00FBA63B /* s_Bold.png in Resources */,
+				889839AC1A3D3C5C00FBA63B /* s_Color.png in Resources */,
+				889839A11A3D3C5C00FBA63B /* JsonSample.txt in Resources */,
+				889839941A3D3C5C00FBA63B /* _Paste.png in Resources */,
+				889839991A3D3C5C00FBA63B /* _Undo.png in Resources */,
+				889839B41A3D3C5C00FBA63B /* XmlResource.xml in Resources */,
+				889839951A3D3C5C00FBA63B /* _Print.png in Resources */,
+				889839AD1A3D3C5C00FBA63B /* s_Font.png in Resources */,
+				889839A81A3D3C5C00FBA63B /* s_AlignLeft.png in Resources */,
+				8898399C1A3D3C5C00FBA63B /* Chemical.txt in Resources */,
+				889839AE1A3D3C5C00FBA63B /* s_Italic.png in Resources */,
+				889839971A3D3C5C00FBA63B /* _Save.png in Resources */,
+				889839A71A3D3C5C00FBA63B /* s_AlignCenter.png in Resources */,
+				889839BC1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml in Resources */,
+				889839BA1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml in Resources */,
+				889839BB1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml in Resources */,
+				889839B51A3D3C5C00FBA63B /* XmlWindowResource.xml in Resources */,
+				889839A41A3D3C5C00FBA63B /* OfficeOutlook.ico in Resources */,
+				889839911A3D3C5C00FBA63B /* _Delete.png in Resources */,
+				889839A91A3D3C5C00FBA63B /* s_AlignRight.png in Resources */,
+				889839A51A3D3C5C00FBA63B /* OfficePowerPoint.ico in Resources */,
+				889839A21A3D3C5C00FBA63B /* OfficeExcel.ico in Resources */,
+				889839A31A3D3C5C00FBA63B /* OfficeOneNote.ico in Resources */,
+				889839B81A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.xml in Resources */,
+				889839931A3D3C5C00FBA63B /* _Open.png in Resources */,
+				8898399F1A3D3C5C00FBA63B /* HelloWorld.xml in Resources */,
+				889839B11A3D3C5C00FBA63B /* XmlDoc.xml in Resources */,
+				889839961A3D3C5C00FBA63B /* _Redo.png in Resources */,
+				889839981A3D3C5C00FBA63B /* _SaveAs.png in Resources */,
+				889839B21A3D3C5C00FBA63B /* XmlDocDemo.xml in Resources */,
+				889839B01A3D3C5C00FBA63B /* s_Underline.png in Resources */,
+				8898399A1A3D3C5C00FBA63B /* BigDoc.png in Resources */,
+				889839921A3D3C5C00FBA63B /* _New.png in Resources */,
+				8898398F1A3D3C5C00FBA63B /* _Copy.png in Resources */,
+				8898399B1A3D3C5C00FBA63B /* CalculatorDefinition.txt in Resources */,
+				889839B61A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.bin in Resources */,
+				8898399D1A3D3C5C00FBA63B /* document2.xml in Resources */,
+				889839A01A3D3C5C00FBA63B /* HelloWorldViewModel.xml in Resources */,
+				889839B71A3D3C5C00FBA63B /* XmlWindowResourceControlTemplate.precompiled.compressed in Resources */,
+				889839AA1A3D3C5C00FBA63B /* s_Background.png in Resources */,
 				884BB0121A304C04007DF242 /* Info.plist in Resources */,
+				889839B91A3D3C5C00FBA63B /* XmlWindowResourceDataBinding.xml in Resources */,
+				889839B31A3D3C5C00FBA63B /* XmlDocDemo_TooltipWindow.jpg in Resources */,
+				8898399E1A3D3C5C00FBA63B /* Gif.gif in Resources */,
+				889839AF1A3D3C5C00FBA63B /* s_Strike.png in Resources */,
+				889839A61A3D3C5C00FBA63B /* OfficeWord.ico in Resources */,
+				889839901A3D3C5C00FBA63B /* _Cut.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

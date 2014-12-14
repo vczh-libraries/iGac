@@ -20,9 +20,16 @@
     {
         cocoaWindow = window;
         [self updateTrackingAreas];
+        
+        _enableMouseMoveWindow = NO;
     }
     
     return self;
+}
+
+- (BOOL)mouseDownCanMoveWindow
+{
+    return _enableMouseMoveWindow;
 }
 
 - (id)init

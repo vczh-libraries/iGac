@@ -19,7 +19,10 @@ namespace vl { namespace presentation { namespace osx { class CocoaWindow; } } }
     vl::presentation::osx::CocoaWindow* cocoaWindow;
 }
 
+@property (nonatomic) bool enableMouseMoveWindow;
+
 - (id)initWithCocoaWindow:(vl::presentation::osx::CocoaWindow*)window;
+
 
 @end
 

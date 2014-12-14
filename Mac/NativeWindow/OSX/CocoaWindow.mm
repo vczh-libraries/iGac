@@ -21,7 +21,7 @@ using namespace vl::presentation;
 
 @interface CocoaWindowDelegate : NSObject<NSWindowDelegate>
 
-@property (nonatomic, readonly) INativeWindow::WindowSizeState sizeState;
+@property (nonatomic) INativeWindow::WindowSizeState sizeState;
 @property (assign) INativeWindow* nativeWindow;
 
 - (id)initWithNativeWindow:(INativeWindow*)window;
@@ -75,12 +75,17 @@ namespace vl {
                 alwaysPassFocusToParent(false),
                 mouseLastX(0),
                 mouseLastY(0),
+                mouseDownX(0),
+                mouseDownY(0),
                 mouseHoving(false),
                 graphicsHandler(0),
                 customFrameMode(false),
                 supressingAlt(false),
                 enabled(false),
-                capturing(false)
+                capturing(false),
+                resizing(false),
+                moving(false),
+                resizingBorder(INativeWindowListener::NoDecision)
             {
                 CreateWindow();
 
@@ -154,6 +159,7 @@ namespace vl {
                 
                 [nativeContainer->window setFrame:nsbounds display:YES];
                 
+                previousBounds = GetBounds();
                 Show();
             }
 
@@ -251,11 +257,13 @@ namespace vl {
             void CocoaWindow::EnableCustomFrameMode() 
             {
                 customFrameMode = true;
+                [nativeContainer->window setMovableByWindowBackground:YES];
             }
 
             void CocoaWindow::DisableCustomFrameMode() 
             {
                 customFrameMode = false;
+                [nativeContainer->window setMovableByWindowBackground:NO];
             }
 
             bool CocoaWindow::IsCustomFrameModeEnabled() 
@@ -281,17 +289,30 @@ namespace vl {
 
             void CocoaWindow::ShowRestored() 
             {
-                // todo
+                SetBounds(previousBounds);
+                
+                [nativeContainer->delegate setSizeState:INativeWindow::Restored];
             }
 
             void CocoaWindow::ShowMaximized() 
             {
-                // todo
-                [nativeContainer->window toggleFullScreen:nil];
+                NSScreen* screen = [nativeContainer->window screen];
+                
+                while(!screen && [nativeContainer->window  parentWindow])
+                {
+                    screen = [[nativeContainer->window  parentWindow] screen];
+                }
+                if(!screen)
+                    screen = [NSScreen mainScreen];
+                
+                previousBounds = GetBounds();
+                [nativeContainer->window setFrame:[screen visibleFrame] display:YES];
+                [nativeContainer->delegate setSizeState:INativeWindow::Maximized];
             }
 
             void CocoaWindow::ShowMinimized() 
             {
+                previousBounds = GetBounds();
                 [nativeContainer->window miniaturize:nil];
             }
 
@@ -790,6 +811,273 @@ namespace vl {
                 }
             }
             
+            void CocoaWindow::SetResizingBorder(INativeWindowListener::HitTestResult border)
+            {
+                resizingBorder = border;
+                INativeResourceService* resourceService = GetCurrentController()->ResourceService();
+
+                switch(border)
+                {
+                    case INativeWindowListener::BorderLeft:
+                    case INativeWindowListener::BorderRight:
+                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeWE));
+                        break;
+                        
+                    case INativeWindowListener::BorderTop:
+                    case INativeWindowListener::BorderBottom:
+                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNS));
+                        break;
+                        
+                    case INativeWindowListener::BorderLeftTop:
+                    case INativeWindowListener::BorderRightBottom:
+                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNWSE));
+                        break;
+                        
+                    case INativeWindowListener::BorderRightTop:
+                    case INativeWindowListener::BorderLeftBottom:
+                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNESW));
+                        break;
+                        
+                    case INativeWindowListener::Title:
+                       // SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::Hand));
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+            
+            void CocoaWindow::HitTestMouseDown(vint x, vint y)
+            {
+                Point p(x, y);
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    INativeWindowListener::HitTestResult r = listeners[i]->HitTest(p);
+                    
+                    switch(r)
+                    {
+                        case INativeWindowListener::BorderLeft:
+                        case INativeWindowListener::BorderRight:
+                        case INativeWindowListener::BorderTop:
+                        case INativeWindowListener::BorderBottom:
+                        case INativeWindowListener::BorderLeftTop:
+                        case INativeWindowListener::BorderRightTop:
+                        case INativeWindowListener::BorderLeftBottom:
+                        case INativeWindowListener::BorderRightBottom:
+                            resizing = true;
+                            lastBorder = GetBounds();
+                            return;
+                            
+                        case INativeWindowListener::Title:
+                            lastBorder = GetBounds();
+                            moving = true;
+                            return;
+                            
+                        default:
+                            break;
+                    }
+                }
+            }
+            
+            void CocoaWindow::HitTestMouseMove(vint x, vint y)
+            {
+                Point p(x, y);
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    INativeWindowListener::HitTestResult r = listeners[i]->HitTest(p);
+                    
+                    switch(r)
+                    {
+                        case INativeWindowListener::BorderLeft:
+                        case INativeWindowListener::BorderRight:
+                        case INativeWindowListener::BorderTop:
+                        case INativeWindowListener::BorderBottom:
+                        case INativeWindowListener::BorderLeftTop:
+                        case INativeWindowListener::BorderRightTop:
+                        case INativeWindowListener::BorderLeftBottom:
+                        case INativeWindowListener::BorderRightBottom:
+                        case INativeWindowListener::Title:
+                            SetResizingBorder(r);
+                            return;
+                            
+                            
+                            
+                        default:
+                            SetResizingBorder(INativeWindowListener::NoDecision);
+                            break;
+                    }
+                }
+            }
+            
+            void CocoaWindow::HitTestMouseUp(vint x, vint y)
+            {
+                if(resizing)
+                {
+                    resizing = false;
+                    SetWindowCursor(GetCurrentController()->ResourceService()->GetDefaultSystemCursor());
+                }
+                else if(moving)
+                {
+                    moving = false;
+                    SetWindowCursor(GetCurrentController()->ResourceService()->GetDefaultSystemCursor());
+                }
+                else
+                {
+                    Point p(x, y);
+                    for(vint i=0;i<listeners.Count();i++)
+                    {
+                        switch(listeners[i]->HitTest(p))
+                        {
+                            case INativeWindowListener::ButtonMinimum:
+                                ShowMinimized();
+                                return;
+                                
+                            case INativeWindowListener::ButtonMaximum:
+                                if (GetSizeState() == INativeWindow::Maximized)
+                                {
+                                    ShowRestored();
+                                }
+                                else
+                                {
+                                    ShowMaximized();
+                                }
+                                return;
+                                
+                            case INativeWindowListener::ButtonClose:
+                                Hide();
+                                return;
+                                
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            
+            void CocoaWindow::MovingDragged()
+            {
+                vint diffX = [NSEvent mouseLocation].x - mouseDownX;
+                vint diffY = -([NSEvent mouseLocation].y - mouseDownY);
+                
+                Rect bounds = lastBorder;
+                
+                bounds.x1 += diffX;
+                bounds.y1 += diffY;
+                bounds.x2 += diffX;
+                bounds.y2 += diffY;
+                
+                NSScreen* screen = GetWindowScreen(nativeContainer->window);
+                NSRect visibleFrame = screen.visibleFrame;
+                visibleFrame.origin.y = screen.frame.size.height - (visibleFrame.origin.y + visibleFrame.size.height);
+                
+                if(bounds.x2 < visibleFrame.origin.x + 10)
+                    bounds.x2 = visibleFrame.origin.x + 10;
+                if(bounds.y2 < visibleFrame.origin.y + 10)
+                    bounds.y2 = visibleFrame.origin.y + 10;
+                
+                if(bounds.x1 > visibleFrame.size.width + visibleFrame.origin.x - 10)
+                    bounds.x1 = visibleFrame.size.width + visibleFrame.origin.x - 10;
+                if(bounds.y1 > visibleFrame.size.height + visibleFrame.origin.y - 10)
+                    bounds.y1 = visibleFrame.size.height + visibleFrame.origin.y - 10;
+                
+                SetBounds(bounds);
+            }
+            
+            void CocoaWindow::ResizingDragged()
+            {
+                vint diffX = [NSEvent mouseLocation].x - mouseDownX;
+                vint diffY = -([NSEvent mouseLocation].y - mouseDownY);
+                
+                Rect bounds = lastBorder;
+                NSScreen* screen = GetWindowScreen(nativeContainer->window);
+                
+#define CHECK_X1 if(bounds.x1 > bounds.x2 - 1) bounds.x1 = bounds.x2 - 1;
+#define CHECK_X2 if(bounds.x2 < bounds.x1 + 1) bounds.x2 = bounds.x1 + 1;
+#define CHECK_Y1 if(bounds.y1 > bounds.y2 - 1) bounds.y1 = bounds.y2 - 1;
+#define CHECK_Y2 if(bounds.y2 < bounds.y1 + 1) bounds.y2 = bounds.y1 + 1;
+                
+                switch(resizingBorder)
+                {
+                    case INativeWindowListener::BorderLeft:
+                        bounds.x1 += diffX;
+                        
+                        CHECK_X1;
+                        break;
+                        
+                    case INativeWindowListener::BorderRight:
+                        bounds.x2 += diffX;
+                        
+                        CHECK_X2;
+                        break;
+                        
+                    case INativeWindowListener::BorderTop:
+                        bounds.y1 += diffY;
+                        
+                        CHECK_Y1;
+                        break;
+                        
+                    case INativeWindowListener::BorderBottom:
+                        bounds.y2 += diffY;
+                        
+                        CHECK_Y2;
+                        break;
+                        
+                    case INativeWindowListener::BorderLeftTop:
+                        bounds.x1 += diffX;
+                        bounds.y1 += diffY;
+                        
+                        CHECK_X1;
+                        CHECK_Y1;
+                        break;
+                        
+                    case INativeWindowListener::BorderRightTop:
+                        bounds.x2 += diffX;
+                        bounds.y1 += diffY;
+                        
+                        CHECK_X2;
+                        CHECK_Y1;
+                        break;
+                        
+                    case INativeWindowListener::BorderLeftBottom:
+                        bounds.x1 += diffX;
+                        bounds.y2 += diffY;
+                        
+                        CHECK_X1;
+                        CHECK_Y2;
+                        break;
+                        
+                    case INativeWindowListener::BorderRightBottom:
+                        bounds.x2 += diffX;
+                        bounds.y2 += diffY;
+                        
+                        CHECK_X2;
+                        CHECK_Y2;
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+                NSRect visibleFrame = screen.visibleFrame;
+                visibleFrame.origin.y = screen.frame.size.height - (visibleFrame.origin.y + visibleFrame.size.height);
+                
+                if(bounds.x1 < visibleFrame.origin.x)
+                    bounds.x1 = visibleFrame.origin.x;
+                if(bounds.x2 > visibleFrame.size.width + visibleFrame.origin.x)
+                    bounds.x2 = visibleFrame.size.width + visibleFrame.origin.x;
+                if(bounds.y1 < visibleFrame.origin.y)
+                    bounds.y1 = visibleFrame.origin.y;
+                if(bounds.y2 > visibleFrame.size.height + visibleFrame.origin.y)
+                    bounds.y2 = visibleFrame.size.height + visibleFrame.origin.y;
+                
+                bounds = FlipRect(nativeContainer->window, bounds);
+                NSRect nsBounds = NSMakeRect((CGFloat)bounds.Left(),
+                                             (CGFloat)bounds.Top(),
+                                             (CGFloat)bounds.Width(),
+                                             (CGFloat)bounds.Height());
+                [nativeContainer->window setFrame:nsBounds  display:YES];
+            }
+            
             void CocoaWindow::HandleEventInternal(NSEvent* event)
             {
                 switch([event type])
@@ -815,6 +1103,14 @@ namespace vl {
                             {
                                 listeners[i]->LeftButtonDown(info);
                             }
+                            
+                            mouseDownX = [NSEvent mouseLocation].x;
+                            mouseDownY = [NSEvent mouseLocation].y;
+                            
+                            if(customFrameMode)
+                            {
+                                HitTestMouseDown(info.x, info.y);
+                            }
                         }
                         break;
                     }
@@ -826,6 +1122,11 @@ namespace vl {
                         for(vint i=0; i<listeners.Count(); ++i)
                         {
                             listeners[i]->LeftButtonUp(info);
+                        }
+                        
+                        if(customFrameMode)
+                        {
+                            HitTestMouseUp(info.x, info.y);
                         }
                         break;
                     }
@@ -876,6 +1177,26 @@ namespace vl {
                         }
                         mouseLastX = info.x;
                         mouseLastY = info.y;
+                        
+                        if(customFrameMode)
+                        {
+                            if(event.type == NSMouseMoved)
+                            {
+                                if(!resizing)
+                                    HitTestMouseMove(mouseLastX, mouseLastY);
+                            }
+                            
+                            if(event.type == NSLeftMouseDragged ||
+                               event.type == NSMouseMoved)
+                            {
+                                if(resizing)
+                                    ResizingDragged();
+                                
+                                if(moving)
+                                    MovingDragged();
+                            }
+                        }
+                        
                         break;
                     }
                         
