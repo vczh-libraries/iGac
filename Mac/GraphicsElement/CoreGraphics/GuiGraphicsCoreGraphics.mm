@@ -89,6 +89,20 @@ namespace vl {
     
     namespace presentation {
         
+        namespace elements {
+            
+            GuiCoreGraphicsElement::GuiCoreGraphicsElement()
+            {
+                
+            }
+            
+            GuiCoreGraphicsElement::~GuiCoreGraphicsElement()
+            {
+                
+            }
+            
+        }
+        
         namespace elements_coregraphics {
             
             using namespace osx;
@@ -601,6 +615,8 @@ void CoreGraphicsMain()
     elements_coregraphics::GuiImageFrameElementRenderer::Register();
     elements_coregraphics::GuiPolygonElementRenderer::Register();
     elements_coregraphics::GuiColorizedTextElementRenderer::Register();
+    elements_coregraphics::GuiCoreGraphicsElementRenderer::Register();
+
     elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
     
     {

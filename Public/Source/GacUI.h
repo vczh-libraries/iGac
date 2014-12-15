@@ -9938,7 +9938,7 @@ Strong Typed DataSource Extensions
 					Ptr<StrongTypedColumnProvider<TRow, TColumn>> AddStrongTypedColumn(const WString& text, Ptr<StrongTypedColumnProvider<TRow, TColumn>> column)
 					{
 						column->SetText(text);
-						return AddColumnInternal(column, true)?column:0;
+						return AddColumnInternal(column, true)?column:nullptr;
 					}
 
 					template<typename TColumn>

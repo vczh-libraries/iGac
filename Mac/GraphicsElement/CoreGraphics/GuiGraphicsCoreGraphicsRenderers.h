@@ -19,6 +19,16 @@ namespace vl {
         
         namespace elements_coregraphics {
             
+            // this is actually higher level stuff
+            // real CTFont stuff to do
+            class CoreTextFontPackage
+            {
+            public:
+                NSFont*                     font;
+                NSMutableDictionary*        attributes;
+            };
+            
+            
             using namespace elements;
             
 #define DEFINE_ELEMENT_RENDERER(TELEMENT, TRENDERER, TBRUSHPROPERTY)\
@@ -212,6 +222,23 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
+            class GuiCoreGraphicsElementRenderer : public Object, public IGuiGraphicsRenderer
+            {
+                DEFINE_GUI_GRAPHICS_RENDERER(GuiCoreGraphicsElement, GuiCoreGraphicsElementRenderer, ICoreGraphicsRenderTarget)
+                
+            protected:
+                
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+            public:
+                GuiCoreGraphicsElementRenderer();
+                ~GuiCoreGraphicsElementRenderer();
+                
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
+            
             class FontNotFoundException: public Exception
             {
             public:
@@ -221,6 +248,7 @@ namespace vl {
                     
                 }
             };
+            
             
         }
 

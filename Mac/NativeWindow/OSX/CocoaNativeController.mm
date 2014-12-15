@@ -162,6 +162,7 @@ namespace vl {
                 CocoaAsyncService           asyncService;
                 CocoaClipboardService       clipboardService;
                 CocoaImageService           imageService;
+                CocoaDialogService          dialogService;
                 
                 CocoaApplicationDelegate*   appDelegate;
                 
@@ -308,11 +309,6 @@ namespace vl {
                     return &screenService;
                 }
                 
-                INativeWindowService* WindowService()
-                {
-                    return this;
-                }
-                
                 INativeInputService* InputService()
                 {
                     return &inputService;
@@ -320,7 +316,12 @@ namespace vl {
                 
                 INativeDialogService* DialogService()
                 {
-                    return 0;
+                    return &dialogService;
+                }
+                
+                INativeWindowService* WindowService()
+                {
+                    return this;
                 }
                 
                 WString GetOSVersion()

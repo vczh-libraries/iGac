@@ -12,6 +12,7 @@
 #include "GacUI.h"
 
 using namespace vl;
+using namespace vl::collections;
 using namespace vl::presentation;
 using namespace vl::presentation::elements;
 using namespace vl::presentation::compositions;

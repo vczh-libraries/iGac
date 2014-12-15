@@ -26,6 +26,7 @@
 #include "template_customized_border.h"
 #include "treeview_file_explorer.h"
 #include "scroll_colorpicker.h"
+#include "datagrid_chemical_elements.h"
 
 int main(int argc, const char * argv[])
 {
@@ -37,6 +38,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<CheckAndRadioWindow>();
+    RunGacWindow<ChemicalElementWindow>();
 }
 

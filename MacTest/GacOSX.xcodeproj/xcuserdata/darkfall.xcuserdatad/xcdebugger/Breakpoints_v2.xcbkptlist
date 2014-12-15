@@ -51,5 +51,49 @@
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "datagrid_chemical_elements.h"
+            timestampString = "440330431.339119"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "249"
+            endingLineNumber = "249">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ElementElectronColumnProvider::VisualizeCell(long long, vl::presentation::controls::list::IDataVisualizer*)"
+                  moduleName = "GacOSX"
+                  urlString = "file:///Users/darkfall/Documents/gac/MacTest/datagrid_chemical_elements.h"
+                  timestampString = "440330265.50163"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "virtual thunk to ElementElectronColumnProvider::VisualizeCell(long long, vl::presentation::controls::list::IDataVisualizer*)"
+                  moduleName = "GacOSX"
+                  urlString = "file:///Users/darkfall/Documents/gac/MacTest/datagrid_chemical_elements.h"
+                  timestampString = "440330265.501809"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "20">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

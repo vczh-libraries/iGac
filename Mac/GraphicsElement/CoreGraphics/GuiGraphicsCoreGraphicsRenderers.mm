@@ -938,6 +938,61 @@ namespace vl {
                 
             }
             
+            ///////
+            
+            void GuiCoreGraphicsElementRenderer::InitializeInternal()
+            {
+                
+            }
+            
+            void GuiCoreGraphicsElementRenderer::FinalizeInternal()
+            {
+                
+            }
+            
+            void GuiCoreGraphicsElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+                if(oldRenderTarget)
+                {
+                    GuiCoreGraphicsElementEventArgs arguments(element, Rect());
+                    element->BeforeRenderTargetChanged.Execute(arguments);
+                }
+                if(newRenderTarget)
+                {
+                    GuiCoreGraphicsElementEventArgs arguments(element, Rect());
+                    element->AfterRenderTargetChanged.Execute(arguments);
+                }
+            }
+            
+            GuiCoreGraphicsElementRenderer::GuiCoreGraphicsElementRenderer()
+            {
+                
+            }
+            
+            GuiCoreGraphicsElementRenderer::~GuiCoreGraphicsElementRenderer()
+            {
+                
+            }
+            
+            void GuiCoreGraphicsElementRenderer::Render(Rect bounds)
+            {
+                if(renderTarget)
+                {
+                    
+                    renderTarget->PushClipper(bounds);
+                    if(!renderTarget->IsClipperCoverWholeTarget())
+                    {
+                        GuiCoreGraphicsElementEventArgs arguments(element, bounds);
+                        element->Rendering.Execute(arguments);
+                    }
+                    renderTarget->PopClipper();
+                }
+            }
+            
+            void GuiCoreGraphicsElementRenderer::OnElementStateChanged()
+            {
+                
+            }
         }
     }
     

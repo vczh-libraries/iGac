@@ -11,11 +11,44 @@
 
 #include "GacUI.h"
 
-#include <Cocoa/Cocoa.h>
-
 namespace vl {
     
     namespace presentation {
+        
+        namespace elements {
+            
+            class GuiCoreGraphicsElement;
+            
+            struct GuiCoreGraphicsElementEventArgs : compositions::GuiEventArgs
+            {
+            public:
+                GuiCoreGraphicsElement*				element;
+                Rect                                bounds;
+                
+                GuiCoreGraphicsElementEventArgs(GuiCoreGraphicsElement* _element, Rect _bounds):element(_element),
+                    bounds(_bounds)
+                {
+                }
+            };
+            
+            class GuiCoreGraphicsElement : public Object, public IGuiGraphicsElement, public Description<GuiCoreGraphicsElement>
+            {
+                DEFINE_GUI_GRAPHICS_ELEMENT(GuiCoreGraphicsElement, L"CoreGraphicsElement")
+                
+            protected:
+                GuiCoreGraphicsElement();
+                
+            public:
+                ~GuiCoreGraphicsElement();
+                
+                compositions::GuiGraphicsEvent<GuiCoreGraphicsElementEventArgs>		BeforeRenderTargetChanged;
+                
+                compositions::GuiGraphicsEvent<GuiCoreGraphicsElementEventArgs>		AfterRenderTargetChanged;
+                
+                compositions::GuiGraphicsEvent<GuiCoreGraphicsElementEventArgs>		Rendering;
+            };
+            
+        }
         
         namespace elements_coregraphics {
             
@@ -37,15 +70,8 @@ namespace vl {
                 virtual void								SetBindedRenderTarget(INativeWindow* window, ICoreGraphicsRenderTarget* renderTarget) = 0;
             };
             
-            // this is actually higher level stuff
-            // real CTFont stuff to do
-            class CoreTextFontPackage
-            {
-            public:
-                NSFont*                     font;
-                NSMutableDictionary*        attributes;
-            };
-            
+            class CoreTextFontPackage;
+           
             
             class ICoreGraphicsResourceManager: public Interface
             {

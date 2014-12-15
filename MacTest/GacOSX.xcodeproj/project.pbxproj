@@ -80,6 +80,8 @@
 		889839BA1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */; };
 		889839BB1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */; };
 		889839BC1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */; };
+		88DAE4E11A3EDBC1004E458F /* datagrid_chemical_elements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88DAE4DF1A3EDBC1004E458F /* datagrid_chemical_elements.cpp */; };
+		88DAE4E41A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 88DAE4E21A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -197,6 +199,10 @@
 		88DAE4DB1A3D65CC004E458F /* listview_virtual_mode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview_virtual_mode.h; sourceTree = SOURCE_ROOT; };
 		88DAE4DC1A3D69CB004E458F /* treeview_file_explorer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = treeview_file_explorer.h; sourceTree = SOURCE_ROOT; };
 		88DAE4DD1A3D819D004E458F /* scroll_colorpicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scroll_colorpicker.h; sourceTree = SOURCE_ROOT; };
+		88DAE4DE1A3ECEEA004E458F /* datagrid_chemical_elements.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = datagrid_chemical_elements.h; sourceTree = SOURCE_ROOT; };
+		88DAE4DF1A3EDBC1004E458F /* datagrid_chemical_elements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = datagrid_chemical_elements.cpp; sourceTree = SOURCE_ROOT; };
+		88DAE4E21A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = datagrid_chemical_elements_cg_renderer.mm; sourceTree = SOURCE_ROOT; };
+		88DAE4E31A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datagrid_chemical_elements_cg_renderer.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +264,10 @@
 				88DAE4DC1A3D69CB004E458F /* treeview_file_explorer.h */,
 				8898395F1A3D363000FBA63B /* template_customized_border.h */,
 				88DAE4DD1A3D819D004E458F /* scroll_colorpicker.h */,
+				88DAE4DE1A3ECEEA004E458F /* datagrid_chemical_elements.h */,
+				88DAE4DF1A3EDBC1004E458F /* datagrid_chemical_elements.cpp */,
+				88DAE4E21A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm */,
+				88DAE4E31A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.h */,
 				884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */,
 				884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,
@@ -557,6 +567,7 @@
 				884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */,
 				884BC1CA1A344FE2007DF242 /* CocoaNativeController.mm in Sources */,
 				884BC1CE1A344FE2007DF242 /* CocoaInputService.mm in Sources */,
+				88DAE4E11A3EDBC1004E458F /* datagrid_chemical_elements.cpp in Sources */,
 				884BC1C71A344FE2007DF242 /* GuiGraphicsCoreGraphicsRenderers.mm in Sources */,
 				884BC1CD1A344FE2007DF242 /* CocoaCallbackService.mm in Sources */,
 				884BC1E81A35B704007DF242 /* CocoaAsyncService.mm in Sources */,
@@ -572,6 +583,7 @@
 				884BB0141A304C0A007DF242 /* main.cpp in Sources */,
 				884BC1C81A344FE2007DF242 /* CocoaBaseView.mm in Sources */,
 				884BC1D01A344FE2007DF242 /* CocoaScreenService.mm in Sources */,
+				88DAE4E41A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm in Sources */,
 				884BC1CB1A344FE2007DF242 /* CocoaWindow.mm in Sources */,
 				884BC1CF1A344FE2007DF242 /* CocoaResourceService.mm in Sources */,
 				884BC1F11A373CC9007DF242 /* CocoaClipboardService.mm in Sources */,
