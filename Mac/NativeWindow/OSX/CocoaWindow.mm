@@ -240,6 +240,7 @@ namespace vl {
                 else
                 {
                     [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
+                    [nativeContainer->window setLevel:cocoaParent->GetNativeContainer()->window.level+1];
                 }
                 parentWindow = cocoaParent;
             }
@@ -318,8 +319,8 @@ namespace vl {
 
             void CocoaWindow::Hide() 
             {
-                // HidesOnDeactivate
-                [nativeContainer->window orderOut:nil];
+                // actually close it as we need to trigger closing / closed events for GuiMenu to work
+                [nativeContainer->window close];
             }
 
             bool CocoaWindow::IsVisible() 
@@ -1419,7 +1420,7 @@ namespace vl {
 - (void)windowWillClose:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosed();
-
+    firstTime = true;
 }
 
 - (void)windowDidResize:(NSNotification *)notification

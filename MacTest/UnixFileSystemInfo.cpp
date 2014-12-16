@@ -166,7 +166,7 @@ void FileProperties::Load()
         smallIcon       =   new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(24, 24)), 0);
         bigIcon         =   new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(48, 48)), 0);
         
-        lastWriteTime   =   GetFileModificationTime(fullPath);
+        lastWriteTime   =   osx::GetFileModificationTime(fullPath);
         size            =   osx::GetFileSize(fullPath);
         
         isDirectory     =   osx::IsFileDirectory(fullPath);

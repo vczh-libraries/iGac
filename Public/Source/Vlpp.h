@@ -31,6 +31,9 @@ Macros:
 #define VCZH_MSVC
 #else
 #define VCZH_GCC
+#if defined(__APPLE__)
+#define VCZH_APPLE
+#endif
 #endif
 
 #if defined VCZH_MSVC

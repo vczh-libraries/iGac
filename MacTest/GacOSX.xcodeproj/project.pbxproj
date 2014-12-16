@@ -203,6 +203,9 @@
 		88DAE4DF1A3EDBC1004E458F /* datagrid_chemical_elements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = datagrid_chemical_elements.cpp; sourceTree = SOURCE_ROOT; };
 		88DAE4E21A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = datagrid_chemical_elements_cg_renderer.mm; sourceTree = SOURCE_ROOT; };
 		88DAE4E31A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datagrid_chemical_elements_cg_renderer.h; sourceTree = SOURCE_ROOT; };
+		88DAE4E51A40077B004E458F /* datagrid_file_browser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = datagrid_file_browser.h; sourceTree = SOURCE_ROOT; };
+		88DAE4E61A400C83004E458F /* datagrid_date_picker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = datagrid_date_picker.h; sourceTree = SOURCE_ROOT; };
+		88DAE4E71A401549004E458F /* datagrid_table_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = datagrid_table_editor.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +271,9 @@
 				88DAE4DF1A3EDBC1004E458F /* datagrid_chemical_elements.cpp */,
 				88DAE4E21A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.mm */,
 				88DAE4E31A3EE4FA004E458F /* datagrid_chemical_elements_cg_renderer.h */,
+				88DAE4E51A40077B004E458F /* datagrid_file_browser.h */,
+				88DAE4E61A400C83004E458F /* datagrid_date_picker.h */,
+				88DAE4E71A401549004E458F /* datagrid_table_editor.h */,
 				884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */,
 				884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */,
 				884BC1E31A354F69007DF242 /* gac_include.h */,

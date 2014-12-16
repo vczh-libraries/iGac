@@ -27,6 +27,9 @@
 #include "treeview_file_explorer.h"
 #include "scroll_colorpicker.h"
 #include "datagrid_chemical_elements.h"
+#include "datagrid_file_browser.h"
+#include "datagrid_date_picker.h"
+#include "datagrid_table_editor.h"
 
 int main(int argc, const char * argv[])
 {
@@ -38,6 +41,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<ChemicalElementWindow>();
+    RunGacWindow<TableEditorWindow>();
 }
 

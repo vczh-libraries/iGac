@@ -555,7 +555,6 @@ GuiControl
 					isVisuallyEnabled=newValue;
 					styleController->SetVisuallyEnabled(isVisuallyEnabled);
 					VisuallyEnabledChanged.Execute(GetNotifyEventArguments());
-
 					for(vint i=0;i<children.Count();i++)
 					{
 						children[i]->UpdateVisuallyEnabled();
@@ -753,7 +752,8 @@ GuiControl
 				{
 					isEnabled=value;
 					EnabledChanged.Execute(GetNotifyEventArguments());
-					UpdateVisuallyEnabled();
+                    UpdateVisuallyEnabled();
+
 				}
 			}
 

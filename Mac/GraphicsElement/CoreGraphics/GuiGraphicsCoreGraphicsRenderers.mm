@@ -289,8 +289,8 @@ namespace vl {
             
             void GuiSolidLabelElementRenderer::CreateColor()
             {
-                Color color = element->GetColor();
-                [nsAttributes setObject:[NSColor colorWithRed:color.r/255.0f green:color.g/255.0f blue:color.b/255.0f alpha:color.a/255.0f]
+                oldColor = element->GetColor();
+                [nsAttributes setObject:[NSColor colorWithRed:oldColor.r/255.0f green:oldColor.g/255.0f blue:oldColor.b/255.0f alpha:oldColor.a/255.0f]
                                  forKey:NSForegroundColorAttributeName];
             }
             

@@ -10,6 +10,7 @@
 #define __GacOSX__osx_shared__
 
 #include "GacUI.h"
+#include <sys/stat.h>
 
 namespace osx
 {
@@ -21,6 +22,8 @@ namespace osx
     extern vl::WString GetFileModificationTimeString(const vl::WString& file);
     
     extern bool IsFileDirectory(const vl::WString& file);
+    
+    extern struct timespec GetFileModificationTime(const vl::WString& file);
     
     extern vl::Ptr<vl::presentation::INativeImage>  GetFileIconImage(const vl::WString& file, vl::presentation::Size size);
     

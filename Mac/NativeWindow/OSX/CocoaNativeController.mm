@@ -262,12 +262,8 @@ namespace vl {
                             else if([window->GetNativeContainer()->window level] == [result->GetNativeContainer()->window level])
                             {
                                 // encapsulates
-                                if(r.x1 > minRect.x1 &&
-                                   r.y1 > minRect.y1 &&
-                                   r.x2 < minRect.x2 &&
-                                   r.y2 < minRect.y2)
+                                if(r.Width() * r.Height() < minRect.Width() * minRect.Height())
                                 {
-                                    
                                     minRect = r;
                                     result = window;
                                 }

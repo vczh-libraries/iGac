@@ -119,4 +119,14 @@ namespace osx {
         return service->GetIconForFile(file, size);
     }
     
+    struct timespec GetFileModificationTime(const vl::WString& file)
+    {
+        struct timespec result;
+        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath: WStringToNSString(file) error:nil];
+
+        result.tv_sec = [[attributes fileModificationDate] timeIntervalSince1970];
+        result.tv_nsec = 0;
+        return result;
+    }
+    
 }

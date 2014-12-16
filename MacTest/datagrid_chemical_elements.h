@@ -257,7 +257,7 @@ protected:
  Data source for chemical elements
  ***********************************************************************/
 
-class DataProvider : public list::StrongTypedDataProvider<ElementData>
+class ChemicalElementWindowDataProvider : public list::StrongTypedDataProvider<ElementData>
 {
 protected:
     List<ElementData>                         elements;
@@ -265,7 +265,7 @@ protected:
     Ptr<list::IDataVisualizerFactory>         subFactory;
     Ptr<list::IDataVisualizerFactory>         eecFactory;
 public:
-    DataProvider()
+    ChemicalElementWindowDataProvider()
     {
         // mainFactory will draw a data cell with a border, an image (not used in this demo), and a black text.
         mainFactory=new list::CellBorderDataVisualizer::Factory(new list::ListViewMainColumnDataVisualizer::Factory);
@@ -349,7 +349,7 @@ public:
     {
         this->SetText(L"Controls.DataGrid.ChemicalElements");
         
-        dataGrid=new GuiVirtualDataGrid(GetCurrentTheme()->CreateListViewStyle(), new DataProvider);
+        dataGrid=new GuiVirtualDataGrid(GetCurrentTheme()->CreateListViewStyle(), new ChemicalElementWindowDataProvider);
         dataGrid->GetBoundsComposition()->SetAlignmentToParent(Margin(5, 5, 5, 5));
         dataGrid->SetHorizontalAlwaysVisible(false);
         dataGrid->SetVerticalAlwaysVisible(false);
