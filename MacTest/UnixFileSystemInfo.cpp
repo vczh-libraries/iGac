@@ -7,7 +7,6 @@
 //
 
 #include "UnixFileSystemInfo.h"
-
 #include <pwd.h>
 #include <dirent.h>
 #include <unistd.h>
@@ -19,6 +18,7 @@
 #if defined(__APPLE__)
 
 #include "osx_shared.h"
+
 #endif
 
 

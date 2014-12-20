@@ -42,6 +42,7 @@ namespace vl {
                 bool                                            capturing;
                 bool                                            resizing;
                 bool                                            moving;
+                bool                                            opened;
                 INativeWindowListener::HitTestResult            resizingBorder;
                 
                 Rect                                            lastBorder;

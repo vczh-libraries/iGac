@@ -10,6 +10,7 @@
 #define GacOSX_gac_include_h
 
 #include "GacUI.h"
+#include "GacUIReflection.h"
 
 using namespace vl;
 using namespace vl::collections;

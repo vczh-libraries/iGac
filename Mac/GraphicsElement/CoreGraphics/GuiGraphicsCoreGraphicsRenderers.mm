@@ -423,12 +423,28 @@ namespace vl {
                 UpdateParagraphStyle();
                 
                 oldText = element->GetText();
-                // well, this is really a hack. but works
-                // the issue here is even though osx has webdings font
-                // 'a' is mapped to unicode 'a', so its still, an 'a'
-                if(oldFont.fontFamily == L"Webdings" && oldText.Length() > 0 && oldText[0] == L'a')
+                
+                if(oldFont.fontFamily == L"Webdings" && oldText.Length() > 0)
                 {
-                    nsText = @"\u2713";
+                    // map webdings to unicode
+                    wchar_t* wsStr = new wchar_t[oldText.Length()];
+                    for(vint i=0; i<oldText.Length(); ++i)
+                    {
+                        switch(oldText[i])
+                        {
+                            case L'a': wsStr[i] = 0x00002713; break;
+                            case L'r': wsStr[i] = 0x00002715; break;
+                            case L'0': wsStr[i] = 0x0000035F; break;
+                            case L'1': wsStr[i] = 0x0000002B; break;
+                            case L'2': wsStr[i] = 0x0000002B; break;
+                                // more todo
+                                
+                            default: wsStr[i] = oldText[i];
+                        }
+                    }
+                    
+                    nsText = osx::WStringToNSString(wsStr);
+                    delete[] wsStr;
                 }
                 else
                 {
@@ -615,7 +631,7 @@ namespace vl {
                                 x=bounds.Right() - minSize.x;
                                 break;
                         }
-                        dest = CGRectMake((CGFloat)x, (CGFloat)y, (CGFloat)(x+minSize.x), (CGFloat)(y+minSize.y));
+                        dest = CGRectMake((CGFloat)x, (CGFloat)y, (CGFloat)(minSize.x), (CGFloat)(minSize.y));
                     }
                     
                     CGContextSaveGState(context);
@@ -952,14 +968,16 @@ namespace vl {
             
             void GuiCoreGraphicsElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
             {
+                ICoreGraphicsRenderTarget* newCGTarget = (ICoreGraphicsRenderTarget*)newRenderTarget;
+                ICoreGraphicsRenderTarget* oldCGTarget = (ICoreGraphicsRenderTarget*)oldRenderTarget;
                 if(oldRenderTarget)
                 {
-                    GuiCoreGraphicsElementEventArgs arguments(element, Rect());
+                    GuiCoreGraphicsElementEventArgs arguments(element, Rect(), oldCGTarget? oldCGTarget->GetCGContext() : 0);
                     element->BeforeRenderTargetChanged.Execute(arguments);
                 }
                 if(newRenderTarget)
                 {
-                    GuiCoreGraphicsElementEventArgs arguments(element, Rect());
+                    GuiCoreGraphicsElementEventArgs arguments(element, Rect(), newCGTarget ? newCGTarget->GetCGContext() : 0);
                     element->AfterRenderTargetChanged.Execute(arguments);
                 }
             }
@@ -982,7 +1000,7 @@ namespace vl {
                     renderTarget->PushClipper(bounds);
                     if(!renderTarget->IsClipperCoverWholeTarget())
                     {
-                        GuiCoreGraphicsElementEventArgs arguments(element, bounds);
+                        GuiCoreGraphicsElementEventArgs arguments(element, bounds, GetCurrentCGContextFromRenderTarget());
                         element->Rendering.Execute(arguments);
                     }
                     renderTarget->PopClipper();

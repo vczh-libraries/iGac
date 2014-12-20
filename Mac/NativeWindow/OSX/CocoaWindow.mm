@@ -26,42 +26,14 @@ using namespace vl::presentation;
 
 - (id)initWithNativeWindow:(INativeWindow*)window;
 
+- (void)reset;
+
 @end
 
 @interface CocoaNSWindow : NSWindow
 
 
 @end
-
-@implementation CocoaNSWindow
-
-- (BOOL)canBecomeKeyWindow
-{
-    return YES;
-}
-
-- (BOOL)canBecomeMainWindow
-{
-    return YES;
-}
-
-- (BOOL)acceptsFirstResponder
-{
-    return YES;
-}
-
-- (BOOL)becomeFirstResponder
-{
-    return YES;
-}
-
-- (BOOL)resignFirstResponder
-{
-    return YES;
-}
-
-@end
-
 
 namespace vl {
     
@@ -85,6 +57,7 @@ namespace vl {
                 capturing(false),
                 resizing(false),
                 moving(false),
+                opened(false),
                 resizingBorder(INativeWindowListener::NoDecision)
             {
                 CreateWindow();
@@ -169,7 +142,8 @@ namespace vl {
             }
 
             void CocoaWindow::SetClientSize(Size size) 
-            {   [nativeContainer->window setContentSize:NSMakeSize(size.x, size.y)];
+            {
+                [nativeContainer->window setContentSize:NSMakeSize(size.x, size.y)];
                 [nativeContainer->window display];
             }
 
@@ -234,13 +208,14 @@ namespace vl {
                 CocoaWindow* cocoaParent = dynamic_cast<CocoaWindow*>(parent);
                 if(!cocoaParent)
                 {
-                    if(parentWindow)
+                    if(parentWindow) {
                         [parentWindow->GetNativeContainer()->window removeChildWindow:nativeContainer->window];
+                    }
                 }
                 else
                 {
-                    [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
-                    [nativeContainer->window setLevel:cocoaParent->GetNativeContainer()->window.level+1];
+                    if(!parentWindow)
+                        [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
                 }
                 parentWindow = cocoaParent;
             }
@@ -280,16 +255,41 @@ namespace vl {
 
             void CocoaWindow::Show() 
             {
-                [nativeContainer->window makeKeyAndOrderFront:nil];
+                if(parentWindow)
+                {
+                    [nativeContainer->window makeKeyAndOrderFront:nil];
+                    [nativeContainer->window makeFirstResponder:nativeContainer->window.contentView];
+
+                }
+                else
+                {
+                    [nativeContainer->window makeKeyAndOrderFront:nil];
+                    [nativeContainer->window makeMainWindow];
+                }
+                [nativeContainer->window.contentView setNeedsDisplay:YES];
+                
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                }
             }
 
             void CocoaWindow::ShowDeactivated() 
             {
-              //  [nativeContainer->window orderOut:nil];
+                [nativeContainer->window orderFront:nil];
+                [nativeContainer->window makeFirstResponder:nativeContainer->window.contentView];
+
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                }
             }
 
             void CocoaWindow::ShowRestored() 
             {
+                // SetBounds -> Show
                 SetBounds(previousBounds);
                 
                 [nativeContainer->delegate setSizeState:INativeWindow::Restored];
@@ -309,6 +309,12 @@ namespace vl {
                 previousBounds = GetBounds();
                 [nativeContainer->window setFrame:[screen visibleFrame] display:YES];
                 [nativeContainer->delegate setSizeState:INativeWindow::Maximized];
+                
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                }
             }
 
             void CocoaWindow::ShowMinimized() 
@@ -321,11 +327,12 @@ namespace vl {
             {
                 // actually close it as we need to trigger closing / closed events for GuiMenu to work
                 [nativeContainer->window close];
+                opened = false;
             }
 
-            bool CocoaWindow::IsVisible() 
+            bool CocoaWindow::IsVisible()
             {
-                return [nativeContainer->window isMainWindow] && [nativeContainer->window isVisible];
+                return [nativeContainer->window isVisible] && [nativeContainer->window frame].size.width > 0;
             }
 
             void CocoaWindow::Enable() 
@@ -352,6 +359,11 @@ namespace vl {
             void CocoaWindow::SetFocus() 
             {
                 [nativeContainer->window makeKeyWindow];
+                [nativeContainer->window makeFirstResponder:nativeContainer->window.contentView];
+                if(parentWindow)
+                {
+                    [nativeContainer->window orderFront:nil];
+                }
             }
 
             bool CocoaWindow::IsFocused() 
@@ -361,7 +373,7 @@ namespace vl {
 
             void CocoaWindow::SetActivate() 
             {
-                [nativeContainer->window makeKeyAndOrderFront:nil];
+                [nativeContainer->window makeKeyWindow];
             }
 
             bool CocoaWindow::IsActivated() 
@@ -466,7 +478,7 @@ namespace vl {
                 NSUInteger styleMask = [nativeContainer->window styleMask];
                 if(visible)
                     styleMask ^= NSBorderlessWindowMask;
-                else
+                else 
                     styleMask = NSBorderlessWindowMask;
                 [nativeContainer->window setStyleMask:styleMask];
             }
@@ -1335,14 +1347,31 @@ namespace vl {
                         break;
                 }
             }
+            
         }
     }
 }
 
 
+@implementation CocoaNSWindow
+
+- (BOOL)canBecomeKeyWindow
+{
+    // NSPanel
+    return (self.parentWindow != nil) ? (self.styleMask & NSBorderlessWindowMask): YES;
+}
+
+- (BOOL)canBecomeMainWindow
+{
+    return (self.parentWindow != nil) ? NO : YES;
+}
+
+
+@end
+
 @implementation CocoaWindowDelegate
 {
-    bool firstTime;
+
 }
 
 - (id)initWithNativeWindow:(INativeWindow*)window
@@ -1351,12 +1380,14 @@ namespace vl {
     {
         _nativeWindow = window;
         _sizeState = vl::presentation::INativeWindow::Restored;
-        
-        firstTime = true;
     }
     return self;
 }
 
+- (void)reset
+{
+
+}
 
 - (void)windowDidMiniaturize:(NSNotification *)notification
 {
@@ -1385,30 +1416,22 @@ namespace vl {
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-    // this is a hack... but works for now
-    if(firstTime)
-    {
-        (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeOpened();
-        firstTime = false;
-    }
-    
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeGotFocus();
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeAcivate();
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeLostFocus();
+    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeDeactivate();
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
-    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeAcivate();
 }
 
 - (void)windowDidResignMain:(NSNotification *)notification
 {
-    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeDeactivate();
-
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -1420,7 +1443,6 @@ namespace vl {
 - (void)windowWillClose:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosed();
-    firstTime = true;
 }
 
 - (void)windowDidResize:(NSNotification *)notification

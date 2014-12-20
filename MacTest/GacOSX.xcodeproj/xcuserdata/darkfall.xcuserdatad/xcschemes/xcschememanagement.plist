@@ -4,12 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>ControlTemplateWindow.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>GacOSX.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>GacOSX_Label_HyperLink.xcscheme</key>
+		<key>GacStaticLibrary.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
@@ -33,6 +38,21 @@
 			<true/>
 		</dict>
 		<key>884BC1821A3298F1007DF242</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8883496D1A456CCE00B4E711</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>888349DF1A456E0600B4E711</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>888349F11A456E0600B4E711</key>
 		<dict>
 			<key>primary</key>
 			<true/>

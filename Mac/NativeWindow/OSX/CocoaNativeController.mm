@@ -254,7 +254,7 @@ namespace vl {
                                 continue;
                             }
                             
-                            if(([window->GetNativeContainer()->window level] > [result->GetNativeContainer()->window level]))
+                            if(([window->GetNativeContainer()->window level] > [result->GetNativeContainer()->window level]) || [window->GetNativeContainer()->window level] == NSFloatingWindowLevel)
                             {
                                 minRect = r;
                                 result = window;

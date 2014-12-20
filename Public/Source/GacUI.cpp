@@ -3657,8 +3657,8 @@ GuiWindow
 					SetBounds(
 						Rect(
 							Point(
-								windowBounds.Left()+(screenBounds.Width()-windowBounds.Width())/2,
-								windowBounds.Top()+(screenBounds.Height()-windowBounds.Height())/2
+								(screenBounds.Width()-windowBounds.Width())/2,
+								(screenBounds.Height()-windowBounds.Height())/2
 								),
 							windowBounds.GetSize()
 							)

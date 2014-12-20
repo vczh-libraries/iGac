@@ -5,8 +5,8 @@
 * GuiDocument
 
 #####Known Issues/Limiations:
-* Popup will take focus (parent window will be defocused)
 * Global keyboard hook for InputService::keyPressed and such
 * Tab popup button will show up initially
 * AsyncService::Semaphore::WaitForTime	
+* DateTime.miliseconds incorrect in *nix
 

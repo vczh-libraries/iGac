@@ -8,6 +8,7 @@
 
 #include "GuiGraphicsCoreGraphics.h"
 #include "GuiGraphicsCoreGraphicsRenderers.h"
+#include "GuiGraphicsLayoutProviderCoreText.h"
 
 #include "../../NativeWindow/OSX/CocoaHelper.h"
 #include "../../NativeWindow/OSX/CocoaWindow.h"
@@ -69,6 +70,13 @@ inline CGContextRef GetCurrentCGContext()
     
     CGContextRef viewContext = GetCurrentCGContext();
     _drawingLayer = CGLayerCreateWithContext(viewContext, size, NULL);
+    
+    if(_drawingLayer)
+    {
+        CGContextRef context = CGLayerGetContext(_drawingLayer);
+        CGContextSetRGBFillColor(context, 0, 0, 0, 0);
+        CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    }
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -280,7 +288,7 @@ namespace vl {
                     window(_window)
                 {
                     nativeView = GetCoreGraphicsView(window);
-                
+                    
                     [GetNSNativeContainer(window)->window setContentView:nativeView];
                 }
                 
@@ -299,6 +307,9 @@ namespace vl {
                                                                                                     flipped:true]];
                     
                     CGContextRef context = (CGContextRef)GetCGContext();
+                    if(!context)
+                        return;
+                    
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView frame]);
                     
@@ -312,7 +323,11 @@ namespace vl {
                 
                 bool StopRendering()
                 {
-                    CGContextRestoreGState((CGContextRef)GetCGContext());
+                    CGContextRef context = (CGContextRef)GetCGContext();
+                    if(!context)
+                        return false;
+                    
+                    CGContextRestoreGState(context);
                     [NSGraphicsContext restoreGraphicsState];
                     SetCurrentRenderTarget(0);
                     // todo succeed / not
@@ -385,7 +400,7 @@ namespace vl {
                 
                 
                 /////
-                void* GetCGContext() const
+                CGContextRef GetCGContext() const
                 {
                     return [nativeView getLayerContext];
                 }
@@ -400,10 +415,14 @@ namespace vl {
                 CachedCoreTextFontPackageAllocator          coreTextFonts;
                 CachedCharMeasurerAllocator                 charMeasurers;
                 
+                Ptr<CoreTextLayoutProvider>                 layoutProvider;
+                
             public:
                 CoreGraphicsResourceManager()
                 {
                     g_coreGraphicsObjectProvider = new CoreGraphicsObjectProvider;
+                    
+                    layoutProvider = new CoreTextLayoutProvider;
                 }
                 
                 IGuiGraphicsRenderTarget* GetRenderTarget(INativeWindow* window)
@@ -420,7 +439,7 @@ namespace vl {
                 
                 IGuiGraphicsLayoutProvider* GetLayoutProvider()
                 {
-                    return 0;
+                    return layoutProvider.Obj();
                 }
                 
                 void NativeWindowCreated(INativeWindow* window)

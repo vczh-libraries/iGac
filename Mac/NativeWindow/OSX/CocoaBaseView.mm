@@ -50,8 +50,28 @@
 
 - (BOOL)acceptsFirstResponder
 {
-    return YES;
+    if(cocoaWindow->GetParent())
+    {
+        NSPoint mouseLoc = [NSEvent mouseLocation];
+        NSPoint windowLocation = [[self window] convertRectFromScreen: NSMakeRect(mouseLoc.x, mouseLoc.y, 0, 0)].origin;
+        NSPoint viewLocation = [self convertPoint:windowLocation fromView:nil];
+        return NSPointInRect(viewLocation, [self bounds]);
+    }
+    return [super acceptsFirstResponder];
 }
+
+- (BOOL)becomeFirstResponder
+{
+    cocoaWindow->InvokeGotFocus();
+    return [super becomeFirstResponder];
+}
+
+- (BOOL)resignFirstResponder
+{
+    cocoaWindow->InvokeLostFocus();
+    return [super resignFirstResponder];
+}
+
 
 - (void)cursorUpdate:(NSEvent *)event
 {
@@ -201,6 +221,11 @@
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
     [self setNeedsDisplay:YES];
+}
+
+- (BOOL)needsDisplay
+{
+    return YES;
 }
 
 

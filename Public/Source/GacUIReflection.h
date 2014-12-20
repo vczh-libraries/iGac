@@ -897,7 +897,8 @@ Instance Scope Wrapper
 			}
 		};
 
-#define GUI_INSTANCE_REFERENCE(NAME) LoadInstanceReference(L#NAME, this->NAME)
+#define GUI_INSTANCE_WSTR(str) L ## str
+#define GUI_INSTANCE_REFERENCE(NAME) LoadInstanceReference(GUI_INSTANCE_WSTR(#NAME), this->NAME)
 	}
 }
 

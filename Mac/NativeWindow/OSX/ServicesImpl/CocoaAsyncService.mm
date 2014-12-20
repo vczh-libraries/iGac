@@ -61,6 +61,8 @@ namespace vl {
                     if(status==INativeDelay::Pending)
                     {
                         executeTime=DateTime::LocalTime().Forward(milliseconds);
+                        // todo fixing vlpp, this is a hack
+                        executeTime.milliseconds = milliseconds;
                         return true;
                     }
                 }

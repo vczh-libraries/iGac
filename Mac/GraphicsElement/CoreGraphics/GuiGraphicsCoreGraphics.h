@@ -11,6 +11,8 @@
 
 #include "GacUI.h"
 
+typedef struct CGContext *CGContextRef;
+
 namespace vl {
     
     namespace presentation {
@@ -24,9 +26,12 @@ namespace vl {
             public:
                 GuiCoreGraphicsElement*				element;
                 Rect                                bounds;
+                CGContextRef                        context;
                 
-                GuiCoreGraphicsElementEventArgs(GuiCoreGraphicsElement* _element, Rect _bounds):element(_element),
-                    bounds(_bounds)
+                GuiCoreGraphicsElementEventArgs(GuiCoreGraphicsElement* _element, Rect _bounds, CGContextRef _context):
+                    element(_element),
+                    bounds(_bounds),
+                    context(_context)
                 {
                 }
             };
@@ -57,7 +62,7 @@ namespace vl {
             class ICoreGraphicsRenderTarget : public elements::IGuiGraphicsRenderTarget
             {
             public:
-                virtual void* GetCGContext() const = 0;
+                virtual CGContextRef GetCGContext() const = 0;
             };
             
             
