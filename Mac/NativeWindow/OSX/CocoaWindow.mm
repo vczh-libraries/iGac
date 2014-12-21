@@ -143,8 +143,15 @@ namespace vl {
 
             void CocoaWindow::SetClientSize(Size size) 
             {
-                [nativeContainer->window setContentSize:NSMakeSize(size.x, size.y)];
-                [nativeContainer->window display];
+                Rect bounds = GetBounds();
+                Rect newBounds = Rect(bounds.Left(), bounds.Top(), size.x, size.y);
+
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moving(newBounds, true);
+                }
+                
+                [nativeContainer->window setContentSize:NSMakeSize(newBounds.Width(), newBounds.Height())];
             }
 
             Rect CocoaWindow::GetClientBoundsInScreen() 
@@ -257,7 +264,7 @@ namespace vl {
             {
                 if(parentWindow)
                 {
-                    [nativeContainer->window makeKeyAndOrderFront:nil];
+                    [nativeContainer->window orderFront:nil];
                     [nativeContainer->window makeFirstResponder:nativeContainer->window.contentView];
 
                 }

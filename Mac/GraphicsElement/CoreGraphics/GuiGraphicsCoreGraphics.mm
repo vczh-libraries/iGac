@@ -143,9 +143,10 @@ namespace vl {
                     // but its safe to assume that this is availabe in every OS X
                     if(!coreTextFont->font)
                     {
-                        coreTextFont->font = [fontManager fontWithFamily:@"Lucida Grande" traits:traitMask weight:0 size:font.size];
-                        
-                        wprintf(L"%ls\n", (L"Font " + font.fontFamily + L" cannot be found.").Buffer());
+                        coreTextFont->font = [fontManager fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME
+                                                                  traits:traitMask
+                                                                  weight:0
+                                                                    size:font.size];
                     }
                     
                     if(!coreTextFont->font)

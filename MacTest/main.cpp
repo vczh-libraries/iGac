@@ -30,6 +30,7 @@
 #include "controls/datagrid_file_browser.h"
 #include "controls/datagrid_date_picker.h"
 #include "controls/datagrid_table_editor.h"
+#include "controls/tooltip_richtext.h"
 
 #include "rendering/rendering_rawapi.h"
 
@@ -46,6 +47,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<TableEditorWindow>();
+    RunGacWindow<TooltipWindow>();
 }
 

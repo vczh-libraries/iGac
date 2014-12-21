@@ -17,7 +17,7 @@ class ListViewDataSource : public list::ItemProviderBase, public list::ListViewI
 private:
     List<Ptr<FileProperties>>       fileProperties;
     ColumnItemViewCallbackList      columnItemViewCallbacks;
-    int                             columnSizes[4];
+    vint                            columnSizes[4];
 public:
     ListViewDataSource()
     {

@@ -21,8 +21,8 @@ private:
     
     void UpdateColor()
     {
-        int components[3];
-        for(int i=0;i<3;i++)
+        vint components[3];
+        for(vint i=0;i<3;i++)
         {
             components[i]=trackers[i]->GetPosition();
             labelComponents[i]->SetText(itow(components[i]));

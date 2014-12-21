@@ -19,7 +19,7 @@ private:
     GuiToolstripMenu*               fileTypeMenu;
     List<Ptr<FileProperties>>       fileProperties;
     
-    int                             sortingColumn;
+    vint                            sortingColumn;
     bool                            ascending;
     WString                         filteredFileType;
     
