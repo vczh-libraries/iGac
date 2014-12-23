@@ -50,6 +50,7 @@ namespace vl {
             unsigned int GetMainScreenHeight();
             
             NSString*   WStringToNSString(const WString& str);
+            NSString*   WStringToNSString(const wchar_t* str, uint32_t len);
             WString     NSStringToWString(NSString* str);
             
 #ifdef GAC_OS_OSX

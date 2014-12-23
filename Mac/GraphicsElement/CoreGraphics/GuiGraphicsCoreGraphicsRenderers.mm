@@ -694,6 +694,8 @@ namespace vl {
                     CGContextSaveGState(context);
                     
                     wchar_t passwordChar = element->GetPasswordChar();
+                    NSString* nsPassWordChar = WStringToNSString(&passwordChar, 1);
+                    
                     Point viewPosition = element->GetViewPosition();
                     Rect viewBounds(viewPosition, bounds.GetSize());
                     
@@ -716,6 +718,8 @@ namespace vl {
                         text::TextLine& line = element->GetLines().GetLine(row);
                         
                         vint x = startColumn == 0 ? 0 : line.att[startColumn-1].rightOffset;
+                        
+                        NSString* nsLine = WStringToNSString(line.text + startColumn, (uint32_t)(endColumn - startColumn + 1));
                         for(vint column = startColumn; column <= endColumn; column++)
                         {
                             bool inSelection=false;
@@ -763,8 +767,7 @@ namespace vl {
                                 [nsAttributes setObject:[NSColor colorWithRed:textColor.r/255.0f green:textColor.g/255.0f blue:textColor.b/255.0f alpha:textColor.a/255.0f]
                                                  forKey:NSForegroundColorAttributeName];
                                 
-                                WString s = passwordChar ? passwordChar : line.text[column];
-                                NSString* str = WStringToNSString(s);
+                                NSString* str = passwordChar ? nsPassWordChar : [nsLine substringWithRange:NSMakeRange(column - startColumn, 1)];
                                 
                                 [str drawAtPoint:NSMakePoint(tx, ty)
                                   withAttributes:nsAttributes];

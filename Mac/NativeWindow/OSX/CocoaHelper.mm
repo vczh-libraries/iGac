@@ -68,6 +68,14 @@ namespace vl {
                 return nsstr;
             }
             
+            NSString* WStringToNSString(const wchar_t* str, uint32_t len)
+            {
+                NSString* nsstr = [[NSString alloc] initWithBytes: str
+                                                           length: len * sizeof(wchar_t)
+                                                         encoding: NSUTF32LittleEndianStringEncoding];
+                return nsstr;
+            }
+            
             WString NSStringToWString(NSString* str)
             {
                 NSData* data = [str dataUsingEncoding: NSUTF32LittleEndianStringEncoding];

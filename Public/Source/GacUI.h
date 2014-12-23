@@ -1584,6 +1584,18 @@ Native Window Provider
 #define VKEY_PA1            0xFD
 #define VKEY_OEM_CLEAR      0xFE
 
+/*
+ * Friendly names for common keys (US)
+ */
+#define VKEY_SEMICOLON		VKEY_OEM_1
+#define VKEY_SLASH			VKEY_OEM_2
+#define VKEY_GRAVE_ACCENT	VKEY_OEM_3
+#define VKEY_RIGHT_BRACKET	VKEY_OEM_4
+#define VKEY_BACKSLASH		VKEY_OEM_5
+#define VKEY_LEFT_BRACKET	VKEY_OEM_6
+#define VKEY_APOSTROPHE		VKEY_OEM_7
+
+
 #endif
 
 /***********************************************************************

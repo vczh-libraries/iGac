@@ -272,6 +272,8 @@ namespace vl {
                 {
                     [nativeContainer->window makeKeyAndOrderFront:nil];
                     [nativeContainer->window makeMainWindow];
+                    
+
                 }
                 [nativeContainer->window.contentView setNeedsDisplay:YES];
                 
@@ -641,6 +643,8 @@ namespace vl {
             
             void CocoaWindow::InvokeGotFocus()
             {
+                [nativeContainer->window makeFirstResponder:nativeContainer->window.contentView];
+
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->GotFocus();

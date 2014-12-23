@@ -14,6 +14,8 @@
 #include "GuiGraphicsCoreGraphics.h"
 #include "GuiGraphicsCoreGraphicsRenderers.h"
 
+#include <vector>
+
 using namespace vl::presentation;
 using namespace vl::presentation::elements_coregraphics;
 
@@ -23,6 +25,7 @@ using namespace vl::presentation::elements_coregraphics;
 }
 
 @property (nonatomic) NSRange textRange;
+@property (nonatomic) NSRect cellFrame;
 @property (nonatomic) IGuiGraphicsElement* graphicsElement;
 @property (nonatomic) IGuiGraphicsParagraph::InlineObjectProperties properties;
 
@@ -46,6 +49,7 @@ using namespace vl::presentation::elements_coregraphics;
 {
     CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
 
+    _cellFrame = cellFrame;
     IGuiGraphicsRenderer* graphicsRenderer = _graphicsElement->GetRenderer();
     if(graphicsRenderer)
     {
@@ -72,6 +76,16 @@ using namespace vl::presentation::elements_coregraphics;
 }
 
 - (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView untilMouseUp:(BOOL)flag
+{
+    return NO;
+}
+
+- (BOOL)wantsToTrackMouseForEvent:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex
+{
+    return NO;
+}
+
+- (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex untilMouseUp:(BOOL)flag
 {
     return NO;
 }
@@ -106,18 +120,9 @@ using namespace vl::presentation::elements_coregraphics;
     [self drawWithFrame:cellFrame inView:controlView];
 }
 
-- (BOOL)wantsToTrackMouseForEvent:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex
-{
-    return NO;
-}
-
-- (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex untilMouseUp:(BOOL)flag
-{
-    return NO;
-}
-
 - (NSRect)cellFrameForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex
 {
+    _cellFrame = NSMakeRect(position.x, position.y, _properties.size.x, _properties.size.y);
     return NSMakeRect(0, 0, _properties.size.x, _properties.size.y);
 }
 
@@ -166,8 +171,24 @@ namespace vl {
                     TextCellContainer() {}
                 };
                 
-                typedef Dictionary<IGuiGraphicsElement*, TextCellContainer>     InlineElementList;
+                typedef Dictionary<IGuiGraphicsElement*, TextCellContainer>     InlineElementMap;
                 typedef Dictionary<TextRange, IGuiGraphicsElement*>             GraphicsElementMap;
+                
+                struct BoundingMetrics
+                {
+                    vint textPosition;
+                    vint textLength;
+                    Rect boundingRect;
+                    
+                    BoundingMetrics():textPosition(-1), textLength(-1) {}
+                    BoundingMetrics(vint _textPosition, vint _textLength, const Rect& _rect):
+                        textPosition(_textPosition),
+                        textLength(_textLength),
+                        boundingRect(_rect)
+                    {
+                        
+                    }
+                };
                 
             protected:
                 IGuiGraphicsLayoutProvider*				provider;
@@ -178,17 +199,25 @@ namespace vl {
                 List<Color>								usedColors;
                 
                 GraphicsElementMap						graphicsElements;
-                InlineElementList                       inlineElements;
+                InlineElementMap                        inlineElements;
                 
-                vint									caret;
+                vint									caretPos;
                 Color									caretColor;
                 bool									caretFrontSide;
                 
                 Alignment                               textAlignment;
                 
-                NSMutableAttributedString*              attributedText;
-                NSMutableAttributedString*              renderingTextCopy;
+                NSTextStorage*                          textStorage;
+                NSTextContainer*                        textContainer;
+                NSLayoutManager*                        layoutManager;
                 NSMutableParagraphStyle*                paragrahStyle;
+
+                bool                                    needFormatData;
+                Dictionary<vint, BoundingMetrics>       glyphBoundingRects;
+                Array<vint>                             charBoundingMetricsMap;
+                Array<BoundingMetrics>                  lineFragments;
+                Dictionary<vint, vint>                  charLineFragmentsMap;
+                
                 
             public:
                 CoreTextParagraph(IGuiGraphicsLayoutProvider* _provider, const WString& _text, ICoreGraphicsRenderTarget* _renderTarget):
@@ -197,7 +226,7 @@ namespace vl {
                     paragraphText(_text),
                     wrapLine(true),
                     maxWidth(-1),
-                    caret(-1),
+                    caretPos(-1),
                     caretFrontSide(false),
                     textAlignment(Alignment::Left)
                 {
@@ -207,8 +236,16 @@ namespace vl {
                     
                     paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                     
-                    attributedText = [[NSMutableAttributedString alloc] initWithString:WStringToNSString(_text) attributes:@{NSParagraphStyleAttributeName: paragrahStyle}];
-
+                    textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text)
+                                                             attributes:@{NSParagraphStyleAttributeName: paragrahStyle}];
+                    
+                    textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth == -1 ? CGFLOAT_MAX : maxWidth, CGFLOAT_MAX)];
+                    layoutManager = [[NSLayoutManager alloc] init];
+                    
+                    [layoutManager addTextContainer:textContainer];
+                    [textStorage addLayoutManager:layoutManager];
+                    
+                    needFormatData = true;
                 }
                 
             public:
@@ -230,6 +267,22 @@ namespace vl {
                 void SetWrapLine(bool value)
                 {
                     wrapLine = value;
+                    
+                    [paragrahStyle setLineBreakMode:value ? NSLineBreakByTruncatingTail : NSLineBreakByWordWrapping];
+                    [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
+                                                    options:0
+                                                 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                     {
+                         NSParagraphStyle* style = [attrs objectForKey:NSParagraphStyleAttributeName];
+                         if(style)
+                         {
+                             [textStorage removeAttribute:NSParagraphStyleAttributeName range:range];
+                         }
+                     }];
+                    [textStorage addAttribute:NSParagraphStyleAttributeName
+                                        value:paragrahStyle
+                                        range:NSMakeRange(0, textStorage.length)];
+                    needFormatData = true;
                 }
                 
                 vint GetMaxWidth()
@@ -240,6 +293,8 @@ namespace vl {
                 void SetMaxWidth(vint value)
                 {
                     maxWidth = value;
+                    [textContainer setContainerSize:NSMakeSize(value != -1 ? value : CGFLOAT_MAX, CGFLOAT_MAX)];
+                    needFormatData = true;
                 }
                 
                 Alignment GetParagraphAlignment()
@@ -265,30 +320,33 @@ namespace vl {
                     }
                     textAlignment = value;
                     
-                    [attributedText enumerateAttributesInRange:NSMakeRange(0, attributedText.length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSParagraphStyle* style = [attrs objectForKey:NSParagraphStyleAttributeName];
                          if(style)
                          {
-                             [attributedText removeAttribute:NSParagraphStyleAttributeName range:range];
+                             [textStorage removeAttribute:NSParagraphStyleAttributeName range:range];
                          }
                      }];
-                     [attributedText addAttribute:NSParagraphStyleAttributeName value:paragrahStyle range:NSMakeRange(0, attributedText.length)];
+                    [textStorage addAttribute:NSParagraphStyleAttributeName
+                                        value:paragrahStyle
+                                        range:NSMakeRange(0, textStorage.length)];
+                    needFormatData = true;
                 }
                 
                 bool SetFont(vint start, vint length, const WString& value)
                 {
                     // remove old fonts
-                    [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                     {
                         NSFont* font = [attrs objectForKey:NSFontAttributeName];
                         if(font)
                         {
-                            [attributedText removeAttribute:NSFontAttributeName range:range];
+                            [textStorage removeAttribute:NSFontAttributeName range:range];
                             
                             font = [[NSFontManager sharedFontManager] convertFont:font toFamily:WStringToNSString(value)];
                         }
@@ -299,7 +357,8 @@ namespace vl {
                             
                         }
                         
-                        [attributedText addAttribute:NSFontAttributeName value:font range:range];
+                        [textStorage addAttribute:NSFontAttributeName value:font range:range];
+                        needFormatData = true;
                     }];
                     
                     return true;
@@ -307,21 +366,22 @@ namespace vl {
                 
                 bool SetSize(vint start, vint length, vint value)
                 {
-                    [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSFont* font = [attrs objectForKey:NSFontAttributeName];
                          if(font)
                          {
-                             [attributedText removeAttribute:NSFontAttributeName range:range];
+                             [textStorage removeAttribute:NSFontAttributeName range:range];
                              font = [[NSFontManager sharedFontManager] convertFont:font toSize:value];
                          }
                          if(!font)
                          {
                              font = [[NSFontManager sharedFontManager] fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME traits:0 weight:0 size:value];
                          }
-                         [attributedText addAttribute:NSFontAttributeName value:font range:range];
+                         [textStorage addAttribute:NSFontAttributeName value:font range:range];
+                         needFormatData = true;
                      }];
                     
                     return true;
@@ -329,7 +389,7 @@ namespace vl {
                 
                 bool SetStyle(vint start, vint length, TextStyle value)
                 {
-                    [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
@@ -342,7 +402,7 @@ namespace vl {
                          NSFont* font = [attrs objectForKey:NSFontAttributeName];
                          if(font)
                          {
-                             [attributedText removeAttribute:NSFontAttributeName range:range];
+                             [textStorage removeAttribute:NSFontAttributeName range:range];
                            //  font = [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:traitMask];
                              
                              NSFontDescriptor* desp = font.fontDescriptor;
@@ -364,14 +424,14 @@ namespace vl {
                                                                                weight:0
                                                                                  size:12];
                          }
-                         [attributedText addAttribute:NSFontAttributeName value:font range:range];
+                         [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          
                          if(value & TextStyle::Underline)
                          {
                              NSNumber* style = [attrs objectForKey:NSUnderlineStyleAttributeName];
                              if(style)
                              {
-                                 [attributedText removeAttribute:NSUnderlineStyleAttributeName range:range];
+                                 [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
                              }
                          }
                          
@@ -380,23 +440,26 @@ namespace vl {
                              NSNumber* style = [attrs objectForKey:NSStrikethroughStyleAttributeName];
                              if(style)
                              {
-                                 [attributedText removeAttribute:NSStrikethroughStyleAttributeName range:range];
+                                 [textStorage removeAttribute:NSStrikethroughStyleAttributeName range:range];
                              }
                          }
+                         needFormatData = true;
                     }];
                     
                     if(value & TextStyle::Strikeline)
                     {
-                        [attributedText addAttribute:NSStrikethroughStyleAttributeName
-                                               value:[NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle]
-                                               range:NSMakeRange(start, length)];
+                        [textStorage addAttribute:NSStrikethroughStyleAttributeName
+                                            value:[NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle]
+                                            range:NSMakeRange(start, length)];
+                        needFormatData = true;
                     }
                     
                     if(value & TextStyle::Underline)
                     {
-                        [attributedText addAttribute:NSUnderlineStyleAttributeName
-                                               value:[NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle]
-                                               range:NSMakeRange(start, length)];
+                        [textStorage addAttribute:NSUnderlineStyleAttributeName
+                                            value:[NSNumber numberWithInteger:NSUnderlinePatternSolid | NSUnderlineStyleSingle]
+                                            range:NSMakeRange(start, length)];
+                        needFormatData = true;
                     }
                     
                     return true;
@@ -404,46 +467,51 @@ namespace vl {
                 
                 bool SetColor(vint start, vint length, Color value)
                 {
-                    [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSColor* color = [attrs objectForKey:NSForegroundColorAttributeName];
                          if(color)
                          {
-                             [attributedText removeAttribute:NSForegroundColorAttributeName range:range];
+                             [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
                          }
                      }];
                     
-                    [attributedText addAttribute:NSForegroundColorAttributeName
+                    [textStorage addAttribute:NSForegroundColorAttributeName
                                            value:[NSColor colorWithRed:value.r / 255.0f
                                                                  green:value.g / 255.0f
                                                                   blue:value.b / 255.0f
                                                                  alpha:value.a / 255.0f]
                                            range:NSMakeRange(start, length)];
+                    
+                    needFormatData = true;
                     
                     return true;
                 }
                 
                 bool SetBackgroundColor(vint start, vint length, Color value)
                 {
-                    [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
+                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSColor* color = [attrs objectForKey:NSBackgroundColorAttributeName];
                          if(color)
                          {
-                             [attributedText removeAttribute:NSBackgroundColorAttributeName range:range];
+                             [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
                          }
                      }];
                     
-                    [attributedText addAttribute:NSBackgroundColorAttributeName
+                    [textStorage addAttribute:NSBackgroundColorAttributeName
                                            value:[NSColor colorWithRed:value.r / 255.0f
                                                                  green:value.g / 255.0f
                                                                   blue:value.b / 255.0f
                                                                  alpha:value.a / 255.0f]
                                            range:NSMakeRange(start, length)];
+                    
+                    needFormatData = true;
+                    
                     return true;
                 }
                 
@@ -462,12 +530,14 @@ namespace vl {
                     }
                 
                     GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:value.Obj() andProperties:properties];
+                    textCell.textRange = NSMakeRange(start, length);
+                    
                     NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
                     [attachment setAttachmentCell:textCell];
                     
                     NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
                     
-                    [attributedText replaceCharactersInRange:NSMakeRange(start, 1)
+                    [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
                                         withAttributedString:attachmentStr];
                     
                     if(length > 1)
@@ -481,7 +551,7 @@ namespace vl {
                         // maybe there are better solutions here?
                         
                         NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
-                        [attributedText replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
+                        [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
                     }
                    
                     IGuiGraphicsRenderer* renderer = value->GetRenderer();
@@ -492,6 +562,7 @@ namespace vl {
                     inlineElements.Add(value.Obj(), textCell);
                     SetMap(graphicsElements, start, length, value.Obj());
                     
+                    needFormatData = true;
                     return true;
                 }
                 
@@ -503,39 +574,41 @@ namespace vl {
                         GuiElementsTextCell* textCell = inlineElements[element].textCell;
                         NSTextAttachment* attachment = textCell.attachment;
                         
-                        [attributedText enumerateAttributesInRange:NSMakeRange(start, length)
-                                                           options:0
-                                                        usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                        [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
+                                                        options:0
+                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                          {
-                             NSFont* font = [attrs objectForKey:NSAttachmentAttributeName];
-                             if(font)
+                             NSTextAttachment* attachment = [attrs objectForKey:NSAttachmentAttributeName];
+                             if(attachment)
                              {
-                                 [attributedText removeAttribute:NSAttachmentAttributeName range:range];
+                                 [textStorage removeAttribute:NSAttachmentAttributeName range:range];
+                                 [textStorage replaceCharactersInRange:NSMakeRange(range.location, 1) withString:@"\u200d"];
+                                 
+                                 needFormatData = true;
                              }
                          }];
                         
-                        [attributedText addAttribute:NSAttachmentAttributeName value:attachment range:textCell.textRange];
                     }
                     
-                    return false;
+                    return true;
                 }
                 
                 vint GetHeight()
                 {
-                    CGRect bounds = [attributedText boundingRectWithSize:NSMakeSize(maxWidth, CGFLOAT_MAX)
-                                                                 options:NSStringDrawingUsesLineFragmentOrigin];
-                //    printf("Height: %f", bounds.size.height);
-                    return bounds.size.height;
+                    [layoutManager glyphRangeForTextContainer:textContainer];
+                    
+                    return [layoutManager
+                            usedRectForTextContainer:textContainer].size.height;
                 }
                 
                 bool OpenCaret(vint _caret, Color _color, bool _frontSide)
                 {
                     if(!IsValidCaret(_caret))
                         return false;
-                    if(caret != -1)
+                    if(caretPos != -1)
                         CloseCaret();
                     
-                    caret = _caret;
+                    caretPos = _caret;
                     caretColor = _color;
                     caretFrontSide = _frontSide;
                     return true;
@@ -543,15 +616,16 @@ namespace vl {
                 
                 bool CloseCaret()
                 {
-                    if(caret == -1)
+                    if(caretPos == -1)
                         return false;
-                    caret = -1;
+                    caretPos = -1;
                     return true;
                 }
                 
                 void Render(Rect bounds)
                 {
                     // todo
+                    GenerateFormatData();
                     CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
 
                     NSRect rect = NSMakeRect((CGFloat)bounds.Left(),
@@ -559,11 +633,14 @@ namespace vl {
                                              maxWidth,
                                              CGFLOAT_MAX);
                     
-                    [attributedText drawInRect:rect];
+                    NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+                    [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:rect.origin];
                     
-                    if(caret != -1)
+                   // [textStorage drawInRect:rect];
+                    
+                    if(caretPos != -1)
                     {
-                        Rect caretBounds = GetCaretBounds(caret, caretFrontSide);
+                        Rect caretBounds = GetCaretBounds(caretPos, caretFrontSide);
                         vint x = caretBounds.x1 + bounds.x1;
                         vint y1 = caretBounds.y1 + bounds.y1;
                         vint y2 = y1+caretBounds.Height();
@@ -580,150 +657,462 @@ namespace vl {
                 
                 vint GetCaret(vint comparingCaret, CaretRelativePosition position, bool& preferFrontSide)
                 {
+                    GenerateFormatData();
+                    if(position == CaretFirst) return 0;
+                    if(position == CaretLast) return paragraphText.Length();
+                    if(!IsValidCaret(comparingCaret)) return -1;
+                    
+                    vint frontLineIndex = -1;
+                    vint backLineIndex = -1;
+                    GetLineIndexFromTextPos(comparingCaret, frontLineIndex, backLineIndex);
+                    vint lineIndex = preferFrontSide ? frontLineIndex : backLineIndex;
+                    
+                    BoundingMetrics& lineMetrics = lineFragments[lineIndex];
+                    
+                    vint lineStart = lineMetrics.textPosition;
+                    vint lineEnd = lineMetrics.textPosition + lineMetrics.textLength;
+
+                    switch(position)
+                    {
+                        case CaretLineFirst:
+                            return lineStart;
+                            
+                        case CaretLineLast:
+                            return lineEnd;
+                            
+                        case CaretMoveLeft:
+                        {
+                            if(comparingCaret == 0)
+                            {
+                                return 0;
+                            }
+                            
+                            return glyphBoundingRects[charBoundingMetricsMap[comparingCaret-1]].textPosition;
+                        }
+                            
+                        case CaretMoveRight:
+                        {
+                            if(comparingCaret == paragraphText.Length())
+                            {
+                                return paragraphText.Length();
+                            }
+                            
+                            vint index = charBoundingMetricsMap[comparingCaret];
+                            if(index == glyphBoundingRects.Count()-1)
+                                return paragraphText.Length();
+                            
+                            return glyphBoundingRects[index+1].textPosition;
+                        }
+                            
+                        case CaretMoveUp:
+                        {
+                            if(lineIndex == 0)
+                            {
+                                return comparingCaret;
+                            }
+                            else
+                            {
+                                Rect bounds = GetCaretBounds(comparingCaret, preferFrontSide);
+                                preferFrontSide = true;
+                                return GetCaretFromXWithLine(bounds.x1, lineIndex-1);
+                            }
+                        }
+                        case CaretMoveDown:
+                        {
+                            if(lineIndex == lineFragments.Count()-1)
+                            {
+                                return comparingCaret;
+                            }
+                            else
+                            {
+                                Rect bounds = GetCaretBounds(comparingCaret, preferFrontSide);
+                                preferFrontSide = false;
+                                return GetCaretFromXWithLine(bounds.x1, lineIndex+1);
+                            }
+                        }
+                            
+                        default:
+                            break;
+                    }
                     return -1;
                 }
                 
                 Rect GetCaretBounds(vint caret, bool frontSide)
                 {
-                    return Rect();
+                    GenerateFormatData();
+                    
+                    if(!IsValidCaret(caret)) return Rect();
+                    if(paragraphText.Length() == 0) return Rect(Point(0, 0), Size(0, GetHeight()));
+                    
+                    vint frontLineIndex = -1;
+                    vint backLineIndex = -1;
+                    GetLineIndexFromTextPos(caret, frontLineIndex, backLineIndex);
+                    vint lineIndex = frontSide ? frontLineIndex : backLineIndex;
+                    
+                    BoundingMetrics& lineMetrics = lineFragments[lineIndex];
+                    
+                    vint lineStart = lineMetrics.textPosition;
+                    vint lineEnd = lineMetrics.textPosition + lineMetrics.textLength;
+                    if(caret == lineStart)
+                        frontSide = false;
+                    else if(caret == lineEnd)
+                        frontSide = true;
+                    
+                    if(frontSide)
+                        caret--;
+                    
+                    const BoundingMetrics& charMetrics = glyphBoundingRects[charBoundingMetricsMap[caret]];
+                    if(frontSide)
+                    {
+                        return Rect(Point(charMetrics.boundingRect.Left() + charMetrics.boundingRect.Width(), charMetrics.boundingRect.Top()),
+                                    Size(0, charMetrics.boundingRect.Height()));
+                    }
+                    else
+                    {
+                        return Rect(Point(charMetrics.boundingRect.Left(), charMetrics.boundingRect.Top()),
+                                    Size(0, charMetrics.boundingRect.Height()));
+                    }
                 }
                 
                 vint GetCaretFromPoint(Point point)
                 {
-                    return -1;
+                    GenerateFormatData();
+                    
+                    vint line = GetLineIndexFromY(point.y);
+                    vint caret = GetCaretFromXWithLine(point.x, line);
+                    return caret;
                 }
                 
                 Ptr<IGuiGraphicsElement> GetInlineObjectFromPoint(Point point, vint& start, vint& length)
                 {
+                    GenerateFormatData();
+                    
+                    NSPoint nsp = NSMakePoint(point.x, point.y);
+                    for(vint i=0; i<inlineElements.Count(); ++i)
+                    {
+                        GuiElementsTextCell* cell = inlineElements.Values().Get(i).textCell;
+                        
+                        if(NSPointInRect(nsp, cell.cellFrame))
+                        {
+                            IGuiGraphicsElement* element=0;
+                            if(GetMap(graphicsElements, cell.textRange.location, element) && element)
+                            {
+                                start = cell.textRange.location;
+                                length = cell.textRange.length;
+                                
+                                return element;
+                            }
+                        }
+                    }
                     return Ptr<IGuiGraphicsElement>();
                 }
                 
                 vint GetNearestCaretFromTextPos(vint textPos, bool frontSide)
                 {
-                    return -1;
+                    GenerateFormatData();
+                    
+                    if(!IsValidTextPos(textPos)) return -1;
+                    if(textPos == 0 || textPos == paragraphText.Length()) return textPos;
+                    
+                    vint index = charBoundingMetricsMap[textPos];
+                    const BoundingMetrics& metrics = glyphBoundingRects[index];
+                    if(metrics.textPosition == textPos)
+                        return textPos;
+                    else if(frontSide)
+                        return metrics.textPosition;
+                    else
+                        return metrics.textPosition + metrics.textPosition;
                 }
                 
                 bool IsValidCaret(vint caret)
                 {
+                    GenerateFormatData();
+                    
+                    if(!IsValidTextPos(caret)) return false;
+                    if(caret == 0 || caret == paragraphText.Length()) return true;
+                    if(glyphBoundingRects[charBoundingMetricsMap[caret]].textPosition == caret) return true;
+                    
                     return false;
                 }
                 
                 bool IsValidTextPos(vint textPos)
                 {
-                    return false;
+                    return 0 <= textPos && textPos <= paragraphText.Length();
                 }
                 
-                protected:
-                     template<typename T>
-                     void CutMap(Dictionary<TextRange, T>& map, vint start, vint length)
+            protected:
+                void GenerateFormatData()
+                {
+                    if(needFormatData)
+                    {
+                        needFormatData = false;
+                        
+                        NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+                        
+                        glyphBoundingRects.Clear();
+                        charBoundingMetricsMap.Resize(glyphRange.length);
+                        
+                        for(NSUInteger i=glyphRange.location; i<glyphRange.length+glyphRange.location; ++i)
+                        {
+                            NSRect bounding = [layoutManager boundingRectForGlyphRange:NSMakeRange(i, 1) inTextContainer:textContainer];
+                            
+                            NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
+
+                            if(bounding.size.width > 0)
+                            {
+                                IGuiGraphicsElement* element = 0;
+                                GuiElementsTextCell* cell = 0;
+                                if(GetMap(graphicsElements, i, element) && element)
+                                {
+                                    cell = inlineElements.Get(element).textCell;
+                                    for(vint j=0; j<cell.textRange.length; ++j)
+                                    {
+                                        charBoundingMetricsMap[i-glyphRange.location+j] = charIndex;
+                                    }
+                                }
+                                else
+                                {
+                                    charBoundingMetricsMap[i-glyphRange.location] = charIndex;
+                                }
+                                
+                                assert(cell ? cell.textRange.location == i : true);
+                                glyphBoundingRects.Add(charIndex, BoundingMetrics(i,
+                                                                                  cell ? cell.textRange.length : 1,
+                                                                                  Rect(bounding.origin.x,
+                                                                                       bounding.origin.y,
+                                                                                       bounding.size.width + bounding.origin.x,
+                                                                                       bounding.size.height + bounding.origin.y)));
+                                
+                                
+                            }
+                            
+                      //      printf("%d/%d: %f %f %f %f\n", charIndex, paragraphText.Length(), bounding.origin.x, bounding.origin.y, bounding.size.width, bounding.size.height);
+                        }
+                        
+                        NSRange lineFragmentRange;
+                        NSUInteger glyphIndex = glyphRange.location;
+                        
+                        std::vector<BoundingMetrics> metrics;
+                        
+                        charLineFragmentsMap.Clear();
+                        for(;;)
+                        {
+                            if(![layoutManager isValidGlyphIndex:glyphIndex])
+                                break;
+                            
+                            NSRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
+                                                                                      effectiveRange:&lineFragmentRange];
+                            
+                            metrics.push_back(BoundingMetrics(lineFragmentRange.location,
+                                                              lineFragmentRange.length,
+                                                              Rect(lineFragmentRect.origin.x,
+                                                                   lineFragmentRect.origin.y,
+                                                                   lineFragmentRect.size.width + lineFragmentRect.origin.x,
+                                                                   lineFragmentRect.size.height + lineFragmentRect.origin.y)));
+                            
+                            for(NSUInteger i=lineFragmentRange.location; i<lineFragmentRange.location+lineFragmentRange.length; ++i)
+                            {
+                                NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
+
+                                charLineFragmentsMap.Set(charIndex, metrics.size()-1);
+                            }
+                            
+                            glyphIndex += lineFragmentRange.length;
+                            
+                      //      printf("line %d (%d - %d): %f %f %f %f\n", metrics.size()-1, lineFragmentRange.location, lineFragmentRange.length+lineFragmentRange.location, lineFragmentRect.origin.x, lineFragmentRect.origin.y, lineFragmentRect.size.width, lineFragmentRect.size.height);
+                            
+                        }
+                        lineFragments.Resize(metrics.size());
+                        for(size_t i=0; i<metrics.size(); ++i)
+                        {
+                            lineFragments.Set(i, metrics[i]);
+                        }
+                    }
+                }
+                
+                vint GetLineIndexFromY(vint y)
+                {
+                    for(vint i=0; i<lineFragments.Count(); ++i)
+                    {
+                        const BoundingMetrics& metrics = lineFragments[i];
+                        if(metrics.boundingRect.Top() <= y &&
+                           metrics.boundingRect.Bottom() >= y)
+                        {
+                            return i;
+                        }
+                    }
+                    return -1;
+                }
+                
+                vint GetCaretFromXWithLine(vint x, vint lineIndex)
+                {
+                    if(lineIndex == -1) return -1;
+                    
+                    const BoundingMetrics& metrics = lineFragments[lineIndex];
+                    for(vint i=metrics.textPosition; i<metrics.textPosition+metrics.textLength; ++i)
+                    {
+                        NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
+                        
+                        const BoundingMetrics& charMetrics = glyphBoundingRects[charBoundingMetricsMap[charIndex]];
+                        if(charMetrics.boundingRect.Left() >= x)
+                            return charIndex;
+                    }
+                    return -1;
+                }
+                
+                void GetLineIndexFromTextPos(vint textPos, vint& frontLineIndex, vint& backLineIndex)
+                {
+                    frontLineIndex = -1;
+                    backLineIndex = -1;
+                    vint start = 0;
+                    vint end = lineFragments.Count() - 1;
+                    while(start <= end)
+                    {
+                        vint middle = (start + end) / 2;
+                        BoundingMetrics& metrics = lineFragments[middle];
+                        vint lineStart = metrics.textPosition;
+                        vint lineEnd = metrics.textPosition + metrics.textLength;
+                        
+                        if(textPos < lineStart)
+                        {
+                            end = middle - 1;
+                        }
+                        else if(textPos > lineEnd)
+                        {
+                            start = middle + 1;
+                        }
+                        else if(textPos == lineStart && middle != 0)
+                        {
+                            BoundingMetrics& anotherLine = lineFragments[middle - 1];
+                            frontLineIndex = middle - 1;
+                            backLineIndex = middle;
+                            return;
+                        }
+                        else if(textPos == lineEnd && middle != lineFragments.Count() - 1)
+                        {
+                            frontLineIndex = middle;
+                            backLineIndex = middle + 1;
+                            return;
+                        }
+                        else
+                        {
+                            frontLineIndex = middle;
+                            backLineIndex = middle;
+                            return;
+                        }
+                    }
+                }
+                
+                 template<typename T>
+                 void CutMap(Dictionary<TextRange, T>& map, vint start, vint length)
+                 {
+                     vint end=start+length;
+                     for(vint i=map.Count()-1;i>=0;i--)
                      {
-                         vint end=start+length;
-                         for(vint i=map.Count()-1;i>=0;i--)
+                         TextRange key=map.Keys()[i];
+                         if(key.start<end && start<key.end)
                          {
-                             TextRange key=map.Keys()[i];
-                             if(key.start<end && start<key.end)
+                             T value=map.Values()[i];
+                             
+                             vint s1=key.start;
+                             vint s2=key.start>start?key.start:start;
+                             vint s3=key.end<end?key.end:end;
+                             vint s4=key.end;
+                             
+                             map.Remove(key);
+                             if(s1<s2)
                              {
-                                 T value=map.Values()[i];
+                                 map.Add(TextRange(s1, s2), value);
+                             }
+                             if(s2<s3)
+                             {
+                                 map.Add(TextRange(s2, s3), value);
+                             }
+                             if(s3<s4)
+                             {
+                                 map.Add(TextRange(s3, s4), value);
+                             }
+                         }
+                     }
+                 }
+                 
+                 template<typename T>
+                 void UpdateOverlappedMap(Dictionary<TextRange, T>& map, vint start, vint length, const T& value)
+                 {
+                     vint end=start+length;
+                     for(vint i=map.Count()-1;i>=0;i--)
+                     {
+                         TextRange key=map.Keys()[i];
+                         if(key.start<end && start<key.end)
+                         {
+                             map.Set(key, value);
+                         }
+                     }
+                 }
+                 
+                 template<typename T>
+                 void DefragmentMap(Dictionary<TextRange, T>& map)
+                 {
+                     vint lastIndex=map.Count()-1;
+                     T lastValue=map.Values()[lastIndex];
+                     for(vint i=map.Count()-2;i>=-1;i--)
+                     {
+                         if(i==-1 || map.Values()[i]!=lastValue)
+                         {
+                             if(lastIndex-i>0)
+                             {
+                                 vint start=map.Keys()[i+1].start;
+                                 vint end=map.Keys()[lastIndex].end;
+                                 TextRange key(start, end);
                                  
-                                 vint s1=key.start;
-                                 vint s2=key.start>start?key.start:start;
-                                 vint s3=key.end<end?key.end:end;
-                                 vint s4=key.end;
-                                 
-                                 map.Remove(key);
-                                 if(s1<s2)
+                                 for(vint j=lastIndex;j>i;j--)
                                  {
-                                     map.Add(TextRange(s1, s2), value);
+                                     map.Remove(map.Keys()[j]);
                                  }
-                                 if(s2<s3)
-                                 {
-                                     map.Add(TextRange(s2, s3), value);
-                                 }
-                                 if(s3<s4)
-                                 {
-                                     map.Add(TextRange(s3, s4), value);
-                                 }
+                                 map.Add(key, lastValue);
+                             }
+                             lastIndex=i;
+                             if(i!=-1)
+                             {
+                                 lastValue=map.Values()[i];
                              }
                          }
                      }
-                     
-                     template<typename T>
-                     void UpdateOverlappedMap(Dictionary<TextRange, T>& map, vint start, vint length, const T& value)
+                 }
+                 
+                 template<typename T>
+                 void SetMap(Dictionary<TextRange, T>& map, vint start, vint length, const T& value)
+                 {
+                     CutMap(map, start, length);
+                     UpdateOverlappedMap(map, start, length, value);
+                     DefragmentMap(map);
+                 }
+                 
+                 template<typename T>
+                 bool GetMap(Dictionary<TextRange, T>& map, vint textPosition, T& value)
+                 {
+                     vint start=0;
+                     vint end=map.Count()-1;
+                     while(start<=end)
                      {
-                         vint end=start+length;
-                         for(vint i=map.Count()-1;i>=0;i--)
+                         vint middle=(start+end)/2;
+                         TextRange key=map.Keys()[middle];
+                         if(textPosition<key.start)
                          {
-                             TextRange key=map.Keys()[i];
-                             if(key.start<end && start<key.end)
-                             {
-                                 map.Set(key, value);
-                             }
+                             end=middle-1;
                          }
-                     }
-                     
-                     template<typename T>
-                     void DefragmentMap(Dictionary<TextRange, T>& map)
-                     {
-                         vint lastIndex=map.Count()-1;
-                         T lastValue=map.Values()[lastIndex];
-                         for(vint i=map.Count()-2;i>=-1;i--)
+                         else if(textPosition>=key.end)
                          {
-                             if(i==-1 || map.Values()[i]!=lastValue)
-                             {
-                                 if(lastIndex-i>0)
-                                 {
-                                     vint start=map.Keys()[i+1].start;
-                                     vint end=map.Keys()[lastIndex].end;
-                                     TextRange key(start, end);
-                                     
-                                     for(vint j=lastIndex;j>i;j--)
-                                     {
-                                         map.Remove(map.Keys()[j]);
-                                     }
-                                     map.Add(key, lastValue);
-                                 }
-                                 lastIndex=i;
-                                 if(i!=-1)
-                                 {
-                                     lastValue=map.Values()[i];
-                                 }
-                             }
+                             start=middle+1;
                          }
-                     }
-                     
-                     template<typename T>
-                     void SetMap(Dictionary<TextRange, T>& map, vint start, vint length, const T& value)
-                     {
-                         CutMap(map, start, length);
-                         UpdateOverlappedMap(map, start, length, value);
-                         DefragmentMap(map);
-                     }
-                     
-                     template<typename T>
-                     bool GetMap(Dictionary<TextRange, T>& map, vint textPosition, T& value)
-                     {
-                         vint start=0;
-                         vint end=map.Count()-1;
-                         while(start<=end)
+                         else
                          {
-                             vint middle=(start+end)/2;
-                             TextRange key=map.Keys()[middle];
-                             if(textPosition<key.start)
-                             {
-                                 end=middle-1;
-                             }
-                             else if(textPosition>=key.end)
-                             {
-                                 start=middle+1;
-                             }
-                             else
-                             {
-                                 value=map.Values()[middle];
-                                 return true;
-                             }
+                             value=map.Values()[middle];
+                             return true;
                          }
-                         return false;
                      }
+                     return false;
+                 }
             };
             
             Ptr<elements::IGuiGraphicsParagraph> CoreTextLayoutProvider::CreateParagraph(const WString& str, elements::IGuiGraphicsRenderTarget* renderTarget)
