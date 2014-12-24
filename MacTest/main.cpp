@@ -37,6 +37,8 @@
 #include "persistant/directcode_simplewindow.h"
 #include "persistant/directcode_scripting.h"
 
+#include "editor/document_editor.h"
+
 int main(int argc, const char * argv[])
 {
     SetupOSXCoreGraphicsRenderer();
@@ -47,6 +49,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<TooltipWindow>();
+    RunGacWindow<DocumentEditorWindow>();
 }
 

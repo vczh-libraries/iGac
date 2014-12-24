@@ -719,7 +719,7 @@ namespace vl {
                         
                         vint x = startColumn == 0 ? 0 : line.att[startColumn-1].rightOffset;
                         
-                        NSString* nsLine = WStringToNSString(line.text + startColumn, (uint32_t)(endColumn - startColumn + 1));
+                        NSString* nsLine = WStringToNSString(line.text, (uint32_t)line.dataLength);
                         for(vint column = startColumn; column <= endColumn; column++)
                         {
                             bool inSelection=false;
@@ -767,10 +767,9 @@ namespace vl {
                                 [nsAttributes setObject:[NSColor colorWithRed:textColor.r/255.0f green:textColor.g/255.0f blue:textColor.b/255.0f alpha:textColor.a/255.0f]
                                                  forKey:NSForegroundColorAttributeName];
                                 
-                                NSString* str = passwordChar ? nsPassWordChar : [nsLine substringWithRange:NSMakeRange(column - startColumn, 1)];
+                                NSString* str = passwordChar ? nsPassWordChar : [nsLine substringWithRange:NSMakeRange(column, 1)];
                                 
-                                [str drawAtPoint:NSMakePoint(tx, ty)
-                                  withAttributes:nsAttributes];
+                                [str drawAtPoint:NSMakePoint(tx, ty) withAttributes:nsAttributes];
                             }
                             x = x2;
                         }

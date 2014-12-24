@@ -173,17 +173,22 @@ namespace vl {
                 
                 typedef Dictionary<IGuiGraphicsElement*, TextCellContainer>     InlineElementMap;
                 typedef Dictionary<TextRange, IGuiGraphicsElement*>             GraphicsElementMap;
+                typedef Dictionary<TextRange, Color>                            BackgroundColorMap;
                 
                 struct BoundingMetrics
                 {
                     vint textPosition;
                     vint textLength;
+                    CGFloat lineHeight;
+                    CGFloat yOffset;
                     Rect boundingRect;
                     
-                    BoundingMetrics():textPosition(-1), textLength(-1) {}
-                    BoundingMetrics(vint _textPosition, vint _textLength, const Rect& _rect):
+                    BoundingMetrics():textPosition(-1), textLength(-1), lineHeight(0), yOffset(0) {}
+                    BoundingMetrics(vint _textPosition, vint _textLength, CGFloat _lineHeight, CGFloat _yOffset, const Rect& _rect):
                         textPosition(_textPosition),
                         textLength(_textLength),
+                        lineHeight(_lineHeight),
+                        yOffset(_yOffset),
                         boundingRect(_rect)
                     {
                         
@@ -200,6 +205,7 @@ namespace vl {
                 
                 GraphicsElementMap						graphicsElements;
                 InlineElementMap                        inlineElements;
+                BackgroundColorMap                      backgroundColors;
                 
                 vint									caretPos;
                 Color									caretColor;
@@ -233,7 +239,8 @@ namespace vl {
                     usedColors.Add(Color(0, 0, 0));
                     
                     graphicsElements.Add(TextRange(0, _text.Length()), 0);
-                    
+                    backgroundColors.Add(TextRange(0, _text.Length()), Color(0, 0, 0, 0));
+
                     paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                     
                     textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text)
@@ -254,7 +261,7 @@ namespace vl {
                     return provider;
                 }
                 
-                IGuiGraphicsRenderTarget*   GetRenderTarget()
+                IGuiGraphicsRenderTarget* GetRenderTarget()
                 {
                     return renderTarget;
                 }
@@ -468,8 +475,8 @@ namespace vl {
                 bool SetColor(vint start, vint length, Color value)
                 {
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                    options:0
+                                                usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSColor* color = [attrs objectForKey:NSForegroundColorAttributeName];
                          if(color)
@@ -479,11 +486,11 @@ namespace vl {
                      }];
                     
                     [textStorage addAttribute:NSForegroundColorAttributeName
-                                           value:[NSColor colorWithRed:value.r / 255.0f
-                                                                 green:value.g / 255.0f
-                                                                  blue:value.b / 255.0f
-                                                                 alpha:value.a / 255.0f]
-                                           range:NSMakeRange(start, length)];
+                                        value:[NSColor colorWithRed:value.r / 255.0f
+                                                              green:value.g / 255.0f
+                                                               blue:value.b / 255.0f
+                                                              alpha:value.a / 255.0f]
+                                        range:NSMakeRange(start, length)];
                     
                     needFormatData = true;
                     
@@ -492,26 +499,7 @@ namespace vl {
                 
                 bool SetBackgroundColor(vint start, vint length, Color value)
                 {
-                    [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
-                     {
-                         NSColor* color = [attrs objectForKey:NSBackgroundColorAttributeName];
-                         if(color)
-                         {
-                             [textStorage removeAttribute:NSBackgroundColorAttributeName range:range];
-                         }
-                     }];
-                    
-                    [textStorage addAttribute:NSBackgroundColorAttributeName
-                                           value:[NSColor colorWithRed:value.r / 255.0f
-                                                                 green:value.g / 255.0f
-                                                                  blue:value.b / 255.0f
-                                                                 alpha:value.a / 255.0f]
-                                           range:NSMakeRange(start, length)];
-                    
-                    needFormatData = true;
-                    
+                    SetMap(backgroundColors, start, length, value);
                     return true;
                 }
                 
@@ -624,10 +612,41 @@ namespace vl {
                 
                 void Render(Rect bounds)
                 {
-                    // todo
                     GenerateFormatData();
                     CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
 
+                    
+                    for(vint i = 0; i < backgroundColors.Count(); i++)
+                    {
+                        TextRange key = backgroundColors.Keys()[i];
+                        Color color = backgroundColors.Values()[i];
+                        if(color.a > 0)
+                        {
+                            vint start = key.start;
+                            if(start < 0)
+                            {
+                                start = 0;
+                            }
+                            
+                            CGContextSetRGBFillColor(context, color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+
+                            while(start < charBoundingMetricsMap.Count() && start < key.end)
+                            {
+                                vint index = charBoundingMetricsMap[start];
+                                const BoundingMetrics& charMetrics = glyphBoundingRects[index];
+                                
+                                CGRect rect = CGRectMake(charMetrics.boundingRect.Left() + (CGFloat)bounds.x1,
+                                                         charMetrics.boundingRect.Top() + (CGFloat)bounds.y1,
+                                                         charMetrics.boundingRect.Width() + 1.0f,
+                                                         charMetrics.boundingRect.Height() + 1.0f);
+                                
+                                CGContextFillRect(context, rect);
+                                
+                                start = charMetrics.textPosition + charMetrics.textLength;
+                            }
+                        }
+                    }
+                    
                     NSRect rect = NSMakeRect((CGFloat)bounds.Left(),
                                              (CGFloat)bounds.Top(),
                                              maxWidth,
@@ -635,8 +654,6 @@ namespace vl {
                     
                     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
                     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:rect.origin];
-                    
-                   // [textStorage drawInRect:rect];
                     
                     if(caretPos != -1)
                     {
@@ -762,15 +779,18 @@ namespace vl {
                         caret--;
                     
                     const BoundingMetrics& charMetrics = glyphBoundingRects[charBoundingMetricsMap[caret]];
+                    
                     if(frontSide)
                     {
-                        return Rect(Point(charMetrics.boundingRect.Left() + charMetrics.boundingRect.Width(), charMetrics.boundingRect.Top()),
-                                    Size(0, charMetrics.boundingRect.Height()));
+                        return Rect(Point(charMetrics.boundingRect.Left() + charMetrics.boundingRect.Width(),
+                                          charMetrics.boundingRect.Top() + charMetrics.yOffset),
+                                    Size(0, charMetrics.lineHeight));
                     }
                     else
                     {
-                        return Rect(Point(charMetrics.boundingRect.Left(), charMetrics.boundingRect.Top()),
-                                    Size(0, charMetrics.boundingRect.Height()));
+                        return Rect(Point(charMetrics.boundingRect.Left(),
+                                          charMetrics.boundingRect.Top() + charMetrics.yOffset),
+                                    Size(0, charMetrics.lineHeight));
                     }
                 }
                 
@@ -778,9 +798,23 @@ namespace vl {
                 {
                     GenerateFormatData();
                     
-                    vint line = GetLineIndexFromY(point.y);
-                    vint caret = GetCaretFromXWithLine(point.x, line);
-                    return caret;
+                    CGFloat partialFraction;
+                    NSUInteger charIndex = [layoutManager characterIndexForPoint:NSMakePoint(point.x, point.y) inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&partialFraction];
+                    if(partialFraction > 0.5f)
+                    {
+                        NSUInteger nextIndex = charIndex + 1;
+                        if(nextIndex > paragraphText.Length())
+                            return charIndex;
+                        else if(nextIndex == paragraphText.Length())
+                            return nextIndex;
+                        
+                        const BoundingMetrics& metrics = glyphBoundingRects[charBoundingMetricsMap[nextIndex]];
+                        if(metrics.boundingRect.Top() > point.y)
+                            return charIndex;
+                        return nextIndex;
+                    }
+                    else
+                        return charIndex;
                 }
                 
                 Ptr<IGuiGraphicsElement> GetInlineObjectFromPoint(Point point, vint& start, vint& length)
@@ -794,7 +828,7 @@ namespace vl {
                         
                         if(NSPointInRect(nsp, cell.cellFrame))
                         {
-                            IGuiGraphicsElement* element=0;
+                            IGuiGraphicsElement* element = 0;
                             if(GetMap(graphicsElements, cell.textRange.location, element) && element)
                             {
                                 start = cell.textRange.location;
@@ -852,12 +886,30 @@ namespace vl {
                         glyphBoundingRects.Clear();
                         charBoundingMetricsMap.Resize(glyphRange.length);
                         
-                        for(NSUInteger i=glyphRange.location; i<glyphRange.length+glyphRange.location; ++i)
+                        for(NSUInteger i = glyphRange.location; i < glyphRange.length+glyphRange.location; ++i)
                         {
                             NSRect bounding = [layoutManager boundingRectForGlyphRange:NSMakeRange(i, 1) inTextContainer:textContainer];
                             
                             NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
-
+                            
+                            // retrieve line height for font at index
+                            // since bounding rect may not reflect the line height of the glyph (if there are smaller / larger glyphs within the same line)
+                            CGFloat fontLineHeight = bounding.size.height;
+                            CGFloat ascender = 0;
+                            CGFloat descender = 0;
+                            CGFloat leading = 0;
+                            NSDictionary* attrs = [textStorage attributesAtIndex:charIndex effectiveRange:0];
+                            NSFont* font = [attrs objectForKey:NSFontAttributeName];
+                            if(font)
+                            {
+                                fontLineHeight = [layoutManager defaultLineHeightForFont:font];
+                                ascender = [font ascender];
+                                descender = [font descender];
+                            }
+                            
+                            CGFloat baselineOffset = [[layoutManager typesetter] baselineOffsetInLayoutManager:layoutManager glyphIndex:i];
+                            
+                            
                             if(bounding.size.width > 0)
                             {
                                 IGuiGraphicsElement* element = 0;
@@ -876,8 +928,17 @@ namespace vl {
                                 }
                                 
                                 assert(cell ? cell.textRange.location == i : true);
+                                
+                                float yOff = 0;
+                                if(bounding.size.height - fontLineHeight != 0)
+                                {
+                                    yOff = bounding.size.height - baselineOffset - descender - fontLineHeight + 1;
+                                }
+                                
                                 glyphBoundingRects.Add(charIndex, BoundingMetrics(i,
                                                                                   cell ? cell.textRange.length : 1,
+                                                                                  fontLineHeight,
+                                                                                  yOff,
                                                                                   Rect(bounding.origin.x,
                                                                                        bounding.origin.y,
                                                                                        bounding.size.width + bounding.origin.x,
@@ -886,7 +947,7 @@ namespace vl {
                                 
                             }
                             
-                      //      printf("%d/%d: %f %f %f %f\n", charIndex, paragraphText.Length(), bounding.origin.x, bounding.origin.y, bounding.size.width, bounding.size.height);
+                           // printf("baselineOffset %f accent %f lineHeight %f leading %f\n", baselineOffset, accent, fontLineHeight, leading);
                         }
                         
                         NSRange lineFragmentRange;
@@ -905,6 +966,8 @@ namespace vl {
                             
                             metrics.push_back(BoundingMetrics(lineFragmentRange.location,
                                                               lineFragmentRange.length,
+                                                              lineFragmentRect.size.height,
+                                                              0,
                                                               Rect(lineFragmentRect.origin.x,
                                                                    lineFragmentRect.origin.y,
                                                                    lineFragmentRect.size.width + lineFragmentRect.origin.x,
@@ -949,15 +1012,44 @@ namespace vl {
                     if(lineIndex == -1) return -1;
                     
                     const BoundingMetrics& metrics = lineFragments[lineIndex];
-                    for(vint i=metrics.textPosition; i<metrics.textPosition+metrics.textLength; ++i)
+                    vint lineStart = metrics.textPosition;
+                    vint lineEnd = metrics.textPosition + metrics.textLength;
+                    
+                    float minLineX = 0;
+                    float maxLineX = 0;
+                    
+                    for(vint i = lineStart; i < lineEnd; )
                     {
                         NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
-                        
+
                         const BoundingMetrics& charMetrics = glyphBoundingRects[charBoundingMetricsMap[charIndex]];
-                        if(charMetrics.boundingRect.Left() >= x)
-                            return charIndex;
+
+                        float minX = charMetrics.boundingRect.Left();
+                        float maxX = minX + charMetrics.boundingRect.Width();
+                        
+                        if(minLineX > minX) minLineX = minX;
+                        if(maxLineX < maxX) maxLineX = maxX;
+                        
+                        if(minX <= x && x < maxX)
+                        {
+                            // todo, check NSGlyphAttributeBidiLevel for layout direction
+                            float d1 = x-minX;
+                            float d2 = maxX-x;
+                            if(d1 <= d2)
+                            {
+                                return i;
+                            }
+                            else
+                            {
+                                return i + metrics.textLength;
+                            }
+                        }
+                        i += metrics.textLength;
                     }
-                    return -1;
+                    
+                    if(x < minLineX) return lineStart;
+                    if(x >= maxLineX) return lineEnd;
+                    return lineStart;
                 }
                 
                 void GetLineIndexFromTextPos(vint textPos, vint& frontLineIndex, vint& backLineIndex)
@@ -1003,6 +1095,7 @@ namespace vl {
                     }
                 }
                 
+                // copy pasta!
                  template<typename T>
                  void CutMap(Dictionary<TextRange, T>& map, vint start, vint length)
                  {

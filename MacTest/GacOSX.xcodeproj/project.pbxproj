@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		880702A01A4AC4F10006D2DB /* document_editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8807029F1A4AC4F10006D2DB /* document_editor.cpp */; };
+		880702A21A4AC5310006D2DB /* document_editor_initialization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 880702A11A4AC5310006D2DB /* document_editor_initialization.cpp */; };
 		884BB0121A304C04007DF242 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 884BB0111A304C04007DF242 /* Info.plist */; };
 		884BB0141A304C0A007DF242 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BB0131A304C0A007DF242 /* main.cpp */; };
 		884BC1591A304D10007DF242 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1581A304D10007DF242 /* Cocoa.framework */; };
@@ -235,6 +237,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8807029E1A4AC4E10006D2DB /* document_editor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = document_editor.h; sourceTree = "<group>"; };
+		8807029F1A4AC4F10006D2DB /* document_editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = document_editor.cpp; sourceTree = "<group>"; };
+		880702A11A4AC5310006D2DB /* document_editor_initialization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = document_editor_initialization.cpp; sourceTree = "<group>"; };
 		884BAFEE1A304BA1007DF242 /* GacOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GacOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		884BB0111A304C04007DF242 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		884BB0131A304C0A007DF242 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
@@ -900,6 +905,9 @@
 		88DAE5001A42D6AF004E458F /* editor */ = {
 			isa = PBXGroup;
 			children = (
+				8807029E1A4AC4E10006D2DB /* document_editor.h */,
+				8807029F1A4AC4F10006D2DB /* document_editor.cpp */,
+				880702A11A4AC5310006D2DB /* document_editor_initialization.cpp */,
 			);
 			path = editor;
 			sourceTree = SOURCE_ROOT;
@@ -1168,8 +1176,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				880702A01A4AC4F10006D2DB /* document_editor.cpp in Sources */,
 				88DAE5071A42D767004E458F /* rendering_rawapi.mm in Sources */,
 				884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */,
+				880702A21A4AC5310006D2DB /* document_editor_initialization.cpp in Sources */,
 				88DAE5031A42D6AF004E458F /* datagrid_chemical_elements.cpp in Sources */,
 				88DAE5041A42D6AF004E458F /* datagrid_chemical_elements_cg_renderer.mm in Sources */,
 				884BC1941A329B34007DF242 /* osx_shared.mm in Sources */,
@@ -1479,6 +1489,7 @@
 				888349771A456CCE00B4E711 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		888349FA1A456E0600B4E711 /* Build configuration list for PBXNativeTarget "ControlTemplateWindow" */ = {
 			isa = XCConfigurationList;
@@ -1487,6 +1498,7 @@
 				888349FC1A456E0600B4E711 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

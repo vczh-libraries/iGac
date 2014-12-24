@@ -191,27 +191,41 @@ namespace vl {
                                                     const WString& filter,
                                                     FileDialogOptions options)
             {
+                
+                NSMutableArray* filters = [[NSMutableArray alloc] init];
+                
+                vint prevIndex = 0;
+                vint k = 0;
+                bool allowAnyTypes = false;
+                for(vint i=0;i<filter.Length();i++)
+                {
+                    if(filter[i]==L'|')
+                    {
+                        if(k == 1)
+                        {
+                            NSString* filterStr = WStringToNSString(filter.Sub(prevIndex, i-prevIndex));
+                            NSUInteger dotIndex = [filterStr rangeOfString:@"."].location;
+                            
+                            if([filterStr compare:@"*.*"] == NSOrderedSame)
+                                allowAnyTypes = true;
+                            [filters addObject:[filterStr substringFromIndex:dotIndex+1]];
+                        }
+                        prevIndex = i+1;
+                        k = (k+1) % 2;
+                    }
+                }
+                if(prevIndex != filter.Length())
+                {
+                    NSString* filterStr = WStringToNSString(filter.Sub(prevIndex, filter.Length()-prevIndex));
+                    NSUInteger dotIndex = [filterStr rangeOfString:@"."].location;
+                    
+                    [filters addObject:[filterStr substringFromIndex:dotIndex+1]];
+                }
+                
                 if(dialogType == FileDialogTypes::FileDialogOpen ||
                    dialogType == FileDialogTypes::FileDialogOpenPreview)
                 {
                     NSOpenPanel* op = [NSOpenPanel openPanel];
-                    
-                    NSMutableArray* filters = [[NSMutableArray alloc] init];
-
-                    vint prevIndex = 0;
-                    for(vint i=0;i<filter.Length();i++)
-                    {
-                        if(filter[i]==L'|')
-                        {
-                            [filters addObject:WStringToNSString(filter.Sub(prevIndex, i-prevIndex))];
-                            prevIndex = i+1;
-                        }
-                    }
-                    if(prevIndex != filter.Length())
-                    {
-                        [filters addObject:WStringToNSString(filter.Sub(prevIndex, filter.Length()-prevIndex))];
-
-                    }
                     
                     [op setAllowedFileTypes:filters];
                     [op setDirectoryURL: [NSURL fileURLWithPath:WStringToNSString(initialDirectory)]];
@@ -220,6 +234,7 @@ namespace vl {
                     
                     [op setCanChooseFiles:YES];
                     [op setCanChooseDirectories:YES];
+                    [op setAllowsOtherFileTypes:allowAnyTypes];
                     if(options & FileDialogAllowMultipleSelection)
                     {
                         [op setAllowsMultipleSelection:YES];
@@ -236,7 +251,7 @@ namespace vl {
                         NSArray* urls = [op URLs];
                         for(NSURL* url in urls)
                         {
-                            selectionFileNames.Add(NSStringToWString([url absoluteString]));
+                            selectionFileNames.Add(NSStringToWString(url.path));
                         }
                         
                         return true;
@@ -247,33 +262,16 @@ namespace vl {
                 {
                     NSSavePanel* op = [NSSavePanel savePanel];
                     
-                    NSMutableArray* filters = [[NSMutableArray alloc] init];
-                    
-                    vint prevIndex = 0;
-                    for(vint i=0;i<filter.Length();i++)
-                    {
-                        if(filter[i]==L'|')
-                        {
-                            [filters addObject:WStringToNSString(filter.Sub(prevIndex, i-prevIndex))];
-                            prevIndex = i+1;
-                        }
-                    }
-                    if(prevIndex != filter.Length())
-                    {
-                        [filters addObject:WStringToNSString(filter.Sub(prevIndex, filter.Length()-prevIndex))];
-                        
-                    }
-                    
                     [op setAllowedFileTypes:filters];
                     [op setDirectoryURL: [NSURL fileURLWithPath:WStringToNSString(initialDirectory)]];
                     [op setTitle:WStringToNSString(title)];
                     [op setNameFieldStringValue:WStringToNSString(initialFileName)];
-                    
+                    [op setAllowsOtherFileTypes:allowAnyTypes];
                     
                     if([op runModal] == NSFileHandlingPanelOKButton)
                     {
                         selectionFileNames.Clear();
-                        selectionFileNames.Add(NSStringToWString([[op URL] absoluteString]));
+                        selectionFileNames.Add(NSStringToWString([op URL].path));
                         
                         return true;
                     }

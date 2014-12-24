@@ -88,10 +88,9 @@ namespace vl {
                 [window orderFrontRegardless];
                 
                 [window setAcceptsMouseMovedEvents:YES];
-                [window setLevel:NSMainMenuWindowLevel + 1];
                 
                 // hide on diactivate
-                [window setHidesOnDeactivate:YES];
+                //[window setHidesOnDeactivate:YES];
                 
                 // disable auto restore...
                 // which actually sucks for our usage
@@ -732,7 +731,9 @@ namespace vl {
                 asciiLowerMap[VKEY_OEM_PLUS] = L'=';
                 asciiLowerMap[VKEY_OEM_3] = L'`';
                 asciiLowerMap[VKEY_SPACE] = L' ';
-                asciiLowerMap[VKEY_RETURN] = L'\n';
+                asciiLowerMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiLowerMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiLowerMap[VKEY_BACK] = VKEY_BACK;
                 for(int i=VKEY_A; i<=VKEY_Z; ++i)
                     asciiLowerMap[i] = L'a' + (i-VKEY_A);
                 for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
@@ -760,7 +761,9 @@ namespace vl {
                 asciiUpperMap[VKEY_OEM_PLUS] = L'+';
                 asciiUpperMap[VKEY_OEM_3] = L'~';
                 asciiUpperMap[VKEY_SPACE] = L' ';
-                asciiUpperMap[VKEY_RETURN] = L'\n';
+                asciiUpperMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiUpperMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiUpperMap[VKEY_BACK] = VKEY_BACK;
                 for(int i=VKEY_A; i<=VKEY_Z; ++i)
                     asciiUpperMap[i] = L'A' + (i-VKEY_A);
                 for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
@@ -781,10 +784,11 @@ namespace vl {
                 if(code >= 256)
                     return false;
                 
+                info.code = asciiLowerMap[code];
                 if(info.capslock || info.shift) {
                     info.code = asciiUpperMap[code];
                 }
-                info.code = asciiLowerMap[code];
+                
                 if(info.code != 0)
                     return true;
                 
