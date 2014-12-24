@@ -13,7 +13,7 @@
 
 namespace vl { namespace presentation { namespace osx { class CocoaWindow; } } };
 
-@interface CocoaBaseView: NSView // <NSTextInputClient> // todo IME handling via TextInputClient
+@interface CocoaBaseView: NSView <NSTextInputClient> // todo IME handling via TextInputClient
 {
     NSTrackingArea* trackingArea;
     vl::presentation::osx::CocoaWindow* cocoaWindow;
@@ -23,6 +23,7 @@ namespace vl { namespace presentation { namespace osx { class CocoaWindow; } } }
 
 - (id)initWithCocoaWindow:(vl::presentation::osx::CocoaWindow*)window;
 
+- (void)updateIMEComposition;
 
 @end
 

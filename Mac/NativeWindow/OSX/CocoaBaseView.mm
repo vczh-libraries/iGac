@@ -13,6 +13,12 @@
 #include "ServicesImpl/CocoaResourceService.h"
 
 @implementation CocoaBaseView
+{
+    NSString* textToInsert;
+    BOOL hasMarkedText;
+    NSRange markedRange;
+    NSString* markedText;
+}
 
 - (id)initWithCocoaWindow:(vl::presentation::osx::CocoaWindow *)window
 {
@@ -22,6 +28,9 @@
         [self updateTrackingAreas];
         
         _enableMouseMoveWindow = NO;
+        
+        textToInsert = nil;
+        markedText = nil;
     }
     
     return self;
@@ -71,7 +80,6 @@
     cocoaWindow->InvokeLostFocus();
     return [super resignFirstResponder];
 }
-
 
 - (void)cursorUpdate:(NSEvent *)event
 {
@@ -167,7 +175,24 @@
 
 - (void)keyDown:(NSEvent *)event
 {
-    cocoaWindow->HandleEventInternal(event);
+    BOOL oldHasMarkedText = hasMarkedText;
+    
+    textToInsert = @"";
+    markedText = @"";
+    
+    [self interpretKeyEvents:@[event]];
+    
+    // only send single key event to the generic key handle
+    // when we are not composing text with an IME
+    if(!oldHasMarkedText && !hasMarkedText && textToInsert.length <= 1)
+        cocoaWindow->HandleEventInternal(event);
+    else
+    {
+        if(textToInsert.length >= 1)
+        {
+            cocoaWindow->InsertText(vl::presentation::osx::NSStringToWString(textToInsert));
+        }
+    }
 }
 
 - (void)flagsChanged:(NSEvent *)event
@@ -223,9 +248,85 @@
     [self setNeedsDisplay:YES];
 }
 
-- (BOOL)needsDisplay
+- (void)updateIMEComposition
 {
-    return YES;
+    [[NSTextInputContext currentInputContext] invalidateCharacterCoordinates];
+}
+
+// NSTextInputClient
+
+- (void)insertText:(id)aString replacementRange:(NSRange)replacementRange
+{
+    if([aString isKindOfClass:[NSAttributedString class]])
+        textToInsert = [aString string];
+    else
+        textToInsert = [aString copy];
+}
+
+- (void)doCommandBySelector:(SEL)aSelector
+{
+    
+}
+
+- (void)setMarkedText:(id)aString selectedRange:(NSRange)selectedRange replacementRange:(NSRange)replacementRange
+{
+    hasMarkedText = YES;
+    markedRange = selectedRange;
+    if([aString isKindOfClass:[NSAttributedString class]])
+    {
+        markedText = [aString string];
+    }
+    else
+        markedText = aString;
+}
+
+- (void)unmarkText
+{
+    hasMarkedText = NO;
+    markedRange = NSMakeRange(NSNotFound, 0);
+}
+
+- (NSRange)selectedRange
+{
+    return NSMakeRange(NSNotFound, 0);
+}
+
+- (NSRange)markedRange
+{
+    return markedRange;
+}
+
+- (BOOL)hasMarkedText
+{
+    return hasMarkedText;
+}
+
+- (NSAttributedString *)attributedSubstringForProposedRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange
+{
+    return nil;
+}
+
+- (NSArray*)validAttributesForMarkedText
+{
+    return nil;
+}
+
+- (NSRect)firstRectForCharacterRange:(NSRange)aRange actualRange:(NSRangePointer)actualRange
+{
+    vl::presentation::Point caretPoint = cocoaWindow->GetCaretPoint();
+    vl::presentation::Rect bounds = cocoaWindow->GetBounds();
+    
+    NSWindow* wnd = cocoaWindow->GetNativeContainer()->window;
+    NSScreen* screen = vl::presentation::osx::GetWindowScreen(wnd);
+    
+    return NSMakeRect(caretPoint.x + bounds.Left(),
+                      screen.frame.size.height - (caretPoint.y + bounds.Top() + 30),
+                      16, 16);
+}
+
+- (NSUInteger)characterIndexForPoint:(NSPoint)aPoint
+{
+    return 0;
 }
 
 

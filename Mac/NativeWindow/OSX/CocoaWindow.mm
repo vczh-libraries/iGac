@@ -14,6 +14,8 @@
 // _NSGetProgname
 #import <crt_externs.h>
 
+#import "CocoaBaseView.h"
+
 #include "CocoaHelper.h"
 #include "ServicesImpl/CocoaResourceService.h"
 
@@ -200,8 +202,9 @@ namespace vl {
             void CocoaWindow::SetCaretPoint(Point point)
             {
                 caretPoint = point;
-                // todo
                 
+                if(nativeContainer->window.contentView)
+                    [(CocoaBaseView*)nativeContainer->window.contentView updateIMEComposition];
             }
 
             INativeWindow* CocoaWindow::GetParent() 
@@ -592,6 +595,9 @@ namespace vl {
             
             void CocoaWindow::InvokeMoved()
             {
+                if(nativeContainer->window.contentView)
+                    [(CocoaBaseView*)nativeContainer->window.contentView updateIMEComposition];
+                
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->Moved();

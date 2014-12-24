@@ -327,6 +327,7 @@ namespace vl {
                 while(!s && [window parentWindow])
                 {
                     s = [[window parentWindow] screen];
+                    window = [window parentWindow];
                 }
                 if(!s)
                     s = [NSScreen mainScreen];
