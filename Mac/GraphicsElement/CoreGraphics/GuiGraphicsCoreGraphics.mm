@@ -15,7 +15,11 @@
 #include "../../NativeWindow/OSX/CocoaNativeController.h"
 #include "../../NativeWindow/OSX/CocoaBaseView.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
@@ -34,10 +38,15 @@ using namespace vl::presentation::osx;
 
 inline CGContextRef GetCurrentCGContext()
 {
+#ifdef GAC_OS_OSX
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 101000
     return [[NSGraphicsContext currentContext] CGContext];
 #else
     return (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+#endif
+    
+#else
+    return UIGraphicsGetCurrentContext();
 #endif
 }
 
@@ -79,12 +88,25 @@ inline CGContextRef GetCurrentCGContext()
     }
 }
 
+#ifdef GAC_OS_OSX
 - (void)drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = GetCurrentCGContext();
     
     CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
+#else
+- (void)drawRect:(CGRect)dirtyRect
+{
+    if(!_drawingLayer)
+    {
+        [self resize:self.frame.size];
+    }
+    CGContextRef context = GetCurrentCGContext();
+    
+    CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
+}
+#endif
 
 - (CGContextRef)getLayerContext
 {
@@ -92,6 +114,18 @@ inline CGContextRef GetCurrentCGContext()
 }
 
 @end
+
+#ifdef GAC_OS_IOS
+
+@interface CoreGraphicsViewController: UIViewController
+
+@end
+
+@implementation CoreGraphicsViewController
+
+@end
+
+#endif
 
 namespace vl {
     
@@ -124,6 +158,7 @@ namespace vl {
                 
                 static Ptr<CoreTextFontPackage> CreateCoreTextFontPackage(const FontProperties& font)
                 {
+#ifdef GAC_OS_OSX
                     NSFontManager* fontManager = [NSFontManager sharedFontManager];
                     
                     NSFontTraitMask traitMask = 0;
@@ -131,6 +166,7 @@ namespace vl {
                         traitMask |= NSBoldFontMask;
                     if(font.italic)
                         traitMask |= NSItalicFontMask;
+      
                     
                     Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
                     
@@ -148,7 +184,6 @@ namespace vl {
                                                                   weight:0
                                                                     size:font.size];
                     }
-                    
                     if(!coreTextFont->font)
                     {
                         throw FontNotFoundException(L"Font " + font.fontFamily + L" cannot be found.");
@@ -166,6 +201,50 @@ namespace vl {
                     {
                         [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
                     }
+
+                    
+#else
+                    UIFontDescriptorSymbolicTraits traitMask = 0;
+                    if(font.bold)
+                        traitMask |= UIFontDescriptorTraitBold;
+                    if(font.italic)
+                        traitMask |= UIFontDescriptorTraitItalic;
+                    
+                    
+                    Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
+                    
+                    UIFontDescriptor* descriptor = [[[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: WStringToNSString(font.fontFamily)}] fontDescriptorWithSymbolicTraits:traitMask];
+                                                                                                
+                    coreTextFont->font = [UIFont fontWithDescriptor:descriptor size:font.size];
+                    
+                    // this is just a pretty naive fall back here
+                    // but its safe to assume that this is availabe in every OS X
+                    if(!coreTextFont->font)
+                    {
+                        
+                        descriptor = [[[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: GAC_OSX_DEFAULT_FONT_FAMILY_NAME}]  fontDescriptorWithSymbolicTraits:traitMask];
+                        coreTextFont->font = [UIFont fontWithDescriptor:descriptor size:font.size];
+
+                    }
+                    if(!coreTextFont->font)
+                    {
+                        throw FontNotFoundException(L"Font " + font.fontFamily + L" cannot be found.");
+                    }
+                    
+                    coreTextFont->attributes = [NSMutableDictionary dictionaryWithDictionary:@{ NSFontAttributeName: coreTextFont->font }];
+                    
+                    if(font.underline)
+                    {
+                        [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSUnderlineStyleAttributeName];
+                    }
+                    
+                    
+                    if(font.strikeline)
+                    {
+                        [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
+                    }
+                    
+#endif
                     
                     return coreTextFont;
                 }
@@ -278,6 +357,7 @@ namespace vl {
             {
             protected:
                 CoreGraphicsView*       nativeView;
+                
                 List<Rect>              clippers;
                 vint                    clipperCoverWholeTargetCounter;
                 INativeWindow*          window;
@@ -290,36 +370,49 @@ namespace vl {
                 {
                     nativeView = GetCoreGraphicsView(window);
                     
+#ifdef GAC_OS_OSX
                     [GetNSNativeContainer(window)->window setContentView:nativeView];
+#endif
                 }
                 
                 ~CoreGraphicsRenderTarget()
                 {
+#ifdef GAC_OS_OSX
                     [[nativeView window] setContentView:nil];
+#else
+                    [nativeView removeFromSuperview];
+#endif
                 }
                 
                 void StartRendering()
                 {
                     SetCurrentRenderTarget(this);
                     
+#ifdef GAC_OS_OSX
                     [NSGraphicsContext saveGraphicsState];
                     
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:(CGContextRef)GetCGContext()
                                                                                                     flipped:true]];
                     
+#else
+                    
+                    UIGraphicsPushContext(GetCGContext());
+                    
+#endif
+                    
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if(!context)
                         return;
                     
-                    CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
+                    CGContextSetRGBFillColor(context, 1, 0, 0, 1);
                     CGContextFillRect(context, [nativeView frame]);
                     
                     CGContextSaveGState(context);
                     // flip the context, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
-                    // just putting it here for now
-                    CGContextScaleCTM(context, 1.0, -1.0);
-                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height);
+                   // // just putting it here for now
+                   // CGContextScaleCTM(context, 1.0, -1.0);
+                   // CGContextTranslateCTM(context, 0, -nativeView.frame.size.height);
                 }
                 
                 bool StopRendering()
@@ -329,7 +422,11 @@ namespace vl {
                         return false;
                     
                     CGContextRestoreGState(context);
+#ifdef GAC_OS_OSX
                     [NSGraphicsContext restoreGraphicsState];
+#else
+                    UIGraphicsPopContext();
+#endif
                     SetCurrentRenderTarget(0);
                     // todo succeed / not
                     return true;
@@ -533,6 +630,15 @@ namespace vl {
                     window(_window)
                 {
                     nativeView = [[CoreGraphicsView alloc] initWithCocoaWindow:dynamic_cast<CocoaWindow*>(_window)];
+                    [nativeView setFrame:[dynamic_cast<CocoaWindow*>(_window)->GetNativeContainer()->window frame]];
+#ifdef GAC_OS_IOS
+                    [GetNSNativeContainer(window)->window addSubview:nativeView];
+                    [GetNSNativeContainer(window)->window layoutSubviews];
+                    
+                //    [GetNSNativeContainer(window)->window setRootViewController:nativeViewController];
+                    
+                    [GetNSNativeContainer(window)->window performSelector:@selector(setContentView:) withObject:nativeView afterDelay:0];
+#endif
                 }
                 
                 void RebuildLayer(Size size)

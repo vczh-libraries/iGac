@@ -9,14 +9,37 @@
 #include "CocoaDialogService.h"
 #include "../CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
+
+#ifdef GAC_OS_IOS
+
+@interface AlertDelegate: NSObject<UIAlertViewDelegate>
+
+@property (nonatomic) NSInteger buttonIndex;
+
+@end
+
+@implementation AlertDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    _buttonIndex = buttonIndex;
+}
+
+@end
+
+#endif
 
 namespace vl {
     
     namespace presentation {
         
         namespace osx {
-            
+       
             INativeDialogService::MessageBoxButtonsOutput CocoaDialogService::ShowMessageBox(INativeWindow* window,
                                                                                              const WString& text,
                                                                                              const WString& title,
@@ -25,6 +48,8 @@ namespace vl {
                                                                                              MessageBoxIcons icon,
                                                                                              MessageBoxModalOptions modal)
             {
+                
+#ifdef GAC_OS_OSX
                 CFStringRef button1 = CFSTR("OK"), button2 = nil, button3 = nil;
                 switch(buttons)
                 {
@@ -155,6 +180,90 @@ namespace vl {
                         break;
                     }
                 }
+                
+#else
+                NSString* button1 = @"OK", *button2 = nil, *button3 = nil;
+                switch(buttons)
+                {
+                    case DisplayOK: break;
+                    case DisplayOKCancel: button2 = @("Cancel"); break;
+                    case DisplayAbortRetryIgnore: button1 = @("Abort"); button2 = @("Retry"); button3 = @("Ignore"); break;
+                    case DisplayCancelTryAgainContinue: button1 = @("Cancel"); button2 = @("Try Again"); button3 = @("Continue"); break;
+                    case DisplayRetryCancel: button1 = @("Retry"); button2 = @("Cancel"); break;
+                    case DisplayYesNo: button1 = @("Yes"); button2 = @("No"); break;
+                    case DisplayYesNoCancel: button1 = @("Yes"); button2 = @("No"); button3 = @("Cancel"); break;
+                }
+                
+                AlertDelegate* delegate = [[AlertDelegate alloc] init];
+                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:WStringToNSString(title)
+                                                                message:WStringToNSString(text)
+                                                               delegate:delegate
+                                                      cancelButtonTitle:button2
+                                                      otherButtonTitles:button3, nil];
+                
+                [alert show];
+                
+                switch(delegate.buttonIndex)
+                {
+                    case 0:
+                    {
+                        switch(buttons)
+                        {
+                            case DisplayOK:
+                            case DisplayOKCancel:
+                                return SelectOK;
+                            case DisplayAbortRetryIgnore:
+                                return SelectAbort;
+                            case DisplayCancelTryAgainContinue:
+                                return SelectCancel;
+                            case DisplayRetryCancel:
+                                return SelectRetry;
+                            case DisplayYesNo:
+                            case DisplayYesNoCancel:
+                                return SelectYes;
+                        }
+                        break;
+                    }
+                    case 1:
+                    {
+                        switch(buttons)
+                        {
+                            case DisplayOK:
+                            case DisplayOKCancel:
+                                return SelectCancel;
+                            case DisplayAbortRetryIgnore:
+                                return SelectRetry;
+                            case DisplayCancelTryAgainContinue:
+                                return SelectTryAgain;
+                            case DisplayRetryCancel:
+                                return SelectCancel;
+                            case DisplayYesNo:
+                            case DisplayYesNoCancel:
+                                return SelectNo;
+                        }
+                        break;
+                    }
+                    case 2:
+                    {
+                        switch(buttons)
+                        {
+                            case DisplayOK:
+                            case DisplayOKCancel:
+                                return SelectOK;
+                            case DisplayAbortRetryIgnore:
+                                return SelectAbort;
+                            case DisplayCancelTryAgainContinue:
+                                return SelectCancel;
+                            case DisplayRetryCancel:
+                                return SelectRetry;
+                            case DisplayYesNo:
+                            case DisplayYesNoCancel:
+                                return SelectYes;
+                        }
+                        break;
+                    }
+                }
+#endif
                 return SelectCancel;
             }
             
@@ -191,7 +300,8 @@ namespace vl {
                                                     const WString& filter,
                                                     FileDialogOptions options)
             {
-                
+             
+#ifdef GAC_OS_OSX
                 NSMutableArray* filters = [[NSMutableArray alloc] init];
                 
                 vint prevIndex = 0;
@@ -277,6 +387,12 @@ namespace vl {
                     }
                     return false;
                 }
+                
+#else
+                
+                return false;
+                
+#endif
             }
             
         }

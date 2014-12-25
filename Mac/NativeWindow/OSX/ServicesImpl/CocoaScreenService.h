@@ -10,8 +10,13 @@
 #define __GAC_OSX_SCREEN_SERVICE_H__
 
 #include "GacUI.h"
+#include "../CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 namespace vl {
     
@@ -24,11 +29,17 @@ namespace vl {
                 friend class CocoaScreenService;
                 
             protected:
+#ifdef GAC_OS_OSX
                 NSScreen*    screen;
-                
+#else
+                UIScreen*    screen;
+#endif
             public:
+#ifdef GAC_OS_OSX
                 CocoaScreen(NSScreen* screen);
-                
+#else
+                CocoaScreen(UIScreen* screen);
+#endif
                 Rect        GetBounds() override;
                 Rect        GetClientBounds() override;
                 WString     GetName() override;

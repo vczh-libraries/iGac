@@ -12,8 +12,13 @@
 
 #import <sys/sysctl.h>
 #import <Foundation/Foundation.h>
-#import <Cocoa/Cocoa.h>
 
+#endif
+
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
+#import <Cocoa/Cocoa.h>
 #endif
 
 namespace vl {
@@ -46,18 +51,26 @@ namespace vl {
             
             unsigned int GetMainScreenWidth()
             {
+#ifdef GAC_OS_OSX
                 CGDisplayModeRef cgmode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
                 unsigned int result = (unsigned int)CGDisplayModeGetWidth(cgmode);
                 CGDisplayModeRelease(cgmode);
                 return result;
+#else
+                return [[UIScreen mainScreen] bounds].size.width;
+#endif
             }
             
             unsigned int GetMainScreenHeight()
             {
+#ifdef GAC_OS_OSX
                 CGDisplayModeRef cgmode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
                 unsigned int result = (unsigned int)CGDisplayModeGetHeight(cgmode);
                 CGDisplayModeRelease(cgmode);
                 return result;
+#else
+                return [[UIScreen mainScreen] bounds].size.height;
+#endif
             }
             
             NSString* WStringToNSString(const WString& str)
@@ -342,8 +355,21 @@ namespace vl {
                 return s.frame.size.height - y;
             }
 
-#endif
+#else
+      
+            Rect FlipRect(UIWindow* window, Rect rect)
+            {
+                return Rect(rect.x1,
+                            [[UIScreen mainScreen] bounds].size.height - (rect.Top() + rect.Height()),
+                            rect.x2,
+                            [[UIScreen mainScreen] bounds].size.height - (rect.Bottom() - rect.Height()));
+            }
             
+            CGFloat FlipY(UIWindow* window, CGFloat y)
+            {
+                return [UIScreen mainScreen].bounds.size.height - y;
+            }
+#endif
         
 
         }

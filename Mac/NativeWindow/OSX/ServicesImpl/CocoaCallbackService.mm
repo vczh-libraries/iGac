@@ -50,6 +50,8 @@ namespace vl {
                     return false;
                 }
             }
+          
+#ifdef GAC_OS_OSX
             
             void CocoaCallbackService::InvokeMouseHook(CGEventType type, CGEventRef event)
             {
@@ -99,7 +101,8 @@ namespace vl {
                     }
                 }
             }
-    
+#endif
+            
             void CocoaCallbackService::InvokeGlobalTimer()
             {
                 for(vint i=0;i<listeners.Count();i++)

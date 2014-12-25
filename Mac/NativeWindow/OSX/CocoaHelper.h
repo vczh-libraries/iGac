@@ -26,6 +26,7 @@
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1 || TARGET_IPHONE_SIMULATOR == 1
 
 #define GAC_OS_IOS
+#import <UIKit/UIKit.h>
 
 #endif
 
@@ -71,8 +72,17 @@ namespace vl {
             NSScreen* GetWindowScreen(NSWindow* window);
             CGFloat FlipY(NSWindow* window, CGFloat y);
             
-#endif
+#else
             
+            Rect FlipRect(UIWindow* window, Rect rect);
+            CGFloat FlipY(UIWindow* window, CGFloat y);
+
+            struct NSContainer
+            {
+                UIView* window;
+                UIViewController* controller;
+            };
+#endif
             
             
         }

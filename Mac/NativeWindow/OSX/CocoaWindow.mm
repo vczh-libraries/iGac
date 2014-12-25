@@ -7,8 +7,13 @@
 //
 
 #include "CocoaWindow.h"
+#include "CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 #import <Foundation/Foundation.h>
 
 // _NSGetProgname
@@ -16,10 +21,11 @@
 
 #import "CocoaBaseView.h"
 
-#include "CocoaHelper.h"
 #include "ServicesImpl/CocoaResourceService.h"
 
 using namespace vl::presentation;
+
+#ifdef GAC_OS_OSX
 
 @interface CocoaWindowDelegate : NSObject<NSWindowDelegate>
 
@@ -37,11 +43,23 @@ using namespace vl::presentation;
 
 @end
 
+#else
+
+@interface CocoaNSWindow : UIView
+
+@property (nonatomic, retain) UIView* contentView;
+
+@end
+
+#endif
+
 namespace vl {
     
     namespace presentation {
         
         namespace osx {
+            
+#ifdef GAC_OS_OSX
             
             CocoaWindow::CocoaWindow():
                 nativeContainer(0),
@@ -1369,12 +1387,678 @@ namespace vl {
                 }
             }
             
+#else
+      
+            CocoaWindow::CocoaWindow():
+            nativeContainer(0),
+            parentWindow(0),
+            alwaysPassFocusToParent(false),
+            mouseLastX(0),
+            mouseLastY(0),
+            mouseDownX(0),
+            mouseDownY(0),
+            mouseHoving(false),
+            graphicsHandler(0),
+            customFrameMode(false),
+            supressingAlt(false),
+            enabled(false),
+            capturing(false),
+            resizing(false),
+            moving(false),
+            opened(false),
+            resizingBorder(INativeWindowListener::NoDecision)
+            {
+                CreateWindow();
+                
+                InitKeyNameMappings();
+            }
+            
+            CocoaWindow::~CocoaWindow()
+            {
+                if(nativeContainer)
+                {
+                    delete nativeContainer;
+                }
+            }
+            
+            void CocoaWindow::CreateWindow()
+            {
+                
+                CocoaNSWindow* window = [[CocoaNSWindow alloc] init];
+                UIViewController* controller = [[UIViewController alloc] init];
+                [controller setView:window];
+                
+                nativeContainer = new NSContainer();
+                nativeContainer->window = window;
+                nativeContainer->controller = controller;
+                
+                currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
+                
+                
+            }
+            
+            Rect CocoaWindow::GetBounds()
+            {
+                CGRect nsbounds = [nativeContainer->window frame];
+                
+                return Rect(nsbounds.origin.x,
+                            nsbounds.origin.y,
+                            nsbounds.size.width + nsbounds.origin.x,
+                            nsbounds.size.height + nsbounds.origin.y);
+            }
+            
+            void CocoaWindow::SetBounds(const Rect& bounds)
+            {
+                Rect newBounds = bounds;
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moving(newBounds, true);
+                }
+                CGRect nsbounds = CGRectMake(newBounds.Left(),
+                                             newBounds.Top(),
+                                             newBounds.Width(),
+                                             newBounds.Height());
+                
+                [nativeContainer->window setFrame:nsbounds];
+                for(UIView* subView in nativeContainer->window.subviews)
+                {
+                    [subView setFrame:nativeContainer->window.bounds];
+                }
+                
+                previousBounds = GetBounds();
+            }
+            
+            Size CocoaWindow::GetClientSize()
+            {
+                return GetClientBoundsInScreen().GetSize();
+            }
+            
+            void CocoaWindow::SetClientSize(Size size)
+            {
+                Rect bounds = GetBounds();
+                Rect newBounds = Rect(bounds.Left(), bounds.Top(), bounds.Left()+size.x, bounds.Top()+size.y);
+                
+                this->SetBounds(newBounds);
+            }
+            
+            Rect CocoaWindow::GetClientBoundsInScreen()
+            {
+                CGRect contentFrame = [nativeContainer->window frame];
+                
+                return Rect(contentFrame.origin.x,
+                            contentFrame.origin.y,
+                            contentFrame.size.width + contentFrame.origin.x,
+                            contentFrame.size.height + contentFrame.origin.y);
+            }
+            
+            WString CocoaWindow::GetTitle()
+            {
+                return L"";
+            }
+            
+            void CocoaWindow::SetTitle(WString title)
+            {
+                
+            }
+            
+            INativeCursor* CocoaWindow::GetWindowCursor()
+            {
+                return currentCursor;
+            }
+            
+            void CocoaWindow::SetWindowCursor(INativeCursor* cursor)
+            {
+                currentCursor = cursor;
+                
+                dynamic_cast<CocoaCursor*>(cursor)->Set();
+            }
+            
+            Point CocoaWindow::GetCaretPoint()
+            {
+                return caretPoint;
+            }
+            
+            void CocoaWindow::SetCaretPoint(Point point)
+            {
+                caretPoint = point;
+            }
+            
+            INativeWindow* CocoaWindow::GetParent()
+            {
+                return parentWindow;
+            }
+            
+            void CocoaWindow::SetParent(INativeWindow* parent)
+            {
+                CocoaWindow* cocoaParent = dynamic_cast<CocoaWindow*>(parent);
+                
+                parentWindow = cocoaParent;
+            }
+            
+            bool CocoaWindow::GetAlwaysPassFocusToParent()
+            {
+                return alwaysPassFocusToParent;
+            }
+            
+            void CocoaWindow::SetAlwaysPassFocusToParent(bool value)
+            {
+                alwaysPassFocusToParent = value;
+            }
+            
+            void CocoaWindow::EnableCustomFrameMode()
+            {
+                customFrameMode = true;
+            }
+            
+            void CocoaWindow::DisableCustomFrameMode()
+            {
+                customFrameMode = false;
+            }
+            
+            bool CocoaWindow::IsCustomFrameModeEnabled()
+            {
+                return customFrameMode;
+            }
+            
+            INativeWindow::WindowSizeState CocoaWindow::GetSizeState()
+            {
+                return INativeWindow::Restored;
+            }
+            
+            void CocoaWindow::Show()
+            {
+                [nativeContainer->window setHidden:NO];
+                
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                    
+                    NSLog(@"%@", [[UIApplication sharedApplication].windows firstObject]);
+                    UIWindow* wnd = [[UIApplication sharedApplication].windows firstObject];
+                    [wnd.subviews[0] addSubview:nativeContainer->window];
+                }
+            }
+            
+            void CocoaWindow::ShowDeactivated()
+            {
+                [nativeContainer->window setHidden:NO];
+                
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                    
+                    [[[UIApplication sharedApplication].windows firstObject] addSubview:nativeContainer->window];
+                    
+                }
+            }
+            
+            void CocoaWindow::ShowRestored()
+            {
+                // SetBounds -> Show
+                SetBounds(previousBounds);
+            }
+            
+            void CocoaWindow::ShowMaximized()
+            {
+                previousBounds = GetBounds();
+                [nativeContainer->window setFrame:[[UIScreen mainScreen] bounds]];
+                
+                if(!opened)
+                {
+                    InvokeOpened();
+                    opened = true;
+                    
+                    [[[UIApplication sharedApplication].windows firstObject] addSubview:nativeContainer->window];
+                    
+                }
+            }
+            
+            void CocoaWindow::ShowMinimized()
+            {
+                previousBounds = GetBounds();
+            }
+            
+            void CocoaWindow::Hide()
+            {
+                // actually close it as we need to trigger closing / closed events for GuiMenu to work
+                [nativeContainer->window setHidden:YES];
+                opened = false;
+            }
+            
+            bool CocoaWindow::IsVisible()
+            {
+                return ![nativeContainer->window isHidden];
+            }
+            
+            void CocoaWindow::Enable()
+            {
+                // todo
+                enabled = true;
+            }
+            
+            void CocoaWindow::Disable()
+            {
+                // todo
+                enabled = false;
+            }
+            
+            bool CocoaWindow::IsEnabled()
+            {
+                return enabled;
+            }
+            
+            void CocoaWindow::SetFocus()
+            {
+                [nativeContainer->window becomeFirstResponder];
+            }
+            
+            bool CocoaWindow::IsFocused()
+            {
+                return [nativeContainer->window isFirstResponder];
+            }
+            
+            void CocoaWindow::SetActivate()
+            {
+                [nativeContainer->window becomeFirstResponder];
+            }
+            
+            bool CocoaWindow::IsActivated()
+            {
+                return [nativeContainer->window isFirstResponder];
+            }
+            
+            void CocoaWindow::ShowInTaskBar()
+            {
+                // not configurable at runtime
+            }
+            
+            void CocoaWindow::HideInTaskBar()
+            {
+                // not configurable at runtime
+            }
+            
+            bool CocoaWindow::IsAppearedInTaskBar()
+            {
+                return true;
+            }
+            
+            void CocoaWindow::EnableActivate()
+            {
+                // not configurable
+            }
+            
+            void CocoaWindow::DisableActivate()
+            {
+                // not configurable
+            }
+            
+            bool CocoaWindow::IsEnabledActivate()
+            {
+                return true;
+            }
+            
+            bool CocoaWindow::RequireCapture()
+            {
+                // todo
+                capturing = true;
+                return true;
+            }
+            
+            bool CocoaWindow::ReleaseCapture()
+            {
+                // todo
+                capturing = false;
+                return true;
+            }
+            
+            bool CocoaWindow::IsCapturing()
+            {
+                return capturing;
+            }
+            
+            bool CocoaWindow::GetMaximizedBox()
+            {
+                return false;
+            }
+            
+            void CocoaWindow::SetMaximizedBox(bool visible)
+            {
+                
+            }
+            
+            bool CocoaWindow::GetMinimizedBox()
+            {
+                return false;
+            }
+            
+            void CocoaWindow::SetMinimizedBox(bool visible)
+            {
+                
+            }
+            
+            bool CocoaWindow::GetBorder()
+            {
+                return false;
+            }
+            
+            void CocoaWindow::SetBorder(bool visible)
+            {
+                
+            }
+            
+            bool CocoaWindow::GetSizeBox()
+            {
+                return false;
+            }
+            
+            void CocoaWindow::SetSizeBox(bool visible)
+            {
+                
+            }
+            
+            bool CocoaWindow::GetIconVisible()
+            {
+                // no such thing
+                return false;
+            }
+            
+            void CocoaWindow::SetIconVisible(bool visible)
+            {
+                (void)visible;
+            }
+            
+            bool CocoaWindow::GetTitleBar()
+            {
+                return GetBorder();
+            }
+            
+            void CocoaWindow::SetTitleBar(bool visible)
+            {
+                SetBorder(visible);
+            }
+            
+            bool CocoaWindow::GetTopMost()
+            {
+                // todo
+                return false;
+            }
+            
+            void CocoaWindow::SetTopMost(bool topmost)
+            {
+                [nativeContainer->window.window.rootViewController.view bringSubviewToFront:nativeContainer->window];
+            }
+            
+            void CocoaWindow::SupressAlt()
+            {
+                
+            }
+            
+            bool CocoaWindow::InstallListener(INativeWindowListener* listener)
+            {
+                if(listeners.Contains(listener))
+                {
+                    return false;
+                }
+                else
+                {
+                    listeners.Add(listener);
+                    return true;
+                }
+            }
+            
+            bool CocoaWindow::UninstallListener(INativeWindowListener* listener)
+            {
+                if(listeners.Contains(listener))
+                {
+                    listeners.Remove(listener);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+            void CocoaWindow::RedrawContent()
+            {
+                CocoaNSWindow* window = (CocoaNSWindow*)nativeContainer->window;
+                [window.contentView setNeedsDisplay];
+                
+            }
+            
+            NSContainer* CocoaWindow::GetNativeContainer() const
+            {
+                return nativeContainer;
+            }
+            
+            void CocoaWindow::SetGraphicsHandler(Interface* handler)
+            {
+                graphicsHandler = handler;
+            }
+            
+            Interface* CocoaWindow::GetGraphicsHandler() const
+            {
+                return graphicsHandler;
+            }
+            
+            void CocoaWindow::InvokeMoved()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moved();
+                }
+            }
+            
+            void CocoaWindow::InvokeOpened()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Opened();
+                }
+            }
+            
+            void CocoaWindow::InvokeClosed()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Closed();
+                }
+            }
+            
+            bool CocoaWindow::InvokeClosing()
+            {
+                bool cancel = false;
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Closing(cancel);
+                }
+                return cancel;
+            }
+            
+            void CocoaWindow::InvokeAcivate()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Activated();
+                }
+            }
+            
+            void CocoaWindow::InvokeDeactivate()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Deactivated();
+                }
+            }
+            
+            void CocoaWindow::InvokeGotFocus()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->GotFocus();
+                }
+            }
+            
+            void CocoaWindow::InvokeLostFocus()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->LostFocus();
+                }
+            }
+            
+            NSContainer* GetNSNativeContainer(INativeWindow* window)
+            {
+                return (dynamic_cast<CocoaWindow*>(window))->GetNativeContainer();
+            }
+            
+            NativeWindowMouseInfo CreateMouseInfo(CocoaNSWindow* window, UIEvent* event)
+            {
+                NativeWindowMouseInfo info;
+                
+                UITouch* touch = [[event touchesForView:window] anyObject];
+                if(touch)
+                {
+                    CGPoint loc = [touch locationInView:window.contentView];
+                    info.x = loc.x;
+                    info.y = window.contentView.frame.size.height - loc.y;
+                    
+                    
+                    info.left = touch.phase == UITouchPhaseBegan;
+                }
+                
+                info.nonClient = false;
+                
+                return info;
+            }
+            
+            void CocoaWindow::InitKeyNameMappings()
+            {
+                memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
+                memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
+                
+                asciiLowerMap[VKEY_0] = L'0';
+                asciiLowerMap[VKEY_0] = L'1';
+                asciiLowerMap[VKEY_2] = L'2';
+                asciiLowerMap[VKEY_3] = L'3';
+                asciiLowerMap[VKEY_4] = L'4';
+                asciiLowerMap[VKEY_5] = L'5';
+                asciiLowerMap[VKEY_6] = L'6';
+                asciiLowerMap[VKEY_7] = L'7';
+                asciiLowerMap[VKEY_8] = L'8';
+                asciiLowerMap[VKEY_9] = L'9';
+                asciiLowerMap[VKEY_OEM_1] = L';';
+                asciiLowerMap[VKEY_OEM_6] = L'[';
+                asciiLowerMap[VKEY_OEM_4] = L']';
+                asciiLowerMap[VKEY_OEM_7] = L'\'';
+                asciiLowerMap[VKEY_OEM_COMMA] = L',';
+                asciiLowerMap[VKEY_OEM_PERIOD] = L'.';
+                asciiLowerMap[VKEY_OEM_2] = L'/';
+                asciiLowerMap[VKEY_OEM_5] = L'\\';
+                asciiLowerMap[VKEY_OEM_MINUS] = L'-';
+                asciiLowerMap[VKEY_OEM_PLUS] = L'=';
+                asciiLowerMap[VKEY_OEM_3] = L'`';
+                asciiLowerMap[VKEY_SPACE] = L' ';
+                asciiLowerMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiLowerMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiLowerMap[VKEY_BACK] = VKEY_BACK;
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiLowerMap[i] = L'a' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+                
+                asciiUpperMap[VKEY_0] = L')';
+                asciiUpperMap[VKEY_1] = L'!';
+                asciiUpperMap[VKEY_2] = L'@';
+                asciiUpperMap[VKEY_3] = L'#';
+                asciiUpperMap[VKEY_4] = L'$';
+                asciiUpperMap[VKEY_5] = L'%';
+                asciiUpperMap[VKEY_6] = L'^';
+                asciiUpperMap[VKEY_7] = L'&';
+                asciiUpperMap[VKEY_8] = L'*';
+                asciiUpperMap[VKEY_9] = L'(';
+                asciiUpperMap[VKEY_OEM_1] = L':';
+                asciiUpperMap[VKEY_OEM_6] = L'{';
+                asciiUpperMap[VKEY_OEM_4] = L'}';
+                asciiUpperMap[VKEY_OEM_7] = L'\"';
+                asciiUpperMap[VKEY_OEM_COMMA] = L'<';
+                asciiUpperMap[VKEY_OEM_PERIOD] = L'>';
+                asciiUpperMap[VKEY_OEM_2] = L'?';
+                asciiUpperMap[VKEY_OEM_5] = L'|';
+                asciiUpperMap[VKEY_OEM_MINUS] = L'_';
+                asciiUpperMap[VKEY_OEM_PLUS] = L'+';
+                asciiUpperMap[VKEY_OEM_3] = L'~';
+                asciiUpperMap[VKEY_SPACE] = L' ';
+                asciiUpperMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiUpperMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiUpperMap[VKEY_BACK] = VKEY_BACK;
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiUpperMap[i] = L'A' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+            }
+            
+            void CocoaWindow::InsertText(const WString& str)
+            {
+                NativeWindowCharInfo info;
+                
+                for(int i=0; i<str.Length(); ++i)
+                {
+                    info.code = str[i];
+                    
+                    for(int i=0; i<listeners.Count(); ++i)
+                    {
+                        listeners[i]->Char(info);
+                    }
+                }
+            }
+            
+            void CocoaWindow::SetResizingBorder(INativeWindowListener::HitTestResult border)
+            {
+                
+            }
+            
+            void CocoaWindow::HitTestMouseDown(vint x, vint y)
+            {
+                
+            }
+            
+            void CocoaWindow::HitTestMouseMove(vint x, vint y)
+            {
+                
+            }
+            
+            void CocoaWindow::HitTestMouseUp(vint x, vint y)
+            {
+                
+            }
+            
+            void CocoaWindow::MovingDragged()
+            {
+                
+            }
+            
+            void CocoaWindow::ResizingDragged()
+            {
+                
+            }
+            
+            void CocoaWindow::HandleEventInternal(UIEvent* event)
+            {
+                
+            }
+            
+#endif
+            
         }
     }
 }
 
-
 @implementation CocoaNSWindow
+
+#ifdef GAC_OS_OSX
 
 - (BOOL)canBecomeKeyWindow
 {
@@ -1387,8 +2071,11 @@ namespace vl {
     return (self.parentWindow != nil) ? NO : YES;
 }
 
+#endif
 
 @end
+
+#ifdef GAC_OS_OSX
 
 @implementation CocoaWindowDelegate
 {
@@ -1473,3 +2160,5 @@ namespace vl {
 }
 
 @end
+
+#endif

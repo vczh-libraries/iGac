@@ -11,7 +11,11 @@
 #include "../../NativeWindow/OSX/CocoaHelper.h"
 #include "../../NativeWindow/OSX/ServicesImpl/CocoaImageService.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 #import <CoreGraphics/CoreGraphics.h>
 
 namespace vl {
@@ -123,7 +127,11 @@ namespace vl {
             cgGradient(0),
             cgColorSpace(0)
             {
+#ifdef GAC_OS_OSX
                 cgColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+#else
+                cgColorSpace = CGColorSpaceCreateDeviceRGB();
+#endif
             }
             
             GuiGradientBackgroundElementRenderer::~GuiGradientBackgroundElementRenderer()
@@ -290,12 +298,17 @@ namespace vl {
             void GuiSolidLabelElementRenderer::CreateColor()
             {
                 oldColor = element->GetColor();
+#ifdef GAC_OS_OSX
                 [nsAttributes setObject:[NSColor colorWithRed:oldColor.r/255.0f green:oldColor.g/255.0f blue:oldColor.b/255.0f alpha:oldColor.a/255.0f]
                                  forKey:NSForegroundColorAttributeName];
+#else
+                
+#endif
             }
             
             void GuiSolidLabelElementRenderer::UpdateParagraphStyle()
             {
+#ifdef GAC_OS_OSX
                 switch(element->GetHorizontalAlignment())
                 {
                     case Alignment::Left:
@@ -310,6 +323,22 @@ namespace vl {
                         [nsParagraphStyle setAlignment:NSCenterTextAlignment];
                         break;
                 }
+#else
+                switch(element->GetHorizontalAlignment())
+                {
+                    case Alignment::Left:
+                        [nsParagraphStyle setAlignment:NSTextAlignmentLeft];
+                        break;
+                        
+                    case Alignment::Right:
+                        [nsParagraphStyle setAlignment:NSTextAlignmentRight];
+                        break;
+                        
+                    case Alignment::Center:
+                        [nsParagraphStyle setAlignment:NSTextAlignmentCenter];
+                        break;
+                }
+#endif
                 
                 if(element->GetEllipse())
                 {
@@ -323,9 +352,16 @@ namespace vl {
             
             void GuiSolidLabelElementRenderer::UpdateMinSize()
             {
+#ifdef GAC_OS_OSX
                 CGRect rect = [nsText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
                                                 attributes:nsAttributes];
+#else
+                CGRect rect = [nsText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
+                                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                                attributes:nsAttributes
+                                                   context:nil];
+#endif
                 
                 minSize = Size(rect.size.width, rect.size.height);
             }
@@ -387,9 +423,15 @@ namespace vl {
                 
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
+#ifdef GAC_OS_OSX
                     [coreTextFont->font set];
                     [nsText drawAtPoint:NSMakePoint(x, y)
                          withAttributes:nsAttributes];
+                    
+#else
+                    [nsText drawAtPoint:CGPointMake(x, y)
+                         withAttributes:nsAttributes];
+#endif
                 }
                 else
                 {
@@ -460,7 +502,11 @@ namespace vl {
             cgBorderPath(0),
             cgColorSpace(0)
             {
+#ifdef GAC_OS_OSX
                 cgColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+#else
+                cgColorSpace = CGColorSpaceCreateDeviceRGB();
+#endif
             }
             
             GuiPolygonElementRenderer::~GuiPolygonElementRenderer()
@@ -764,12 +810,21 @@ namespace vl {
                             {
                                 Color textColor = color.text;
                                 
+#ifdef GAC_OS_OSX
                                 [nsAttributes setObject:[NSColor colorWithRed:textColor.r/255.0f green:textColor.g/255.0f blue:textColor.b/255.0f alpha:textColor.a/255.0f]
                                                  forKey:NSForegroundColorAttributeName];
                                 
+#else
+                                [nsAttributes setObject:[UIColor colorWithRed:textColor.r/255.0f green:textColor.g/255.0f blue:textColor.b/255.0f alpha:textColor.a/255.0f]
+                                                 forKey:NSForegroundColorAttributeName];
+#endif
                                 NSString* str = passwordChar ? nsPassWordChar : [nsLine substringWithRange:NSMakeRange(column, 1)];
                                 
+#ifdef GAC_OS_OSX
                                 [str drawAtPoint:NSMakePoint(tx, ty) withAttributes:nsAttributes];
+#else
+                                [str drawAtPoint:CGPointMake(tx, ty) withAttributes:nsAttributes];
+#endif
                             }
                             x = x2;
                         }

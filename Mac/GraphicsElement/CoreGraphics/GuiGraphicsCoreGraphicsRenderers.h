@@ -10,8 +10,13 @@
 #define __GAC_OSX_COREGRAPHICS_RENDERER_H__
 
 #include "GuiGraphicsCoreGraphics.h"
+#include "../../NativeWindow/OSX/CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 namespace vl {
     
@@ -24,7 +29,11 @@ namespace vl {
             class CoreTextFontPackage
             {
             public:
+#ifdef GAC_OS_OSX
                 NSFont*                     font;
+#else  
+                UIFont*                     font;
+#endif
                 NSMutableDictionary*        attributes;
             };
             

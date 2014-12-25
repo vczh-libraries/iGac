@@ -10,8 +10,7 @@
 #define __GAC_OSX_COCOA_IMAGE_SERVICE_H__
 
 #include "GacUI.h"
-
-#include <Cocoa/Cocoa.h>
+#include "../CocoaHelper.h"
 
 namespace vl {
     
@@ -46,13 +45,22 @@ namespace vl {
             {
             protected:
                 INativeImageService*                        imageService;
+#ifdef GAC_OS_OSX
                 NSImage*                                    nsImage;
                 NSImageRep*                                 imageRep;
+#else
+                UIImage*                                    nsImage;
+#endif
                 collections::Array<Ptr<CocoaImageFrame>>    frames;
                 
             public:
+#ifdef GAC_OS_OSX
+
                 CocoaImage(INativeImageService* service, NSImage* image);
-                
+#else
+                CocoaImage(INativeImageService* service, UIImage* image);
+
+#endif
                 INativeImageService*		GetImageService() override;
                 FormatType					GetFormat()  override;
                 vint						GetFrameCount()  override;
@@ -69,7 +77,11 @@ namespace vl {
                 Ptr<INativeImage>			CreateImageFromStream(stream::IStream& stream)  override;
                 
                 ////
+#ifdef GAC_OS_OSX
+
                 Ptr<INativeImage>           GetIconForFile(const WString& path, Size iconSize = Size(0, 0));
+#endif
+                
             };
 
             

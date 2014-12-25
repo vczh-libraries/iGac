@@ -25,20 +25,16 @@
     if(self = [super init])
     {
         cocoaWindow = window;
-        [self updateTrackingAreas];
         
-        _enableMouseMoveWindow = NO;
+#ifdef GAC_OS_OSX
+        [self updateTrackingAreas];
+#endif
         
         textToInsert = nil;
         markedText = nil;
     }
     
     return self;
-}
-
-- (BOOL)mouseDownCanMoveWindow
-{
-    return _enableMouseMoveWindow;
 }
 
 - (id)init
@@ -57,6 +53,8 @@
     return YES;
 }
 
+#ifdef GAC_OS_OSX
+
 - (BOOL)acceptsFirstResponder
 {
     if(cocoaWindow->GetParent())
@@ -67,18 +65,6 @@
         return NSPointInRect(viewLocation, [self bounds]);
     }
     return [super acceptsFirstResponder];
-}
-
-- (BOOL)becomeFirstResponder
-{
-    cocoaWindow->InvokeGotFocus();
-    return [super becomeFirstResponder];
-}
-
-- (BOOL)resignFirstResponder
-{
-    cocoaWindow->InvokeLostFocus();
-    return [super resignFirstResponder];
 }
 
 - (void)cursorUpdate:(NSEvent *)event
@@ -329,5 +315,53 @@
     return 0;
 }
 
+#else
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)becomeFirstResponder
+{
+    cocoaWindow->InvokeGotFocus();
+    return [super becomeFirstResponder];
+}
+
+- (BOOL)resignFirstResponder
+{
+    cocoaWindow->InvokeLostFocus();
+    return [super resignFirstResponder];
+}
+
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    
+}
+
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    if(cocoaWindow)
+        cocoaWindow->InvokeMoved();
+}
+
+#endif
 
 @end

@@ -10,7 +10,11 @@
 #include "CocoaPredef.h"
 #include "CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 namespace vl {
     
@@ -18,6 +22,7 @@ namespace vl {
         
         namespace osx {
             
+#ifdef GAC_OS_OSX
             // hack hack hack
             // note this guy may not work in a sandboxed app?
             
@@ -176,6 +181,38 @@ namespace vl {
                 return systemCursorType;
             }
             
+#else
+            
+            CocoaCursor::CocoaCursor(SystemCursorType _type):
+            isSystemCursor(true),
+            systemCursorType(_type)
+            {
+                InitSystemCursors();
+            }
+            
+            void CocoaCursor::InitSystemCursors()
+            {
+                // seems NSCursor won't get properly initialized until applicationDidFinishLaunching happened
+                
+            }
+            
+            bool CocoaCursor::IsSystemCursor()
+            {
+                return isSystemCursor;
+            }
+            
+            void CocoaCursor::Set()
+            {
+                
+            }
+            
+            INativeCursor::SystemCursorType CocoaCursor::GetSystemCursorType()
+            {
+                return systemCursorType;
+            }
+            
+#endif
+            
             CocoaResourceService::CocoaResourceService()
             {
                 {
@@ -186,18 +223,33 @@ namespace vl {
                     }
                 }
                 {
-                    NSFont* userFont = [NSFont userFontOfSize:10];
+#ifdef GAC_OS_OSX
+                    NSFont* userFont = [NSFont userFontOfSize:12];
                     NSFontDescriptor* descriptor = [userFont fontDescriptor];
+                    
+                    NSFontTraitMask traits = [[descriptor.fontAttributes valueForKey:NSFontTraitsAttribute] unsignedIntegerValue];
                     
                     defaultFont.fontFamily = NSStringToWString([descriptor.fontAttributes valueForKey:NSFontFamilyAttribute]);
                     // osx default is 12
                     defaultFont.size = 12;
                     
-                    NSFontTraitMask traits = [[descriptor.fontAttributes valueForKey:NSFontTraitsAttribute] unsignedIntegerValue];
-                    
                     defaultFont.italic = traits & NSItalicFontMask;
                     defaultFont.bold = traits & NSBoldFontMask;
                     
+#else
+                    UIFont* font = [UIFont systemFontOfSize:12];
+                    UIFontDescriptor* descriptor = [font fontDescriptor];
+                    UIFontDescriptorSymbolicTraits traits = descriptor.symbolicTraits;
+                    
+                    
+                    defaultFont.fontFamily = NSStringToWString([descriptor.fontAttributes valueForKey:UIFontDescriptorFamilyAttribute]);
+                    // osx default is 12
+                    defaultFont.size = 12;
+                    
+                    defaultFont.italic = traits & UIFontDescriptorTraitItalic;
+                    defaultFont.bold = traits & UIFontDescriptorTraitBold;
+                    
+#endif
                     // underline is handled by text attribute
                     // not a font attribute
                     defaultFont.underline = false;

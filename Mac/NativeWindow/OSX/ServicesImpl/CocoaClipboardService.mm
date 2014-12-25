@@ -9,7 +9,11 @@
 #include "CocoaClipboardService.h"
 #include "../CocoaHelper.h"
 
+#ifdef GAC_OS_IOS
+#import <UIKit/UIKit.h>
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 namespace vl {
     
@@ -19,16 +23,23 @@ namespace vl {
             
             bool CocoaClipboardService::SetText(const WString& value)
             {
+#ifdef GAC_OS_OSX
                 NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
                 
                 NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
                 [pasteboard declareTypes:types owner:nil];
                 return [pasteboard setString:WStringToNSString(value)
                                      forType:NSStringPboardType];
+#else
+                [UIPasteboard generalPasteboard].string = WStringToNSString(value);
+                return true;
+#endif
             }
             
             WString CocoaClipboardService::GetText()
             {
+#ifdef GAC_OS_OSX
+
                 NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
                 
                 if (![[pasteboard types] containsObject:NSStringPboardType])
@@ -43,12 +54,27 @@ namespace vl {
                 }
                 
                 return NSStringToWString(str);
+                
+#else
+                
+                NSString* str = [UIPasteboard generalPasteboard].string;
+                if(!str)
+                    return L"";
+                
+                return NSStringToWString(str);
+                
+#endif
             }
             
             bool CocoaClipboardService::ContainsText()
             {
+#ifdef GAC_OS_OSX
                 NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
                 return [[pasteboard types] containsObject:NSStringPboardType];
+                
+#else
+                return [UIPasteboard generalPasteboard].string != nil;
+#endif
             }
 
         }

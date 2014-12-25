@@ -10,8 +10,7 @@
 #define __GAC_OSX_RESOURCE_SERVICE_H__
 
 #include "GacUI.h"
-
-@class NSCursor;
+#include "../CocoaHelper.h"
 
 namespace vl {
   
@@ -19,6 +18,7 @@ namespace vl {
         
         namespace osx {
             
+#ifdef GAC_OS_OSX
             class CocoaCursor: public INativeCursor
             {
             protected:
@@ -41,6 +41,26 @@ namespace vl {
                 void                Set();
             };
             
+#else
+            class CocoaCursor: public INativeCursor
+            {
+            protected:
+                bool                isSystemCursor;
+                SystemCursorType    systemCursorType;
+                
+            public:
+                CocoaCursor(SystemCursorType type);
+                
+                ////
+                
+                bool                IsSystemCursor() override;
+                SystemCursorType    GetSystemCursorType() override;
+                
+                ///
+                void                InitSystemCursors();
+                void                Set();
+            };
+#endif
             class CocoaResourceService : public Object, public INativeResourceService
             {
             protected:
@@ -57,7 +77,6 @@ namespace vl {
                 FontProperties          GetDefaultFont() override;
                 void                    SetDefaultFont(const FontProperties& value) override;
             };
-            
         }
     }
 }

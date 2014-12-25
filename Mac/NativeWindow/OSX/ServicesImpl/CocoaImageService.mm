@@ -78,6 +78,7 @@ namespace vl {
                 return cgImage;
             }
             
+#ifdef GAC_OS_OSX
             CocoaImage::CocoaImage(INativeImageService* _service, NSImage* _image):
             imageService(_service),
             nsImage(_image)
@@ -94,6 +95,15 @@ namespace vl {
                 
                 frames.Resize(count);
             }
+#else
+            CocoaImage::CocoaImage(INativeImageService* _service, UIImage* _image):
+            imageService(_service),
+            nsImage(_image)
+            {
+                frames.Resize(nsImage.images != nil ? nsImage.images.count : 1);
+            }
+            
+#endif
             
             INativeImageService* CocoaImage::GetImageService()
             {
@@ -102,12 +112,17 @@ namespace vl {
             
             INativeImage::FormatType CocoaImage::GetFormat()
             {
+#ifdef GAC_OS_OSX
                 if([imageRep isKindOfClass:[NSBitmapImageRep class]])
                 {
                     vint count = (vint)[[(NSBitmapImageRep*)imageRep valueForProperty:NSImageFrameCount] intValue];
                     if(count > 0)
                         return INativeImage::Gif;
                 }
+#else
+                if(nsImage.images != nil)
+                    return INativeImage::Gif;
+#endif
                 return INativeImage::Bmp;
             }
             
@@ -123,6 +138,7 @@ namespace vl {
                     Ptr<CocoaImageFrame>& frame = frames[index];
                     if(!frame)
                     {
+#ifdef GAC_OS_OSX
                         if([imageRep isKindOfClass:[NSBitmapImageRep class]])
                         {
                             NSBitmapImageRep* bitmapRep = (NSBitmapImageRep*)imageRep;
@@ -154,7 +170,12 @@ namespace vl {
                         {
                             frame = new CocoaImageFrame(this, [imageRep CGImageForProposedRect:nil context:nil hints:nil]);
                         }
-                        
+#else
+                        if(nsImage.images != nil)
+                            frame = new CocoaImageFrame(this, [(UIImage*)[nsImage.images objectAtIndex:index] CGImage]);
+#endif
+                        else
+                            frame = new CocoaImageFrame(this, nsImage.CGImage);
                     }
                     return frame.Obj();
                 }
@@ -165,7 +186,11 @@ namespace vl {
 
             Ptr<INativeImage> CocoaImageService::CreateImageFromFile(const WString& path)
             {
+#ifdef GAC_OS_OSX
                 NSImage* image = [[NSImage alloc] initWithContentsOfFile:WStringToNSString(path)];
+#else
+                UIImage* image = [[UIImage alloc] initWithContentsOfFile:WStringToNSString(path)];
+#endif
                 if(image)
                 {
                     return new CocoaImage(this, image);
@@ -176,7 +201,11 @@ namespace vl {
             Ptr<INativeImage> CocoaImageService::CreateImageFromMemory(void* buffer, vint length)
             {
                 NSData* data = [NSData dataWithBytes:buffer length:(NSUInteger)length];
+#ifdef GAC_OS_OSX
                 NSImage* image = [[NSImage alloc] initWithData:data];
+#else
+                UIImage* image = [[UIImage alloc] initWithData:data];
+#endif
                 if(image)
                 {
                     return new CocoaImage(this, image);
@@ -200,6 +229,7 @@ namespace vl {
                 return CreateImageFromMemory(memoryStream.GetInternalBuffer(), (vint)memoryStream.Size());
             }
             
+#ifdef GAC_OS_OSX
             Ptr<INativeImage> CocoaImageService::GetIconForFile(const WString& path, Size iconSize)
             {
                 NSImage* image = [[NSWorkspace sharedWorkspace] iconForFile:WStringToNSString(path)];
@@ -222,6 +252,7 @@ namespace vl {
                 }
                 return nullptr;
             }
+#endif
         }
     }
 }

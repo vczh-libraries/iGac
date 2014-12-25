@@ -19,6 +19,8 @@
 using namespace vl::presentation;
 using namespace vl::presentation::elements_coregraphics;
 
+#ifdef GAC_OS_OSX
+
 @interface GuiElementsTextCell: NSObject<NSTextAttachmentCell>
 {
     NSTextAttachment* attachment;
@@ -127,6 +129,38 @@ using namespace vl::presentation::elements_coregraphics;
 }
 
 @end
+
+#else
+
+@interface GuiElementsTextCell: NSObject
+{
+}
+
+@property (nonatomic, retain) NSTextAttachment* attachment;
+@property (nonatomic) NSRange textRange;
+@property (nonatomic) CGRect cellFrame;
+@property (nonatomic) IGuiGraphicsElement* graphicsElement;
+@property (nonatomic) IGuiGraphicsParagraph::InlineObjectProperties properties;
+
+- (id)initWithGraphicsElement:(IGuiGraphicsElement*)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
+
+@end
+
+@implementation GuiElementsTextCell
+
+- (id)initWithGraphicsElement:(IGuiGraphicsElement*)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
+{
+    if(self = [super init])
+    {
+        _graphicsElement = element;
+        _properties = properties;
+    }
+    return self;
+}
+
+@end
+
+#endif
 
 namespace vl {
     
@@ -246,7 +280,11 @@ namespace vl {
                     textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text)
                                                              attributes:@{NSParagraphStyleAttributeName: paragrahStyle}];
                     
+#ifdef GAC_OS_OSX
                     textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth == -1 ? CGFLOAT_MAX : maxWidth, CGFLOAT_MAX)];
+#else
+                    textContainer = [[NSTextContainer alloc] initWithSize:CGSizeMake(maxWidth == -1 ? CGFLOAT_MAX : maxWidth, CGFLOAT_MAX)];
+#endif
                     layoutManager = [[NSLayoutManager alloc] init];
                     
                     [layoutManager addTextContainer:textContainer];
@@ -300,7 +338,11 @@ namespace vl {
                 void SetMaxWidth(vint value)
                 {
                     maxWidth = value;
+#ifdef GAC_OS_OSX
                     [textContainer setContainerSize:NSMakeSize(value != -1 ? value : CGFLOAT_MAX, CGFLOAT_MAX)];
+#else
+                    [textContainer setSize:CGSizeMake(value != -1 ? value : CGFLOAT_MAX, CGFLOAT_MAX)];
+#endif
                     needFormatData = true;
                 }
                 
@@ -311,6 +353,8 @@ namespace vl {
                 
                 void SetParagraphAlignment(Alignment value)
                 {
+                    
+#ifdef GAC_OS_OSX
                     switch(value)
                     {
                         case Alignment::Left:
@@ -325,6 +369,23 @@ namespace vl {
                             [paragrahStyle setAlignment:NSCenterTextAlignment];
                             break;
                     }
+#else
+                    switch(value)
+                    {
+                        case Alignment::Left:
+                            [paragrahStyle setAlignment:NSTextAlignmentLeft];
+                            break;
+                            
+                        case Alignment::Right:
+                            [paragrahStyle setAlignment:NSTextAlignmentRight];
+                            break;
+                            
+                        case Alignment::Center:
+                            [paragrahStyle setAlignment:NSTextAlignmentCenter];
+                            break;
+                    }
+#endif
+                    
                     textAlignment = value;
                     
                     [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
@@ -350,6 +411,7 @@ namespace vl {
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                     {
+#ifdef GAC_OS_OSX
                         NSFont* font = [attrs objectForKey:NSFontAttributeName];
                         if(font)
                         {
@@ -364,6 +426,28 @@ namespace vl {
                             
                         }
                         
+#else
+                        
+                        UIFont* font = [attrs objectForKey:NSFontAttributeName];
+                        UIFontDescriptor* descriptor;
+                        CGFloat size = 12;
+                        if(font)
+                        {
+                            [textStorage removeAttribute:NSFontAttributeName range:range];
+                            
+                            descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: WStringToNSString(value),
+                                                                                            UIFontDescriptorTraitsAttribute:[NSNumber numberWithInteger:font.fontDescriptor.symbolicTraits ]}];
+                            size = font.fontDescriptor.pointSize;
+                        }
+                        
+                        if(!font)
+                        {
+                            descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: GAC_OSX_DEFAULT_FONT_FAMILY_NAME}];
+                            
+                        }
+                        font = [UIFont fontWithDescriptor:descriptor size:size];
+#endif
+                        
                         [textStorage addAttribute:NSFontAttributeName value:font range:range];
                         needFormatData = true;
                     }];
@@ -377,6 +461,7 @@ namespace vl {
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
+#ifdef GAC_OS_OSX
                          NSFont* font = [attrs objectForKey:NSFontAttributeName];
                          if(font)
                          {
@@ -387,6 +472,27 @@ namespace vl {
                          {
                              font = [[NSFontManager sharedFontManager] fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME traits:0 weight:0 size:value];
                          }
+#else
+                         
+                         UIFont* font = [attrs objectForKey:NSFontAttributeName];
+                         UIFontDescriptor* descriptor;
+                         CGFloat size = value;
+                         if(font)
+                         {
+                             [textStorage removeAttribute:NSFontAttributeName range:range];
+                             
+                             descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: font.familyName,
+                                                                                             UIFontDescriptorTraitsAttribute:[NSNumber numberWithInteger:font.fontDescriptor.symbolicTraits ]}];
+                             size = font.fontDescriptor.pointSize;
+                         }
+                         
+                         if(!font)
+                         {
+                             descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: GAC_OSX_DEFAULT_FONT_FAMILY_NAME}];
+                             
+                         }
+                         font = [UIFont fontWithDescriptor:descriptor size:size];
+#endif
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          needFormatData = true;
                      }];
@@ -400,6 +506,7 @@ namespace vl {
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
+#ifdef GAC_OS_OSX
                          NSFontTraitMask traitMask = 0;
                          if(value & TextStyle::Bold)
                              traitMask |= NSBoldFontMask;
@@ -431,6 +538,35 @@ namespace vl {
                                                                                weight:0
                                                                                  size:12];
                          }
+                         
+#else
+                         UIFontDescriptorSymbolicTraits traitMask = 0;
+                         if(value & TextStyle::Bold)
+                             traitMask |= UIFontDescriptorTraitBold;
+                         if(value & TextStyle::Italic)
+                             traitMask |= UIFontDescriptorTraitItalic;
+                         
+                         UIFont* font = [attrs objectForKey:NSFontAttributeName];
+                         UIFontDescriptor* descriptor;
+                         CGFloat size = value;
+                         if(font)
+                         {
+                             [textStorage removeAttribute:NSFontAttributeName range:range];
+                             
+                             descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: font.familyName,
+                                                                                             UIFontDescriptorTraitsAttribute:[NSNumber numberWithInteger:traitMask]}];
+                             size = font.fontDescriptor.pointSize;
+                         }
+                         
+                         if(!font)
+                         {
+                             descriptor = [[UIFontDescriptor alloc] initWithFontAttributes:@{UIFontDescriptorFamilyAttribute: GAC_OSX_DEFAULT_FONT_FAMILY_NAME,
+                                                                                             UIFontDescriptorTraitsAttribute:[NSNumber numberWithInteger:traitMask]}];
+                             
+                         }
+                         font = [UIFont fontWithDescriptor:descriptor size:size];
+                         
+#endif
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          
                          if(value & TextStyle::Underline)
@@ -478,19 +614,36 @@ namespace vl {
                                                     options:0
                                                 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
+#ifdef GAC_OS_OSX
                          NSColor* color = [attrs objectForKey:NSForegroundColorAttributeName];
                          if(color)
                          {
                              [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
                          }
+#else
+                         UIColor* color = [attrs objectForKey:NSForegroundColorAttributeName];
+                         if(color)
+                         {
+                             [textStorage removeAttribute:NSForegroundColorAttributeName range:range];
+                         }
+#endif
                      }];
                     
+#ifdef GAC_OS_OSX
                     [textStorage addAttribute:NSForegroundColorAttributeName
                                         value:[NSColor colorWithRed:value.r / 255.0f
                                                               green:value.g / 255.0f
                                                                blue:value.b / 255.0f
                                                               alpha:value.a / 255.0f]
                                         range:NSMakeRange(start, length)];
+#else
+                    [textStorage addAttribute:NSForegroundColorAttributeName
+                                        value:[UIColor colorWithRed:value.r / 255.0f
+                                                              green:value.g / 255.0f
+                                                               blue:value.b / 255.0f
+                                                              alpha:value.a / 255.0f]
+                                        range:NSMakeRange(start, length)];
+#endif
                     
                     needFormatData = true;
                     
@@ -521,8 +674,11 @@ namespace vl {
                     textCell.textRange = NSMakeRange(start, length);
                     
                     NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
+#ifdef GAC_OS_OSX
                     [attachment setAttachmentCell:textCell];
-                    
+#else
+                    attachment.bounds = CGRectMake(0, 0, properties.size.x, properties.size.y);
+#endif
                     NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
                     
                     [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
@@ -647,10 +803,20 @@ namespace vl {
                         }
                     }
                     
+#ifdef GAC_OS_OSX
                     NSRect rect = NSMakeRect((CGFloat)bounds.Left(),
                                              (CGFloat)bounds.Top(),
                                              maxWidth,
                                              CGFLOAT_MAX);
+                    
+                    
+#else
+                    CGRect rect = CGRectMake((CGFloat)bounds.Left(),
+                                             (CGFloat)bounds.Top(),
+                                             maxWidth,
+                                             CGFLOAT_MAX);
+                    
+#endif
                     
                     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
                     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:rect.origin];
@@ -799,7 +965,11 @@ namespace vl {
                     GenerateFormatData();
                     
                     CGFloat partialFraction;
+#ifdef GAC_OS_OSX
                     NSUInteger charIndex = [layoutManager characterIndexForPoint:NSMakePoint(point.x, point.y) inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&partialFraction];
+#else
+                    NSUInteger charIndex = [layoutManager characterIndexForPoint:CGPointMake(point.x, point.y) inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&partialFraction];
+#endif
                     if(partialFraction > 0.5f)
                     {
                         NSUInteger nextIndex = charIndex + 1;
@@ -821,13 +991,22 @@ namespace vl {
                 {
                     GenerateFormatData();
                     
+#ifdef GAC_OS_OSX
                     NSPoint nsp = NSMakePoint(point.x, point.y);
+#else
+                    CGPoint nsp = CGPointMake(point.x, point.y);
+#endif
                     for(vint i=0; i<inlineElements.Count(); ++i)
                     {
                         GuiElementsTextCell* cell = inlineElements.Values().Get(i).textCell;
                         
+#ifdef GAC_OS_OSX
                         if(NSPointInRect(nsp, cell.cellFrame))
                         {
+#else
+                        if(CGRectContainsPoint(cell.cellFrame, nsp))
+                        {
+#endif
                             IGuiGraphicsElement* element = 0;
                             if(GetMap(graphicsElements, cell.textRange.location, element) && element)
                             {
@@ -855,7 +1034,7 @@ namespace vl {
                     else if(frontSide)
                         return metrics.textPosition;
                     else
-                        return metrics.textPosition + metrics.textPosition;
+                        return metrics.textPosition + metrics.textLength;
                 }
                 
                 bool IsValidCaret(vint caret)
@@ -888,8 +1067,12 @@ namespace vl {
                         
                         for(NSUInteger i = glyphRange.location; i < glyphRange.length+glyphRange.location; ++i)
                         {
+#ifdef GAC_OS_OSX
                             NSRect bounding = [layoutManager boundingRectForGlyphRange:NSMakeRange(i, 1) inTextContainer:textContainer];
                             
+#else
+                            CGRect bounding = [layoutManager boundingRectForGlyphRange:NSMakeRange(i, 1) inTextContainer:textContainer];
+#endif
                             NSUInteger charIndex = [layoutManager characterIndexForGlyphAtIndex:i];
                             
                             // retrieve line height for font at index
@@ -899,16 +1082,26 @@ namespace vl {
                             CGFloat descender = 0;
                             CGFloat leading = 0;
                             NSDictionary* attrs = [textStorage attributesAtIndex:charIndex effectiveRange:0];
+                            
+#ifdef GAC_OS_OSX
                             NSFont* font = [attrs objectForKey:NSFontAttributeName];
+#else
+                            UIFont* font = [attrs objectForKey:NSFontAttributeName];
+#endif
                             if(font)
                             {
+#ifdef GAC_OS_OSX
                                 fontLineHeight = [layoutManager defaultLineHeightForFont:font];
+#endif
                                 ascender = [font ascender];
                                 descender = [font descender];
                             }
                             
+#ifdef GAC_OS_OSX
                             CGFloat baselineOffset = [[layoutManager typesetter] baselineOffsetInLayoutManager:layoutManager glyphIndex:i];
-                            
+#else
+                            CGFloat baselineOffset = 0;
+#endif
                             
                             if(bounding.size.width > 0)
                             {
@@ -961,8 +1154,13 @@ namespace vl {
                             if(![layoutManager isValidGlyphIndex:glyphIndex])
                                 break;
                             
+#ifdef GAC_OS_OSX
                             NSRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
                                                                                       effectiveRange:&lineFragmentRange];
+#else
+                            CGRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
+                                                                                      effectiveRange:&lineFragmentRange];
+#endif
                             
                             metrics.push_back(BoundingMetrics(lineFragmentRange.location,
                                                               lineFragmentRange.length,

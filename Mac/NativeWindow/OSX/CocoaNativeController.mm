@@ -20,10 +20,10 @@
 #include "ServicesImpl/CocoaDialogService.h"
 #include "ServicesImpl/CocoaImageService.h"
 
-#include <Cocoa/Cocoa.h>
-
 // _NSGetProgname
 #import <crt_externs.h>
+
+#ifdef GAC_OS_OSX
 
 @interface CocoaApplicationDelegate: NSObject<NSApplicationDelegate>
 
@@ -31,6 +31,7 @@
 @end
 
 @implementation CocoaApplicationDelegate {
+
     NSMenu* mainMenu;
 }
 
@@ -137,6 +138,39 @@
 
 @end
 
+#else
+
+namespace vl {
+    namespace presentation {
+        namespace osx {
+            class CocoaController;
+        }
+    }
+}
+
+@interface CocoaApplicationDelegate: UIResponder<UIApplicationDelegate>
+
+@end
+
+@interface RootViewController: UIViewController
+
+@end
+
+@implementation RootViewController
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+@end
+
+UIWindow* window;
+UIViewController* viewController;
+NSMutableArray* pendingViews;
+
+#endif
+
 
 namespace vl {
     
@@ -147,7 +181,9 @@ namespace vl {
             using namespace collections;
             
             void GlobalTimerFunc();
+#ifdef GAC_OS_OSX
             void MouseTapFunc(CGEventType type, CGEventRef event);
+#endif
             
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
@@ -169,8 +205,15 @@ namespace vl {
             public:
                 CocoaController():
                     mainWindow(0),
+#ifdef GAC_OS_OSX
                     inputService(&MouseTapFunc, &GlobalTimerFunc)
+#else
+                    inputService(&GlobalTimerFunc)
+#endif
+                
                 {
+#ifdef GAC_OS_OSX
+                    
                     [NSApplication sharedApplication];
                     
                     appDelegate = [[CocoaApplicationDelegate alloc] init];
@@ -180,6 +223,11 @@ namespace vl {
                     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
                     
                     [NSApp finishLaunching];
+                    
+#else
+                    
+                    pendingViews = [[NSMutableArray alloc] init];
+#endif
                 }
                 
                 ~CocoaController()
@@ -213,12 +261,33 @@ namespace vl {
                     return mainWindow;
                 }
                 
+#ifdef GAC_OS_IOS
+                
+                void AddView(UIView* view)
+                {
+                    
+                }
+      
+                void ApplicationDidFinishLaunching()
+                {
+                    for(UIView* view in pendingViews)
+                    {
+                        [window.subviews[0] addSubview:view];
+                    }
+                    mainWindow->Show();
+                }
+                
+#endif
+                
                 void Run(INativeWindow* window)
                 {
                     mainWindow = window;
-                    mainWindow->Show();
                     
+#ifdef GAC_OS_OSX
                     [NSApp run];
+#else
+                    UIApplicationMain(0, 0, 0, NSStringFromClass([CocoaApplicationDelegate class]));
+#endif
 //                    // todo
 //                    for (;;)
 //                    {
@@ -254,6 +323,7 @@ namespace vl {
                                 continue;
                             }
                             
+#ifdef GAC_OS_OSX
                             if(([window->GetNativeContainer()->window level] > [result->GetNativeContainer()->window level]) || [window->GetNativeContainer()->window level] == NSFloatingWindowLevel)
                             {
                                 minRect = r;
@@ -268,6 +338,10 @@ namespace vl {
                                     result = window;
                                 }
                             }
+#else
+                            
+                            
+#endif
                         }
                     }
                     return result;
@@ -334,6 +408,8 @@ namespace vl {
                 
                 void InvokeGlobalTimer()
                 {
+                    [window setNeedsDisplay];
+                    
                     asyncService.ExecuteAsyncTasks();
                     callbackService.InvokeGlobalTimer();
                 }
@@ -355,14 +431,76 @@ namespace vl {
                 dynamic_cast<CocoaController*>(GetCurrentController())->InvokeGlobalTimer();
             }
             
+            void WindowViewCreated(UIView* view)
+            {
+                [pendingViews addObject:view];
+            }
+            
+#ifdef GAC_OS_OSX
             void MouseTapFunc(CGEventType type, CGEventRef event)
             {
                 INativeCallbackService* cb = dynamic_cast<CocoaController*>(GetCurrentController())->CallbackService();
                 dynamic_cast<CocoaCallbackService*>(cb)->InvokeMouseHook(type, event);
             }
+#endif
             
         }
         
     }
     
 }
+
+#ifdef GAC_OS_IOS
+
+
+@implementation CocoaApplicationDelegate
+{
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    UIWindow* key = [UIApplication sharedApplication].keyWindow;
+    
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    
+    window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    UIView* rootView = [[UIView alloc] initWithFrame:window.frame];
+    viewController = [[RootViewController alloc] init];
+    [viewController setView:rootView];
+    [window setRootViewController:viewController];
+    [window addSubview:rootView];
+    
+    [window makeKeyAndVisible];
+    
+    vl::presentation::osx::CocoaController* controller = dynamic_cast<vl::presentation::osx::CocoaController*>(vl::presentation::GetCurrentController());
+    
+    controller->ApplicationDidFinishLaunching();
+    
+    return YES;
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    
+}
+
+@end
+
+#endif

@@ -11,9 +11,7 @@
 
 #include "GacUI.h"
 
-#include "CocoaPredef.h"
-
-@class NSEvent;
+#include "CocoaHelper.h"
 
 namespace vl {
     
@@ -133,7 +131,6 @@ namespace vl {
                 
             
                 ///
-                void                HandleEventInternal(NSEvent* event);
                 void                InvokeClosed();
                 void                InvokeOpened();
                 bool                InvokeClosing();
@@ -150,7 +147,12 @@ namespace vl {
                 void                HitTestMouseMove(vint x, vint y);
                 void                HitTestMouseUp(vint x, vint y);
                 
+#ifdef GAC_OS_OSX
+                void                HandleEventInternal(NSEvent* event);
                 bool                ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
+#else
+                void                HandleEventInternal(UIEvent* event);
+#endif
             };
             
             extern NSContainer* GetNSNativeContainer(INativeWindow* window);

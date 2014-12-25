@@ -10,8 +10,11 @@
 #define __GAC_OSX_CALLBACK_SERVICE_H__
 
 #include "GacUI.h"
+#include "../CocoaHelper.h"
 
+#ifdef GAC_OS_OSX
 #import <Quartz/Quartz.h>
+#endif
 
 namespace vl {
     
@@ -33,7 +36,9 @@ namespace vl {
                 bool    UninstallListener(INativeControllerListener* listener) override;
                 
                 //
+#ifdef GAC_OS_OSX
                 void    InvokeMouseHook(CGEventType type, CGEventRef event);
+#endif
                 void    InvokeGlobalTimer();
                 void    InvokeClipboardUpdated();
                 void    InvokeNativeWindowCreated(INativeWindow* window);

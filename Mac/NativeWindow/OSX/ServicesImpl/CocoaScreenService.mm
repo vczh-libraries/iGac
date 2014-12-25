@@ -17,15 +17,27 @@ namespace vl {
         
         namespace osx {
 
+#ifdef GAC_OS_OSX
             CocoaScreen::CocoaScreen(NSScreen* _screen):
                 screen(_screen)
             {
                 
             }
+#else
+            CocoaScreen::CocoaScreen(UIScreen* _screen):
+            screen(_screen)
+            {
+                
+            }
+#endif
             
             Rect CocoaScreen::GetBounds()
             {
+#ifdef GAC_OS_OSX
                 NSRect r = [screen frame];
+#else
+                CGRect r = [screen bounds];
+#endif
                 return Rect(r.origin.x,
                             r.origin.y,
                             r.origin.x + r.size.width,
@@ -44,7 +56,11 @@ namespace vl {
             
             bool CocoaScreen::IsPrimary()
             {
+#ifdef GAC_OS_OSX
                 return screen == [NSScreen mainScreen];
+#else
+                return true;
+#endif
             }
             
             CocoaScreenService::CocoaScreenService()
@@ -56,11 +72,15 @@ namespace vl {
             {
                 screens.Clear();
                 
+#ifdef GAC_OS_OSX
                 NSArray* nsscreens = [NSScreen screens];
                 [nsscreens enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
                 {
                     screens.Add((new CocoaScreen((NSScreen*)obj)));
                 }];
+#else
+                screens.Add(new CocoaScreen([UIScreen mainScreen]));
+#endif
             }
             
             vint CocoaScreenService::GetScreenCount()
@@ -75,6 +95,7 @@ namespace vl {
             
             INativeScreen* CocoaScreenService::GetScreen(INativeWindow* window)
             {
+#ifdef GAC_OS_OSX
                 CocoaWindow* wnd = dynamic_cast<CocoaWindow*>(window);
                 if(wnd)
                 {
@@ -88,6 +109,9 @@ namespace vl {
                         }
                     }
                 }
+#else
+                return screens[0].Obj();
+#endif
                 return 0;
             }
             
