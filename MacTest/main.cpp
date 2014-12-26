@@ -51,26 +51,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    DateTime dt=DateTime::FromDateTime(2000, 1, 1);
-    assert(dt.year==2000);
-    assert(dt.month==1);
-    assert(dt.day==1);
-    assert(dt.dayOfWeek==6);
-    assert(dt.hour==0);
-    assert(dt.minute==0);
-    assert(dt.second==0);
-    assert(dt.milliseconds==0);
-    
-    dt=DateTime::FromFileTime(dt.filetime);
-    assert(dt.year==2000);
-    assert(dt.month==1);
-    assert(dt.day==1);
-    assert(dt.dayOfWeek==6);
-    assert(dt.hour==0);
-    assert(dt.minute==0);
-    assert(dt.second==0);
-    assert(dt.milliseconds==0);
-    
-    RunGacWindow<TooltipWindow>();
+    RunGacWindow<DocumentEditorWindow>();
 }
 

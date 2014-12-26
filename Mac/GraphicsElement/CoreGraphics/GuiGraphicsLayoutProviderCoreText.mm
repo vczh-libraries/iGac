@@ -660,7 +660,7 @@ namespace vl {
                         Rect caretBounds = GetCaretBounds(caretPos, caretFrontSide);
                         vint x = caretBounds.x1 + bounds.x1;
                         vint y1 = caretBounds.y1 + bounds.y1;
-                        vint y2 = y1+caretBounds.Height();
+                        vint y2 = y1 + caretBounds.Height();
                         
                         CGPoint points[2];
                         CGContextSetLineWidth(context, 2.0f);
@@ -684,11 +684,14 @@ namespace vl {
                     GetLineIndexFromTextPos(comparingCaret, frontLineIndex, backLineIndex);
                     vint lineIndex = preferFrontSide ? frontLineIndex : backLineIndex;
                     
+                    if(lineIndex == -1)
+                        return 0;
+                    
                     BoundingMetrics& lineMetrics = lineFragments[lineIndex];
                     
                     vint lineStart = lineMetrics.textPosition;
                     vint lineEnd = lineMetrics.textPosition + lineMetrics.textLength;
-
+                    
                     switch(position)
                     {
                         case CaretLineFirst:
@@ -703,22 +706,33 @@ namespace vl {
                             {
                                 return 0;
                             }
+
+                            vint index = charBoundingMetricsMap[comparingCaret-1];
                             
-                            return glyphBoundingRects[charBoundingMetricsMap[comparingCaret-1]].textPosition;
+                            const BoundingMetrics& metrics = glyphBoundingRects[charBoundingMetricsMap[comparingCaret-1]];
+                            return metrics.textPosition;
                         }
                             
                         case CaretMoveRight:
                         {
-                            if(comparingCaret == paragraphText.Length())
+                            if(comparingCaret >= paragraphText.Length()-1)
                             {
                                 return paragraphText.Length();
                             }
                             
-                            vint index = charBoundingMetricsMap[comparingCaret];
+                            vint index = charBoundingMetricsMap[comparingCaret+1];
                             if(index == glyphBoundingRects.Count()-1)
                                 return paragraphText.Length();
                             
-                            return glyphBoundingRects[index+1].textPosition;
+                            if(index == charBoundingMetricsMap[comparingCaret])
+                            {
+                                vint newCaret = glyphBoundingRects[index].textPosition + glyphBoundingRects[index].textLength;
+                                if(newCaret == lineEnd)
+                                    preferFrontSide = false;
+                                return newCaret;
+                            }
+                            
+                            return glyphBoundingRects[index].textPosition;
                         }
                             
                         case CaretMoveUp:
@@ -782,7 +796,7 @@ namespace vl {
                     
                     if(frontSide)
                     {
-                        return Rect(Point(charMetrics.boundingRect.Left() + charMetrics.boundingRect.Width(),
+                        return Rect(Point(charMetrics.boundingRect.Right(),
                                           charMetrics.boundingRect.Top() + charMetrics.yOffset),
                                     Size(0, charMetrics.lineHeight));
                     }
@@ -798,23 +812,8 @@ namespace vl {
                 {
                     GenerateFormatData();
                     
-                    CGFloat partialFraction;
-                    NSUInteger charIndex = [layoutManager characterIndexForPoint:NSMakePoint(point.x, point.y) inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:&partialFraction];
-                    if(partialFraction > 0.5f)
-                    {
-                        NSUInteger nextIndex = charIndex + 1;
-                        if(nextIndex > paragraphText.Length())
-                            return charIndex;
-                        else if(nextIndex == paragraphText.Length())
-                            return nextIndex;
-                        
-                        const BoundingMetrics& metrics = glyphBoundingRects[charBoundingMetricsMap[nextIndex]];
-                        if(metrics.boundingRect.Top() > point.y)
-                            return charIndex;
-                        return nextIndex;
-                    }
-                    else
-                        return charIndex;
+                    vint lineIndex = GetLineIndexFromY(point.y);
+                    return GetCaretFromXWithLine(point.x, lineIndex);
                 }
                 
                 Ptr<IGuiGraphicsElement> GetInlineObjectFromPoint(Point point, vint& start, vint& length)
@@ -886,7 +885,7 @@ namespace vl {
                         glyphBoundingRects.Clear();
                         charBoundingMetricsMap.Resize(glyphRange.length);
                         
-                        for(NSUInteger i = glyphRange.location; i < glyphRange.length+glyphRange.location; ++i)
+                        for(NSUInteger i = glyphRange.location; i < glyphRange.length+glyphRange.location; )
                         {
                             NSRect bounding = [layoutManager boundingRectForGlyphRange:NSMakeRange(i, 1) inTextContainer:textContainer];
                             
@@ -909,45 +908,55 @@ namespace vl {
                             
                             CGFloat baselineOffset = [[layoutManager typesetter] baselineOffsetInLayoutManager:layoutManager glyphIndex:i];
                             
-                            
-                            if(bounding.size.width > 0)
+                            IGuiGraphicsElement* element = 0;
+                            GuiElementsTextCell* cell = 0;
+                            if(GetMap(graphicsElements, i, element) && element)
                             {
-                                IGuiGraphicsElement* element = 0;
-                                GuiElementsTextCell* cell = 0;
-                                if(GetMap(graphicsElements, i, element) && element)
+                                cell = inlineElements.Get(element).textCell;
+                                for(vint j=0; j<cell.textRange.length; ++j)
                                 {
-                                    cell = inlineElements.Get(element).textCell;
-                                    for(vint j=0; j<cell.textRange.length; ++j)
-                                    {
-                                        charBoundingMetricsMap[i-glyphRange.location+j] = charIndex;
-                                    }
-                                }
-                                else
-                                {
-                                    charBoundingMetricsMap[i-glyphRange.location] = charIndex;
+                                    charBoundingMetricsMap[i-glyphRange.location+j] = charIndex;
                                 }
                                 
-                                assert(cell ? cell.textRange.location == i : true);
-                                
-                                float yOff = 0;
-                                if(bounding.size.height - fontLineHeight != 0)
-                                {
-                                    yOff = bounding.size.height - baselineOffset - descender - fontLineHeight + 1;
-                                }
-                                
-                                glyphBoundingRects.Add(charIndex, BoundingMetrics(i,
-                                                                                  cell ? cell.textRange.length : 1,
-                                                                                  fontLineHeight,
-                                                                                  yOff,
-                                                                                  Rect(bounding.origin.x,
-                                                                                       bounding.origin.y,
-                                                                                       bounding.size.width + bounding.origin.x,
-                                                                                       bounding.size.height + bounding.origin.y)));
-                                
-                                
+                                fontLineHeight = cell.properties.size.y;
+                            }
+                            else
+                            {
+                                charBoundingMetricsMap[i-glyphRange.location] = charIndex;
                             }
                             
-                           // printf("baselineOffset %f accent %f lineHeight %f leading %f\n", baselineOffset, accent, fontLineHeight, leading);
+                            assert(cell ? cell.textRange.location <= i && i < cell.textRange.location + cell.textRange.length : true);
+                            
+                            float yOff = 0;
+                            if(cell == 0 && bounding.size.height - fontLineHeight != 0)
+                            {
+                                yOff = bounding.size.height - baselineOffset - descender - fontLineHeight + 1;
+                            }
+                            
+                            vint textLength = cell ? cell.textRange.length : (paragraphText[charIndex] == '\r' ? 2 : 1);
+                            
+                            glyphBoundingRects.Add(charIndex, BoundingMetrics(i,
+                                                                              textLength,
+                                                                              fontLineHeight,
+                                                                              yOff,
+                                                                              Rect(bounding.origin.x,
+                                                                                   bounding.origin.y,
+                                                                                   bounding.size.width + bounding.origin.x,
+                                                                                   bounding.size.height + bounding.origin.y)));
+                            
+                            if(element)
+                            {
+                                i += cell.textRange.length;
+                            }
+                            else
+                            {
+                                if(paragraphText[charIndex] == '\r')
+                                {
+                                    i += 1;
+                                    charBoundingMetricsMap[i-glyphRange.location] = charIndex;
+                                }
+                                i += 1;
+                            }
                         }
                         
                         NSRange lineFragmentRange;
@@ -964,6 +973,14 @@ namespace vl {
                             NSRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
                                                                                       effectiveRange:&lineFragmentRange];
                             
+                            if(paragraphText[lineFragmentRange.location + lineFragmentRange.length - 2] == L'\r')
+                            {
+                                lineFragmentRange.length -= 2;
+                            }
+                            else if(paragraphText[lineFragmentRange.location + lineFragmentRange.length - 1] == L'\n')
+                            {
+                                lineFragmentRange.length -= 1;
+                            }
                             metrics.push_back(BoundingMetrics(lineFragmentRange.location,
                                                               lineFragmentRange.length,
                                                               lineFragmentRect.size.height,
@@ -1041,10 +1058,10 @@ namespace vl {
                             }
                             else
                             {
-                                return i + metrics.textLength;
+                                return i + charMetrics.textLength;
                             }
                         }
-                        i += metrics.textLength;
+                        i += charMetrics.textLength;
                     }
                     
                     if(x < minLineX) return lineStart;

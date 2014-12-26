@@ -298,7 +298,9 @@ void DocumentEditorWindow::InitializeComponents()
         cell->AddChild(textBox->GetBoundsComposition());
         
         List<WString> errors;
-        Ptr<DocumentModel> model = DocumentModel::LoadFromXml(GetResourceFolder() + L"XmlDocDemo.xml", errors);
+        Ptr<GuiResource> resource = GuiResource::LoadFromXml(GetResourceFolder() + L"XmlDocDemo.xml", errors);
+
+        Ptr<DocumentModel> model=resource->GetValueByPath(L"Doc").Cast<DocumentModel>();
         textBox->SetDocument(model);
     }
     
