@@ -2,11 +2,10 @@
 
 
 #####Current Progress:
-* GuiDocument
+* Finalizing & Bug fixes
 
 #####Known Issues/Limiations:
-* Global keyboard hook for InputService::keyPressed and such
-* Tab popup button will show up initially
-* AsyncService::Semaphore::WaitForTime	
-* DateTime.miliseconds incorrect in *nix
+* Global keyboard hook requires Accessibility priviledge
+* Tabview page switch button will show up initially
+* AsyncService::Semaphore::WaitForTime
 

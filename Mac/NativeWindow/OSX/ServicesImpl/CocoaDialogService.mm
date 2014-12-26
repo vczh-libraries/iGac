@@ -65,7 +65,7 @@
 
 const CGFloat HackedButtonWidth = 64.0f;
 const CGFloat HackedButtonHeight = 24.0f;
-const CGFloat HackedButtonBottomMargin = 7.0f;
+const CGFloat HackedButtonBottomMargin = 4.0f;
 const CGFloat HackedButtonSideMargin = 9.0f;
 
 // hack system color / font panels since they don't have a OK / Cancel button
