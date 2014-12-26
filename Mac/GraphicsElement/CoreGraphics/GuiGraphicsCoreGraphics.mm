@@ -126,28 +126,9 @@ namespace vl {
                 {
                     NSFontManager* fontManager = [NSFontManager sharedFontManager];
                     
-                    NSFontTraitMask traitMask = 0;
-                    if(font.bold)
-                        traitMask |= NSBoldFontMask;
-                    if(font.italic)
-                        traitMask |= NSItalicFontMask;
-                    
                     Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
                     
-                    coreTextFont->font = [fontManager fontWithFamily:WStringToNSString(font.fontFamily)
-                                                              traits:traitMask
-                                                              weight:0
-                                                                size:font.size];
-                    
-                    // this is just a pretty naive fall back here
-                    // but its safe to assume that this is availabe in every OS X
-                    if(!coreTextFont->font)
-                    {
-                        coreTextFont->font = [fontManager fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME
-                                                                  traits:traitMask
-                                                                  weight:0
-                                                                    size:font.size];
-                    }
+                    coreTextFont->font = CreateFontWithGacFont(font);
                     
                     if(!coreTextFont->font)
                     {

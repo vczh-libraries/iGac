@@ -17,6 +17,7 @@
 		884BC1611A304D22007DF242 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
 		884BC1941A329B34007DF242 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
 		884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */; };
+		886CD3E61A4DB3BE0010C947 /* CocoaIntrospection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 886CD3E41A4DB3BE0010C947 /* CocoaIntrospection.mm */; };
 		888349AF1A456CF800B4E711 /* GuiGraphicsCoreGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 8883497E1A456CF800B4E711 /* GuiGraphicsCoreGraphics.h */; };
 		888349B01A456CF800B4E711 /* GuiGraphicsCoreGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8883497F1A456CF800B4E711 /* GuiGraphicsCoreGraphics.mm */; };
 		888349B11A456CF800B4E711 /* GuiGraphicsCoreGraphicsRenderers.h in Headers */ = {isa = PBXBuildFile; fileRef = 888349801A456CF800B4E711 /* GuiGraphicsCoreGraphicsRenderers.h */; };
@@ -253,6 +254,8 @@
 		884BC1E31A354F69007DF242 /* gac_include.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gac_include.h; sourceTree = SOURCE_ROOT; };
 		884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnixFileSystemInfo.cpp; sourceTree = SOURCE_ROOT; };
 		884BC1FB1A3BF4FD007DF242 /* UnixFileSystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnixFileSystemInfo.h; sourceTree = SOURCE_ROOT; };
+		886CD3E41A4DB3BE0010C947 /* CocoaIntrospection.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaIntrospection.mm; sourceTree = "<group>"; };
+		886CD3E51A4DB3BE0010C947 /* CocoaIntrospection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaIntrospection.h; sourceTree = "<group>"; };
 		8883496E1A456CCE00B4E711 /* libGacStaticLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGacStaticLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8883497E1A456CF800B4E711 /* GuiGraphicsCoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuiGraphicsCoreGraphics.h; sourceTree = "<group>"; };
 		8883497F1A456CF800B4E711 /* GuiGraphicsCoreGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GuiGraphicsCoreGraphics.mm; sourceTree = "<group>"; };
@@ -618,6 +621,8 @@
 				8883498C1A456CF800B4E711 /* CocoaPredef.h */,
 				8883498D1A456CF800B4E711 /* CocoaWindow.h */,
 				8883498E1A456CF800B4E711 /* CocoaWindow.mm */,
+				886CD3E51A4DB3BE0010C947 /* CocoaIntrospection.h */,
+				886CD3E41A4DB3BE0010C947 /* CocoaIntrospection.mm */,
 				8883498F1A456CF800B4E711 /* CoreGraphics */,
 				888349921A456CF800B4E711 /* ServicesImpl */,
 			);
@@ -1177,6 +1182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				880702A01A4AC4F10006D2DB /* document_editor.cpp in Sources */,
+				886CD3E61A4DB3BE0010C947 /* CocoaIntrospection.mm in Sources */,
 				88DAE5071A42D767004E458F /* rendering_rawapi.mm in Sources */,
 				884BC1FC1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp in Sources */,
 				880702A21A4AC5310006D2DB /* document_editor_initialization.cpp in Sources */,

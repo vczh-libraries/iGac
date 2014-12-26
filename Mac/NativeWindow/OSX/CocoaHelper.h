@@ -26,6 +26,7 @@
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1 || TARGET_IPHONE_SIMULATOR == 1
 
 #define GAC_OS_IOS
+#import <UIKit/UIKit.h>
 
 #endif
 
@@ -33,6 +34,8 @@
 #include "CocoaPredef.h"
 
 @class CocoaWindowDelegate;
+
+#define GAC_APPLE_DEFAULT_FONT_FAMILY_NAME @"Helvetica"
 
 namespace vl {
     
@@ -58,6 +61,11 @@ namespace vl {
             void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
             NSCursor* MakeCursorFromData(unsigned char* data, int hotspot_x, int hotspot_y);
+            
+            NSFont* CreateFontWithFontFamily(NSString* fontFamily, NSFontTraitMask traits, uint32_t size, uint32_t weight = 5);
+            NSFont* CreateFontWithGacFont(const FontProperties& font);
+            NSFontTraitMask GetTraitMask(bool bold, bool italic);
+            NSFontTraitMask GetTraitMask(const FontProperties& font);
             
             struct NSContainer
             {

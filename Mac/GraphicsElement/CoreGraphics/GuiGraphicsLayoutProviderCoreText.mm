@@ -360,7 +360,7 @@ namespace vl {
                         
                         if(!font)
                         {
-                            font = [[NSFontManager sharedFontManager] fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME traits:0 weight:0 size:12];
+                            font = CreateFontWithFontFamily(GAC_APPLE_DEFAULT_FONT_FAMILY_NAME, 0, 12);
                             
                         }
                         
@@ -385,7 +385,7 @@ namespace vl {
                          }
                          if(!font)
                          {
-                             font = [[NSFontManager sharedFontManager] fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME traits:0 weight:0 size:value];
+                             font = CreateFontWithFontFamily(GAC_APPLE_DEFAULT_FONT_FAMILY_NAME, 0, 12);
                          }
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          needFormatData = true;
@@ -420,16 +420,13 @@ namespace vl {
                                  originalSize = 12;
                              font = [[NSFontManager sharedFontManager] fontWithFamily:font.familyName
                                                                                traits:traitMask
-                                                                               weight:0
+                                                                               weight:5
                                                                                  size:originalSize];
                              
                          }
                          if(!font)
                          {
-                             font = [[NSFontManager sharedFontManager] fontWithFamily:GAC_OSX_DEFAULT_FONT_FAMILY_NAME
-                                                                               traits:traitMask
-                                                                               weight:0
-                                                                                 size:12];
+                             font = CreateFontWithFontFamily(GAC_APPLE_DEFAULT_FONT_FAMILY_NAME, traitMask, 12);
                          }
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          

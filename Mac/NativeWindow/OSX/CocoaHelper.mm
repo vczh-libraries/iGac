@@ -341,6 +341,50 @@ namespace vl {
                 NSScreen* s = GetWindowScreen(window);
                 return s.frame.size.height - y;
             }
+            
+            NSFontTraitMask GetTraitMask(bool bold, bool italic)
+            {
+                NSFontTraitMask traitMask = 0;
+                if(bold)
+                    traitMask |= NSBoldFontMask;
+                if(italic)
+                    traitMask |= NSItalicFontMask;
+                
+                return traitMask;
+            }
+            
+            NSFontTraitMask GetTraitMask(const FontProperties& font)
+            {
+                return GetTraitMask(font.bold, font.italic);
+            }
+            
+            NSFont* CreateFontWithFontFamily(NSString* fontFamily, NSFontTraitMask traits, uint32_t size, uint32_t weight)
+            {
+                NSFontManager* fontManager = [NSFontManager sharedFontManager];
+                NSFont* font = [fontManager fontWithFamily:fontFamily
+                                                    traits:traits
+                                                    weight:5
+                                                    size:size];
+                
+                // this is just a pretty naive fall back here
+                // but its safe to assume that this is availabe in every OS X
+                if(!font)
+                {
+                    font = [fontManager fontWithFamily:GAC_APPLE_DEFAULT_FONT_FAMILY_NAME
+                                                traits:traits
+                                                weight:5
+                                                  size:size];
+                }
+                
+                return font;
+            }
+            
+            NSFont* CreateFontWithGacFont(const FontProperties& fontProperties)
+            {
+                return CreateFontWithFontFamily(WStringToNSString(fontProperties.fontFamily),
+                                                GetTraitMask(fontProperties),
+                                                (uint32_t)fontProperties.size);
+            }
 
 #endif
             

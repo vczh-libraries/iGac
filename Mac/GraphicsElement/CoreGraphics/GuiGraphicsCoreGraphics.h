@@ -13,8 +13,6 @@
 
 typedef struct CGContext *CGContextRef;
 
-#define GAC_OSX_DEFAULT_FONT_FAMILY_NAME @"Helvetica"
-
 namespace vl {
     
     namespace presentation {
