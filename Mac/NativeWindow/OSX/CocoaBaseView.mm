@@ -59,14 +59,8 @@
 
 - (BOOL)acceptsFirstResponder
 {
-    if(cocoaWindow->GetParent())
-    {
-        NSPoint mouseLoc = [NSEvent mouseLocation];
-        NSPoint windowLocation = [[self window] convertRectFromScreen: NSMakeRect(mouseLoc.x, mouseLoc.y, 0, 0)].origin;
-        NSPoint viewLocation = [self convertPoint:windowLocation fromView:nil];
-        return NSPointInRect(viewLocation, [self bounds]);
-    }
-    return [super acceptsFirstResponder];
+    // as borderless window will not be included in the responder chain by default
+    return [cocoaWindow->GetNativeContainer()->window styleMask] & NSBorderlessWindowMask ? YES : [super acceptsFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder

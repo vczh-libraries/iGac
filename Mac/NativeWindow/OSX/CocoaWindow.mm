@@ -224,7 +224,12 @@ namespace vl {
                 else
                 {
                     if(!parentWindow)
+                    {
                         [cocoaParent->GetNativeContainer()->window addChildWindow:nativeContainer->window ordered:NSWindowAbove];
+                        
+                        // why prior to 10.10 this will be disabled...
+                        [nativeContainer->window setAcceptsMouseMovedEvents:YES];
+                    }
                 }
                 parentWindow = cocoaParent;
             }
