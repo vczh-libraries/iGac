@@ -34,7 +34,7 @@ using namespace vl::presentation::osx;
 
 inline CGContextRef GetCurrentCGContext()
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10 && defined(NSAppKitVersionNumber10_9)
     if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9)
     {
         return [[NSGraphicsContext currentContext] CGContext];
