@@ -29,6 +29,10 @@ using namespace vl::presentation::elements_coregraphics;
 @property (nonatomic) IGuiGraphicsElement* graphicsElement;
 @property (nonatomic) IGuiGraphicsParagraph::InlineObjectProperties properties;
 
+#ifndef NS_DESIGNATED_INITIALIZER
+#define NS_DESIGNATED_INITIALIZER
+#endif
+
 - (id)initWithGraphicsElement:(IGuiGraphicsElement*)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
 
 @end

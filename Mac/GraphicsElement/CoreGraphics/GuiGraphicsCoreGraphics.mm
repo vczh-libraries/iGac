@@ -34,11 +34,14 @@ using namespace vl::presentation::osx;
 
 inline CGContextRef GetCurrentCGContext()
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101000
-    return [[NSGraphicsContext currentContext] CGContext];
-#else
-    return (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10
+    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9)
+    {
+        return [[NSGraphicsContext currentContext] CGContext];
+    }
+    else
 #endif
+    return (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
 }
 
 @implementation CoreGraphicsView

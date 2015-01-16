@@ -51,6 +51,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    RunGacWindow<DocumentEditorWindow>();
+    RunGacWindow<CheckAndRadioWindow>();
 }
 
