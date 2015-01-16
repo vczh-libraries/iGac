@@ -84,7 +84,7 @@ namespace vl {
             {
                 imageRep = [[nsImage representations] objectAtIndex:0];
                 
-                vint count;
+                vint count = 1;
                 if([imageRep isKindOfClass:[NSBitmapImageRep class]])
                 {
                     vint count = (vint)[[(NSBitmapImageRep*)imageRep valueForProperty:NSImageFrameCount] intValue];
