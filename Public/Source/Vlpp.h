@@ -6658,8 +6658,10 @@ Pairwise
 			IEnumerator<S>*					enumerator1;
 			IEnumerator<T>*					enumerator2;
 			Pair<S, T>						current;
+            
+            typedef Pair<S, T>  PairType;
 		public:
-			PairwiseEnumerator(IEnumerator<S>* _enumerator1, IEnumerator<T>* _enumerator2, Pair<S, T> _current=Pair<S, T>())
+			PairwiseEnumerator(IEnumerator<S>* _enumerator1, IEnumerator<T>* _enumerator2, Pair<S, T> _current=PairType())
 				:enumerator1(_enumerator1)
 				,enumerator2(_enumerator2)
 				,current(_current)

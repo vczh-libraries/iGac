@@ -51,8 +51,6 @@ using namespace vl::presentation::elements_coregraphics;
 
 - (void)draw:(NSRect)cellFrame
 {
-    CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
-
     _cellFrame = cellFrame;
     IGuiGraphicsRenderer* graphicsRenderer = _graphicsElement->GetRenderer();
     if(graphicsRenderer)
@@ -220,7 +218,6 @@ namespace vl {
                 NSTextStorage*                          textStorage;
                 NSTextContainer*                        textContainer;
                 NSLayoutManager*                        layoutManager;
-                NSMutableParagraphStyle*                paragrahStyle;
 
                 bool                                    needFormatData;
                 Dictionary<vint, BoundingMetrics>       glyphBoundingRects;
@@ -245,10 +242,7 @@ namespace vl {
                     graphicsElements.Add(TextRange(0, _text.Length()), 0);
                     backgroundColors.Add(TextRange(0, _text.Length()), Color(0, 0, 0, 0));
 
-                    paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-                    
-                    textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text)
-                                                             attributes:@{NSParagraphStyleAttributeName: paragrahStyle}];
+                    textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text) attributes:@{NSParagraphStyleAttributeName: [NSParagraphStyle defaultParagraphStyle]}];
                     
                     textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth == -1 ? CGFLOAT_MAX : maxWidth, CGFLOAT_MAX)];
                     layoutManager = [[NSLayoutManager alloc] init];
@@ -257,6 +251,11 @@ namespace vl {
                     [textStorage addLayoutManager:layoutManager];
                     
                     needFormatData = true;
+                }
+                
+                ~CoreTextParagraph()
+                {
+                    
                 }
                 
             public:
@@ -279,7 +278,10 @@ namespace vl {
                 {
                     wrapLine = value;
                     
+                    NSMutableParagraphStyle* paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                     [paragrahStyle setLineBreakMode:value ? NSLineBreakByTruncatingTail : NSLineBreakByWordWrapping];
+                    
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
                                                     options:0
                                                  usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
@@ -293,6 +295,8 @@ namespace vl {
                     [textStorage addAttribute:NSParagraphStyleAttributeName
                                         value:paragrahStyle
                                         range:NSMakeRange(0, textStorage.length)];
+                    [textStorage endEditing];
+                    
                     needFormatData = true;
                 }
                 
@@ -315,6 +319,8 @@ namespace vl {
                 
                 void SetParagraphAlignment(Alignment value)
                 {
+                    NSMutableParagraphStyle* paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                    
                     switch(value)
                     {
                         case Alignment::Left:
@@ -331,6 +337,8 @@ namespace vl {
                     }
                     textAlignment = value;
                     
+                    
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
@@ -344,12 +352,15 @@ namespace vl {
                     [textStorage addAttribute:NSParagraphStyleAttributeName
                                         value:paragrahStyle
                                         range:NSMakeRange(0, textStorage.length)];
+                    [textStorage endEditing];
+                    
                     needFormatData = true;
                 }
                 
                 bool SetFont(vint start, vint length, const WString& value)
                 {
                     // remove old fonts
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
@@ -371,16 +382,19 @@ namespace vl {
                         [textStorage addAttribute:NSFontAttributeName value:font range:range];
                         needFormatData = true;
                     }];
+                    [textStorage endEditing];
                     
                     return true;
                 }
                 
                 bool SetSize(vint start, vint length, vint value)
                 {
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
+                         
                          NSFont* font = [attrs objectForKey:NSFontAttributeName];
                          if(font)
                          {
@@ -394,12 +408,14 @@ namespace vl {
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          needFormatData = true;
                      }];
+                    [textStorage endEditing];
                     
                     return true;
                 }
                 
                 bool SetStyle(vint start, vint length, TextStyle value)
                 {
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                        options:0
                                                     usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
@@ -469,12 +485,14 @@ namespace vl {
                                             range:NSMakeRange(start, length)];
                         needFormatData = true;
                     }
+                    [textStorage endEditing];
                     
                     return true;
                 }
                 
                 bool SetColor(vint start, vint length, Color value)
                 {
+                    [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                     options:0
                                                 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
@@ -492,6 +510,7 @@ namespace vl {
                                                                blue:value.b / 255.0f
                                                               alpha:value.a / 255.0f]
                                         range:NSMakeRange(start, length)];
+                    [textStorage endEditing];
                     
                     needFormatData = true;
                     
@@ -526,6 +545,9 @@ namespace vl {
                     
                     NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
                     
+                    
+                    
+                    [textStorage beginEditing];
                     [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
                                         withAttributedString:attachmentStr];
                     
@@ -542,6 +564,7 @@ namespace vl {
                         NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
                         [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
                     }
+                    [textStorage endEditing];
                    
                     IGuiGraphicsRenderer* renderer = value->GetRenderer();
                     if(renderer)
@@ -558,10 +581,11 @@ namespace vl {
                 bool ResetInlineObject(vint start, vint length)
                 {
                     IGuiGraphicsElement* element = 0;
+                    
+                    [textStorage beginEditing];
                     if(GetMap(graphicsElements, start, element) && element)
                     {
                         GuiElementsTextCell* textCell = inlineElements[element].textCell;
-                        NSTextAttachment* attachment = textCell.attachment;
                         
                         [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                         options:0
@@ -576,8 +600,8 @@ namespace vl {
                                  needFormatData = true;
                              }
                          }];
-                        
                     }
+                    [textStorage endEditing];
                     
                     return true;
                 }
@@ -707,8 +731,6 @@ namespace vl {
                             {
                                 return 0;
                             }
-
-                            vint index = charBoundingMetricsMap[comparingCaret-1];
                             
                             const BoundingMetrics& metrics = glyphBoundingRects[charBoundingMetricsMap[comparingCaret-1]];
                             return metrics.textPosition;
@@ -895,7 +917,6 @@ namespace vl {
                             // retrieve line height for font at index
                             // since bounding rect may not reflect the line height of the glyph (if there are smaller / larger glyphs within the same line)
                             CGFloat fontLineHeight = bounding.size.height;
-                            CGFloat ascender = 0;
                             CGFloat descender = 0;
                             CGFloat leading = 0;
                             NSDictionary* attrs = [textStorage attributesAtIndex:charIndex effectiveRange:0];
@@ -903,7 +924,6 @@ namespace vl {
                             if(font)
                             {
                                 fontLineHeight = [layoutManager defaultLineHeightForFont:font];
-                                ascender = [font ascender];
                                 descender = [font descender];
                             }
                             
