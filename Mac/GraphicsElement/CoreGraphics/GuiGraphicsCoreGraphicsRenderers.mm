@@ -193,7 +193,6 @@ namespace vl {
                 }
                 
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
-
                 switch(element->GetShape())
                 {
                     case ElementShape::Rectangle:
@@ -924,23 +923,23 @@ namespace vl {
                 switch (element->GetDirection()) {
                     case Gui3DSplitterElement::Horizontal:
                     {
-                        vint y = bounds.y1 + bounds.Height() / 2 - 1;
+                        vint y = bounds.y1 + bounds.Height() / 2;
                         
-                        points[1] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+0.5f);
+                        points[0] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+0.5f);
                         points[1] = CGPointMake((CGFloat)bounds.x2, (CGFloat)y+0.5f);
-                        points[1] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+1.5f);
-                        points[1] = CGPointMake((CGFloat)bounds.x2, (CGFloat)y+1.5f);
+                        points[2] = CGPointMake((CGFloat)bounds.x1, (CGFloat)y+1.5f);
+                        points[3] = CGPointMake((CGFloat)bounds.x2, (CGFloat)y+1.5f);
                         break;
                     }
                         
                     case Gui3DSplitterElement::Vertical:
                     {
-                        vint x = bounds.x1 + bounds.Width() / 2 - 1;
+                        vint x = bounds.x1 + bounds.Width() / 2;
                         
-                        points[1] = CGPointMake((CGFloat)x+0.5f, (CGFloat)bounds.y1);
+                        points[0] = CGPointMake((CGFloat)x+0.5f, (CGFloat)bounds.y1);
                         points[1] = CGPointMake((CGFloat)x+0.5f, (CGFloat)bounds.y2);
-                        points[1] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y1);
-                        points[1] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y2);
+                        points[2] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y1);
+                        points[3] = CGPointMake((CGFloat)x+1.5f, (CGFloat)bounds.y2);
                         break;
                     }
                 }
