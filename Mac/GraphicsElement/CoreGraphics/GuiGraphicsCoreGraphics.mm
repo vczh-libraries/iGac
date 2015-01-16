@@ -126,9 +126,7 @@ namespace vl {
             public:
                 
                 static Ptr<CoreTextFontPackage> CreateCoreTextFontPackage(const FontProperties& font)
-                {
-                    NSFontManager* fontManager = [NSFontManager sharedFontManager];
-                    
+                {                    
                     Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
                     
                     coreTextFont->font = CreateFontWithGacFont(font);
