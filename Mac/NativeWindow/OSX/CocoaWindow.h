@@ -14,6 +14,9 @@
 #include "CocoaPredef.h"
 
 @class NSEvent;
+@class CocoaWindowDelegate;
+@class NSWindow;
+@class NSWindowController;
 
 namespace vl {
     
@@ -24,8 +27,6 @@ namespace vl {
             class CocoaWindow : public Object, public INativeWindow
             {
             protected:
-                NSContainer*                                    nativeContainer;
-                
                 Point                                           caretPoint;
                 CocoaWindow*                                    parentWindow;
                 bool                                            alwaysPassFocusToParent;
@@ -49,18 +50,19 @@ namespace vl {
                 INativeCursor*                                  currentCursor;
                 Rect                                            previousBounds;
                 
-                wchar_t                                         asciiLowerMap[256];
-                wchar_t                                         asciiUpperMap[256];
+                collections::List<IDraggingListener*>           draggingListeners;
                 
-            protected:
-                void CreateWindow();
-                void InitKeyNameMappings();
+                NSWindow*                                       nsWindow;
+                NSWindowController*                             nsController;
+                CocoaWindowDelegate*                            nsDelegate;
                 
+
             public:
                 CocoaWindow();
                 virtual ~CocoaWindow();
                 
-                NSContainer*        GetNativeContainer() const;
+                NSWindow*           GetNativeWindow() const;
+                NSWindowController* GetNativeController() const;
                 
                 void                SetGraphicsHandler(Interface* handelr);
                 Interface*          GetGraphicsHandler() const;
@@ -149,11 +151,20 @@ namespace vl {
                 void                HitTestMouseDown(vint x, vint y);
                 void                HitTestMouseMove(vint x, vint y);
                 void                HitTestMouseUp(vint x, vint y);
+                void                DragEntered();
+                void                PrepareDrag();
+                void                PerformFileDrag(const vl::collections::List<WString>& files);
+                void                ConcludeDrag();
                 
-                bool                ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
+                void                InstallDraggingListener(IDraggingListener* listener);
+                void                UninstallDraggingListener(IDraggingListener* listener);
+                
+            protected:
+                void                CreateWindow();
+    
             };
             
-            extern NSContainer* GetNSNativeContainer(INativeWindow* window);
+            extern NSWindow* GetNativeWindow(INativeWindow* window);
             
         }
         

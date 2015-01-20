@@ -272,7 +272,7 @@ namespace vl {
                 {
                     nativeView = GetCoreGraphicsView(window);
                     
-                    [GetNSNativeContainer(window)->window setContentView:nativeView];
+                    [GetNativeWindow(window) setContentView:nativeView];
                 }
                 
                 ~CoreGraphicsRenderTarget()

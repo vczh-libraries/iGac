@@ -33,8 +33,6 @@
 #include "GacUI.h"
 #include "CocoaPredef.h"
 
-@class CocoaWindowDelegate;
-
 #define GAC_APPLE_DEFAULT_FONT_FAMILY_NAME @"Helvetica"
 
 namespace vl {
@@ -66,13 +64,6 @@ namespace vl {
             NSFont* CreateFontWithGacFont(const FontProperties& font);
             NSFontTraitMask GetTraitMask(bool bold, bool italic);
             NSFontTraitMask GetTraitMask(const FontProperties& font);
-            
-            struct NSContainer
-            {
-                NSWindow* window;
-                NSWindowController* controller;
-                CocoaWindowDelegate* delegate;
-            };
             
             vint NSEventKeyCodeToGacKeyCode(unsigned short keycode);
             Rect FlipRect(NSWindow* window, Rect rect);

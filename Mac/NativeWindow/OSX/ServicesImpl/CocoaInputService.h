@@ -53,6 +53,9 @@ namespace vl {
                 
                 vint8_t                                 globalKeyStates[256];
                 
+                wchar_t                                 asciiLowerMap[256];
+                wchar_t                                 asciiUpperMap[256];
+                
             protected:
                 void StartGCDTimer();
                 // for global key states & mouse hooking
@@ -61,9 +64,6 @@ namespace vl {
             public:
                 CocoaInputService(MouseTapFunc mouseTap, TimerFunc timer);
                 virtual ~CocoaInputService();
-                
-                void InitializeKeyMapping();
-                void InvokeInputHook(CGEventType type, CGEventRef event);
                 
                 // INativeInputService
                 
@@ -79,7 +79,15 @@ namespace vl {
                 
                 WString GetKeyName(vint code) override;
                 vint    GetKey(const WString& name) override;
+                
+                ///
+                
+                void    InitKeyMapping();
+                void    InvokeInputHook(CGEventType type, CGEventRef event);
+                bool    ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
             };
+            
+            CocoaInputService* GetCocoaInputService();
             
         }
         

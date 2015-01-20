@@ -152,19 +152,19 @@ namespace vl {
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
             protected:
-                Dictionary<NSContainer*, CocoaWindow*>		windows;
-                INativeWindow*                              mainWindow;
+                Dictionary<NSWindow*, CocoaWindow*>		windows;
+                INativeWindow*                          mainWindow;
                 
-                CocoaCallbackService        callbackService;
-                CocoaInputService           inputService;
-                CocoaResourceService        resourceService;
-                CocoaScreenService          screenService;
-                CocoaAsyncService           asyncService;
-                CocoaClipboardService       clipboardService;
-                CocoaImageService           imageService;
-                CocoaDialogService          dialogService;
+                CocoaCallbackService                    callbackService;
+                CocoaInputService                       inputService;
+                CocoaResourceService                    resourceService;
+                CocoaScreenService                      screenService;
+                CocoaAsyncService                       asyncService;
+                CocoaClipboardService                   clipboardService;
+                CocoaImageService                       imageService;
+                CocoaDialogService                      dialogService;
                 
-                CocoaApplicationDelegate*   appDelegate;
+                CocoaApplicationDelegate*               appDelegate;
                 
             public:
                 CocoaController():
@@ -193,17 +193,17 @@ namespace vl {
                 {
                     CocoaWindow* window = new CocoaWindow();
                     callbackService.InvokeNativeWindowCreated(window);
-                    windows.Add(window->GetNativeContainer(), window);
+                    windows.Add(window->GetNativeWindow(), window);
                     return window;
                 }
                 
                 void DestroyNativeWindow(INativeWindow* window)
                 {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
-                    if(window != 0 && windows.Keys().Contains(cocoaWindow->GetNativeContainer()))
+                    if(window != 0 && windows.Keys().Contains(cocoaWindow->GetNativeWindow()))
                     {
                         callbackService.InvokeNativeWindowDestroyed(window);
-                        windows.Remove(cocoaWindow->GetNativeContainer());
+                        windows.Remove(cocoaWindow->GetNativeWindow());
                         delete cocoaWindow;
                     }
                 }
@@ -254,12 +254,12 @@ namespace vl {
                                 continue;
                             }
                             
-                            if(([window->GetNativeContainer()->window level] > [result->GetNativeContainer()->window level]) || [window->GetNativeContainer()->window level] == NSFloatingWindowLevel)
+                            if(([window->GetNativeWindow() level] > [result->GetNativeWindow() level]) || [window->GetNativeWindow() level] == NSFloatingWindowLevel)
                             {
                                 minRect = r;
                                 result = window;
                             }
-                            else if([window->GetNativeContainer()->window level] == [result->GetNativeContainer()->window level])
+                            else if([window->GetNativeWindow() level] == [result->GetNativeWindow() level])
                             {
                                 // encapsulates
                                 if(r.Width() * r.Height() < minRect.Width() * minRect.Height())

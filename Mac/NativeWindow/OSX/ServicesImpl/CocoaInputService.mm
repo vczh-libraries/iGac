@@ -17,6 +17,11 @@ namespace vl {
         
         namespace osx {
             
+            namespace
+            {
+                CocoaInputService* g_inputService;
+            }
+            
             CGEventRef InputTapFunc(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
             {
                 CocoaInputService* inputService = (CocoaInputService*)refcon;
@@ -34,7 +39,9 @@ namespace vl {
                 inputTapPort(0),
                 inputTapRunLoopSource(0)
             {
-                InitializeKeyMapping();
+                g_inputService = this;
+                
+                InitKeyMapping();
                 
                 eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
                 // default is 0.25s
@@ -52,7 +59,7 @@ namespace vl {
                 
             }
             
-            void CocoaInputService::InitializeKeyMapping()
+            void CocoaInputService::InitKeyMapping()
             {
                 // todo
                 // just build the map...
@@ -217,6 +224,69 @@ namespace vl {
                     keys.Set(KeyMappings[i].keyName, KeyMappings[i].keyCode);
                     keyNames.Set(i, KeyMappings[i].keyName);
                 }
+                
+                memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
+                memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
+                
+                asciiLowerMap[VKEY_0] = L'0';
+                asciiLowerMap[VKEY_0] = L'1';
+                asciiLowerMap[VKEY_2] = L'2';
+                asciiLowerMap[VKEY_3] = L'3';
+                asciiLowerMap[VKEY_4] = L'4';
+                asciiLowerMap[VKEY_5] = L'5';
+                asciiLowerMap[VKEY_6] = L'6';
+                asciiLowerMap[VKEY_7] = L'7';
+                asciiLowerMap[VKEY_8] = L'8';
+                asciiLowerMap[VKEY_9] = L'9';
+                asciiLowerMap[VKEY_OEM_1] = L';';
+                asciiLowerMap[VKEY_OEM_6] = L'[';
+                asciiLowerMap[VKEY_OEM_4] = L']';
+                asciiLowerMap[VKEY_OEM_7] = L'\'';
+                asciiLowerMap[VKEY_OEM_COMMA] = L',';
+                asciiLowerMap[VKEY_OEM_PERIOD] = L'.';
+                asciiLowerMap[VKEY_OEM_2] = L'/';
+                asciiLowerMap[VKEY_OEM_5] = L'\\';
+                asciiLowerMap[VKEY_OEM_MINUS] = L'-';
+                asciiLowerMap[VKEY_OEM_PLUS] = L'=';
+                asciiLowerMap[VKEY_OEM_3] = L'`';
+                asciiLowerMap[VKEY_SPACE] = L' ';
+                asciiLowerMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiLowerMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiLowerMap[VKEY_BACK] = VKEY_BACK;
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiLowerMap[i] = L'a' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+                
+                asciiUpperMap[VKEY_0] = L')';
+                asciiUpperMap[VKEY_1] = L'!';
+                asciiUpperMap[VKEY_2] = L'@';
+                asciiUpperMap[VKEY_3] = L'#';
+                asciiUpperMap[VKEY_4] = L'$';
+                asciiUpperMap[VKEY_5] = L'%';
+                asciiUpperMap[VKEY_6] = L'^';
+                asciiUpperMap[VKEY_7] = L'&';
+                asciiUpperMap[VKEY_8] = L'*';
+                asciiUpperMap[VKEY_9] = L'(';
+                asciiUpperMap[VKEY_OEM_1] = L':';
+                asciiUpperMap[VKEY_OEM_6] = L'{';
+                asciiUpperMap[VKEY_OEM_4] = L'}';
+                asciiUpperMap[VKEY_OEM_7] = L'\"';
+                asciiUpperMap[VKEY_OEM_COMMA] = L'<';
+                asciiUpperMap[VKEY_OEM_PERIOD] = L'>';
+                asciiUpperMap[VKEY_OEM_2] = L'?';
+                asciiUpperMap[VKEY_OEM_5] = L'|';
+                asciiUpperMap[VKEY_OEM_MINUS] = L'_';
+                asciiUpperMap[VKEY_OEM_PLUS] = L'+';
+                asciiUpperMap[VKEY_OEM_3] = L'~';
+                asciiUpperMap[VKEY_SPACE] = L' ';
+                asciiUpperMap[VKEY_RETURN] = VKEY_RETURN;
+                asciiUpperMap[VKEY_ESCAPE] = VKEY_ESCAPE;
+                asciiUpperMap[VKEY_BACK] = VKEY_BACK;
+                for(int i=VKEY_A; i<=VKEY_Z; ++i)
+                    asciiUpperMap[i] = L'A' + (i-VKEY_A);
+                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
             }
             
             void CocoaInputService::HookInput()
@@ -373,6 +443,37 @@ namespace vl {
             vint CocoaInputService::GetKey(const WString& name)
             {
                 return keys.Get(name);
+            }
+            
+            //
+            bool CocoaInputService::ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event)
+            {
+                info.ctrl = event.modifierFlags & NSCommandKeyMask;
+                info.shift = event.modifierFlags & NSShiftKeyMask;
+                info.alt = event.modifierFlags & NSAlternateKeyMask;
+                info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
+                
+                if(info.ctrl || info.alt)
+                    return false;
+                
+                vint code = NSEventKeyCodeToGacKeyCode(event.keyCode);
+                if(code >= 256)
+                    return false;
+                
+                info.code = asciiLowerMap[code];
+                if(info.capslock || info.shift) {
+                    info.code = asciiUpperMap[code];
+                }
+                
+                if(info.code != 0)
+                    return true;
+                
+                return false;
+            }
+            
+            CocoaInputService* GetCocoaInputService()
+            {
+                return g_inputService;
             }
             
         }

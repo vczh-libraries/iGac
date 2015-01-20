@@ -215,6 +215,21 @@
 		889839BA1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */; };
 		889839BB1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */; };
 		889839BC1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */; };
+		88AD46061A6EE6A1009C1AD7 /* libGacStaticLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8883496E1A456CCE00B4E711 /* libGacStaticLibrary.a */; };
+		88AD46071A6EE6E0009C1AD7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1581A304D10007DF242 /* Cocoa.framework */; };
+		88AD46081A6EE6E6009C1AD7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15E1A304D1E007DF242 /* CoreGraphics.framework */; };
+		88AD46091A6EE6EA009C1AD7 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC1601A304D22007DF242 /* Quartz.framework */; };
+		88AD460A1A6EE6F2009C1AD7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884BC15A1A304D13007DF242 /* CoreFoundation.framework */; };
+		88AD460B1A6EF0E5009C1AD7 /* UnixFileSystemInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1FA1A3BF4FD007DF242 /* UnixFileSystemInfo.cpp */; };
+		88AD460C1A6EF0E5009C1AD7 /* osx_shared.mm in Sources */ = {isa = PBXBuildFile; fileRef = 884BC1921A329B34007DF242 /* osx_shared.mm */; };
+		88AD46101A6EF288009C1AD7 /* CocoaIntrospection.mm in Sources */ = {isa = PBXBuildFile; fileRef = 886CD3E41A4DB3BE0010C947 /* CocoaIntrospection.mm */; };
+		88AD461E1A6EF443009C1AD7 /* BigDoc.png in Resources */ = {isa = PBXBuildFile; fileRef = 8898396C1A3D3C5C00FBA63B /* BigDoc.png */; };
+		88AD46B61A6F176E009C1AD7 /* ID3Window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 88AD46B21A6F176E009C1AD7 /* ID3Window.mm */; };
+		88AD46B71A6F176E009C1AD7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 88AD46B31A6F176E009C1AD7 /* Images.xcassets */; };
+		88AD46B91A6F176E009C1AD7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88AD46B51A6F176E009C1AD7 /* main.cpp */; };
+		88AD47341A6F17D1009C1AD7 /* ID3Convert.mm in Sources */ = {isa = PBXBuildFile; fileRef = 88AD472B1A6F17D1009C1AD7 /* ID3Convert.mm */; };
+		88AD47A61A6F17F2009C1AD7 /* libtag.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88AD475E1A6F17F2009C1AD7 /* libtag.a */; };
+		88AD47AA1A6F180D009C1AD7 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 88AD47A91A6F180D009C1AD7 /* libz.dylib */; };
 		88DAE5031A42D6AF004E458F /* datagrid_chemical_elements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88DAE4EB1A42D6AF004E458F /* datagrid_chemical_elements.cpp */; };
 		88DAE5041A42D6AF004E458F /* datagrid_chemical_elements_cg_renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 88DAE4EE1A42D6AF004E458F /* datagrid_chemical_elements_cg_renderer.mm */; };
 		88DAE5071A42D767004E458F /* rendering_rawapi.mm in Sources */ = {isa = PBXBuildFile; fileRef = 88DAE5061A42D767004E458F /* rendering_rawapi.mm */; };
@@ -453,6 +468,16 @@
 		8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceItemTemplate.xml; sourceTree = "<group>"; };
 		8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceListViewModel.xml; sourceTree = "<group>"; };
 		8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceViewModel.xml; sourceTree = "<group>"; };
+		88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ID3Convert.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		88AD46B11A6F176E009C1AD7 /* ID3Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3Window.h; sourceTree = "<group>"; };
+		88AD46B21A6F176E009C1AD7 /* ID3Window.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ID3Window.mm; sourceTree = "<group>"; };
+		88AD46B31A6F176E009C1AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		88AD46B41A6F176E009C1AD7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88AD46B51A6F176E009C1AD7 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		88AD472A1A6F17D1009C1AD7 /* ID3Convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3Convert.h; sourceTree = "<group>"; };
+		88AD472B1A6F17D1009C1AD7 /* ID3Convert.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ID3Convert.mm; sourceTree = "<group>"; };
+		88AD475E1A6F17F2009C1AD7 /* libtag.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtag.a; sourceTree = "<group>"; };
+		88AD47A91A6F180D009C1AD7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		88DAE4E91A42D6AF004E458F /* button_check_and_radio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = button_check_and_radio.h; sourceTree = "<group>"; };
 		88DAE4EA1A42D6AF004E458F /* button_enable_disable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = button_enable_disable.h; sourceTree = "<group>"; };
 		88DAE4EB1A42D6AF004E458F /* datagrid_chemical_elements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = datagrid_chemical_elements.cpp; sourceTree = "<group>"; };
@@ -514,12 +539,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		88AD45E11A6EE53C009C1AD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88AD47AA1A6F180D009C1AD7 /* libz.dylib in Frameworks */,
+				88AD460A1A6EE6F2009C1AD7 /* CoreFoundation.framework in Frameworks */,
+				88AD46091A6EE6EA009C1AD7 /* Quartz.framework in Frameworks */,
+				88AD46081A6EE6E6009C1AD7 /* CoreGraphics.framework in Frameworks */,
+				88AD46071A6EE6E0009C1AD7 /* Cocoa.framework in Frameworks */,
+				88AD47A61A6F17F2009C1AD7 /* libtag.a in Frameworks */,
+				88AD46061A6EE6A1009C1AD7 /* libGacStaticLibrary.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		884BAFE51A304BA1007DF242 = {
 			isa = PBXGroup;
 			children = (
+				88AD47A91A6F180D009C1AD7 /* libz.dylib */,
 				884BC1601A304D22007DF242 /* Quartz.framework */,
 				884BC15E1A304D1E007DF242 /* CoreGraphics.framework */,
 				884BC15C1A304D1A007DF242 /* Foundation.framework */,
@@ -528,6 +568,7 @@
 				8883497B1A456CF800B4E711 /* Mac */,
 				888349A31A456CF800B4E711 /* Public */,
 				884BAFF01A304BA1007DF242 /* GacOSX */,
+				88AD46B01A6F176E009C1AD7 /* ID3ConvertGUI */,
 				888349E11A456E0600B4E711 /* ControlTemplateWindow */,
 				884BAFEF1A304BA1007DF242 /* Products */,
 			);
@@ -539,6 +580,7 @@
 				884BAFEE1A304BA1007DF242 /* GacOSX.app */,
 				8883496E1A456CCE00B4E711 /* libGacStaticLibrary.a */,
 				888349E01A456E0600B4E711 /* ControlTemplateWindow.app */,
+				88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -876,6 +918,46 @@
 			path = Resources;
 			sourceTree = SOURCE_ROOT;
 		};
+		88AD46B01A6F176E009C1AD7 /* ID3ConvertGUI */ = {
+			isa = PBXGroup;
+			children = (
+				88AD47361A6F17F1009C1AD7 /* External */,
+				88AD46BA1A6F17D1009C1AD7 /* ID3Convert */,
+				88AD46B11A6F176E009C1AD7 /* ID3Window.h */,
+				88AD46B21A6F176E009C1AD7 /* ID3Window.mm */,
+				88AD46B31A6F176E009C1AD7 /* Images.xcassets */,
+				88AD46B41A6F176E009C1AD7 /* Info.plist */,
+				88AD46B51A6F176E009C1AD7 /* main.cpp */,
+			);
+			path = ID3ConvertGUI;
+			sourceTree = "<group>";
+		};
+		88AD46BA1A6F17D1009C1AD7 /* ID3Convert */ = {
+			isa = PBXGroup;
+			children = (
+				88AD472A1A6F17D1009C1AD7 /* ID3Convert.h */,
+				88AD472B1A6F17D1009C1AD7 /* ID3Convert.mm */,
+			);
+			path = ID3Convert;
+			sourceTree = "<group>";
+		};
+		88AD47361A6F17F1009C1AD7 /* External */ = {
+			isa = PBXGroup;
+			children = (
+				88AD47371A6F17F1009C1AD7 /* taglib */,
+			);
+			name = External;
+			path = ID3Convert/External;
+			sourceTree = "<group>";
+		};
+		88AD47371A6F17F1009C1AD7 /* taglib */ = {
+			isa = PBXGroup;
+			children = (
+				88AD475E1A6F17F2009C1AD7 /* libtag.a */,
+			);
+			path = taglib;
+			sourceTree = "<group>";
+		};
 		88DAE4E81A42D6AF004E458F /* controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -1022,6 +1104,23 @@
 			productReference = 888349E01A456E0600B4E711 /* ControlTemplateWindow.app */;
 			productType = "com.apple.product-type.application";
 		};
+		88AD45E31A6EE53C009C1AD7 /* ID3ConvertGUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88AD46021A6EE53C009C1AD7 /* Build configuration list for PBXNativeTarget "ID3ConvertGUI" */;
+			buildPhases = (
+				88AD45E01A6EE53C009C1AD7 /* Sources */,
+				88AD45E11A6EE53C009C1AD7 /* Frameworks */,
+				88AD45E21A6EE53C009C1AD7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ID3ConvertGUI;
+			productName = ID3Convert;
+			productReference = 88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1038,6 +1137,9 @@
 						CreatedOnToolsVersion = 6.1.1;
 					};
 					888349DF1A456E0600B4E711 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					88AD45E31A6EE53C009C1AD7 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
 				};
@@ -1058,6 +1160,7 @@
 				884BAFED1A304BA1007DF242 /* GacOSX */,
 				8883496D1A456CCE00B4E711 /* GacStaticLibrary */,
 				888349DF1A456E0600B4E711 /* ControlTemplateWindow */,
+				88AD45E31A6EE53C009C1AD7 /* ID3ConvertGUI */,
 			);
 		};
 /* End PBXProject section */
@@ -1174,6 +1277,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		88AD45E21A6EE53C009C1AD7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88AD461E1A6EF443009C1AD7 /* BigDoc.png in Resources */,
+				88AD46B71A6F176E009C1AD7 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1197,6 +1309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				88AD46101A6EF288009C1AD7 /* CocoaIntrospection.mm in Sources */,
 				888349B61A456CF800B4E711 /* CocoaBaseView.mm in Sources */,
 				888349C31A456CF800B4E711 /* CocoaCallbackService.mm in Sources */,
 				888349C51A456CF800B4E711 /* CocoaClipboardService.mm in Sources */,
@@ -1278,6 +1391,18 @@
 				88834AEF1A456F1100B4E711 /* TabDropdownTemplate.cpp in Sources */,
 				88834AD71A456F1100B4E711 /* HScrollHandleTemplate.cpp in Sources */,
 				88834AF61A456F1100B4E711 /* ToolstripSplitArrowTemplate.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		88AD45E01A6EE53C009C1AD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				88AD460B1A6EF0E5009C1AD7 /* UnixFileSystemInfo.cpp in Sources */,
+				88AD46B61A6F176E009C1AD7 /* ID3Window.mm in Sources */,
+				88AD46B91A6F176E009C1AD7 /* main.cpp in Sources */,
+				88AD460C1A6EF0E5009C1AD7 /* osx_shared.mm in Sources */,
+				88AD47341A6F17D1009C1AD7 /* ID3Convert.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1483,6 +1608,46 @@
 			};
 			name = Release;
 		};
+		88AD45FE1A6EE53C009C1AD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/ID3ConvertGUI/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ID3Convert/External/taglib",
+					"$(PROJECT_DIR)/ID3ConvertGUI/ID3Convert/External/taglib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.9;
+			};
+			name = Debug;
+		};
+		88AD45FF1A6EE53C009C1AD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/ID3ConvertGUI/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ID3Convert/External/taglib",
+					"$(PROJECT_DIR)/ID3ConvertGUI/ID3Convert/External/taglib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.9;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1518,6 +1683,15 @@
 			buildConfigurations = (
 				888349FB1A456E0600B4E711 /* Debug */,
 				888349FC1A456E0600B4E711 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88AD46021A6EE53C009C1AD7 /* Build configuration list for PBXNativeTarget "ID3ConvertGUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				88AD45FE1A6EE53C009C1AD7 /* Debug */,
+				88AD45FF1A6EE53C009C1AD7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

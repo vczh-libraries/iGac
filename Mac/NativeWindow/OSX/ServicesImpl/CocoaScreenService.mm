@@ -78,11 +78,11 @@ namespace vl {
                 CocoaWindow* wnd = dynamic_cast<CocoaWindow*>(window);
                 if(wnd)
                 {
-                    NSContainer* container = wnd->GetNativeContainer();
+                    NSScreen* windowScreen = [wnd->GetNativeWindow() screen];
                     
                     for(vint i=0;i<screens.Count();i++)
                     {
-                        if(screens[i]->screen == [container->window screen])
+                        if(screens[i]->screen == windowScreen)
                         {
                             return screens[i].Obj();
                         }

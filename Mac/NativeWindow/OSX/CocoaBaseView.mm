@@ -60,7 +60,7 @@
 - (BOOL)acceptsFirstResponder
 {
     // as borderless window will not be included in the responder chain by default
-    return [cocoaWindow->GetNativeContainer()->window styleMask] & NSBorderlessWindowMask ? YES : [super acceptsFirstResponder];
+    return [cocoaWindow->GetNativeWindow() styleMask] & NSBorderlessWindowMask ? YES : [super acceptsFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder
@@ -213,10 +213,11 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-    if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
-        == NSDragOperationGeneric)
+    if ((NSDragOperationGeneric & [sender draggingSourceOperationMask]) == NSDragOperationGeneric)
     {
         [self setNeedsDisplay:YES];
+        
+        cocoaWindow->DragEntered();
         return NSDragOperationGeneric;
     }
     
@@ -225,20 +226,29 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
+    cocoaWindow->PrepareDrag();
     [self setNeedsDisplay:YES];
     return YES;
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-//    NSPasteboard* pasteboard = [sender draggingPasteboard];
-//    NSArray* files = [pasteboard propertyListForType:NSFilenamesPboardType];
-//    
+    NSPasteboard* pasteboard = [sender draggingPasteboard];
+    NSArray* files = [pasteboard propertyListForType:NSFilenamesPboardType];
+    
+    vl::collections::List<vl::WString> vlFiles;
+    for(NSString* fn in files)
+    {
+        vlFiles.Add(vl::presentation::osx::NSStringToWString(fn));
+    }
+    cocoaWindow->PerformFileDrag(vlFiles);
+    
     return YES;
 }
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
+    cocoaWindow->ConcludeDrag();
     [self setNeedsDisplay:YES];
 }
 
@@ -310,7 +320,7 @@
     vl::presentation::Point caretPoint = cocoaWindow->GetCaretPoint();
     vl::presentation::Rect bounds = cocoaWindow->GetBounds();
     
-    NSWindow* wnd = cocoaWindow->GetNativeContainer()->window;
+    NSWindow* wnd = cocoaWindow->GetNativeWindow();
     NSScreen* screen = vl::presentation::osx::GetWindowScreen(wnd);
     
     return NSMakeRect(caretPoint.x + bounds.Left(),
