@@ -468,7 +468,7 @@
 		8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceItemTemplate.xml; sourceTree = "<group>"; };
 		8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceListViewModel.xml; sourceTree = "<group>"; };
 		8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceViewModel.xml; sourceTree = "<group>"; };
-		88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ID3Convert.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		88AD45E41A6EE53C009C1AD7 /* ID3ConvertGUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ID3ConvertGUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88AD46B11A6F176E009C1AD7 /* ID3Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3Window.h; sourceTree = "<group>"; };
 		88AD46B21A6F176E009C1AD7 /* ID3Window.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ID3Window.mm; sourceTree = "<group>"; };
 		88AD46B31A6F176E009C1AD7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -580,7 +580,7 @@
 				884BAFEE1A304BA1007DF242 /* GacOSX.app */,
 				8883496E1A456CCE00B4E711 /* libGacStaticLibrary.a */,
 				888349E01A456E0600B4E711 /* ControlTemplateWindow.app */,
-				88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */,
+				88AD45E41A6EE53C009C1AD7 /* ID3ConvertGUI.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1118,7 +1118,7 @@
 			);
 			name = ID3ConvertGUI;
 			productName = ID3Convert;
-			productReference = 88AD45E41A6EE53C009C1AD7 /* ID3Convert.app */;
+			productReference = 88AD45E41A6EE53C009C1AD7 /* ID3ConvertGUI.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
