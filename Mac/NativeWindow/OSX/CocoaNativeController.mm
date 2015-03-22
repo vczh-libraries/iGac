@@ -152,7 +152,7 @@ namespace vl {
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
             protected:
-                Dictionary<NSWindow*, CocoaWindow*>		windows;
+                List<CocoaWindow*>                      windows;
                 INativeWindow*                          mainWindow;
                 
                 CocoaCallbackService                    callbackService;
@@ -188,22 +188,24 @@ namespace vl {
                     inputService.StopHookMouse();
                 }
                 
-                
                 INativeWindow* CreateNativeWindow()
                 {
                     CocoaWindow* window = new CocoaWindow();
                     callbackService.InvokeNativeWindowCreated(window);
-                    windows.Add(window->GetNativeWindow(), window);
+                    windows.Add(window);
                     return window;
                 }
                 
                 void DestroyNativeWindow(INativeWindow* window)
                 {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
-                    if(window != 0 && windows.Keys().Contains(cocoaWindow->GetNativeWindow()))
+                    if(window != 0 && windows.Contains(cocoaWindow))
                     {
                         callbackService.InvokeNativeWindowDestroyed(window);
-                        windows.Remove(cocoaWindow->GetNativeWindow());
+                        windows.Remove(cocoaWindow);
+                        
+                        if(cocoaWindow == mainWindow)
+                            [NSApp stop:nil];
                         delete cocoaWindow;
                     }
                 }
@@ -243,7 +245,7 @@ namespace vl {
                     Rect minRect(0, 0, 99999, 99999);
                     for(vint i=0; i<windows.Count(); ++i)
                     {
-                        CocoaWindow* window = (CocoaWindow*)windows.Values()[i];
+                        CocoaWindow* window = (CocoaWindow*)windows[i];
                         Rect r = window->GetClientBoundsInScreen();
                         if(r.Contains(location))
                         {

@@ -454,6 +454,7 @@
 		8898398C1A3D3C5C00FBA63B /* XmlWindowResourceItemTemplate.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceItemTemplate.xml; sourceTree = "<group>"; };
 		8898398D1A3D3C5C00FBA63B /* XmlWindowResourceListViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceListViewModel.xml; sourceTree = "<group>"; };
 		8898398E1A3D3C5C00FBA63B /* XmlWindowResourceViewModel.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = XmlWindowResourceViewModel.xml; sourceTree = "<group>"; };
+
 		88AD47A91A6F180D009C1AD7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		88DA311D1ABED57D004F093E /* GacUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GacUI.cpp; sourceTree = "<group>"; };
 		88DA311E1ABED57D004F093E /* GacUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GacUI.h; sourceTree = "<group>"; };
@@ -550,6 +551,7 @@
 				884BAFEE1A304BA1007DF242 /* GacOSX.app */,
 				8883496E1A456CCE00B4E711 /* libGacStaticLibrary.a */,
 				888349E01A456E0600B4E711 /* ControlTemplateWindow.app */,
+
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1026,6 +1028,7 @@
 			productReference = 888349E01A456E0600B4E711 /* ControlTemplateWindow.app */;
 			productType = "com.apple.product-type.application";
 		};
+
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
