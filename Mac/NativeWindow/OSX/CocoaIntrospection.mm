@@ -8,6 +8,8 @@
 
 #include "CocoaIntrospection.h"
 
+#include <objc/objc-runtime.h>
+
 namespace vl {
     
     namespace presentation {

@@ -12,6 +12,8 @@
 	<dict>
 		<key>4BCB2F5800075511265333839288D34D1089DD90</key>
 		<string>https://github.com/darkfall/Gaclib_OSX.git</string>
+		<key>906953B1DD4935FDAB440F2EAD12DC540B62F9FB</key>
+		<string>https://github.com/vczh/gac.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>MacTest/GacOSX.xcodeproj</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>4BCB2F5800075511265333839288D34D1089DD90</key>
 		<string>../../..</string>
+		<key>906953B1DD4935FDAB440F2EAD12DC540B62F9FB</key>
+		<string>../../../gac/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/darkfall/Gaclib_OSX.git</string>
@@ -33,6 +37,14 @@
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>4BCB2F5800075511265333839288D34D1089DD90</string>
+			<key>IDESourceControlWCCName</key>
+			<string>gac</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>906953B1DD4935FDAB440F2EAD12DC540B62F9FB</string>
 			<key>IDESourceControlWCCName</key>
 			<string>gac</string>
 		</dict>

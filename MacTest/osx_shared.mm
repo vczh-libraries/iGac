@@ -94,6 +94,7 @@ namespace osx {
         BOOL result;
         [[NSFileManager defaultManager] fileExistsAtPath: WStringToNSString(file)
                                              isDirectory: &result];
+        
         return result;
     }
 

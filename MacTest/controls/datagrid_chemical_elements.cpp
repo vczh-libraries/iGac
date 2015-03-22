@@ -16,7 +16,7 @@ ElementElectronDataVisualizer::ElementElectronDataVisualizer()
     renderer = new ElementElectronDataRenderer;
 }
 
-void ElementElectronDataVisualizer::BeforeVisualizerCell(list::IDataProvider* dataProvider, vint row, vint column)override
+void ElementElectronDataVisualizer::BeforeVisualizerCell(list::IDataProvider* dataProvider, vint row, vint column)
 {
     renderer->electronCounts.Clear();
 }

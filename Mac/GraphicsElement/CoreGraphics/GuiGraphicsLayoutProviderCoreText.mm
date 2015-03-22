@@ -26,20 +26,20 @@ using namespace vl::presentation::elements_coregraphics;
 
 @property (nonatomic) NSRange textRange;
 @property (nonatomic) NSRect cellFrame;
-@property (nonatomic) IGuiGraphicsElement* graphicsElement;
+@property (nonatomic) vl::Ptr<IGuiGraphicsElement> graphicsElement;
 @property (nonatomic) IGuiGraphicsParagraph::InlineObjectProperties properties;
 
 #ifndef NS_DESIGNATED_INITIALIZER
 #define NS_DESIGNATED_INITIALIZER
 #endif
 
-- (id)initWithGraphicsElement:(IGuiGraphicsElement*)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
+- (id)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation GuiElementsTextCell
 
-- (id)initWithGraphicsElement:(IGuiGraphicsElement*)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
+- (id)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
 {
     if(self = [super init])
     {
@@ -48,6 +48,7 @@ using namespace vl::presentation::elements_coregraphics;
     }
     return self;
 }
+
 
 - (void)draw:(NSRect)cellFrame
 {
@@ -167,7 +168,7 @@ namespace vl {
                 
                 struct TextCellContainer
                 {
-                    GuiElementsTextCell* textCell;
+                    __unsafe_unretained GuiElementsTextCell* textCell;
                     
                     TextCellContainer(GuiElementsTextCell* c): textCell(c) {}
                     TextCellContainer() {}
@@ -209,6 +210,8 @@ namespace vl {
                 InlineElementMap                        inlineElements;
                 BackgroundColorMap                      backgroundColors;
                 
+                NSMutableArray*                         textCellStorage;
+                
                 vint									caretPos;
                 Color									caretColor;
                 bool									caretFrontSide;
@@ -249,6 +252,8 @@ namespace vl {
                     
                     [layoutManager addTextContainer:textContainer];
                     [textStorage addLayoutManager:layoutManager];
+                    
+                    textCellStorage = [NSMutableArray new];
                     
                     needFormatData = true;
                 }
@@ -537,7 +542,7 @@ namespace vl {
                             return false;
                     }
                 
-                    GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:value.Obj() andProperties:properties];
+                    GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:value andProperties:properties];
                     textCell.textRange = NSMakeRange(start, length);
                     
                     NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
@@ -545,6 +550,7 @@ namespace vl {
                     
                     NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
                     
+                    [textCellStorage addObject:textCell];
                     
                     
                     [textStorage beginEditing];
@@ -600,6 +606,8 @@ namespace vl {
                                  needFormatData = true;
                              }
                          }];
+                        
+                        [textCellStorage removeObject:textCell];
                     }
                     [textStorage endEditing];
                     
@@ -1019,8 +1027,6 @@ namespace vl {
                             }
                             
                             glyphIndex += lineFragmentRange.length;
-                            
-                      //      printf("line %d (%d - %d): %f %f %f %f\n", metrics.size()-1, lineFragmentRange.location, lineFragmentRange.length+lineFragmentRange.location, lineFragmentRect.origin.x, lineFragmentRect.origin.y, lineFragmentRect.size.width, lineFragmentRect.size.height);
                             
                         }
                         lineFragments.Resize(metrics.size());
