@@ -3,7 +3,6 @@
 
 #####Current Progress:
 * Finalizing & Bug fixes
-* CMake
 * iOS proof of concept implementation is in iOS branch, which may not be updated / synced with the main branch as its just something for fun.
 
 #####Known Issues/Limiations:
