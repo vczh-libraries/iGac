@@ -1,4 +1,4 @@
-#### OSX native implementation w CoreGraphics/Quartz2D for GacLib (http://www.gaclib.net) by Vczh
+#### OSX implementation w CoreGraphics/Quartz2D for [GacLib](http://www.gaclib.net)
 
 [![Build Status](https://travis-ci.org/darkfall/Gaclib_OSX.svg?branch=master)](https://travis-ci.org/darkfall/Gaclib_OSX)
 
