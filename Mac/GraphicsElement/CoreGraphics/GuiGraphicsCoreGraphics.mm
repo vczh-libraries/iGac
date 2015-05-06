@@ -91,7 +91,7 @@ inline CGContextRef GetCurrentCGContext()
 - (void)drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = GetCurrentCGContext();
-g
+
     CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
 
