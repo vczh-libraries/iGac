@@ -1,15 +1,13 @@
+os: osx
+
 language: cpp
 
 compiler:
     - clang
-    - gcc
 
 before_install:
     - mkdir ../GacOSX_build
       
-install:
-    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.9; export CC="gcc-4.9"; export CXX="g++-4.9"; fi;
-
 script:
     - cd ../GacOSX_build
     - cmake ../Gaclib_OSX
