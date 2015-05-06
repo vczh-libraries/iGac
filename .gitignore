@@ -1,3 +1,11 @@
+#Cmake
+CMakeCache*
+*.cmake
+CMakeFiles
+Makefile
+MacTest/bin/
+bin/
+
 # our stuff
 _OUTPUT_/
 _DELETE_/
@@ -196,3 +204,5 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+
+CMakeFiles/

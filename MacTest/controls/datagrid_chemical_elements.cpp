@@ -55,3 +55,16 @@ GuiBoundsComposition* ElementElectronDataVisualizer::CreateBoundsCompositionInte
     composition->SetOwnedElement(graphElement);
     return composition;
 }
+
+
+int main(int argc, const char * argv[])
+{
+    SetupOSXCoreGraphicsRenderer();
+    
+    return 0;
+}
+
+void GuiMain()
+{
+    RunGacWindow<ChemicalElementWindow>();
+}

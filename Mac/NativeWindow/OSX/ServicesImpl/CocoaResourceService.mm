@@ -7,8 +7,8 @@
 //
 
 #include "CocoaResourceService.h"
-#include "CocoaPredef.h"
-#include "CocoaHelper.h"
+#include "../CocoaPredef.h"
+#include "../CocoaHelper.h"
 
 #import <Cocoa/Cocoa.h>
 

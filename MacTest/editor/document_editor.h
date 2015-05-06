@@ -9,7 +9,7 @@
 #ifndef GacOSX_document_editor_h
 #define GacOSX_document_editor_h
 
-#include "../gac_include.h"
+#include "../shared/gac_include.h"
 
 class DocumentEditorWindow : public GuiWindow
 {

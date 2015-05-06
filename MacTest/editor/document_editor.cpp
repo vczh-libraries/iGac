@@ -487,3 +487,15 @@ DocumentEditorWindow::DocumentEditorWindow()
 DocumentEditorWindow::~DocumentEditorWindow()
 {
 }
+
+int main(int argc, const char * argv[])
+{
+    SetupOSXCoreGraphicsRenderer();
+    
+    return 0;
+}
+
+void GuiMain()
+{
+    RunGacWindow<DocumentEditorWindow>();
+}

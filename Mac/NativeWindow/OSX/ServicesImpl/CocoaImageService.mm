@@ -7,7 +7,7 @@
 //
 
 #include "CocoaImageService.h"
-#include "CocoaHelper.h"
+#include "../CocoaHelper.h"
 
 namespace vl {
     

@@ -9,7 +9,7 @@
 #ifndef GacOSX_datagrid_chemical_elements_h
 #define GacOSX_datagrid_chemical_elements_h
 
-#include "../gac_include.h"
+#include "../shared/gac_include.h"
 
 struct ElementElectron
 {

@@ -7,7 +7,7 @@
 //
 
 #include "CocoaInputService.h"
-#include "CocoaHelper.h"
+#include "../CocoaHelper.h"
 
 #import <AppKit/AppKit.h>
 
