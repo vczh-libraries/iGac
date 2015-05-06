@@ -1,9 +1,5 @@
 os: osx
-
-language: cpp
-
-compiler:
-    - clang
+language: objective-c
 
 before_install:
     - mkdir ../GacOSX_build
