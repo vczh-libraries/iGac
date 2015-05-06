@@ -64,6 +64,11 @@ inline CGContextRef GetCurrentCGContext()
     return nil;
 }
 
+- (void)viewDidChangeBackingProperties
+{
+    printf("%f\n", [[self window] backingScaleFactor]);
+}
+
 - (void)resize:(CGSize)size
 {
     if(_drawingLayer)
@@ -72,6 +77,7 @@ inline CGContextRef GetCurrentCGContext()
     }
     
     CGContextRef viewContext = GetCurrentCGContext();
+
     _drawingLayer = CGLayerCreateWithContext(viewContext, size, NULL);
     
     if(_drawingLayer)
@@ -85,7 +91,7 @@ inline CGContextRef GetCurrentCGContext()
 - (void)drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = GetCurrentCGContext();
-    
+g
     CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
 
@@ -125,6 +131,18 @@ namespace vl {
                 
             public:
                 
+                ~CachedCoreTextFontPackageAllocator()
+                {
+                    for(vint i=0;i<deadResources.Count();i++)
+                    {
+                        deadResources[i].value->Release();
+                    }
+                    for(vint i=0;i<aliveResources.Count();i++)
+                    {
+                        aliveResources.Values()[i].resource->Release();
+                    }
+                }
+                
                 static Ptr<CoreTextFontPackage> CreateCoreTextFontPackage(const FontProperties& font)
                 {                    
                     Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
@@ -149,6 +167,8 @@ namespace vl {
                         [coreTextFont->attributes setObject:[NSNumber numberWithInt:NSUnderlineStyleSingle] forKey:NSStrikethroughStyleAttributeName];
                     }
                     
+                    coreTextFont->Retain();
+                    
                     return coreTextFont;
                 }
                 
@@ -166,14 +186,19 @@ namespace vl {
                 class CoreGraphicsCharMeasurer: public text::CharMeasurer
                 {
                 protected:
-                    Ptr<CoreTextFontPackage>  coreTextFont;
+                    Ptr<CoreTextFontPackage> coreTextFont;
                     
                 public:
                     CoreGraphicsCharMeasurer(Ptr<CoreTextFontPackage> font):
                     text::CharMeasurer(font->font.pointSize),
                         coreTextFont(font)
                     {
-                        
+                        coreTextFont->Retain();
+                    }
+                    
+                    ~CoreGraphicsCharMeasurer()
+                    {
+                        coreTextFont->Release();
                     }
                     
                     Size MeasureInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
@@ -293,6 +318,8 @@ namespace vl {
                     if(!context)
                         return;
                     
+                    CGContextSetShouldAntialias(context, true);
+
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView frame]);
                     

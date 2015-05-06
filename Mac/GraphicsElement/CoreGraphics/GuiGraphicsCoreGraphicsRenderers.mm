@@ -267,18 +267,39 @@ namespace vl {
             
             GuiSolidLabelElementRenderer::GuiSolidLabelElementRenderer():
             oldText(L""),
-            oldMaxWidth(-1)
+            oldMaxWidth(-1),
+            nsText(0),
+            nsAttributes(0)
             {
                 nsParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+                CFRetain(nsParagraphStyle);
+            }
+            
+            GuiSolidLabelElementRenderer::~GuiSolidLabelElementRenderer()
+            {
+                if(nsAttributes)
+                    CFRelease(nsAttributes);
+                if(nsText)
+                    CFRelease(nsText);
+                if(nsParagraphStyle)
+                    CFRelease(nsParagraphStyle);
             }
             
             void GuiSolidLabelElementRenderer::CreateFont()
             {
                 FontProperties font = element->GetFont();
                 GetCoreGraphicsResourceManager()->DestroyCoreTextFont(oldFont);
-                coreTextFont = GetCoreGraphicsResourceManager()->CreateCoreTextFont(font);
                 
+                
+                if(coreTextFont)
+                    coreTextFont->Release();
+                coreTextFont = GetCoreGraphicsResourceManager()->CreateCoreTextFont(font);
+                coreTextFont->Retain();
+                
+                if(nsAttributes)
+                    CFRelease(nsAttributes);
                 nsAttributes = [NSMutableDictionary dictionaryWithDictionary:coreTextFont->attributes];
+                CFRetain(nsAttributes);
                 
                 [nsAttributes setObject:nsParagraphStyle forKey:NSParagraphStyleAttributeName];
                 CreateColor();
@@ -289,7 +310,10 @@ namespace vl {
             void GuiSolidLabelElementRenderer::CreateColor()
             {
                 oldColor = element->GetColor();
-                [nsAttributes setObject:[NSColor colorWithRed:oldColor.r/255.0f green:oldColor.g/255.0f blue:oldColor.b/255.0f alpha:oldColor.a/255.0f]
+                [nsAttributes setObject:[NSColor colorWithRed:oldColor.r/255.0f
+                                                        green:oldColor.g/255.0f
+                                                         blue:oldColor.b/255.0f
+                                                        alpha:oldColor.a/255.0f]
                                  forKey:NSForegroundColorAttributeName];
             }
             
@@ -423,6 +447,8 @@ namespace vl {
                 
                 oldText = element->GetText();
                 
+                if(nsText)
+                    CFRelease(nsText);
                 if(oldFont.fontFamily == L"Webdings" && oldText.Length() > 0)
                 {
                     // map webdings to unicode
@@ -449,6 +475,7 @@ namespace vl {
                 {
                     nsText = osx::WStringToNSString(element->GetText());
                 }
+                CFRetain(nsText);
                
                 UpdateMinSize();
             }
@@ -658,9 +685,16 @@ namespace vl {
             
             //
             
-            GuiColorizedTextElementRenderer::GuiColorizedTextElementRenderer()
+            GuiColorizedTextElementRenderer::GuiColorizedTextElementRenderer():
+            nsAttributes(0)
             {
                 
+            }
+            
+            GuiColorizedTextElementRenderer::~GuiColorizedTextElementRenderer()
+            {
+                if(nsAttributes)
+                    CFRelease(nsAttributes);
             }
             
             void GuiColorizedTextElementRenderer::InitializeInternal()
@@ -814,10 +848,18 @@ namespace vl {
                     rm->DestroyCoreTextFont(oldFont);
                 }
                 oldFont = element->GetFont();
+                
+                if(coreTextFont)
+                    coreTextFont->Release();
                 coreTextFont = rm->CreateCoreTextFont(oldFont);
+                coreTextFont->Retain();
+                
                 element->GetLines().SetCharMeasurer(rm->CreateCharMeasurer(oldFont).Obj());
                 
+                if(nsAttributes)
+                    CFRelease(nsAttributes);
                 nsAttributes = [NSMutableDictionary dictionaryWithDictionary:coreTextFont->attributes];
+                CFRetain(nsAttributes);
             }
             
             void GuiColorizedTextElementRenderer::ColorChanged()

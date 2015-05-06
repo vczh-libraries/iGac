@@ -24,8 +24,22 @@ namespace vl {
             class CoreTextFontPackage
             {
             public:
-                NSFont*                     font;
-                NSMutableDictionary*        attributes;
+                __unsafe_unretained NSFont*                 font;
+                __unsafe_unretained NSMutableDictionary*    attributes;
+                
+                
+                void Retain()
+                {
+                    CFRetain(attributes);
+                    CFRetain(font);
+                }
+                
+                void Release()
+                {
+                    CFRelease(attributes);
+                    CFRelease(font);
+                }
+                
             };
             
             
@@ -82,10 +96,10 @@ namespace vl {
                 WString                     oldText;
                 vint                        oldMaxWidth;
                 
-                NSString*                   nsText;
-                NSMutableParagraphStyle*    nsParagraphStyle;
-                NSMutableDictionary*        nsAttributes;
-                Ptr<CoreTextFontPackage>    coreTextFont;
+                __unsafe_unretained NSString*                   nsText;
+                __unsafe_unretained NSMutableParagraphStyle*    nsParagraphStyle;
+                __unsafe_unretained NSMutableDictionary*        nsAttributes;
+                Ptr<CoreTextFontPackage>                        coreTextFont;
              
                 void CreateFont();
                 void CreateColor();
@@ -98,6 +112,7 @@ namespace vl {
                 
             public:
                 GuiSolidLabelElementRenderer();
+                ~GuiSolidLabelElementRenderer();
                 
                 void Render(Rect bounds) override;
                 void OnElementStateChanged() override;
@@ -173,7 +188,7 @@ namespace vl {
                 Ptr<CoreTextFontPackage>        coreTextFont;
                 FontProperties                  oldFont;
                 ColorArray                      colors;
-                NSMutableDictionary*            nsAttributes;
+                __unsafe_unretained NSMutableDictionary*            nsAttributes;
                 
                 void InitializeInternal();
                 void FinalizeInternal();
@@ -184,6 +199,7 @@ namespace vl {
                 
             public:
                 GuiColorizedTextElementRenderer();
+                ~GuiColorizedTextElementRenderer();
                 
                 void Render(Rect bounds) override;
                 void OnElementStateChanged() override;

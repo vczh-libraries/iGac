@@ -1355,6 +1355,11 @@ namespace vl {
 
 }
 
+- (void)windowDidChangeBackingProperties:(NSNotification *)notification
+{
+    
+}
+
 - (void)windowDidMiniaturize:(NSNotification *)notification
 {
     _sizeState = vl::presentation::INativeWindow::Minimized;
