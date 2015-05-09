@@ -276,26 +276,26 @@ add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 
 #
-#set(APP_NAME "Persistant.Xml.ControlTemplate")
-#set(TESTAPP_SOURCE_FILES 
-#	"persistant/xml_control_template.cpp" 
-#)
-#file(GLOB CONTROL_TEMPLATE_GENERATED_FILES "persistant/control_template/*.cpp")
+set(APP_NAME "Persistant.Xml.ControlTemplate")
+set(TESTAPP_SOURCE_FILES 
+	"persistant/xml_control_template.cpp" 
+)
+file(GLOB CONTROL_TEMPLATE_GENERATED_FILES "persistant/control_template/*.cpp")
 
-#set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
-#add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${CONTROL_TEMPLATE_GENERATED_FILES} #${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
-#target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${CONTROL_TEMPLATE_GENERATED_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 
 #
-#set(APP_NAME "Persistant.Xml.DataBinding")
-#set(TESTAPP_SOURCE_FILES 
-#	"persistant/xml_data_binding.cpp"
-#)
-#file(GLOB DATA_BINDING_GENERATED_FILES "persistant/data_binding/*.cpp")
+set(APP_NAME "Persistant.Xml.DataBinding")
+set(TESTAPP_SOURCE_FILES 
+	"persistant/xml_data_binding.cpp"
+)
+file(GLOB DATA_BINDING_GENERATED_FILES "persistant/data_binding/*.cpp")
 
-#set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
-#add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${DATA_BINDING_GENERATED_FILES} #${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
-#target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${DATA_BINDING_GENERATED_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 
 #
 set(APP_NAME "Editor.Toolstrip.DocumentEditor")
