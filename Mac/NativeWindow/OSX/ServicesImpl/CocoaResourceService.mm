@@ -23,7 +23,7 @@ namespace vl {
             
             NSCursor* LoadSystemCursor(INativeCursor::SystemCursorType cursorId)
             {
-                NSCursor* cursor;
+               // NSCursor* cursor;
                 NSString* cursorName;
                 switch(cursorId)
                 {
@@ -73,6 +73,7 @@ namespace vl {
                 }
                 if(cursorName)
                 {
+                    // TODO, copy these to proj
                     NSString *cursorPath = [@"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/Resources/cursors" stringByAppendingPathComponent:cursorName];
                     
                     NSImage* image = [[NSImage alloc] initByReferencingFile:[cursorPath stringByAppendingPathComponent:@"cursor.pdf"]];

@@ -55,8 +55,7 @@ namespace vl {
                 NSWindow*                                       nsWindow;
                 NSWindowController*                             nsController;
                 CocoaWindowDelegate*                            nsDelegate;
-                
-
+            
             public:
                 CocoaWindow();
                 virtual ~CocoaWindow();

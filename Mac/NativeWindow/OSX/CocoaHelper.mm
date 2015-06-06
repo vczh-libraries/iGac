@@ -94,6 +94,7 @@ namespace vl {
                 int bpp = 0;
                 
                 // main resolution
+                // todo , CGDisplayModeCopyPixelEncoding deprecated in 10.11
                 CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(cgmode);
                 if(CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
                     bpp = 32;

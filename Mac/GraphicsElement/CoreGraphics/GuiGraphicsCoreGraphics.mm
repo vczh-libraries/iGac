@@ -46,7 +46,8 @@ inline CGContextRef GetCurrentCGContext()
 
 @implementation CoreGraphicsView
 {
-
+    void* _bytes;
+    CGContextRef _context;
 }
 
 - (id)initWithCocoaWindow:(CocoaWindow *)window
@@ -55,6 +56,7 @@ inline CGContextRef GetCurrentCGContext()
     {
         [self resize:[self frame].size];
     }
+    
     return self;
 }
 
@@ -64,27 +66,38 @@ inline CGContextRef GetCurrentCGContext()
     return nil;
 }
 
+- (void)dealloc
+{
+    if(_drawingLayer)
+        CGLayerRelease(_drawingLayer);
+    
+    if(_context)
+        CGContextRelease(_context);
+    
+    [super dealloc];
+}
+
 - (void)viewDidChangeBackingProperties
 {
-    printf("%f\n", [[self window] backingScaleFactor]);
+    [self resize:self.frame.size];
 }
 
 - (void)resize:(CGSize)size
 {
     if(_drawingLayer)
-    {
         CGLayerRelease(_drawingLayer);
-    }
     
-    CGContextRef viewContext = GetCurrentCGContext();
+    if(_context)
+        CGContextRelease(_context);
 
-    _drawingLayer = CGLayerCreateWithContext(viewContext, size, NULL);
+    size.width *= [[self window] backingScaleFactor];
+    size.height *= [[self window] backingScaleFactor];
     
-    if(_drawingLayer)
+    _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+    if(_context)
     {
-        CGContextRef context = CGLayerGetContext(_drawingLayer);
-        CGContextSetRGBFillColor(context, 0, 0, 0, 0);
-        CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+        _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
+        assert(_drawingLayer);
     }
 }
 
@@ -92,12 +105,17 @@ inline CGContextRef GetCurrentCGContext()
 {
     CGContextRef context = GetCurrentCGContext();
 
-    CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
+    CGContextDrawLayerInRect(context, [self backbufferSize], _drawingLayer);
 }
 
 - (CGContextRef)getLayerContext
 {
     return CGLayerGetContext(_drawingLayer);
+}
+
+- (CGRect)backbufferSize
+{
+    return CGRectMake(0, 0, self.frame.size.width * [[self window] backingScaleFactor], self.frame.size.height * [[self window] backingScaleFactor]);
 }
 
 @end
@@ -302,7 +320,7 @@ namespace vl {
                 
                 ~CoreGraphicsRenderTarget()
                 {
-                    [[nativeView window] setContentView:nil];
+                    //[[nativeView window] setContentView:nil];
                 }
                 
                 void StartRendering()
@@ -321,13 +339,13 @@ namespace vl {
                     CGContextSetShouldAntialias(context, true);
 
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
-                    CGContextFillRect(context, [nativeView frame]);
+                    CGContextFillRect(context, [nativeView backbufferSize]);
                     
                     CGContextSaveGState(context);
                     // flip the context, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
-                    CGContextScaleCTM(context, 1.0, -1.0);
+                    CGContextScaleCTM(context, 1.0f, -1.0f);
                     CGContextTranslateCTM(context, 0, -nativeView.frame.size.height);
                 }
                 
@@ -578,20 +596,19 @@ namespace vl {
             public:
                 Dictionary<INativeWindow*, Ptr<CoreGraphicsCocoaNativeWindowListener>>  nativeWindowListeners;
                 
-                void NativeWindowCreated(INativeWindow* window)
+                void NativeWindowCreated(INativeWindow* window) override
                 {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener=new CoreGraphicsCocoaNativeWindowListener(window);
+                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = new CoreGraphicsCocoaNativeWindowListener(window);
                     window->InstallListener(listener.Obj());
                     nativeWindowListeners.Add(window, listener);
                 }
                 
-                void NativeWindowDestroying(INativeWindow* window)
+                void NativeWindowDestroying(INativeWindow* window) override
                 {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener=nativeWindowListeners[window];
+                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = nativeWindowListeners[window];
                     nativeWindowListeners.Remove(window);
                     window->UninstallListener(listener.Obj());
                 }
-                
             };
             
             namespace
@@ -602,7 +619,7 @@ namespace vl {
             CoreGraphicsView* GetCoreGraphicsView(INativeWindow* window)
             {
                 vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
-                return index==-1 ? 0 : g_cocoaListener->nativeWindowListeners.Values().Get(index)->GetCoreGraphicsView();
+                return index == -1 ? 0 : g_cocoaListener->nativeWindowListeners.Values().Get(index)->GetCoreGraphicsView();
             }
             
             void RecreateCoreGraphicsLayer(INativeWindow* window)

@@ -33,13 +33,19 @@ using namespace vl::presentation::elements_coregraphics;
 #define NS_DESIGNATED_INITIALIZER
 #endif
 
-- (id)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation GuiElementsTextCell
 
-- (id)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
+- (instancetype)init
+{
+    self = [super init];
+    return self;
+}
+
+- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
 {
     if(self = [super init])
     {
@@ -228,9 +234,11 @@ namespace vl {
                 Array<BoundingMetrics>                  lineFragments;
                 Dictionary<vint, vint>                  charLineFragmentsMap;
                 
+                IGuiGraphicsParagraphCallback*          paraCallback;
                 
             public:
-                CoreTextParagraph(IGuiGraphicsLayoutProvider* _provider, const WString& _text, ICoreGraphicsRenderTarget* _renderTarget):
+                // todo callback
+                CoreTextParagraph(IGuiGraphicsLayoutProvider* _provider, const WString& _text, ICoreGraphicsRenderTarget* _renderTarget, IGuiGraphicsParagraphCallback* _callback):
                     provider(_provider),
                     renderTarget(_renderTarget),
                     paragraphText(_text),
@@ -238,7 +246,8 @@ namespace vl {
                     maxWidth(-1),
                     caretPos(-1),
                     caretFrontSide(false),
-                    textAlignment(Alignment::Left)
+                    textAlignment(Alignment::Left),
+                    paraCallback(_callback)
                 {
                     usedColors.Add(Color(0, 0, 0));
                     
@@ -264,22 +273,22 @@ namespace vl {
                 }
                 
             public:
-                IGuiGraphicsLayoutProvider* GetProvider()
+                IGuiGraphicsLayoutProvider* GetProvider() override
                 {
                     return provider;
                 }
                 
-                IGuiGraphicsRenderTarget* GetRenderTarget()
+                IGuiGraphicsRenderTarget* GetRenderTarget() override
                 {
                     return renderTarget;
                 }
                 
-                bool GetWrapLine()
+                bool GetWrapLine() override
                 {
                     return wrapLine;
                 }
                 
-                void SetWrapLine(bool value)
+                void SetWrapLine(bool value) override
                 {
                     wrapLine = value;
                     
@@ -305,24 +314,24 @@ namespace vl {
                     needFormatData = true;
                 }
                 
-                vint GetMaxWidth()
+                vint GetMaxWidth() override
                 {
                     return maxWidth;
                 }
                 
-                void SetMaxWidth(vint value)
+                void SetMaxWidth(vint value) override
                 {
                     maxWidth = value;
                     [textContainer setContainerSize:NSMakeSize(value != -1 ? value : CGFLOAT_MAX, CGFLOAT_MAX)];
                     needFormatData = true;
                 }
                 
-                Alignment GetParagraphAlignment()
+                Alignment GetParagraphAlignment() override
                 {
                     return textAlignment;
                 }
                 
-                void SetParagraphAlignment(Alignment value)
+                void SetParagraphAlignment(Alignment value) override
                 {
                     NSMutableParagraphStyle* paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
                     
@@ -362,7 +371,7 @@ namespace vl {
                     needFormatData = true;
                 }
                 
-                bool SetFont(vint start, vint length, const WString& value)
+                bool SetFont(vint start, vint length, const WString& value) override
                 {
                     // remove old fonts
                     [textStorage beginEditing];
@@ -392,7 +401,7 @@ namespace vl {
                     return true;
                 }
                 
-                bool SetSize(vint start, vint length, vint value)
+                bool SetSize(vint start, vint length, vint value) override
                 {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
@@ -418,7 +427,7 @@ namespace vl {
                     return true;
                 }
                 
-                bool SetStyle(vint start, vint length, TextStyle value)
+                bool SetStyle(vint start, vint length, TextStyle value) override
                 {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
@@ -495,7 +504,7 @@ namespace vl {
                     return true;
                 }
                 
-                bool SetColor(vint start, vint length, Color value)
+                bool SetColor(vint start, vint length, Color value) override
                 {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
@@ -522,15 +531,15 @@ namespace vl {
                     return true;
                 }
                 
-                bool SetBackgroundColor(vint start, vint length, Color value)
+                bool SetBackgroundColor(vint start, vint length, Color value) override
                 {
                     SetMap(backgroundColors, start, length, value);
                     return true;
                 }
                 
-                bool SetInlineObject(vint start, vint length, const InlineObjectProperties& properties, Ptr<IGuiGraphicsElement> value)
+                bool SetInlineObject(vint start, vint length, const InlineObjectProperties& properties) override
                 {
-                    if(inlineElements.Keys().Contains(value.Obj()))
+                    if(inlineElements.Keys().Contains(properties.backgroundImage.Obj()))
                     {
                         return false;
                     }
@@ -541,50 +550,54 @@ namespace vl {
                            cell.textRange.location < start + length)
                             return false;
                     }
-                
-                    GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:value andProperties:properties];
-                    textCell.textRange = NSMakeRange(start, length);
                     
-                    NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
-                    [attachment setAttachmentCell:textCell];
-                    
-                    NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
-                    
-                    [textCellStorage addObject:textCell];
-                    
-                    
-                    [textStorage beginEditing];
-                    [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
-                                        withAttributedString:attachmentStr];
-                    
-                    if(length > 1)
+                    if(properties.backgroundImage)
                     {
-                        // well, this is really a hack too
-                        // NSTextAttachment has a special character NSAttachmentCharacter 0xfffc to identify attachments
-                        // it does NOT run through N characters
-                        //
-                        // so here we are replacing unused chars with ZERO WIDTH SPACE
-                        // we cannot just remove them because it will effect length and also attributes applied at different locations
-                        // maybe there are better solutions here?
+                        GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:properties.backgroundImage andProperties:properties];
+                        textCell.textRange = NSMakeRange(start, length);
                         
-                        NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
-                        [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
+                        NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
+                        [attachment setAttachmentCell:textCell];
+                        
+                        NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
+                        
+                        [textCellStorage addObject:textCell];
+                        
+                        
+                        [textStorage beginEditing];
+                        [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
+                                         withAttributedString:attachmentStr];
+                        
+                        if(length > 1)
+                        {
+                            // well, this is really a hack too
+                            // NSTextAttachment has a special character NSAttachmentCharacter 0xfffc to identify attachments
+                            // it does NOT run through N characters
+                            //
+                            // so here we are replacing unused chars with ZERO WIDTH SPACE
+                            // we cannot just remove them because it will effect length and also attributes applied at different locations
+                            // maybe there are better solutions here?
+                            
+                            NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
+                            [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
+                        }
+                        [textStorage endEditing];
+                        
+                        IGuiGraphicsRenderer* renderer = properties.backgroundImage->GetRenderer();
+                        if(renderer)
+                        {
+                            renderer->SetRenderTarget(renderTarget);
+                        }
+                        inlineElements.Add(properties.backgroundImage.Obj(), textCell);
+                        SetMap(graphicsElements, start, length, properties.backgroundImage.Obj());
+                        
+                        needFormatData = true;
+                        return true;
                     }
-                    [textStorage endEditing];
-                   
-                    IGuiGraphicsRenderer* renderer = value->GetRenderer();
-                    if(renderer)
-                    {
-                        renderer->SetRenderTarget(renderTarget);
-                    }
-                    inlineElements.Add(value.Obj(), textCell);
-                    SetMap(graphicsElements, start, length, value.Obj());
-                    
-                    needFormatData = true;
-                    return true;
+                    return false;
                 }
                 
-                bool ResetInlineObject(vint start, vint length)
+                bool ResetInlineObject(vint start, vint length) override
                 {
                     IGuiGraphicsElement* element = 0;
                     
@@ -614,7 +627,7 @@ namespace vl {
                     return true;
                 }
                 
-                vint GetHeight()
+                vint GetHeight() override
                 {
                     [layoutManager glyphRangeForTextContainer:textContainer];
                     
@@ -622,7 +635,7 @@ namespace vl {
                             usedRectForTextContainer:textContainer].size.height;
                 }
                 
-                bool OpenCaret(vint _caret, Color _color, bool _frontSide)
+                bool OpenCaret(vint _caret, Color _color, bool _frontSide) override
                 {
                     if(!IsValidCaret(_caret))
                         return false;
@@ -635,7 +648,7 @@ namespace vl {
                     return true;
                 }
                 
-                bool CloseCaret()
+                bool CloseCaret() override
                 {
                     if(caretPos == -1)
                         return false;
@@ -643,7 +656,7 @@ namespace vl {
                     return true;
                 }
                 
-                void Render(Rect bounds)
+                void Render(Rect bounds) override
                 {
                     GenerateFormatData();
                     CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
@@ -705,7 +718,7 @@ namespace vl {
                     }
                 }
                 
-                vint GetCaret(vint comparingCaret, CaretRelativePosition position, bool& preferFrontSide)
+                vint GetCaret(vint comparingCaret, CaretRelativePosition position, bool& preferFrontSide) override
                 {
                     GenerateFormatData();
                     if(position == CaretFirst) return 0;
@@ -799,7 +812,7 @@ namespace vl {
                     return -1;
                 }
                 
-                Rect GetCaretBounds(vint caret, bool frontSide)
+                Rect GetCaretBounds(vint caret, bool frontSide) override
                 {
                     GenerateFormatData();
                     
@@ -839,7 +852,7 @@ namespace vl {
                     }
                 }
                 
-                vint GetCaretFromPoint(Point point)
+                vint GetCaretFromPoint(Point point) override
                 {
                     GenerateFormatData();
                     
@@ -847,9 +860,11 @@ namespace vl {
                     return GetCaretFromXWithLine(point.x, lineIndex);
                 }
                 
-                Ptr<IGuiGraphicsElement> GetInlineObjectFromPoint(Point point, vint& start, vint& length)
+                Nullable<InlineObjectProperties> GetInlineObjectFromPoint(Point point, vint& start, vint& length) override
                 {
                     GenerateFormatData();
+                    
+                    InlineObjectProperties result;
                     
                     NSPoint nsp = NSMakePoint(point.x, point.y);
                     for(vint i=0; i<inlineElements.Count(); ++i)
@@ -864,14 +879,16 @@ namespace vl {
                                 start = cell.textRange.location;
                                 length = cell.textRange.length;
                                 
-                                return element;
+                                result.size = Size(cell.cellFrame.size.width, cell.cellFrame.size.height);
+                                // TODO other stuff
+                                return result;
                             }
                         }
                     }
-                    return Ptr<IGuiGraphicsElement>();
+                    return result;
                 }
                 
-                vint GetNearestCaretFromTextPos(vint textPos, bool frontSide)
+                vint GetNearestCaretFromTextPos(vint textPos, bool frontSide) override
                 {
                     GenerateFormatData();
                     
@@ -888,7 +905,7 @@ namespace vl {
                         return metrics.textPosition + metrics.textPosition;
                 }
                 
-                bool IsValidCaret(vint caret)
+                bool IsValidCaret(vint caret) override
                 {
                     GenerateFormatData();
                     
@@ -899,7 +916,7 @@ namespace vl {
                     return false;
                 }
                 
-                bool IsValidTextPos(vint textPos)
+                bool IsValidTextPos(vint textPos) override
                 {
                     return 0 <= textPos && textPos <= paragraphText.Length();
                 }
@@ -926,7 +943,6 @@ namespace vl {
                             // since bounding rect may not reflect the line height of the glyph (if there are smaller / larger glyphs within the same line)
                             CGFloat fontLineHeight = bounding.size.height;
                             CGFloat descender = 0;
-                            CGFloat leading = 0;
                             NSDictionary* attrs = [textStorage attributesAtIndex:charIndex effectiveRange:0];
                             NSFont* font = [attrs objectForKey:NSFontAttributeName];
                             if(font)
@@ -1119,7 +1135,7 @@ namespace vl {
                         }
                         else if(textPos == lineStart && middle != 0)
                         {
-                            BoundingMetrics& anotherLine = lineFragments[middle - 1];
+                            // BoundingMetrics& anotherLine = lineFragments[middle - 1];
                             frontLineIndex = middle - 1;
                             backLineIndex = middle;
                             return;
@@ -1252,9 +1268,9 @@ namespace vl {
                  }
             };
             
-            Ptr<elements::IGuiGraphicsParagraph> CoreTextLayoutProvider::CreateParagraph(const WString& str, elements::IGuiGraphicsRenderTarget* renderTarget)
+            Ptr<elements::IGuiGraphicsParagraph> CoreTextLayoutProvider::CreateParagraph(const WString& text, elements::IGuiGraphicsRenderTarget* renderTarget, elements::IGuiGraphicsParagraphCallback* callback)
             {
-                return new CoreTextParagraph(this, str, (ICoreGraphicsRenderTarget*)renderTarget);
+                return new CoreTextParagraph(this, text, (ICoreGraphicsRenderTarget*)renderTarget, callback);
             }
             
         }

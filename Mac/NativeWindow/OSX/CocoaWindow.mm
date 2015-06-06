@@ -82,7 +82,7 @@ namespace vl {
                 NSWindow* window = [[CocoaNSWindow alloc] initWithContentRect:windowRect
                                                                     styleMask:windowStyle
                                                                       backing:NSBackingStoreBuffered
-                                                                        defer:NO];
+                                                                        defer:YES];
                 NSWindowController* controller = [[NSWindowController alloc] initWithWindow:window];
                 [window orderFrontRegardless];
                 
@@ -1135,7 +1135,7 @@ namespace vl {
                         
                     case NSMouseExited:
                     {
-                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
+//                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
                         for(vint i=0; i<listeners.Count(); ++i)
                         {

@@ -165,7 +165,7 @@ namespace vl {
                 CocoaDialogService                      dialogService;
                 
                 CocoaApplicationDelegate*               appDelegate;
-                
+                                
             public:
                 CocoaController():
                     mainWindow(0),
@@ -362,7 +362,6 @@ namespace vl {
                 INativeCallbackService* cb = dynamic_cast<CocoaController*>(GetCurrentController())->CallbackService();
                 dynamic_cast<CocoaCallbackService*>(cb)->InvokeMouseHook(type, event);
             }
-            
         }
         
     }
