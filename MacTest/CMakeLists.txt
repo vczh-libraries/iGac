@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(GacOSXTests)
-include_directories("../gac/Public/Source")
+include_directories("../GacUI/Import")
+include_directories("../GacUI/Release")
+
 include_directories("../Mac")
 
 include_directories(${DEPENDENCIES_INCLUDE_DIRS})
@@ -17,7 +19,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-missing-declarations")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
-set(GACUI_COMMON_FILES "../gac/Public/Source/Vlpp.cpp" "../gac/Public/Source/VlppWorkflow.cpp" "../gac/Public/Source/GacUI.cpp" "../gac/Public/Source/GacUIReflection.cpp")
+set(GACUI_COMMON_FILES 
+	"../GacUI/Import/Vlpp.cpp" 
+	"../GacUI/Import/VlppWorkflow.cpp" 
+	"../GacUI/Release/GacUI.cpp" 
+	"../GacUI/Release/GacUIReflection.cpp")
 
 set(GACOSX_FILES
 	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm"

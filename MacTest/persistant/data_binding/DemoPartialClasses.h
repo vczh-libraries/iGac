@@ -11,7 +11,7 @@ DO NOT MODIFY
 #ifndef VCZH_GACUI_RESOURCE_CODE_GENERATOR_Demo_PARTIAL_CLASSES
 #define VCZH_GACUI_RESOURCE_CODE_GENERATOR_Demo_PARTIAL_CLASSES
 
-#include "../../../gac/Public/Source/GacUIReflection.h"
+#include "../../../GacUI/Release/GacUIReflection.h"
 
 namespace demos
 {

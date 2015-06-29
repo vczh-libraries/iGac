@@ -20,6 +20,8 @@
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
 
+#define RETINA_SCALING_FACTOR 2.0
+
 @interface CoreGraphicsView: CocoaBaseView
 
 @property (readonly) CGLayer* drawingLayer;
@@ -55,6 +57,7 @@ inline CGContextRef GetCurrentCGContext()
     {
         [self resize:[self frame].size];
     }
+    
     return self;
 }
 
@@ -66,7 +69,7 @@ inline CGContextRef GetCurrentCGContext()
 
 - (void)viewDidChangeBackingProperties
 {
-    printf("%f\n", [[self window] backingScaleFactor]);
+    
 }
 
 - (void)resize:(CGSize)size
@@ -78,6 +81,8 @@ inline CGContextRef GetCurrentCGContext()
     
     CGContextRef viewContext = GetCurrentCGContext();
 
+    size.width *= RETINA_SCALING_FACTOR;
+    size.height *= RETINA_SCALING_FACTOR;
     _drawingLayer = CGLayerCreateWithContext(viewContext, size, NULL);
     
     if(_drawingLayer)
@@ -91,8 +96,11 @@ inline CGContextRef GetCurrentCGContext()
 - (void)drawRect:(NSRect)dirtyRect
 {
     CGContextRef context = GetCurrentCGContext();
+    
+//    CGContextScaleCTM(context, 1.0f / RETINA_SCALING_FACTOR, 1.0f / RETINA_SCALING_FACTOR);
+    CGContextDrawLayerInRect(context, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height), _drawingLayer);
 
-    CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
+  //  CGContextDrawLayerAtPoint(context, CGPointMake(0, 0), _drawingLayer);
 }
 
 - (CGContextRef)getLayerContext
@@ -302,7 +310,7 @@ namespace vl {
                 
                 ~CoreGraphicsRenderTarget()
                 {
-                    [[nativeView window] setContentView:nil];
+                    //[[nativeView window] setContentView:nil];
                 }
                 
                 void StartRendering()
@@ -327,7 +335,7 @@ namespace vl {
                     // flip the context, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
-                    CGContextScaleCTM(context, 1.0, -1.0);
+                    CGContextScaleCTM(context, RETINA_SCALING_FACTOR, -RETINA_SCALING_FACTOR);
                     CGContextTranslateCTM(context, 0, -nativeView.frame.size.height);
                 }
                 
