@@ -97,6 +97,7 @@ namespace vl {
                         }
                         break;
                     }
+                    default: break;
                 }
             }
     

@@ -20,7 +20,7 @@ namespace vl {
             class CoreTextLayoutProvider: public Object, public elements::IGuiGraphicsLayoutProvider
             {
             public:
-                Ptr<elements::IGuiGraphicsParagraph> CreateParagraph(const WString& str, elements::IGuiGraphicsRenderTarget* renderTarget) override;
+                Ptr<elements::IGuiGraphicsParagraph> CreateParagraph(const WString& text, elements::IGuiGraphicsRenderTarget* renderTarget, elements::IGuiGraphicsParagraphCallback* callback) override;
             };
             
         }
