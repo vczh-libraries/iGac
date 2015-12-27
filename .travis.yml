@@ -2,9 +2,9 @@ os: osx
 language: objective-c
 
 before_install:
-    - mkdir ../GacOSX_build
+    - mkdir ../iGac_build
       
 script:
-    - cd ../GacOSX_build
-    - cmake ../Gaclib_OSX
+    - cd ../iGac_build
+    - cmake ../iGac
     - make
