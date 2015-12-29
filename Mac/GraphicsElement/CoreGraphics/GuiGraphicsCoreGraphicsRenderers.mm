@@ -14,6 +14,8 @@
 #import <Cocoa/Cocoa.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+static float SCALING_FACTOR = 1.0f;
+
 namespace vl {
     
     namespace presentation {
@@ -57,7 +59,10 @@ namespace vl {
             
             inline CGRect ConvertToCGRect(const Rect& rect, float extends = 0.0f)
             {
-                return CGRectMake(rect.Left() - extends, rect.Top() - extends, rect.Width() + extends * 2, rect.Height() + extends * 2);
+                return CGRectMake((rect.Left() - extends) * SCALING_FACTOR,
+                                  (rect.Top() - extends) * SCALING_FACTOR,
+                                  (rect.Width() + extends * 2) * SCALING_FACTOR,
+                                  (rect.Height() + extends * 2) * SCALING_FACTOR);
             }
             
             IMPLEMENT_ELEMENT_RENDERER(GuiSolidBackgroundElementRenderer)
@@ -372,36 +377,36 @@ namespace vl {
             
             void GuiSolidLabelElementRenderer::Render(Rect bounds)
             {
-                vint x =0;
+                vint x = 0;
                 vint y = 0;
                 
                 switch(element->GetVerticalAlignment())
                 {
                     case Alignment::Top:
-                        y=bounds.Top();
+                        y = bounds.Top();
                         break;
                         
                     case Alignment::Center:
-                        y=bounds.Top() + (bounds.Height() - minSize.y) / 2;
+                        y = bounds.Top() + (bounds.Height() - minSize.y) / 2;
                         break;
                         
                     case Alignment::Bottom:
-                        y=bounds.Bottom() - minSize.y;
+                        y = bounds.Bottom() - minSize.y;
                         break;
                 }
                 
                 switch(element->GetHorizontalAlignment())
                 {
                     case Alignment::Left:
-                        x=bounds.Left();
+                        x = bounds.Left();
                         break;
                         
                     case Alignment::Center:
-                        x=bounds.Left() + (bounds.Width() - minSize.x) / 2;
+                        x = bounds.Left() + (bounds.Width() - minSize.x) / 2;
                         break;
                         
                     case Alignment::Right:
-                        x=bounds.Right() - minSize.x;
+                        x = bounds.Right() - minSize.x;
                         break;
                 }
                 
@@ -411,8 +416,7 @@ namespace vl {
                 if(!element->GetEllipse() && !element->GetMultiline() && !element->GetWrapLine())
                 {
                     [coreTextFont->font set];
-                    [nsText drawAtPoint:NSMakePoint(x, y)
-                         withAttributes:nsAttributes];
+                    [nsText drawAtPoint:NSMakePoint(x, y) withAttributes:nsAttributes];
                 }
                 else
                 {

@@ -96,6 +96,9 @@ inline CGContextRef GetCurrentCGContext()
     _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
     if(_context)
     {
+        CGContextSetShouldAntialias(_context, true);
+        CGContextSetShouldSmoothFonts(_context, true);
+
         _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
         assert(_drawingLayer);
     }
@@ -105,7 +108,8 @@ inline CGContextRef GetCurrentCGContext()
 {
     CGContextRef context = GetCurrentCGContext();
 
-    CGContextDrawLayerInRect(context, [self backbufferSize], _drawingLayer);
+    // window already has scaling factor, don't scale twice
+    CGContextDrawLayerInRect(context, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height), _drawingLayer);
 }
 
 - (CGContextRef)getLayerContext
@@ -226,7 +230,6 @@ namespace vl {
                         
                         CGSize size = [nsStr sizeWithAttributes:coreTextFont->attributes];
                         return Size(size.width, size.height);
-                        
                     }
                     
                     vint MeasureWidthInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
@@ -336,8 +339,6 @@ namespace vl {
                     if(!context)
                         return;
                     
-                    CGContextSetShouldAntialias(context, true);
-
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView backbufferSize]);
                     
@@ -346,7 +347,10 @@ namespace vl {
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
                     CGContextScaleCTM(context, 1.0f, -1.0f);
-                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height);
+                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height * 2);
+                    
+                    // scaling for retina display
+                    CGContextScaleCTM(context, nativeView.window.backingScaleFactor, nativeView.window.backingScaleFactor);
                 }
                 
                 bool StopRendering()
