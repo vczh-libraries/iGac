@@ -32,6 +32,8 @@ namespace osx
     
     extern vl::WString UTF8StringToWString(const char* str, vl::vint len);
     extern void FindDirectoriesAndFiles(const vl::WString& path, vl::collections::List<vl::WString>& directories, vl::collections::List<vl::WString>& files);
+    
+    extern vl::WString GetResourceFolder();
 }
 
 

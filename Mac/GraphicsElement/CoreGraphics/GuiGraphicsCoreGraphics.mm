@@ -328,16 +328,16 @@ namespace vl {
                 
                 void StartRendering()
                 {
+                    CGContextRef context = (CGContextRef)GetCGContext();
+                    if(!context)
+                        return;
+                    
                     SetCurrentRenderTarget(this);
                     
                     [NSGraphicsContext saveGraphicsState];
                     
-                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:(CGContextRef)GetCGContext()
+                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context
                                                                                                     flipped:true]];
-                    
-                    CGContextRef context = (CGContextRef)GetCGContext();
-                    if(!context)
-                        return;
                     
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView backbufferSize]);

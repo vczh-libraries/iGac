@@ -66,7 +66,7 @@ set(APP_NAME "Test_HellWorld_Cpp")
 set(TESTAPP_SOURCE_FILES 
 	"HelloWorlds/Cpp/Main.cpp" 
 )
-set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
@@ -80,9 +80,80 @@ set(TESTAPP_SOURCE_FILES
 	"Controls/ContainersAndButtons/Main.cpp" 
 	"Controls/ContainersAndButtons/DemoPartialClasses.cpp"
 )
-set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.gacosx.${APP_NAME}")
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
+
+#
+set(SHARED_RESOURCES "Layouts/Alignment/Alignment.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Layouts_Alignment")
+set(TESTAPP_SOURCE_FILES 
+	"Layouts/Alignment/Main.cpp" 
+	"Layouts/Alignment/DemoPartialClasses.cpp"
+)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
+
+#
+set(SHARED_RESOURCES "Layouts/Table/Table.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Layouts_Table")
+set(TESTAPP_SOURCE_FILES 
+	"Layouts/Table/Main.cpp" 
+	"Layouts/Table/DemoPartialClasses.cpp"
+)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
 
 
+#
+set(SHARED_RESOURCES "Layouts/Stack/Stack.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Layouts_Stack")
+set(TESTAPP_SOURCE_FILES 
+	"Layouts/Stack/Main.cpp" 
+	"Layouts/Stack/DemoPartialClasses.cpp"
+)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
+
+
+#
+set(SHARED_RESOURCES "Layouts/Flow/Flow.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Layouts_Flow")
+set(TESTAPP_SOURCE_FILES 
+	"Layouts/Flow/Main.cpp" 
+	"Layouts/Flow/DemoPartialClasses.cpp"
+)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )
+
+
+#
+set(SHARED_RESOURCES "Layouts/RichTextEmbedding/RichTextEmbedding.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Layouts_RichTextEmbedding")
+set(TESTAPP_SOURCE_FILES 
+	"Layouts/RichTextEmbedding/Main.cpp" 
+	"Layouts/RichTextEmbedding/DemoPartialClasses.cpp"
+)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} )

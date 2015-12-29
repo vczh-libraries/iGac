@@ -130,4 +130,10 @@ namespace osx {
         return result;
     }
     
+    vl::WString GetResourceFolder()
+    {
+        vl::WString exePath = vl::presentation::GetFolderPath(vl::presentation::controls::GetApplication()->GetExecutablePath());
+        return exePath + L"/Contents/Resources/";
+    }
+
 }
