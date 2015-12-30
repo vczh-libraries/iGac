@@ -9,7 +9,6 @@ GacOSX is distributed under [Microsoft Public License (MS-PL)](http://www.micros
 
 ##### Current Progress:
 * Finalizing & Bug fixes
-* Some richtext stuff (due to gac update, embedded controls works differently)
 
 ##### iOS
 * iOS proof of concept implementation is in iOS branch, which may not be updated / synced with the main branch as its just something for fun.
