@@ -5,7 +5,7 @@
 ![GacOSX](https://darkfall.me/resource/gac_osx.jpg)
 
 ##### License
-GacOSX is distributed under [Microsoft Public License (MS-PL)](http://www.microsoft.com/en-us/openness/licenses.aspx#MPL).
+Apache
 
 ##### Current Progress:
 * Finalizing & Bug fixes
