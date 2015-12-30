@@ -19,6 +19,12 @@
 using namespace vl::presentation;
 using namespace vl::presentation::elements_coregraphics;
 
+class IGuiTextCellCallback {
+public:
+    virtual vl::presentation::Point GetParagraphOffset() = 0;
+    virtual IGuiGraphicsParagraphCallback* GetParagraphCallback() = 0;
+};
+
 @interface GuiElementsTextCell: NSObject<NSTextAttachmentCell>
 {
     NSTextAttachment* attachment;
@@ -28,29 +34,25 @@ using namespace vl::presentation::elements_coregraphics;
 @property (nonatomic) NSRect cellFrame;
 @property (nonatomic) vl::Ptr<IGuiGraphicsElement> graphicsElement;
 @property (nonatomic) IGuiGraphicsParagraph::InlineObjectProperties properties;
+@property (nonatomic) IGuiTextCellCallback* callback;
 
 #ifndef NS_DESIGNATED_INITIALIZER
 #define NS_DESIGNATED_INITIALIZER
 #endif
 
-- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element properties:(IGuiGraphicsParagraph::InlineObjectProperties)properties andCallback:(IGuiTextCellCallback*)callback NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation GuiElementsTextCell
 
-- (instancetype)init
-{
-    self = [super init];
-    return self;
-}
-
-- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element andProperties:(IGuiGraphicsParagraph::InlineObjectProperties)properties
+- (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element properties:(IGuiGraphicsParagraph::InlineObjectProperties)properties andCallback:(IGuiTextCellCallback*)callback
 {
     if(self = [super init])
     {
         _graphicsElement = element;
         _properties = properties;
+        _callback = callback;
     }
     return self;
 }
@@ -59,14 +61,32 @@ using namespace vl::presentation::elements_coregraphics;
 - (void)draw:(NSRect)cellFrame
 {
     _cellFrame = cellFrame;
-    IGuiGraphicsRenderer* graphicsRenderer = _graphicsElement->GetRenderer();
-    if(graphicsRenderer)
+    
+    if(_properties.backgroundImage)
     {
-        vl::presentation::Rect bounds(vl::presentation::Point((vl::vint)cellFrame.origin.x,
-                                                              (vl::vint)cellFrame.origin.y),
-                                      _properties.size);
-        graphicsRenderer->Render(bounds);
+        IGuiGraphicsRenderer* graphicsRenderer = _properties.backgroundImage->GetRenderer();
+        if(graphicsRenderer)
+        {
+            vl::presentation::Rect bounds(vl::presentation::Point((vl::vint)cellFrame.origin.x,
+                                                                  (vl::vint)cellFrame.origin.y),
+                                          _properties.size);
+            graphicsRenderer->Render(bounds);
+        }
     }
+    
+    if(_properties.callbackId != -1)
+    {
+        if(auto paraCallback = _callback->GetParagraphCallback())
+        {
+            auto offset = _callback->GetParagraphOffset();
+            vl::presentation::Rect bounds(vl::presentation::Point((vl::vint)cellFrame.origin.x - offset.x,
+                                                                  (vl::vint)cellFrame.origin.y - offset.y),
+                                          _properties.size);
+            auto size = paraCallback->OnRenderInlineObject(_properties.callbackId, bounds);
+            _properties.size = size;
+        }
+    }
+    
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -147,8 +167,7 @@ namespace vl {
         
         namespace elements_coregraphics {
             
-            // todo
-            class CoreTextParagraph : public Object, public IGuiGraphicsParagraph
+            class CoreTextParagraph : public Object, public IGuiGraphicsParagraph, public IGuiTextCellCallback
             {
             protected:
                 struct TextRange
@@ -235,6 +254,7 @@ namespace vl {
                 Dictionary<vint, vint>                  charLineFragmentsMap;
                 
                 IGuiGraphicsParagraphCallback*          paraCallback;
+                vl::presentation::Point                 paraOffset;
                 
             public:
                 // todo callback
@@ -354,8 +374,8 @@ namespace vl {
                     
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                    options:0
+                                                usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSParagraphStyle* style = [attrs objectForKey:NSParagraphStyleAttributeName];
                          if(style)
@@ -376,8 +396,8 @@ namespace vl {
                     // remove old fonts
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                    options:0
+                                                usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                     {
                         NSFont* font = [attrs objectForKey:NSFontAttributeName];
                         if(font)
@@ -405,8 +425,8 @@ namespace vl {
                 {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                    options:0
+                                                usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          
                          NSFont* font = [attrs objectForKey:NSFontAttributeName];
@@ -431,8 +451,8 @@ namespace vl {
                 {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
-                                                       options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                options:0
+                                            usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSFontTraitMask traitMask = 0;
                          if(value & TextStyle::Bold)
@@ -509,7 +529,7 @@ namespace vl {
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(start, length)
                                                     options:0
-                                                usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
+                                                 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
                      {
                          NSColor* color = [attrs objectForKey:NSForegroundColorAttributeName];
                          if(color)
@@ -543,7 +563,7 @@ namespace vl {
                     {
                         return false;
                     }
-                    for(vint i=0; i<inlineElements.Count(); ++i)
+                    for(vint i = 0; i < inlineElements.Count(); ++i)
                     {
                         GuiElementsTextCell* cell = inlineElements.Values().Get(i).textCell;
                         if(start < cell.textRange.location + cell.textRange.length &&
@@ -551,50 +571,52 @@ namespace vl {
                             return false;
                     }
                     
+                    GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:properties.backgroundImage
+                                                                                              properties:properties
+                                                                                             andCallback:this];
+                    textCell.textRange = NSMakeRange(start, length);
+                    
+                    NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
+                    [attachment setAttachmentCell:textCell];
+                    
+                    NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
+                    
+                    [textCellStorage addObject:textCell];
+                    
+                    
+                    [textStorage beginEditing];
+                    [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
+                                     withAttributedString:attachmentStr];
+                    
+                    if(length > 1)
+                    {
+                        // well, this is really a hack too
+                        // NSTextAttachment has a special character NSAttachmentCharacter 0xfffc to identify attachments
+                        // it does NOT run through N characters
+                        //
+                        // so here we are replacing unused chars with ZERO WIDTH SPACE
+                        // we cannot just remove them because it will effect length and also attributes applied at different locations
+                        // maybe there are better solutions here?
+                        
+                        NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
+                        [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
+                    }
+                    [textStorage endEditing];
+                    
                     if(properties.backgroundImage)
                     {
-                        GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:properties.backgroundImage andProperties:properties];
-                        textCell.textRange = NSMakeRange(start, length);
-                        
-                        NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
-                        [attachment setAttachmentCell:textCell];
-                        
-                        NSAttributedString* attachmentStr = [NSAttributedString attributedStringWithAttachment:attachment];
-                        
-                        [textCellStorage addObject:textCell];
-                        
-                        
-                        [textStorage beginEditing];
-                        [textStorage replaceCharactersInRange:NSMakeRange(start, 1)
-                                         withAttributedString:attachmentStr];
-                        
-                        if(length > 1)
-                        {
-                            // well, this is really a hack too
-                            // NSTextAttachment has a special character NSAttachmentCharacter 0xfffc to identify attachments
-                            // it does NOT run through N characters
-                            //
-                            // so here we are replacing unused chars with ZERO WIDTH SPACE
-                            // we cannot just remove them because it will effect length and also attributes applied at different locations
-                            // maybe there are better solutions here?
-                            
-                            NSString* str = [@"" stringByPaddingToLength:length-1 withString:@"\u200d" startingAtIndex:0];
-                            [textStorage replaceCharactersInRange:NSMakeRange(start+1, length-1) withString:str];
-                        }
-                        [textStorage endEditing];
-                        
                         IGuiGraphicsRenderer* renderer = properties.backgroundImage->GetRenderer();
                         if(renderer)
                         {
                             renderer->SetRenderTarget(renderTarget);
                         }
                         inlineElements.Add(properties.backgroundImage.Obj(), textCell);
-                        SetMap(graphicsElements, start, length, properties.backgroundImage.Obj());
-                        
-                        needFormatData = true;
-                        return true;
                     }
-                    return false;
+                    
+                    SetMap(graphicsElements, start, length, properties.backgroundImage.Obj());
+                    needFormatData = true;
+                    
+                    return true;
                 }
                 
                 bool ResetInlineObject(vint start, vint length) override
@@ -631,8 +653,7 @@ namespace vl {
                 {
                     [layoutManager glyphRangeForTextContainer:textContainer];
                     
-                    return [layoutManager
-                            usedRectForTextContainer:textContainer].size.height;
+                    return [layoutManager usedRectForTextContainer:textContainer].size.height;
                 }
                 
                 bool OpenCaret(vint _caret, Color _color, bool _frontSide) override
@@ -658,10 +679,11 @@ namespace vl {
                 
                 void Render(Rect bounds) override
                 {
+                    paraOffset = bounds.LeftTop();
+                    
                     GenerateFormatData();
                     CGContextRef context = (CGContextRef)(GetCurrentRenderTarget()->GetCGContext());
 
-                    
                     for(vint i = 0; i < backgroundColors.Count(); i++)
                     {
                         TextRange key = backgroundColors.Keys()[i];
@@ -864,8 +886,6 @@ namespace vl {
                 {
                     GenerateFormatData();
                     
-                    InlineObjectProperties result;
-                    
                     NSPoint nsp = NSMakePoint(point.x, point.y);
                     for(vint i=0; i<inlineElements.Count(); ++i)
                     {
@@ -879,13 +899,11 @@ namespace vl {
                                 start = cell.textRange.location;
                                 length = cell.textRange.length;
                                 
-                                result.size = Size(cell.cellFrame.size.width, cell.cellFrame.size.height);
-                                // TODO other stuff
-                                return result;
+                                return cell.properties;
                             }
                         }
                     }
-                    return result;
+                    return InlineObjectProperties();
                 }
                 
                 vint GetNearestCaretFromTextPos(vint textPos, bool frontSide) override
@@ -919,6 +937,18 @@ namespace vl {
                 bool IsValidTextPos(vint textPos) override
                 {
                     return 0 <= textPos && textPos <= paragraphText.Length();
+                }
+                
+                ///// IGuiTextCellBack
+                
+                vl::presentation::Point GetParagraphOffset() override
+                {
+                    return paraOffset;
+                }
+                
+                IGuiGraphicsParagraphCallback* GetParagraphCallback() override
+                {
+                    return paraCallback;
                 }
                 
             protected:

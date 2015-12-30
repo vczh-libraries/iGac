@@ -507,8 +507,6 @@ namespace vl {
                 {
                     coreTextFonts.Destroy(font);
                 }
-                
-                
             };
             
             namespace {
