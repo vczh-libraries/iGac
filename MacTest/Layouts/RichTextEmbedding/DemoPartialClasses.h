@@ -29,11 +29,11 @@ namespace demo
 	{
 		friend struct vl::reflection::description::CustomTypeDescriptorSelector<TImpl>;
 	private:
-		Ptr<demo::IViewModel> ViewModel_;
+        vl::Ptr<demo::IViewModel> ViewModel_;
 	protected:
 		vl::presentation::controls::GuiDocumentViewer* documentViewer;
 
-		void InitializeComponents(Ptr<demo::IViewModel> ViewModel)
+		void InitializeComponents(vl::Ptr<demo::IViewModel> ViewModel)
 		{
 			ViewModel_ = ViewModel;
 			if (InitializeFromResource())
@@ -53,7 +53,7 @@ namespace demo
 		{
 		}
 
-		Ptr<demo::IViewModel> GetViewModel()
+		vl::Ptr<demo::IViewModel> GetViewModel()
 		{
 			return ViewModel_;
 		}
@@ -83,7 +83,7 @@ namespace demo
 		// #region CLASS_MEMBER_GUIEVENT_HANDLER (DO NOT PUT OTHER CONTENT IN THIS #region.)
 		// #endregion CLASS_MEMBER_GUIEVENT_HANDLER
 	public:
-		MainWindow(Ptr<demo::IViewModel> ViewModel);
+		MainWindow(vl::Ptr<demo::IViewModel> ViewModel);
 		~MainWindow();
 	};
 }

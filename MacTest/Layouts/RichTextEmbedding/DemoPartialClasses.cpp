@@ -16,7 +16,7 @@ namespace demo
 
 	// #endregion CLASS_MEMBER_GUIEVENT_HANDLER
 
-	MainWindow::MainWindow(Ptr<demo::IViewModel> ViewModel)
+	MainWindow::MainWindow(vl::Ptr<demo::IViewModel> ViewModel)
 	{
 		InitializeComponents(ViewModel);
 	}
