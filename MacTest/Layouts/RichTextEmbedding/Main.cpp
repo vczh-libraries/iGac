@@ -28,7 +28,7 @@ void GuiMain()
 		List<WString> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"RichTextEmbedding.bin", FileStream::ReadOnly);
 		auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-		GetInstanceLoaderManager()->SetResource(L"Resource", resource);
+		GetResourceManager()->SetResource(L"Resource", resource);
 	}
 	demo::MainWindow window(new ViewModel);
 	window.MoveToScreenCenter();

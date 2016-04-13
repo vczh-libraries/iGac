@@ -19,7 +19,7 @@ void GuiMain()
 		List<WString> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"Flow.bin", FileStream::ReadOnly);
 		auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-		GetInstanceLoaderManager()->SetResource(L"Resource", resource);
+		GetResourceManager()->SetResource(L"Resource", resource);
 	}
 	demo::MainWindow window;
 	window.MoveToScreenCenter();
