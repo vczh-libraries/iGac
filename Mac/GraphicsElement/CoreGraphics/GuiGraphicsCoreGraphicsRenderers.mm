@@ -479,7 +479,8 @@ namespace vl {
                 {
                     nsText = osx::WStringToNSString(element->GetText());
                 }
-                CFRetain(nsText);
+                if(nsText)
+                    CFRetain(nsText);
                
                 UpdateMinSize();
             }
