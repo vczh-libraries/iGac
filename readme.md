@@ -5,7 +5,8 @@
 ![GacOSX](https://darkfall.me/resource/gac_osx.jpg)
 
 ##### License
-Apache
+
+**Read the [LICENSE](https://github.com/vczh-libraries/iGac/blob/master/LICENSE.md) first.**
 
 ##### Current Progress:
 * Finalizing & Bug fixes
