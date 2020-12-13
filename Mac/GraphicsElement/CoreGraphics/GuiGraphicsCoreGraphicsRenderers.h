@@ -60,12 +60,7 @@ namespace vl {
             {
                 DEFINE_ELEMENT_RENDERER(GuiSolidBorderElement, GuiSolidBorderElementRenderer, Color)
             };
-            
-            class GuiRoundBorderElementRenderer : public Object, public IGuiGraphicsRenderer
-            {
-                DEFINE_ELEMENT_RENDERER(GuiRoundBorderElement, GuiRoundBorderElementRenderer, Color)
-            };
-            
+
             class GuiSolidBackgroundElementRenderer : public Object, public IGuiGraphicsRenderer
             {
                 DEFINE_ELEMENT_RENDERER(GuiSolidBackgroundElement, GuiSolidBackgroundElementRenderer, Color)
@@ -251,6 +246,23 @@ namespace vl {
                 GuiCoreGraphicsElementRenderer();
                 ~GuiCoreGraphicsElementRenderer();
                 
+                void Render(Rect bounds)override;
+                void OnElementStateChanged()override;
+            };
+
+            class GuiInnerShadowElementRenderer : public Object, public IGuiGraphicsRenderer
+            {
+            DEFINE_GUI_GRAPHICS_RENDERER(GuiInnerShadowElement, GuiInnerShadowElementRenderer, ICoreGraphicsRenderTarget)
+
+            protected:
+
+                void InitializeInternal();
+                void FinalizeInternal();
+                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+            public:
+                GuiInnerShadowElementRenderer();
+                ~GuiInnerShadowElementRenderer();
+
                 void Render(Rect bounds)override;
                 void OnElementStateChanged()override;
             };

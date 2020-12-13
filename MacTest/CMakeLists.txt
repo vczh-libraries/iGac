@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(GacOSXTests)
+
 include_directories("../Release/Import")
 include_directories("../Mac")
 
@@ -13,15 +14,17 @@ find_library(COREGRAPHICS_LIBRARIES CoreGraphics)
 find_library(COCOA_LIBRARIES Cocoa)
 set(OS_LIBRARIES ${COREFOUNDATION_LIBRARIES} ${QUARTZ_LIBRARIES} ${COREGRAPHICS_LIBRARIES} ${COCOA_LIBRARIES} ${OS_LIBRARIES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-missing-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wno-missing-declarations")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
+add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
+
 set(GACUI_COMMON_FILES 
 	"../Release/Import/Vlpp.cpp" 
-	"../Release/Import/VlppWorkflow.cpp" 
-	"../Release/Import/GacUI.cpp" 
-	"../Release/Import/GacUIReflection.cpp")
+	"../Release/Import/VlppWorkflowLibrary.cpp"
+	"../Release/Import/GacUI.cpp"
+)
 
 set(GACOSX_FILES
 	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm"
@@ -49,7 +52,6 @@ add_library(GacOSX STATIC ${GACOSX_FILES})
 set(DEPENDENCIES_LIBRARIES ${DEPENDENCIES_LIBRARIES} ${OS_LIBRARIES})
 set(GACUI_LIBRARIES "GacUI" "GacOSX")
 
-
 set(GACOSX_TESTS_COMMON_FILES
 	"shared/osx_shared.mm"
 	"shared/UnixFileSystemInfo.cpp"
@@ -69,7 +71,8 @@ add_custom_target(
 set(SHARED_RESOURCES "")
 set(APP_NAME "Test_HellWorld_Cpp")
 set(TESTAPP_SOURCE_FILES 
-	"HelloWorlds/Cpp/Main.cpp" 
+	"HelloWorlds/Cpp/Main.cpp"
+	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -78,6 +81,71 @@ set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_T
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 add_dependencies(${APP_NAME} CopyResources)
 
+#
+set(SHARED_RESOURCES "Controls/AddressBook/AddressBook.bin"
+		"Controls/AddressBook/UI/NewFolder.png"
+		"Controls/AddressBook/UI/NewContact.png"
+		"Controls/AddressBook/UI/ContactBig.png"
+		"Controls/AddressBook/UI/ContactSmall.png"
+		"Controls/AddressBook/UI/Delete.png"
+		"Controls/AddressBook/UI/Edit.png"
+		"Controls/AddressBook/UI/Folder.png"
+		"Controls/AddressBook/UI/ListView_Big.png"
+		"Controls/AddressBook/UI/ListView_Detail.png"
+		"Controls/AddressBook/UI/ListView_Info.png"
+		"Controls/AddressBook/UI/ListView_List.png"
+		"Controls/AddressBook/UI/ListView_Small.png"
+		"Controls/AddressBook/UI/ListView_Tile.png"
+		)
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_AddressBook")
+set(TESTAPP_SOURCE_FILES
+		"Controls/AddressBook/Main.cpp"
+		"Controls/AddressBook/UI/Source/DemoPartialClasses.cpp"
+		"Controls/AddressBook/UI/Source/DemoReflection.cpp"
+		"Controls/AddressBook/UI/Source/MainWindow.cpp"
+		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+		)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
+add_dependencies(${APP_NAME} CopyResources)
+
+#
+set(SHARED_RESOURCES "Controls/Animation/Animation.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Animation")
+set(TESTAPP_SOURCE_FILES
+		"Controls/Animation/Main.cpp"
+		"Controls/Animation/DemoPartialClasses.cpp"
+		"Controls/Animation/DemoReflection.cpp"
+		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+		)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
+add_dependencies(${APP_NAME} CopyResources)
+
+#
+set(SHARED_RESOURCES "Controls/CalculatorAndStateMachine/CalculatorAndStateMachine.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_CalculatorAndStateMachine")
+set(TESTAPP_SOURCE_FILES
+		"Controls/CalculatorAndStateMachine/Main.cpp"
+		"Controls/CalculatorAndStateMachine/DemoPartialClasses.cpp"
+		"Controls/CalculatorAndStateMachine/DemoReflection.cpp"
+		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+		)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
+add_dependencies(${APP_NAME} CopyResources)
 
 #
 set(SHARED_RESOURCES "Controls/ContainersAndButtons/ContainersAndButtons.bin")
@@ -116,8 +184,9 @@ SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATI
 
 set(APP_NAME "Test_Layouts_Table")
 set(TESTAPP_SOURCE_FILES 
-	"Layouts/Table/Main.cpp" 
+	"Layouts/Table/Main.cpp"
 	"Layouts/Table/DemoPartialClasses.cpp"
+	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})

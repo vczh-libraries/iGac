@@ -36,7 +36,7 @@ namespace vl {
                 }
             };
             
-            class GuiCoreGraphicsElement : public Object, public IGuiGraphicsElement, public Description<GuiCoreGraphicsElement>
+            class GuiCoreGraphicsElement : public GuiElementBase<GuiCoreGraphicsElement>
             {
                 DEFINE_GUI_GRAPHICS_ELEMENT(GuiCoreGraphicsElement, L"CoreGraphicsElement")
                 

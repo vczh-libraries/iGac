@@ -153,7 +153,7 @@ namespace vl {
                 ThreadPoolLite::Queue(proc);
             }
             
-            void CocoaAsyncService::InvokeInMainThread(const Func<void()>& proc)
+            void CocoaAsyncService::InvokeInMainThread(INativeWindow* window, const Func<void()>& proc)
             {
                 SPIN_LOCK(taskListLock)
                 {
@@ -162,7 +162,7 @@ namespace vl {
                 }
             }
             
-            bool CocoaAsyncService::InvokeInMainThreadAndWait(const Func<void()>& proc, vint milliseconds)
+            bool CocoaAsyncService::InvokeInMainThreadAndWait(INativeWindow* window, const Func<void()>& proc, vint milliseconds)
             {
                 Semaphore* semaphore = new Semaphore();
                 semaphore->Create(0, 1);

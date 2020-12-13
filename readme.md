@@ -18,3 +18,9 @@
 * Global keyboard hook requires Accessibility priviledge
 * AsyncService::Semaphore::WaitForTime
 
+##### TODO
+* GuiInnerShadowElementRenderer is not implemented yet
+* CMakeLists.txt only covers AddressBook/Animation/CalculatorAndStateMachine/Helloworld/Table
+* Code is compiled under VCZH_DEBUG_NO_REFLECTION, if u need Reflection, remember to add remove VCZH_DEBUG_NO_REFLECTION in CMakeLists.txt and add all of Reflection cpp files.
+* Crash on Helloworld when setting label size
+* MVVM of AddressBook currently not working for 0.9.6.0 on OSX
