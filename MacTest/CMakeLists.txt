@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.4)
 project(GacOSXTests)
+
 include_directories("../Release/Import")
 include_directories("../Mac")
 
@@ -13,14 +14,15 @@ find_library(COREGRAPHICS_LIBRARIES CoreGraphics)
 find_library(COCOA_LIBRARIES Cocoa)
 set(OS_LIBRARIES ${COREFOUNDATION_LIBRARIES} ${QUARTZ_LIBRARIES} ${COREGRAPHICS_LIBRARIES} ${COCOA_LIBRARIES} ${OS_LIBRARIES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-missing-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wno-missing-declarations")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 set(GACUI_COMMON_FILES 
 	"../Release/Import/Vlpp.cpp" 
-	"../Release/Import/VlppWorkflow.cpp" 
-	"../Release/Import/GacUI.cpp" 
+	"../Release/Import/VlppWorkflowLibrary.cpp"
+	"../Release/Import/VlppWorkflowRuntime.cpp"
+	"../Release/Import/GacUI.cpp"
 	"../Release/Import/GacUIReflection.cpp")
 
 set(GACOSX_FILES
@@ -116,7 +118,7 @@ SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATI
 
 set(APP_NAME "Test_Layouts_Table")
 set(TESTAPP_SOURCE_FILES 
-	"Layouts/Table/Main.cpp" 
+	"Layouts/Table/Main.cpp"
 	"Layouts/Table/DemoPartialClasses.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")

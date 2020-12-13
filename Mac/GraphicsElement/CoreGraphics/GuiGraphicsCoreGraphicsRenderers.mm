@@ -71,13 +71,13 @@ namespace vl {
                 
                 SetCGContextFillColor(context, element->GetColor());
             
-                switch(element->GetShape())
+                switch(element->GetShape().shapeType)
                 {
-                    case ElementShape::Rectangle:
+                    case ElementShapeType::Rectangle:
                         CGContextFillRect(context, ConvertToCGRect(bounds));
                         break;
                         
-                    case ElementShape::Ellipse:
+                    case ElementShapeType::Ellipse:
                         CGContextFillEllipseInRect(context, ConvertToCGRect(bounds));
                         break;
                 }
@@ -89,37 +89,16 @@ namespace vl {
                 
                 SetCGContextStrokeColor(context, element->GetColor());
                 
-                switch(element->GetShape())
+                switch(element->GetShape().shapeType)
                 {
-                    case ElementShape::Rectangle:
+                    case ElementShapeType::Rectangle:
                         CGContextStrokeRect(context, ConvertToCGRect(bounds, -0.5f));
                         break;
                         
-                    case ElementShape::Ellipse:
+                    case ElementShapeType::Ellipse:
                         CGContextStrokeEllipseInRect(context, ConvertToCGRect(bounds, -0.5f));
                         break;
                 }
-            }
-            
-            IMPLEMENT_ELEMENT_RENDERER(GuiRoundBorderElementRenderer)
-            {
-                CGContextRef context = GetCurrentCGContextFromRenderTarget();
-                
-                SetCGContextStrokeColor(context, element->GetColor());
-
-                CGRect rect = ConvertToCGRect(bounds, -0.5f);
-                CGFloat radius = (CGFloat)element->GetRadius();
-                
-                CGFloat minx = CGRectGetMinX(rect), midx = CGRectGetMidX(rect), maxx = CGRectGetMaxX(rect);
-                CGFloat miny = CGRectGetMinY(rect), midy = CGRectGetMidY(rect), maxy = CGRectGetMaxY(rect);
-                
-                CGContextMoveToPoint(context, minx, midy);
-                CGContextAddArcToPoint(context, minx, miny, midx, miny, radius);
-                CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius);
-                CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius);
-                CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius);
-                CGContextClosePath(context);
-                CGContextDrawPath(context, kCGPathFillStroke);
             }
             
             ////
@@ -198,9 +177,9 @@ namespace vl {
                 }
                 
                 CGContextRef context = GetCurrentCGContextFromRenderTarget();
-                switch(element->GetShape())
+                switch(element->GetShape().shapeType)
                 {
-                    case ElementShape::Rectangle:
+                    case ElementShapeType::Rectangle:
                         CGContextSaveGState(context);
                         
                         CGContextBeginPath(context);
@@ -212,7 +191,7 @@ namespace vl {
                         CGContextRestoreGState(context);
                         break;
                         
-                    case ElementShape::Ellipse:
+                    case ElementShapeType::Ellipse:
                     {
                         CGContextSaveGState(context);
                         

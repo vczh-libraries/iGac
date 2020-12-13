@@ -353,17 +353,17 @@ namespace vl {
                     CGContextScaleCTM(context, nativeView.window.backingScaleFactor, nativeView.window.backingScaleFactor);
                 }
                 
-                bool StopRendering()
+                RenderTargetFailure StopRendering()
                 {
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if(!context)
-                        return false;
+                        return LostDevice;
                     
                     CGContextRestoreGState(context);
                     [NSGraphicsContext restoreGraphicsState];
                     SetCurrentRenderTarget(0);
                     // todo succeed / not
-                    return true;
+                    return None;
                 }
                 
                 void PushClipper(Rect clipper)
@@ -487,7 +487,12 @@ namespace vl {
                     renderTargets.Remove(renderTarget);
                     GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, 0);
                 }
-                
+
+                void ResizeRenderTarget(INativeWindow* window)
+                {
+                    //TODO resize
+                }
+
                 Ptr<elements::text::CharMeasurer> CreateCharMeasurer(const FontProperties& font)
                 {
                     return charMeasurers.Create(font);
@@ -497,7 +502,8 @@ namespace vl {
                 {
                     return coreTextFonts.Create(font);
                 }
-                
+
+
                 void DestroyCharMeasurer(const FontProperties& font)
                 {
                     charMeasurers.Destroy(font);
@@ -654,7 +660,6 @@ void CoreGraphicsMain()
     GetCurrentController()->CallbackService()->InstallListener(&resourceManager);
     
     elements_coregraphics::GuiSolidBorderElementRenderer::Register();
-    elements_coregraphics::GuiRoundBorderElementRenderer::Register();
     elements_coregraphics::Gui3DBorderElementRenderer::Register();
     elements_coregraphics::Gui3DSplitterElementRenderer::Register();
     elements_coregraphics::GuiSolidBackgroundElementRenderer::Register();

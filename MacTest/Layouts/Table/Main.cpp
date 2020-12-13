@@ -16,7 +16,7 @@ using namespace vl::stream;
 void GuiMain()
 {
 	{
-		List<WString> errors;
+		List<GuiResourceError> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"Table.bin", FileStream::ReadOnly);
 		auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
 		GetResourceManager()->SetResource(L"Resource", resource);

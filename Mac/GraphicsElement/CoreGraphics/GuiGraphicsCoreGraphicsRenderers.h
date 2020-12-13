@@ -60,12 +60,7 @@ namespace vl {
             {
                 DEFINE_ELEMENT_RENDERER(GuiSolidBorderElement, GuiSolidBorderElementRenderer, Color)
             };
-            
-            class GuiRoundBorderElementRenderer : public Object, public IGuiGraphicsRenderer
-            {
-                DEFINE_ELEMENT_RENDERER(GuiRoundBorderElement, GuiRoundBorderElementRenderer, Color)
-            };
-            
+
             class GuiSolidBackgroundElementRenderer : public Object, public IGuiGraphicsRenderer
             {
                 DEFINE_ELEMENT_RENDERER(GuiSolidBackgroundElement, GuiSolidBackgroundElementRenderer, Color)

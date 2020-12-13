@@ -1,6 +1,7 @@
 #Cmake
 CMakeCache*
 *.cmake
+cmake-build-debug
 CMakeFiles
 Makefile
 MacTest/bin/
