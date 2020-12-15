@@ -335,8 +335,7 @@ namespace vl {
                     SetCurrentRenderTarget(this);
                     
                     [NSGraphicsContext saveGraphicsState];
-                    
-                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithGraphicsPort:context
+                    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
                                                                                                     flipped:true]];
                     
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);

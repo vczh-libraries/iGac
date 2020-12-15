@@ -14,7 +14,7 @@ find_library(COREGRAPHICS_LIBRARIES CoreGraphics)
 find_library(COCOA_LIBRARIES Cocoa)
 set(OS_LIBRARIES ${COREFOUNDATION_LIBRARIES} ${QUARTZ_LIBRARIES} ${COREGRAPHICS_LIBRARIES} ${COCOA_LIBRARIES} ${OS_LIBRARIES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wno-missing-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wno-missing-declarations")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
@@ -71,7 +71,8 @@ add_custom_target(
 set(SHARED_RESOURCES "")
 set(APP_NAME "Test_HellWorld_Cpp")
 set(TESTAPP_SOURCE_FILES 
-	"HelloWorlds/Cpp/Main.cpp" 
+	"HelloWorlds/Cpp/Main.cpp"
+	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -120,6 +121,7 @@ set(APP_NAME "Test_Layouts_Table")
 set(TESTAPP_SOURCE_FILES 
 	"Layouts/Table/Main.cpp"
 	"Layouts/Table/DemoPartialClasses.cpp"
+	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
