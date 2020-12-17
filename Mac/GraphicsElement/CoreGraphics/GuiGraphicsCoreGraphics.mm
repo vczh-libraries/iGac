@@ -668,6 +668,7 @@ void CoreGraphicsMain()
     elements_coregraphics::GuiPolygonElementRenderer::Register();
     elements_coregraphics::GuiColorizedTextElementRenderer::Register();
     elements_coregraphics::GuiCoreGraphicsElementRenderer::Register();
+    elements_coregraphics::GuiInnerShadowElementRenderer::Register();
 
     elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
     

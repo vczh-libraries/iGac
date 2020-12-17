@@ -1038,6 +1038,40 @@ namespace vl {
             {
                 
             }
+            ///////
+
+            void GuiInnerShadowElementRenderer::InitializeInternal()
+            {
+
+            }
+
+            void GuiInnerShadowElementRenderer::FinalizeInternal()
+            {
+
+            }
+
+            void GuiInnerShadowElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+            }
+
+            GuiInnerShadowElementRenderer::GuiInnerShadowElementRenderer()
+            {
+
+            }
+
+            GuiInnerShadowElementRenderer::~GuiInnerShadowElementRenderer()
+            {
+
+            }
+
+            void GuiInnerShadowElementRenderer::Render(Rect bounds)
+            {
+            }
+
+            void GuiInnerShadowElementRenderer::OnElementStateChanged()
+            {
+
+            }
         }
     }
     

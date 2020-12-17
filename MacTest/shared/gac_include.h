@@ -28,5 +28,69 @@ void RunGacWindow()
     delete window;
 }
 
+#include "Skins/DarkSkin/DarkSkin.h"
+
+namespace osx
+{
+    class WindowTemplate : public ::vl::presentation::templates::GuiWindowTemplate
+    {
+    public:
+        WindowTemplate()
+        {
+            this->SetCustomFrameEnabled(false);
+        }
+    };
+
+    class Theme : public ::vl::presentation::theme::ThemeTemplates, public ::vl::reflection::Description<Theme>
+    {
+    public:
+        Theme()
+        {
+            this->Window = LAMBDA([](const ::vl::reflection::description::Value& _){
+                return new WindowTemplate();
+            });
+        }
+    };
+}
+
+class OSXSkinPlugin : public Object, public IGuiPlugin
+{
+public:
+
+    GUI_PLUGIN_NAME(Custom_OSXSkinPlugin)
+    {
+        GUI_PLUGIN_DEPEND(GacGen_DarkSkinResourceLoader);
+    }
+
+    void Load()override
+    {
+        RegisterTheme(L"OSX", MakePtr<osx::Theme>());
+    }
+
+    void Unload()override
+    {
+    }
+};
+
+class DefaultSkinPlugin : public Object, public IGuiPlugin
+{
+public:
+
+    GUI_PLUGIN_NAME(Custom_DefaultSkinPlugin)
+    {
+        GUI_PLUGIN_DEPEND(GacGen_DarkSkinResourceLoader);
+    }
+
+    void Load()override
+    {
+        RegisterTheme(L"DarkSkin", MakePtr<darkskin::Theme>());
+    }
+
+    void Unload()override
+    {
+    }
+};
+GUI_REGISTER_PLUGIN(DefaultSkinPlugin)
+GUI_REGISTER_PLUGIN(OSXSkinPlugin)
 
 #endif

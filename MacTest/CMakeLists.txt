@@ -81,6 +81,39 @@ set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_T
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 add_dependencies(${APP_NAME} CopyResources)
 
+#
+set(SHARED_RESOURCES "Controls/Animation/Animation.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_Animation")
+set(TESTAPP_SOURCE_FILES
+		"Controls/Animation/Main.cpp"
+		"Controls/Animation/DemoPartialClasses.cpp"
+		"Controls/Animation/DemoReflection.cpp"
+		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+		)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
+add_dependencies(${APP_NAME} CopyResources)
+
+#
+set(SHARED_RESOURCES "Controls/CalculatorAndStateMachine/CalculatorAndStateMachine.bin")
+SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+set(APP_NAME "Test_CalculatorAndStateMachine")
+set(TESTAPP_SOURCE_FILES
+		"Controls/CalculatorAndStateMachine/Main.cpp"
+		"Controls/CalculatorAndStateMachine/DemoPartialClasses.cpp"
+		"Controls/CalculatorAndStateMachine/DemoReflection.cpp"
+		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+		)
+set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
+add_dependencies(${APP_NAME} CopyResources)
 
 #
 set(SHARED_RESOURCES "Controls/ContainersAndButtons/ContainersAndButtons.bin")
