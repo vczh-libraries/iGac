@@ -18,3 +18,6 @@
 * Global keyboard hook requires Accessibility priviledge
 * AsyncService::Semaphore::WaitForTime
 
+##### TODO
+* GuiInnerShadowElementRenderer not implemented
+* CMakeLists.txt only covers Animation/CalculatorAndStateMachine/Helloworld/Table
