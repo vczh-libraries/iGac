@@ -284,7 +284,8 @@ void GuiMain()
 	{
         FileStream fileStream(osx::GetResourceFolder() + L"AddressBook.bin", FileStream::ReadOnly);
 		auto resource = GuiResource::LoadPrecompiledBinary(fileStream);
-		GetResourceManager()->SetResource(resource);
+        GuiResourceError::List errors;
+        GetResourceManager()->SetResource(resource, errors);
 
 		folderImage = resource->GetImageByPath(L"Images/Folder");
 		contactBigImage = resource->GetImageByPath(L"Images/ContactBig");

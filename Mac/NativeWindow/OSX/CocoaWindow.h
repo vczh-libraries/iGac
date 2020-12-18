@@ -160,6 +160,10 @@ namespace vl {
 
                 Margin              GetCustomFramePadding() override;
 
+                Ptr<GuiImageData> GetIcon() override;
+
+                void SetIcon(Ptr<GuiImageData> icon) override;
+
             protected:
                 void                CreateWindow();
     
