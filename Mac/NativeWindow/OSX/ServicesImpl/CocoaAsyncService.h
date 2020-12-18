@@ -60,7 +60,7 @@ namespace vl {
                 ~CocoaAsyncService();
                 
                 void                ExecuteAsyncTasks();
-                bool                IsInMainThread()override;
+                bool                IsInMainThread(INativeWindow* window)override;
                 void                InvokeAsync(const Func<void()>& proc)override;
                 void                InvokeInMainThread(INativeWindow* window, const Func<void()>& proc)override;
                 bool                InvokeInMainThreadAndWait(INativeWindow* window, const Func<void()>& proc, vint milliseconds)override;

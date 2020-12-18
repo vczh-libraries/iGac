@@ -64,7 +64,7 @@ public:
 
     void Load()override
     {
-        RegisterTheme(L"OSX", MakePtr<osx::Theme>());
+        RegisterTheme(MakePtr<osx::Theme>());
     }
 
     void Unload()override
@@ -83,7 +83,7 @@ public:
 
     void Load()override
     {
-        RegisterTheme(L"DarkSkin", MakePtr<darkskin::Theme>());
+        RegisterTheme(MakePtr<darkskin::Theme>());
     }
 
     void Unload()override

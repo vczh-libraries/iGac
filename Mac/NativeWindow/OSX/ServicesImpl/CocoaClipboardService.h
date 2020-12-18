@@ -16,15 +16,46 @@ namespace vl {
     namespace presentation {
         
         namespace osx {
-            
+
+            class CocoaClipboardService;
+
+            class CocoaClipboardReader : public INativeClipboardReader
+            {
+                friend class CocoaClipboardService;
+            public:
+                CocoaClipboardReader(CocoaClipboardService* _service);
+                bool ContainsText() override;
+                WString GetText() override;
+                bool ContainsDocument() override;
+                Ptr<DocumentModel> GetDocument() override;
+                bool ContainsImage() override;
+                Ptr<INativeImage> GetImage() override;
+
+            };
+
+            class CocoaClipboardWriter : public INativeClipboardWriter
+            {
+                friend class CocoaClipboardService;
+            public:
+                CocoaClipboardWriter(CocoaClipboardService* _service);
+                void SetText(const WString &value) override;
+                void SetDocument(Ptr<DocumentModel> value) override;
+                void SetImage(Ptr<INativeImage> value) override;
+                void Submit() override;
+            };
+
             class CocoaClipboardService: public Object, public INativeClipboardService
             {
+                friend class OSXClipboardReader;
+                friend class OSXClipboardWriter;
+            protected:
+                CocoaClipboardReader*			reader = nullptr;
             public:
-                bool        ContainsText() override;
-                WString     GetText() override;
-                bool        SetText(const WString& value) override;
+                Ptr<INativeClipboardReader>		ReadClipboard()override;
+                Ptr<INativeClipboardWriter>		WriteClipboard()override;
             };
-            
+
+
         }
     }
 }

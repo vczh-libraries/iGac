@@ -18,7 +18,7 @@ void GuiMain()
         List<GuiResourceError> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"Animation.bin", FileStream::ReadOnly);
         auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-        GetResourceManager()->SetResource(L"Resource", resource);
+        GetResourceManager()->SetResource(resource);
     }
     demo::MainWindow window;
     window.MoveToScreenCenter();
