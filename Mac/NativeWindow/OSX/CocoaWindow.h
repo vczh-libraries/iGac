@@ -49,7 +49,8 @@ namespace vl {
                 NativeRect                                      lastBorder;
                 INativeCursor*                                  currentCursor;
                 NativeRect                                      previousBounds;
-                
+                NativeMargin						            customFramePadding;
+
                 collections::List<IDraggingListener*>           draggingListeners;
                 
                 NSWindow*                                       nsWindow;
@@ -131,8 +132,16 @@ namespace vl {
                 bool				InstallListener(INativeWindowListener* listener) override;
                 bool				UninstallListener(INativeWindowListener* listener) override;
                 void				RedrawContent() override;
-                
-            
+                NativeMargin        GetCustomFramePadding() override;
+                Ptr<GuiImageData>   GetIcon() override;
+                void                SetIcon(Ptr<GuiImageData> icon) override;
+                Point               Convert(NativePoint value) override;
+                NativePoint         Convert(Point value) override;
+                Size                Convert(NativeSize value) override;
+                NativeSize          Convert(Size value) override;
+                Margin              Convert(NativeMargin value) override;
+                NativeMargin        Convert(Margin value) override;
+
                 ///
                 void                HandleEventInternal(NSEvent* event);
                 void                InvokeClosed();
@@ -157,24 +166,6 @@ namespace vl {
                 
                 void                InstallDraggingListener(IDraggingListener* listener);
                 void                UninstallDraggingListener(IDraggingListener* listener);
-
-                NativeMargin        GetCustomFramePadding() override;
-
-                Ptr<GuiImageData> GetIcon() override;
-
-                void SetIcon(Ptr<GuiImageData> icon) override;
-
-                Point Convert(NativePoint value) override;
-
-                NativePoint Convert(Point value) override;
-
-                Size Convert(NativeSize value) override;
-
-                NativeSize Convert(Size value) override;
-
-                Margin Convert(NativeMargin value) override;
-
-                NativeMargin Convert(Margin value) override;
 
             protected:
                 void                CreateWindow();
