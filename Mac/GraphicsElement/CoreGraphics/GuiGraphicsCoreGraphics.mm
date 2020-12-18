@@ -675,6 +675,7 @@ void CoreGraphicsMain()
     elements_coregraphics::GuiColorizedTextElementRenderer::Register();
     elements_coregraphics::GuiCoreGraphicsElementRenderer::Register();
     elements_coregraphics::GuiInnerShadowElementRenderer::Register();
+    elements_coregraphics::GuiFocusRectangleElementRenderer::Register();
 
     elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
     

@@ -1040,6 +1040,7 @@ namespace vl {
             {
                 
             }
+
             ///////
 
             void GuiInnerShadowElementRenderer::InitializeInternal()
@@ -1071,6 +1072,41 @@ namespace vl {
             }
 
             void GuiInnerShadowElementRenderer::OnElementStateChanged()
+            {
+
+            }
+
+            ///////
+
+            void GuiFocusRectangleElementRenderer::InitializeInternal()
+            {
+
+            }
+
+            void GuiFocusRectangleElementRenderer::FinalizeInternal()
+            {
+
+            }
+
+            void GuiFocusRectangleElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
+            {
+            }
+
+            GuiFocusRectangleElementRenderer::GuiFocusRectangleElementRenderer()
+            {
+
+            }
+
+            GuiFocusRectangleElementRenderer::~GuiFocusRectangleElementRenderer()
+            {
+
+            }
+
+            void GuiFocusRectangleElementRenderer::Render(Rect bounds)
+            {
+            }
+
+            void GuiFocusRectangleElementRenderer::OnElementStateChanged()
             {
 
             }

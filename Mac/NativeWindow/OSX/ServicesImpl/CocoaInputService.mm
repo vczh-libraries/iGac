@@ -66,156 +66,155 @@ namespace vl {
                 // need some copy-pasta here
                 
                 static struct {
-                    vint       keyCode;
+                    VKEY       keyCode;
                     WString    keyName;
-                    
                 } KeyMappings[] = {
-                    { 0, L"?" },
-                    { 1, L"?" },
-                    { 2, L"?" },
-                    { 3, L"?" },
-                    { 4, L"?" },
-                    { 5, L"?" },
-                    { 6, L"?" },
-                    { 7, L"?" },
-                    { 8, L"Backspace" },
-                    { 9, L"Tab" },
-                    { 10, L"?" },
-                    { 11, L"?" },
-                    { 12, L"?" },
-                    { 13, L"Enter" },
-                    { 14, L"?" },
-                    { 15, L"?" },
-                    { 16, L"Shift" },
-                    { 17, L"Ctrl" },
-                    { 18, L"Alt" },
-                    { 19, L"?" },
-                    { 20, L"Caps Lock" },
-                    { 21, L"?" },
-                    { 22, L"?" },
-                    { 23, L"?" },
-                    { 24, L"?" },
-                    { 25, L"?" },
-                    { 26, L"?" },
-                    { 27, L"Esc" },
-                    { 28, L"?" },
-                    { 29, L"?" },
-                    { 30, L"?" },
-                    { 31, L"?" },
-                    { 32, L"Space" },
-                    { 33, L"Page Up" },
-                    { 34, L"Page Down" },
-                    { 35, L"End" },
-                    { 36, L"Home" },
-                    { 37, L"Left" },
-                    { 38, L"Up" },
-                    { 39, L"Right" },
-                    { 40, L"Down" },
-                    { 41, L"?" },
-                    { 42, L"?" },
-                    { 43, L"?" },
-                    { 44, L"Sys Req" },
-                    { 45, L"Insert" },
-                    { 46, L"Delete" },
-                    { 47, L"?" },
-                    { 48, L"0" },
-                    { 49, L"1" },
-                    { 50, L"2" },
-                    { 51, L"3" },
-                    { 52, L"4" },
-                    { 53, L"5" },
-                    { 54, L"6" },
-                    { 55, L"7" },
-                    { 56, L"8" },
-                    { 57, L"9" },
-                    { 58, L"?" },
-                    { 59, L"?" },
-                    { 60, L"?" },
-                    { 61, L"?" },
-                    { 62, L"?" },
-                    { 63, L"?" },
-                    { 64, L"?" },
-                    { 65, L"A" },
-                    { 66, L"B" },
-                    { 67, L"C" },
-                    { 68, L"D" },
-                    { 69, L"E" },
-                    { 70, L"F" },
-                    { 71, L"G" },
-                    { 72, L"H" },
-                    { 73, L"I" },
-                    { 74, L"J" },
-                    { 75, L"K" },
-                    { 76, L"L" },
-                    { 77, L"M" },
-                    { 78, L"N" },
-                    { 79, L"O" },
-                    { 80, L"P" },
-                    { 81, L"Q" },
-                    { 82, L"R" },
-                    { 83, L"S" },
-                    { 84, L"T" },
-                    { 85, L"U" },
-                    { 86, L"V" },
-                    { 87, L"W" },
-                    { 88, L"X" },
-                    { 89, L"Y" },
-                    { 90, L"Z" },
-                    { 91, L"?" },
-                    { 92, L"?" },
-                    { 93, L"?" },
-                    { 94, L"?" },
-                    { 95, L"?" },
-                    { 96, L"Num 0" },
-                    { 97, L"Num 1" },
-                    { 98, L"Num 2" },
-                    { 99, L"Num 3" },
-                    { 100, L"Num 4" },
-                    { 101, L"Num 5" },
-                    { 102, L"Num 6" },
-                    { 103, L"Num 7" },
-                    { 104, L"Num 8" },
-                    { 105, L"Num 9" },
-                    { 106, L"Num *" },
-                    { 107, L"Num +" },
-                    { 108, L"?" },
-                    { 109, L"Num -" },
-                    { 110, L"Num Del" },
-                    { 111, L"/" },
-                    { 112, L"F1" },
-                    { 113, L"F2" },
-                    { 114, L"F3" },
-                    { 115, L"F4" },
-                    { 116, L"F5" },
-                    { 117, L"F6" },
-                    { 118, L"F7" },
-                    { 119, L"F8" },
-                    { 120, L"F9" },
-                    { 121, L"F10" },
-                    { 122, L"F11" },
-                    { 123, L"F12" },
-                    { 124, L"?" },
-                    { 125, L"?" },
-                    { 126, L"?" },
-                    { 127, L"?" },
-                    { 128, L"?" },
-                    { 129, L"?" },
-                    { 130, L"?" },
-                    { 131, L"?" },
-                    { 132, L"?" },
-                    { 133, L"?" },
-                    { 134, L"?" },
-                    { 135, L"?" },
-                    { 136, L"?" },
-                    { 137, L"?" },
-                    { 138, L"?" },
-                    { 139, L"?" },
-                    { 140, L"?" },
-                    { 141, L"?" },
-                    { 142, L"?" },
-                    { 143, L"?" },
-                    { 144, L"Pause" },
-                    { 145, L"Scroll Lock" }
+                    { (VKEY)0, L"?" },
+                    { (VKEY)1, L"?" },
+                    { (VKEY)2, L"?" },
+                    { (VKEY)3, L"?" },
+                    { (VKEY)4, L"?" },
+                    { (VKEY)5, L"?" },
+                    { (VKEY)6, L"?" },
+                    { (VKEY)7, L"?" },
+                    { (VKEY)8, L"Backspace" },
+                    { (VKEY)9, L"Tab" },
+                    { (VKEY)10, L"?" },
+                    { (VKEY)11, L"?" },
+                    { (VKEY)12, L"?" },
+                    { (VKEY)13, L"Enter" },
+                    { (VKEY)14, L"?" },
+                    { (VKEY)15, L"?" },
+                    { (VKEY)16, L"Shift" },
+                    { (VKEY)17, L"Ctrl" },
+                    { (VKEY)18, L"Alt" },
+                    { (VKEY)19, L"?" },
+                    { (VKEY)20, L"Caps Lock" },
+                    { (VKEY)21, L"?" },
+                    { (VKEY)22, L"?" },
+                    { (VKEY)23, L"?" },
+                    { (VKEY)24, L"?" },
+                    { (VKEY)25, L"?" },
+                    { (VKEY)26, L"?" },
+                    { (VKEY)27, L"Esc" },
+                    { (VKEY)28, L"?" },
+                    { (VKEY)29, L"?" },
+                    { (VKEY)30, L"?" },
+                    { (VKEY)31, L"?" },
+                    { (VKEY)32, L"Space" },
+                    { (VKEY)33, L"Page Up" },
+                    { (VKEY)34, L"Page Down" },
+                    { (VKEY)35, L"End" },
+                    { (VKEY)36, L"Home" },
+                    { (VKEY)37, L"Left" },
+                    { (VKEY)38, L"Up" },
+                    { (VKEY)39, L"Right" },
+                    { (VKEY)40, L"Down" },
+                    { (VKEY)41, L"?" },
+                    { (VKEY)42, L"?" },
+                    { (VKEY)43, L"?" },
+                    { (VKEY)44, L"Sys Req" },
+                    { (VKEY)45, L"Insert" },
+                    { (VKEY)46, L"Delete" },
+                    { (VKEY)47, L"?" },
+                    { (VKEY)48, L"0" },
+                    { (VKEY)49, L"1" },
+                    { (VKEY)50, L"2" },
+                    { (VKEY)51, L"3" },
+                    { (VKEY)52, L"4" },
+                    { (VKEY)53, L"5" },
+                    { (VKEY)54, L"6" },
+                    { (VKEY)55, L"7" },
+                    { (VKEY)56, L"8" },
+                    { (VKEY)57, L"9" },
+                    { (VKEY)58, L"?" },
+                    { (VKEY)59, L"?" },
+                    { (VKEY)60, L"?" },
+                    { (VKEY)61, L"?" },
+                    { (VKEY)62, L"?" },
+                    { (VKEY)63, L"?" },
+                    { (VKEY)64, L"?" },
+                    { (VKEY)65, L"A" },
+                    { (VKEY)66, L"B" },
+                    { (VKEY)67, L"C" },
+                    { (VKEY)68, L"D" },
+                    { (VKEY)69, L"E" },
+                    { (VKEY)70, L"F" },
+                    { (VKEY)71, L"G" },
+                    { (VKEY)72, L"H" },
+                    { (VKEY)73, L"I" },
+                    { (VKEY)74, L"J" },
+                    { (VKEY)75, L"K" },
+                    { (VKEY)76, L"L" },
+                    { (VKEY)77, L"M" },
+                    { (VKEY)78, L"N" },
+                    { (VKEY)79, L"O" },
+                    { (VKEY)80, L"P" },
+                    { (VKEY)81, L"Q" },
+                    { (VKEY)82, L"R" },
+                    { (VKEY)83, L"S" },
+                    { (VKEY)84, L"T" },
+                    { (VKEY)85, L"U" },
+                    { (VKEY)86, L"V" },
+                    { (VKEY)87, L"W" },
+                    { (VKEY)88, L"X" },
+                    { (VKEY)89, L"Y" },
+                    { (VKEY)90, L"Z" },
+                    { (VKEY)91, L"?" },
+                    { (VKEY)92, L"?" },
+                    { (VKEY)93, L"?" },
+                    { (VKEY)94, L"?" },
+                    { (VKEY)95, L"?" },
+                    { (VKEY)96, L"Num 0" },
+                    { (VKEY)97, L"Num 1" },
+                    { (VKEY)98, L"Num 2" },
+                    { (VKEY)99, L"Num 3" },
+                    { (VKEY)100, L"Num 4" },
+                    { (VKEY)101, L"Num 5" },
+                    { (VKEY)102, L"Num 6" },
+                    { (VKEY)103, L"Num 7" },
+                    { (VKEY)104, L"Num 8" },
+                    { (VKEY)105, L"Num 9" },
+                    { (VKEY)106, L"Num *" },
+                    { (VKEY)107, L"Num +" },
+                    { (VKEY)108, L"?" },
+                    { (VKEY)109, L"Num -" },
+                    { (VKEY)110, L"Num Del" },
+                    { (VKEY)111, L"/" },
+                    { (VKEY)112, L"F1" },
+                    { (VKEY)113, L"F2" },
+                    { (VKEY)114, L"F3" },
+                    { (VKEY)115, L"F4" },
+                    { (VKEY)116, L"F5" },
+                    { (VKEY)117, L"F6" },
+                    { (VKEY)118, L"F7" },
+                    { (VKEY)119, L"F8" },
+                    { (VKEY)120, L"F9" },
+                    { (VKEY)121, L"F10" },
+                    { (VKEY)122, L"F11" },
+                    { (VKEY)123, L"F12" },
+                    { (VKEY)124, L"?" },
+                    { (VKEY)125, L"?" },
+                    { (VKEY)126, L"?" },
+                    { (VKEY)127, L"?" },
+                    { (VKEY)128, L"?" },
+                    { (VKEY)129, L"?" },
+                    { (VKEY)130, L"?" },
+                    { (VKEY)131, L"?" },
+                    { (VKEY)132, L"?" },
+                    { (VKEY)133, L"?" },
+                    { (VKEY)134, L"?" },
+                    { (VKEY)135, L"?" },
+                    { (VKEY)136, L"?" },
+                    { (VKEY)137, L"?" },
+                    { (VKEY)138, L"?" },
+                    { (VKEY)139, L"?" },
+                    { (VKEY)140, L"?" },
+                    { (VKEY)141, L"?" },
+                    { (VKEY)142, L"?" },
+                    { (VKEY)143, L"?" },
+                    { (VKEY)144, L"Pause" },
+                    { (VKEY)145, L"Scroll Lock" }
                 };
                 
                 keyNames.Resize(146);
@@ -228,65 +227,65 @@ namespace vl {
                 memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
                 memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
                 
-                asciiLowerMap[VKEY_0] = L'0';
-                asciiLowerMap[VKEY_0] = L'1';
-                asciiLowerMap[VKEY_2] = L'2';
-                asciiLowerMap[VKEY_3] = L'3';
-                asciiLowerMap[VKEY_4] = L'4';
-                asciiLowerMap[VKEY_5] = L'5';
-                asciiLowerMap[VKEY_6] = L'6';
-                asciiLowerMap[VKEY_7] = L'7';
-                asciiLowerMap[VKEY_8] = L'8';
-                asciiLowerMap[VKEY_9] = L'9';
-                asciiLowerMap[VKEY_OEM_1] = L';';
-                asciiLowerMap[VKEY_OEM_6] = L'[';
-                asciiLowerMap[VKEY_OEM_4] = L']';
-                asciiLowerMap[VKEY_OEM_7] = L'\'';
-                asciiLowerMap[VKEY_OEM_COMMA] = L',';
-                asciiLowerMap[VKEY_OEM_PERIOD] = L'.';
-                asciiLowerMap[VKEY_OEM_2] = L'/';
-                asciiLowerMap[VKEY_OEM_5] = L'\\';
-                asciiLowerMap[VKEY_OEM_MINUS] = L'-';
-                asciiLowerMap[VKEY_OEM_PLUS] = L'=';
-                asciiLowerMap[VKEY_OEM_3] = L'`';
-                asciiLowerMap[VKEY_SPACE] = L' ';
-                asciiLowerMap[VKEY_RETURN] = VKEY_RETURN;
-                asciiLowerMap[VKEY_ESCAPE] = VKEY_ESCAPE;
-                asciiLowerMap[VKEY_BACK] = VKEY_BACK;
-                for(int i=VKEY_A; i<=VKEY_Z; ++i)
-                    asciiLowerMap[i] = L'a' + (i-VKEY_A);
-                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
-                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+                asciiLowerMap[(int)VKEY::_0] = L'0';
+                asciiLowerMap[(int)VKEY::_1] = L'1';
+                asciiLowerMap[(int)VKEY::_2] = L'2';
+                asciiLowerMap[(int)VKEY::_3] = L'3';
+                asciiLowerMap[(int)VKEY::_4] = L'4';
+                asciiLowerMap[(int)VKEY::_5] = L'5';
+                asciiLowerMap[(int)VKEY::_6] = L'6';
+                asciiLowerMap[(int)VKEY::_7] = L'7';
+                asciiLowerMap[(int)VKEY::_8] = L'8';
+                asciiLowerMap[(int)VKEY::_9] = L'9';
+                asciiLowerMap[(int)VKEY::_OEM_1] = L';';
+                asciiLowerMap[(int)VKEY::_OEM_6] = L'[';
+                asciiLowerMap[(int)VKEY::_OEM_4] = L']';
+                asciiLowerMap[(int)VKEY::_OEM_7] = L'\'';
+                asciiLowerMap[(int)VKEY::_OEM_COMMA] = L',';
+                asciiLowerMap[(int)VKEY::_OEM_PERIOD] = L'.';
+                asciiLowerMap[(int)VKEY::_OEM_2] = L'/';
+                asciiLowerMap[(int)VKEY::_OEM_5] = L'\\';
+                asciiLowerMap[(int)VKEY::_OEM_MINUS] = L'-';
+                asciiLowerMap[(int)VKEY::_OEM_PLUS] = L'=';
+                asciiLowerMap[(int)VKEY::_OEM_3] = L'`';
+                asciiLowerMap[(int)VKEY::_SPACE] = L' ';
+                asciiLowerMap[(int)VKEY::_RETURN] = (int)VKEY::_RETURN;
+                asciiLowerMap[(int)VKEY::_ESCAPE] = (int)VKEY::_ESCAPE;
+                asciiLowerMap[(int)VKEY::_BACK] = (int)VKEY::_BACK;
+                for(int i=(int)VKEY::_A; i<=(int)VKEY::_Z; ++i)
+                    asciiLowerMap[i] = L'a' + (i-(int)VKEY::_A);
+                for(int i=(int)VKEY::_NUMPAD0; i<(int)VKEY::_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::_NUMPAD0);
                 
-                asciiUpperMap[VKEY_0] = L')';
-                asciiUpperMap[VKEY_1] = L'!';
-                asciiUpperMap[VKEY_2] = L'@';
-                asciiUpperMap[VKEY_3] = L'#';
-                asciiUpperMap[VKEY_4] = L'$';
-                asciiUpperMap[VKEY_5] = L'%';
-                asciiUpperMap[VKEY_6] = L'^';
-                asciiUpperMap[VKEY_7] = L'&';
-                asciiUpperMap[VKEY_8] = L'*';
-                asciiUpperMap[VKEY_9] = L'(';
-                asciiUpperMap[VKEY_OEM_1] = L':';
-                asciiUpperMap[VKEY_OEM_6] = L'{';
-                asciiUpperMap[VKEY_OEM_4] = L'}';
-                asciiUpperMap[VKEY_OEM_7] = L'\"';
-                asciiUpperMap[VKEY_OEM_COMMA] = L'<';
-                asciiUpperMap[VKEY_OEM_PERIOD] = L'>';
-                asciiUpperMap[VKEY_OEM_2] = L'?';
-                asciiUpperMap[VKEY_OEM_5] = L'|';
-                asciiUpperMap[VKEY_OEM_MINUS] = L'_';
-                asciiUpperMap[VKEY_OEM_PLUS] = L'+';
-                asciiUpperMap[VKEY_OEM_3] = L'~';
-                asciiUpperMap[VKEY_SPACE] = L' ';
-                asciiUpperMap[VKEY_RETURN] = VKEY_RETURN;
-                asciiUpperMap[VKEY_ESCAPE] = VKEY_ESCAPE;
-                asciiUpperMap[VKEY_BACK] = VKEY_BACK;
-                for(int i=VKEY_A; i<=VKEY_Z; ++i)
-                    asciiUpperMap[i] = L'A' + (i-VKEY_A);
-                for(int i=VKEY_NUMPAD0; i<VKEY_NUMPAD9; ++i)
-                    asciiLowerMap[i] = L'0' + (i-VKEY_NUMPAD0);
+                asciiUpperMap[(int)VKEY::_0] = L')';
+                asciiUpperMap[(int)VKEY::_1] = L'!';
+                asciiUpperMap[(int)VKEY::_2] = L'@';
+                asciiUpperMap[(int)VKEY::_3] = L'#';
+                asciiUpperMap[(int)VKEY::_4] = L'$';
+                asciiUpperMap[(int)VKEY::_5] = L'%';
+                asciiUpperMap[(int)VKEY::_6] = L'^';
+                asciiUpperMap[(int)VKEY::_7] = L'&';
+                asciiUpperMap[(int)VKEY::_8] = L'*';
+                asciiUpperMap[(int)VKEY::_9] = L'(';
+                asciiUpperMap[(int)VKEY::_OEM_1] = L':';
+                asciiUpperMap[(int)VKEY::_OEM_6] = L'{';
+                asciiUpperMap[(int)VKEY::_OEM_4] = L'}';
+                asciiUpperMap[(int)VKEY::_OEM_7] = L'\"';
+                asciiUpperMap[(int)VKEY::_OEM_COMMA] = L'<';
+                asciiUpperMap[(int)VKEY::_OEM_PERIOD] = L'>';
+                asciiUpperMap[(int)VKEY::_OEM_2] = L'?';
+                asciiUpperMap[(int)VKEY::_OEM_5] = L'|';
+                asciiUpperMap[(int)VKEY::_OEM_MINUS] = L'_';
+                asciiUpperMap[(int)VKEY::_OEM_PLUS] = L'+';
+                asciiUpperMap[(int)VKEY::_OEM_3] = L'~';
+                asciiUpperMap[(int)VKEY::_SPACE] = L' ';
+                asciiUpperMap[(int)VKEY::_RETURN] = (int)VKEY::_RETURN;
+                asciiUpperMap[(int)VKEY::_ESCAPE] = (int)VKEY::_ESCAPE;
+                asciiUpperMap[(int)VKEY::_BACK] = (int)VKEY::_BACK;
+                for(int i=(int)VKEY::_A; i<=(int)VKEY::_Z; ++i)
+                    asciiUpperMap[i] = L'A' + (i-(int)VKEY::_A);
+                for(int i=(int)VKEY::_NUMPAD0; i<(int)VKEY::_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::_NUMPAD0);
             }
             
             void CocoaInputService::HookInput()
@@ -334,12 +333,12 @@ namespace vl {
                     // this won't work is OSX Accessibility is turned on for our app (think about the case of Steam)
                     // so maybe a better way is just hooking window level events and send to InputService
                     // however that won't be global key states...
-                    CGKeyCode keyCode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-                    
+                    auto keyCode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+
                     wprintf(L"%s event\n", GetKeyName(NSEventKeyCodeToGacKeyCode(keyCode)).Buffer());
-                    
+
                     if(keyCode < 256)
-                        globalKeyStates[keyCode] = keyCode;
+                        globalKeyStates[keyCode] = static_cast<vint8_t>(keyCode);
                 }
                 else
                 {
@@ -396,51 +395,51 @@ namespace vl {
                  return isTimerEnabled;
             }
             
-            bool CocoaInputService::IsKeyPressing(vint code)
+            bool CocoaInputService::IsKeyPressing(VKEY code)
             {
-                if(code < 256)
-                    return globalKeyStates[code];
+                if((int)code < 256)
+                    return globalKeyStates[(int)code];
                 return false;
             }
             
-            bool CocoaInputService::IsKeyToggled(vint code)
+            bool CocoaInputService::IsKeyToggled(VKEY code)
             {
-                unsigned long modifierFlags = [NSEvent modifierFlags];
+                NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
                 
                 switch(code)
                 {
-                    case VKEY_CAPITAL:
-                        return modifierFlags & NSAlphaShiftKeyMask;
+                    case VKEY::_CAPITAL:
+                        return modifierFlags & NSEventModifierFlagCapsLock;
                         
-                    case VKEY_SHIFT:
-                        return modifierFlags & NSShiftKeyMask;
+                    case VKEY::_SHIFT:
+                        return modifierFlags & NSEventModifierFlagShift;
                         
-                    case VKEY_CONTROL:
-                        return modifierFlags & NSControlKeyMask;
+                    case VKEY::_CONTROL:
+                        return modifierFlags & NSEventModifierFlagControl;
                         
-                    case VKEY_LMENU:
-                    case VKEY_RMENU:
-                        return modifierFlags & NSAlternateKeyMask;
+                    case VKEY::_LMENU:
+                    case VKEY::_RMENU:
+                        return modifierFlags & NSEventModifierFlagOption;
                         
-                    case VKEY_LWIN:
-                    case VKEY_RWIN:
-                        return modifierFlags & NSCommandKeyMask;
+                    case VKEY::_LWIN:
+                    case VKEY::_RWIN:
+                        return modifierFlags & NSEventModifierFlagCommand;
                         
-                    case VKEY_NUMLOCK:
-                        return modifierFlags & NSNumericPadKeyMask;
+                    case VKEY::_NUMLOCK:
+                        return modifierFlags & NSEventModifierFlagNumericPad;
                         
-                    case VKEY_HELP:
-                        return modifierFlags & NSHelpKeyMask;
+                    case VKEY::_HELP:
+                        return modifierFlags & NSEventModifierFlagHelp;
                 }
                 return false;
             }
             
-            WString CocoaInputService::GetKeyName(vint code)
+            WString CocoaInputService::GetKeyName(VKEY code)
             {
-                return keyNames[code];
+                return keyNames[(int)code];
             }
-            
-            vint CocoaInputService::GetKey(const WString& name)
+
+            VKEY CocoaInputService::GetKey(const WString& name)
             {
                 return keys.Get(name);
             }
@@ -448,27 +447,25 @@ namespace vl {
             //
             bool CocoaInputService::ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event)
             {
-                info.ctrl = event.modifierFlags & NSCommandKeyMask;
-                info.shift = event.modifierFlags & NSShiftKeyMask;
-                info.alt = event.modifierFlags & NSAlternateKeyMask;
-                info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
+                info.ctrl = event.modifierFlags & NSEventModifierFlagCommand;
+                info.shift = event.modifierFlags & NSEventModifierFlagShift;
+                info.alt = event.modifierFlags & NSEventModifierFlagOption;
+                info.capslock = event.modifierFlags & NSEventModifierFlagCapsLock;
                 
                 if(info.ctrl || info.alt)
                     return false;
                 
-                vint code = NSEventKeyCodeToGacKeyCode(event.keyCode);
+                int code = (int)NSEventKeyCodeToGacKeyCode(event.keyCode);
                 if(code >= 256)
                     return false;
                 
                 info.code = asciiLowerMap[code];
-                if(info.capslock || info.shift) {
+                if(info.capslock || info.shift)
+                {
                     info.code = asciiUpperMap[code];
                 }
-                
-                if(info.code != 0)
-                    return true;
-                
-                return false;
+
+                return info.code != 0;
             }
             
             CocoaInputService* GetCocoaInputService()

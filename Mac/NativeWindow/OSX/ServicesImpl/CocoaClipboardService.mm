@@ -29,8 +29,8 @@ namespace vl {
 
             }
 
-            void CocoaClipboardWriter::Submit() {
-
+            bool CocoaClipboardWriter::Submit() {
+                return false;
             }
 
             ////

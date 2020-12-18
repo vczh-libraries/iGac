@@ -38,7 +38,7 @@ namespace vl {
                 typedef void (*MouseTapFunc)(CGEventType type, CGEventRef event);
                 
             protected:
-                collections::Dictionary<WString, vint>  keys;
+                collections::Dictionary<WString, VKEY>  keys;
                 collections::Array<WString>             keyNames;
                 
                 CGEventSourceRef                        eventSource;
@@ -74,11 +74,11 @@ namespace vl {
                 void    StopTimer() override;
                 bool    IsTimerEnabled() override;
                 
-                bool    IsKeyPressing(vint code) override;
-                bool    IsKeyToggled(vint code) override;
+                bool    IsKeyPressing(VKEY code) override;
+                bool    IsKeyToggled(VKEY code) override;
                 
-                WString GetKeyName(vint code) override;
-                vint    GetKey(const WString& name) override;
+                WString GetKeyName(VKEY code) override;
+                VKEY GetKey(const WString& name) override;
                 
                 ///
                 
