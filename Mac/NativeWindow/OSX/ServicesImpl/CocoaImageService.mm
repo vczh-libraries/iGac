@@ -161,8 +161,12 @@ namespace vl {
                 else
                     return 0;
             }
-            
 
+            void CocoaImage::SaveToStream(stream::IStream& stream, FormatType formatType)
+            {
+            }
+
+            ////
             Ptr<INativeImage> CocoaImageService::CreateImageFromFile(const WString& path)
             {
                 NSImage* image = [[NSImage alloc] initWithContentsOfFile:WStringToNSString(path)];

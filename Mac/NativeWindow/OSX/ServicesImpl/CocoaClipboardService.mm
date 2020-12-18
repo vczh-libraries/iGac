@@ -7,50 +7,73 @@
 //
 
 #include "CocoaClipboardService.h"
-#include "../CocoaHelper.h"
-
-#import <Cocoa/Cocoa.h>
 
 namespace vl {
     
     namespace presentation {
         
         namespace osx {
-            
-            bool CocoaClipboardService::SetText(const WString& value)
-            {
-                NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
-                
-                NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-                [pasteboard declareTypes:types owner:nil];
-                return [pasteboard setString:WStringToNSString(value)
-                                     forType:NSStringPboardType];
-            }
-            
-            WString CocoaClipboardService::GetText()
-            {
-                NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-                
-                if (![[pasteboard types] containsObject:NSStringPboardType])
-                {
-                    return L"";
-                }
-                
-                NSString* str = [pasteboard stringForType:NSStringPboardType];
-                if (!str)
-                {
-                    return L"";
-                }
-                
-                return NSStringToWString(str);
-            }
-            
-            bool CocoaClipboardService::ContainsText()
-            {
-                NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-                return [[pasteboard types] containsObject:NSStringPboardType];
+
+            ////
+            CocoaClipboardWriter::CocoaClipboardWriter(CocoaClipboardService *_service) {}
+
+            void CocoaClipboardWriter::SetText(const WString &value) {
+
             }
 
+            void CocoaClipboardWriter::SetDocument(Ptr<DocumentModel> value) {
+
+            }
+
+            void CocoaClipboardWriter::SetImage(Ptr<INativeImage> value) {
+
+            }
+
+            void CocoaClipboardWriter::Submit() {
+
+            }
+
+            ////
+            CocoaClipboardReader::CocoaClipboardReader(CocoaClipboardService *_service) {}
+
+            bool CocoaClipboardReader::ContainsText() {
+                return false;
+            }
+
+            WString CocoaClipboardReader::GetText() {
+                return vl::WString();
+            }
+
+            bool CocoaClipboardReader::ContainsDocument() {
+                return false;
+            }
+
+            Ptr<DocumentModel> CocoaClipboardReader::GetDocument() {
+                return Ptr<DocumentModel>();
+            }
+
+            bool CocoaClipboardReader::ContainsImage() {
+                return false;
+            }
+
+            Ptr<INativeImage> CocoaClipboardReader::GetImage() {
+                return Ptr<INativeImage>();
+            }
+
+            ////
+            Ptr<INativeClipboardReader>		CocoaClipboardService::ReadClipboard()
+            {
+                if (!reader)
+                {
+                    reader = new CocoaClipboardReader(this);
+                }
+                return reader;
+            }
+
+            Ptr<INativeClipboardWriter>		CocoaClipboardService::WriteClipboard()
+            {
+                return new CocoaClipboardWriter(this);
+            }
         }
     }
 }

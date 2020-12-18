@@ -57,6 +57,7 @@ namespace vl {
                 FormatType					GetFormat()  override;
                 vint						GetFrameCount()  override;
                 INativeImageFrame*			GetFrame(vint index)  override;
+                void                        SaveToStream(stream::IStream& stream, FormatType formatType = FormatType::Unknown) override;
             };
             
             class CocoaImageService: public Object, public INativeImageService

@@ -143,7 +143,7 @@ namespace vl {
                 }
             }
             
-            bool CocoaAsyncService::IsInMainThread()
+            bool CocoaAsyncService::IsInMainThread(INativeWindow* window)
             {
                 return Thread::GetCurrentThreadId() == mainThreadId;
             }

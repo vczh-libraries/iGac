@@ -19,7 +19,7 @@ void GuiMain()
         List<GuiResourceError> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"CalculatorAndStateMachine.bin", FileStream::ReadOnly);
         auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-        GetResourceManager()->SetResource(L"Resource", resource);
+        GetResourceManager()->SetResource(resource);
     }
     demo::MainWindow window(new demo::Calculator);
     window.MoveToScreenCenter();

@@ -73,6 +73,7 @@ namespace vl {
             
                 switch(element->GetShape().shapeType)
                 {
+                    case ElementShapeType::RoundRect:
                     case ElementShapeType::Rectangle:
                         CGContextFillRect(context, ConvertToCGRect(bounds));
                         break;
@@ -91,6 +92,7 @@ namespace vl {
                 
                 switch(element->GetShape().shapeType)
                 {
+                    case ElementShapeType::RoundRect:
                     case ElementShapeType::Rectangle:
                         CGContextStrokeRect(context, ConvertToCGRect(bounds, -0.5f));
                         break;
