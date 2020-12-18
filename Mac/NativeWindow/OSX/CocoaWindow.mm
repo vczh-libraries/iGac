@@ -334,8 +334,16 @@ namespace vl {
             void CocoaWindow::Hide(bool closeWindow)
             {
                 // actually close it as we need to trigger closing / closed events for GuiMenu to work
-                [nsWindow close];
-                opened = false;
+                if (closeWindow)
+                {
+                    [nsWindow close];
+                    opened = false;
+                }
+                else
+                {
+                    [nsWindow setIsVisible:false];
+                }
+                InvokeClosed();
             }
 
             bool CocoaWindow::IsVisible()
@@ -346,7 +354,7 @@ namespace vl {
             void CocoaWindow::Enable() 
             {
                 // todo
-                [nsWindow makeKeyWindow];
+                [nsWindow orderFront:nil];
                 [nsWindow makeFirstResponder:nsWindow];
                 enabled = true;
             }
@@ -1313,7 +1321,14 @@ namespace vl {
 
             NativeMargin CocoaWindow::GetCustomFramePadding()
             {
-                return NativeMargin(0, 0, 0, 0);
+                if (GetSizeBox() || GetTitleBar())
+                {
+                    return customFramePadding;
+                }
+                else
+                {
+                    return NativeMargin(0, 0, 0, 0);
+                }
             }
 
             Ptr<GuiImageData> CocoaWindow::GetIcon()
