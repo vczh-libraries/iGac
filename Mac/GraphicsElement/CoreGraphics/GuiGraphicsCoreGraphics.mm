@@ -16,6 +16,7 @@
 #include "../../NativeWindow/OSX/CocoaBaseView.h"
 
 #import <Cocoa/Cocoa.h>
+#import <GacUI.h>
 
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
@@ -236,7 +237,12 @@ namespace vl {
                     {
                         return MeasureInternal(character, renderTarget).x;
                     }
-                    
+
+                    vint MeasureWidthInternal(::elements::text::UnicodeCodePoint codePoint, IGuiGraphicsRenderTarget *renderTarget)
+                    {
+                        return MeasureInternal(codePoint.character, renderTarget).x;
+                    }
+
                     vint GetRowHeightInternal(IGuiGraphicsRenderTarget* renderTarget)
                     {
                         return MeasureInternal(L' ', renderTarget).y;

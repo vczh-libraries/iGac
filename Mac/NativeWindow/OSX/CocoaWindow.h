@@ -94,7 +94,7 @@ namespace vl {
                 void				ShowRestored() override;
                 void				ShowMaximized() override;
                 void				ShowMinimized() override;
-                void				Hide() override;
+                void				Hide(bool closeWindow) override;
                 bool				IsVisible() override;
                 void				Enable() override;
                 void				Disable() override;
