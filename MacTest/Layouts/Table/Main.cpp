@@ -3,8 +3,6 @@
 
 #include "Demo.h"
 
-#define VCZH_DEBUG_NO_REFLECTION
-
 int main(int argc, const char * argv[])
 {
     SetupOSXCoreGraphicsRenderer();

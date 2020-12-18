@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Resource>
+  <Folder name="GacGenConfig">
+    <Folder name="Cpp">
+      <Text name="SourceFolder">Source</Text>
+      <Text name="Resource">..\..\UIRes\AddressBook.bin</Text>
+      <Text name="NormalInclude">GacUI.h</Text>
+      <Text name="ReflectionInclude">GacUIReflection.h</Text>
+      <Text name="Name">Demo</Text>
+    </Folder>
+  </Folder>
+
+  <Script name="ViewModelResource">
+    <Workflow>
+      <![CDATA[
+        module viewmodel;
+
+        using system::*;
+
+        namespace demo
+        {
+          interface IContact
+          {
+            prop Name         : string                      {const, not observe}
+            prop BigImage     : presentation::GuiImageData^ {const, not observe}
+            prop SmallImage   : presentation::GuiImageData^ {const, not observe}
+            prop Birthday     : DateTime                    {const, not observe}
+            prop BirthdayText : string                      {const, not observe}
+            prop Phone        : string                      {const, not observe}
+            prop Address      : string                      {const, not observe}
+            
+            func Update(name : string, birthday : DateTime, phone : string, address : string) : void;
+          }
+      
+          interface ICategory
+          {
+            prop Parent       : ICategory*                  {const, not observe}
+            prop Name         : string                      {const, not observe}
+            prop Image        : presentation::GuiImageData^ {const, not observe}
+            prop Folders      : observe ICategory^[]        {const, not observe}
+            prop Contacts     : observe IContact^[]         {const, not observe}
+          }
+        
+          interface IViewModel
+          {
+            func GetRootCategory() : ICategory^;
+          
+            prop SelectedCategory : ICategory^ {}
+            prop SelectedContact : IContact^ {}
+          
+            func AddCategory(name : string) : void;
+            func RemoveCategory() : void;
+            func CreateContact() : IContact^;
+            func AddContact(contact : IContact^) : void;
+            func RemoveContact() : void;
+          }
+        }
+      ]]>
+    </Workflow>
+  </Script>
+
+  <Folder name="Images">
+    <Image content="File" name="NewContact">NewContact.png</Image>
+    <Image content="File" name="NewFolder">NewFolder.png</Image>
+    <Image content="File" name="Delete">Delete.png</Image>
+
+    <Image content="File" name="Folder">Folder.png</Image>
+    <Image content="File" name="ContactBig">ContactBig.png</Image>
+    <Image content="File" name="ContactSmall">ContactSmall.png</Image>
+    <Image content="File" name="Edit">Edit.png</Image>
+    
+    <Image content="File" name="BigIcon">ListView_Big.png</Image>
+    <Image content="File" name="SmallIcon">ListView_Small.png</Image>
+    <Image content="File" name="List">ListView_List.png</Image>
+    <Image content="File" name="Detail">ListView_Detail.png</Image>
+    <Image content="File" name="Tile">ListView_Tile.png</Image>
+    <Image content="File" name="Information">ListView_Info.png</Image>
+  </Folder>
+  
+  <Folder name="MainWindow">
+    <Instance name="MainWindowResource">
+      <Instance ref.Class="demo::MainWindow">
+        <ref.Parameter Name="ViewModel" Class="demo::IViewModel"/>
+        <ref.Members>
+          <![CDATA[
+            func ClearViewSelection() : void
+            {
+              commandBigIcon.Selected = false;
+              commandSmallIcon.Selected = false;
+              commandList.Selected = false;
+              commandDetail.Selected = false;
+              commandTile.Selected = false;
+              commandInformation.Selected = false;
+            }
+          ]]>
+        </ref.Members>
+        <Window ref.Name="self" Text="AddressBook" ClientSize="x:640 y:480">
+          <att.BoundsComposition-set PreferredMinSize="x:640 y:480"/>
+
+          <att.ViewModel-set>
+            <att.SelectedCategory-bind>treeViewFolders.SelectedItem as (demo::ICategory^)</att.SelectedCategory-bind>
+            <att.SelectedContact-bind>listViewContacts.SelectedItem as (demo::IContact^)</att.SelectedContact-bind>
+          </att.ViewModel-set>
+
+          <ToolstripCommand ref.Name="commandNewFolder" Image-uri="res://Images/NewFolder">
+            <att.Enabled-bind>ViewModel.SelectedCategory is not null</att.Enabled-bind>
+            <ev.Executed-eval>
+              <![CDATA[
+                $Async{
+                  var window = new demo::NewFolderWindow*();
+                  window.MoveToScreenCenter();
+                  $Await window.ShowModalAsync(self);
+                  
+                  if (window.Ready)
+                  {
+                    ViewModel.AddCategory(window.FolderName);
+                  }
+                  delete window;
+                }
+              ]]>
+            </ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandDeleteFolder" Image-uri="res://Images/Delete">
+            <att.Enabled-bind>ViewModel.SelectedCategory.Parent is not null ?? false</att.Enabled-bind>
+            <ev.Executed-eval>
+              <![CDATA[
+                {
+                  ViewModel.RemoveCategory();
+                }
+              ]]>
+            </ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandNewContact" Image-uri="res://Images/NewContact">
+            <att.Enabled-bind>ViewModel.SelectedCategory is not null</att.Enabled-bind>
+            <ev.Executed-eval>
+              <![CDATA[
+                $Async{
+                  var contact = ViewModel.CreateContact();
+                  var window = new demo::NewContactWindow*();
+                  window.MoveToScreenCenter();
+                  window.SetContact(contact);
+                  $Await window.ShowModalAsync(self);
+                  
+                  if (window.Ready)
+                  {
+                    ViewModel.AddContact(contact);
+                  }
+                  delete window;
+                }
+              ]]>
+            </ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandEditContact" Image-uri="res://Images/Edit">
+            <att.Enabled-bind>ViewModel.SelectedContact is not null</att.Enabled-bind>
+            <ev.Executed-eval>
+              <![CDATA[
+                $Async{
+                  var window = new demo::NewContactWindow*();
+                  window.ForEdit = true;
+                  window.MoveToScreenCenter();
+                  window.SetContact(ViewModel.SelectedContact);
+                  $Await window.ShowModalAsync(self);
+                  delete window;
+                }
+              ]]>
+            </ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandDeleteContact" Image-uri="res://Images/Delete">
+            <att.Enabled-bind>ViewModel.SelectedContact is not null</att.Enabled-bind>
+            <ev.Executed-eval>
+              <![CDATA[
+                {
+                  ViewModel.RemoveContact();
+                }
+              ]]>
+            </ev.Executed-eval>
+          </ToolstripCommand>
+
+          <ToolstripCommand ref.Name="commandBigIcon" Image-uri="res://Images/BigIcon">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(BigIcon);]]></ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandSmallIcon" Image-uri="res://Images/SmallIcon">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(SmallIcon);]]></ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandList" Image-uri="res://Images/List">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(ListViewView::List);]]></ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandDetail" Image-uri="res://Images/Detail" Selected="true">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(Detail);]]></ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandTile" Image-uri="res://Images/Tile">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(Tile);]]></ev.Executed-eval>
+          </ToolstripCommand>
+          <ToolstripCommand ref.Name="commandInformation" Image-uri="res://Images/Information">
+            <ev.Executed-eval><![CDATA[listViewContacts.SetView(Information);]]></ev.Executed-eval>
+          </ToolstripCommand>
+
+          <Table CellPadding="5" AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+            <att.Rows>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+            </att.Rows>
+            <att.Columns>
+              <CellOption>composeType:Absolute absolute:180</CellOption>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+            </att.Columns>
+
+            <ColumnSplitter ColumnsToTheLeft="1"/>
+
+            <Cell Site="row:0 column:0">
+              <GroupBox Text="Categories">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                <att.ContainerComposition-set InternalMargin="left:3 top:3 right:3 bottom:3"/>
+
+                <Table CellPadding="5" BorderVisible="false" AlignmentToParent="left:0 top:0 right:0 bottom:0">
+                  <att.Rows>
+                    <CellOption>composeType:MinSize</CellOption>
+                    <CellOption>composeType:Percentage percentage:1.0</CellOption>
+                  </att.Rows>
+                  <att.Columns>
+                    <CellOption>composeType:Percentage percentage:1.0</CellOption>
+                  </att.Columns>
+
+                  <Cell Site="row:0 column:0">
+                    <ToolstripToolBar>
+                      <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                      <ToolstripButton Command-ref="commandNewFolder"/>
+                      <ToolstripButton Command-ref="commandDeleteFolder"/>
+                    </ToolstripToolBar>
+                  </Cell>
+
+                  <Cell Site="row:1 column:0">
+                    <BindableTreeView ref.Name="treeViewFolders" HorizontalAlwaysVisible="false" VerticalAlwaysVisible="false" env.ItemType="demo::ICategory^">
+                      <att.ItemSource-eval>ViewModel.GetRootCategory()</att.ItemSource-eval>
+                      <att.TextProperty>Name</att.TextProperty>
+                      <att.ImageProperty>Image</att.ImageProperty>
+                      <att.ChildrenProperty>Folders</att.ChildrenProperty>
+                      <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                    </BindableTreeView>
+                  </Cell>
+                </Table>
+              </GroupBox>
+            </Cell>
+
+            <Cell Site="row:0 column:1">
+              <GroupBox Text="Contacts">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                <att.ContainerComposition-set InternalMargin="left:3 top:3 right:3 bottom:3"/>
+
+                <Table CellPadding="5" BorderVisible="false" AlignmentToParent="left:0 top:0 right:0 bottom:0">
+                  <att.Rows>
+                    <CellOption>composeType:MinSize</CellOption>
+                    <CellOption>composeType:Percentage percentage:1.0</CellOption>
+                  </att.Rows>
+                  <att.Columns>
+                    <CellOption>composeType:Percentage percentage:1.0</CellOption>
+                  </att.Columns>
+
+                  <Cell Site="row:0 column:0">
+                    <ToolstripToolBar>
+                      <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                      <ToolstripButton Command-ref="commandNewContact"/>
+                      <ToolstripButton Command-ref="commandEditContact"/>
+                      <ToolstripButton Command-ref="commandDeleteContact"/>
+                      <ToolstripSplitter/>
+                      <ToolstripButton Command-ref="commandBigIcon"/>
+                      <ToolstripButton Command-ref="commandSmallIcon"/>
+                      <ToolstripButton Command-ref="commandList"/>
+                      <ToolstripButton Command-ref="commandDetail"/>
+                      <ToolstripButton Command-ref="commandTile"/>
+                      <ToolstripButton Command-ref="commandInformation"/>
+                    </ToolstripToolBar>
+                  </Cell>
+
+                  <Cell Site="row:1 column:0">
+                    <BindableListView ref.Name="listViewContacts" View="Detail" HorizontalAlwaysVisible="false" VerticalAlwaysVisible="false" env.ItemType="demo::IContact^">
+                      <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+                      <att.ItemSource-bind>ViewModel.SelectedCategory.Contacts ?? null</att.ItemSource-bind>
+                      <att.LargeImageProperty>BigImage</att.LargeImageProperty>
+                      <att.SmallImageProperty>SmallImage</att.SmallImageProperty>
+
+                      <att.Columns>
+                        <ListViewColumn Text="Name" TextProperty="Name" Size="120"/>
+                        <ListViewColumn Text="Birthday" TextProperty="BirthdayText" Size="120"/>
+                        <ListViewColumn Text="Phone" TextProperty="Phone" Size="120"/>
+                        <ListViewColumn Text="Address" TextProperty="Address" Size="120"/>
+                      </att.Columns>
+
+                      <att.DataColumns>
+                        <_>1</_>
+                        <_>2</_>
+                      </att.DataColumns>
+                    </BindableListView>
+                  </Cell>
+                </Table>
+              </GroupBox>
+            </Cell>
+          </Table>
+        </Window>
+      </Instance>
+    </Instance>
+    
+    <Instance name="NewFolderWindowResource">
+      <Instance ref.CodeBehind="false" ref.Class="demo::NewFolderWindow">
+        <ref.Members>
+          <![CDATA[
+            prop FolderName : string = "" {}
+            
+            var Ready : bool = true;
+          ]]>
+        </ref.Members>
+        <Window ref.Name="self" Text="New Folder" ClientSize="x:240 y:120" MaximizedBox="false" MinimizedBox="false" SizeBox="false">
+          <att.BoundsComposition-set PreferredMinSize="x:240 y:120"/>
+          <att.FolderName-bind>textBoxName.Text</att.FolderName-bind>
+          
+          <Table CellPadding="5" AlignmentToParent="left:0 top:0 right:0 bottom:0">
+            <att.Rows>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+            </att.Rows>
+            <att.Columns>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+            </att.Columns>
+
+            <Cell Site="row:0 column:0" InternalMargin="top:6">
+              <Label Text="Name:"/>
+            </Cell>
+
+            <Cell Site="row:0 column:1 columnSpan:3">
+              <DocumentTextBox ref.Name="textBoxName" EditMode="Editable" Text="New Folder">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              </DocumentTextBox>
+            </Cell>
+
+            <Cell Site="row:2 column:2">
+              <Button Text="OK">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:60"/>
+                <ev.Clicked-eval><![CDATA[{ self.Close(); }]]></ev.Clicked-eval>
+              </Button>
+            </Cell>
+            <Cell Site="row:2 column:3">
+              <Button Text="Cancel">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:60"/>
+                <ev.Clicked-eval><![CDATA[{ self.Ready = false; self.Close(); }]]></ev.Clicked-eval>
+              </Button>
+            </Cell>
+          </Table>
+        </Window>
+      </Instance>
+    </Instance>
+
+    <Instance name="NewContactWindowResource">
+      <Instance ref.CodeBehind="false" ref.Class="demo::NewContactWindow">
+        <ref.Members>
+          <![CDATA[
+            prop ForEdit : bool = false {}
+          
+            var Ready : bool = false;
+            var contact : IContact^ = null;
+            
+            func SetContact(value : IContact^): void
+            {
+              contact = value;
+              textBoxName.Text = contact.Name;
+              textBoxPhone.Text = contact.Phone;
+              textBoxAddress.Text = contact.Address;
+              datePickerBirthday.Date = contact.Birthday;
+            }
+          ]]>
+        </ref.Members>
+        <Window ref.Name="self" Text-bind="self.ForEdit ? 'Edit Contact' : 'New Contact'" ClientSize="x:480 y:400" MaximizedBox="false" MinimizedBox="false" SizeBox="false">
+          <att.BoundsComposition-set PreferredMinSize="x:480 y:400"/>
+          <Table CellPadding="5" AlignmentToParent="left:0 top:0 right:0 bottom:0">
+            <att.Rows>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+            </att.Rows>
+            <att.Columns>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:Percentage percentage:1.0</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+              <CellOption>composeType:MinSize</CellOption>
+            </att.Columns>
+
+            <Cell Site="row:0 column:0" InternalMargin="top:6">
+              <Label Text="Name:"/>
+            </Cell>
+            <Cell Site="row:0 column:1 columnSpan:3">
+              <DocumentTextBox ref.Name="textBoxName" EditMode="Editable">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              </DocumentTextBox>
+            </Cell>
+
+            <Cell Site="row:1 column:0" InternalMargin="top:6">
+              <Label Text="Phone:"/>
+            </Cell>
+            <Cell Site="row:1 column:1 columnSpan:3">
+              <DocumentTextBox ref.Name="textBoxPhone" EditMode="Editable">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              </DocumentTextBox>
+            </Cell>
+
+            <Cell Site="row:2 column:0" InternalMargin="top:6">
+              <Label Text="Address:"/>
+            </Cell>
+            <Cell Site="row:2 column:1 columnSpan:3">
+              <DocumentTextBox ref.Name="textBoxAddress" EditMode="Editable">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              </DocumentTextBox>
+            </Cell>
+
+            <Cell Site="row:3 column:0" InternalMargin="top:6">
+              <Label Text="Birthday:"/>
+            </Cell>
+            <Cell Site="row:3 column:1 columnSpan:3">
+              <DatePicker ref.Name="datePickerBirthday">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 bottom:0"/>
+              </DatePicker>
+            </Cell>
+
+            <Cell Site="row:5 column:2">
+              <Button Text="OK">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:60"/>
+                <ev.Clicked-eval>
+                  <![CDATA[
+                    {
+                      self.contact.Update(textBoxName.Text, datePickerBirthday.Date, textBoxPhone.Text, textBoxAddress.Text);
+                      self.Ready = true;
+                      self.Close();
+                    }
+                  ]]>
+                </ev.Clicked-eval>
+              </Button>
+            </Cell>
+            <Cell Site="row:5 column:3">
+              <Button Text="Cancel">
+                <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0" PreferredMinSize="x:60"/>
+                <ev.Clicked-eval>
+                  <![CDATA[
+                    {
+                      self.Ready = false;
+                      self.Close();
+                    }
+                  ]]>
+                </ev.Clicked-eval>
+              </Button>
+            </Cell>
+          </Table>
+        </Window>
+      </Instance>
+    </Instance>
+  </Folder>
+</Resource>

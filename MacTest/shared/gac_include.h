@@ -41,7 +41,7 @@ namespace osx
         }
     };
 
-    class Theme : public ::vl::presentation::theme::ThemeTemplates, public ::vl::reflection::Description<Theme>
+    class Theme : public ::vl::presentation::theme::ThemeTemplates
     {
     public:
         Theme()

@@ -1,9 +1,6 @@
 #include "../../shared/osx_shared.h"
 #include "../../shared/gac_include.h"
-
 #include "Demo.h"
-
-#define VCZH_DEBUG_NO_REFLECTION
 
 int main(int argc, const char * argv[])
 {
