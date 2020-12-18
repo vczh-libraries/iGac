@@ -75,7 +75,7 @@ namespace vl {
             
             void CocoaWindow::CreateWindow()
             {
-                NSUInteger windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+                NSWindowStyleMask windowStyle = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable;
                 
                 NSRect windowRect = NSMakeRect(0, 0, 0, 0);
                 
@@ -129,7 +129,7 @@ namespace vl {
                 [nsWindow setFrame:nsbounds display:YES];
                 
                 previousBounds = GetBounds();
-                Show();
+                //Show();
             }
 
             Size CocoaWindow::GetClientSize() 
@@ -268,14 +268,11 @@ namespace vl {
                 {
                     [nsWindow orderFront:nil];
                     [nsWindow makeFirstResponder:nsWindow.contentView];
-
                 }
                 else
                 {
                     [nsWindow makeKeyAndOrderFront:nil];
                     [nsWindow makeMainWindow];
-                    
-
                 }
                 [nsWindow.contentView setNeedsDisplay:YES];
                 
@@ -334,7 +331,7 @@ namespace vl {
                 [nsWindow miniaturize:nil];
             }
 
-            void CocoaWindow::Hide() 
+            void CocoaWindow::Hide(bool closeWindow)
             {
                 // actually close it as we need to trigger closing / closed events for GuiMenu to work
                 [nsWindow close];
@@ -462,17 +459,17 @@ namespace vl {
 
             bool CocoaWindow::GetMinimizedBox() 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
-                return styleMask & NSMiniaturizableWindowMask;
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
+                return styleMask & NSWindowStyleMaskMiniaturizable;
             }
 
             void CocoaWindow::SetMinimizedBox(bool visible) 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
                 if(visible)
-                    styleMask |= NSMiniaturizableWindowMask;
+                    styleMask |= NSWindowStyleMaskMiniaturizable;
                 else
-                    styleMask ^= NSMiniaturizableWindowMask;
+                    styleMask ^= NSWindowStyleMaskMiniaturizable;
                 [nsWindow setStyleMask:styleMask];
                 
                 [[nsWindow standardWindowButton:NSWindowMiniaturizeButton] setHidden:!visible];
@@ -480,33 +477,33 @@ namespace vl {
 
             bool CocoaWindow::GetBorder() 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
-                return !(styleMask & NSBorderlessWindowMask);
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
+                return !(styleMask & NSWindowStyleMaskBorderless);
             }
 
             void CocoaWindow::SetBorder(bool visible) 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
                 if(visible)
-                    styleMask ^= NSBorderlessWindowMask;
+                    styleMask ^= NSWindowStyleMaskBorderless;
                 else 
-                    styleMask = NSBorderlessWindowMask;
+                    styleMask = NSWindowStyleMaskBorderless;
                 [nsWindow setStyleMask:styleMask];
             }
 
             bool CocoaWindow::GetSizeBox() 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
-                return styleMask & NSResizableWindowMask;
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
+                return styleMask & NSWindowStyleMaskResizable;
             }
 
             void CocoaWindow::SetSizeBox(bool visible) 
             {
-                NSUInteger styleMask = [nsWindow styleMask];
+                NSWindowStyleMask styleMask = [nsWindow styleMask];
                 if(visible)
-                    styleMask |= NSResizableWindowMask;
+                    styleMask |= NSWindowStyleMaskResizable;
                 else
-                    styleMask ^= NSResizableWindowMask;
+                    styleMask ^= NSWindowStyleMaskResizable;
                 [nsWindow setStyleMask:styleMask];
             }
 
@@ -676,15 +673,15 @@ namespace vl {
             
             NativeWindowMouseInfo CreateMouseInfo(NSWindow* window, NSEvent* event)
             {
-                NativeWindowMouseInfo info;
+                NativeWindowMouseInfo info{};
                 
-                info.left = event.type == NSLeftMouseDown;
-                info.right = event.type == NSRightMouseDown;
+                info.left = event.type == NSEventTypeLeftMouseDown;
+                info.right = event.type == NSEventTypeRightMouseDown;
                 // assuming its middle mouse
-                info.middle = (event.type == NSOtherMouseDown);
+                info.middle = (event.type == NSEventTypeOtherMouseDown);
                 
-                info.ctrl = event.modifierFlags & NSControlKeyMask;
-                info.shift = event.modifierFlags & NSShiftKeyMask;
+                info.ctrl = event.modifierFlags & NSEventModifierFlagControl;
+                info.shift = event.modifierFlags & NSEventModifierFlagShift;
                 
                 const NSRect contentRect = [window.contentView frame];
                 const NSPoint p = [event locationInWindow];
@@ -703,12 +700,12 @@ namespace vl {
             
             NativeWindowKeyInfo CreateKeyInfo(NSWindow* window, NSEvent* event)
             {
-                NativeWindowKeyInfo info;
+                NativeWindowKeyInfo info{};
              
-                info.ctrl = event.modifierFlags & NSCommandKeyMask;
-                info.shift = event.modifierFlags & NSShiftKeyMask;
-                info.alt = event.modifierFlags & NSAlternateKeyMask;
-                info.capslock = event.modifierFlags & NSAlphaShiftKeyMask;
+                info.ctrl = event.modifierFlags & NSEventModifierFlagCommand;
+                info.shift = event.modifierFlags & NSEventModifierFlagShift;
+                info.alt = event.modifierFlags & NSEventModifierFlagOption;
+                info.capslock = event.modifierFlags & NSEventModifierFlagCapsLock;
                 
                 info.code = NSEventKeyCodeToGacKeyCode(event.keyCode);
                 
@@ -717,13 +714,13 @@ namespace vl {
             
             void CocoaWindow::InsertText(const WString& str)
             {
-                NativeWindowCharInfo info;
-                
-                unsigned long modifierFlags = [NSEvent modifierFlags];
-                info.ctrl = modifierFlags & NSCommandKeyMask;
-                info.shift = modifierFlags & NSShiftKeyMask;
-                info.alt = modifierFlags & NSAlternateKeyMask;
-                info.capslock = modifierFlags & NSAlphaShiftKeyMask;
+                NativeWindowCharInfo info{};
+
+                NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
+                info.ctrl = modifierFlags & NSEventModifierFlagCommand;
+                info.shift = modifierFlags & NSEventModifierFlagShift;
+                info.alt = modifierFlags & NSEventModifierFlagOption;
+                info.capslock = modifierFlags & NSEventModifierFlagCapsLock;
                 
                 for(int i=0; i<str.Length(); ++i)
                 {
@@ -867,7 +864,7 @@ namespace vl {
                                 return;
                                 
                             case INativeWindowListener::ButtonClose:
-                                Hide();
+                                Hide(true);
                                 return;
                                 
                             default:
@@ -1005,11 +1002,11 @@ namespace vl {
             {
                 switch([event type])
                 {
-                    case NSCursorUpdate:
+                    case NSEventTypeCursorUpdate:
 //                        SetWindowCursor(currentCursor);
                         break;
                         
-                    case NSLeftMouseDown:
+                    case NSEventTypeLeftMouseDown:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1038,7 +1035,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSLeftMouseUp:
+                    case NSEventTypeLeftMouseUp:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1054,7 +1051,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSRightMouseDown:
+                    case NSEventTypeRightMouseDown:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1075,7 +1072,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSRightMouseUp:
+                    case NSEventTypeRightMouseUp:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1086,10 +1083,10 @@ namespace vl {
                         break;
                     }
                         
-                    case NSMouseMoved:
-                    case NSLeftMouseDragged:
-                    case NSRightMouseDragged:
-                    case NSOtherMouseDragged:
+                    case NSEventTypeMouseMoved:
+                    case NSEventTypeLeftMouseDragged:
+                    case NSEventTypeRightMouseDragged:
+                    case NSEventTypeOtherMouseDragged:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         info.nonClient = !mouseHoving;
@@ -1103,14 +1100,14 @@ namespace vl {
                         
                         if(customFrameMode)
                         {
-                            if(event.type == NSMouseMoved)
+                            if(event.type == NSEventTypeMouseMoved)
                             {
                                 if(!resizing)
                                     HitTestMouseMove(mouseLastX, mouseLastY);
                             }
                             
-                            if(event.type == NSLeftMouseDragged ||
-                               event.type == NSMouseMoved)
+                            if(event.type == NSEventTypeLeftMouseDragged ||
+                               event.type == NSEventTypeMouseMoved)
                             {
                                 if(resizing)
                                     ResizingDragged();
@@ -1123,7 +1120,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSMouseEntered:
+                    case NSEventTypeMouseEntered:
                     {
                         for(vint i=0; i<listeners.Count(); ++i)
                         {
@@ -1133,7 +1130,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSMouseExited:
+                    case NSEventTypeMouseExited:
                     {
 //                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1145,7 +1142,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSOtherMouseDown:
+                    case NSEventTypeOtherMouseDown:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1166,7 +1163,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSOtherMouseUp:
+                    case NSEventTypeOtherMouseUp:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1177,7 +1174,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSScrollWheel:
+                    case NSEventTypeScrollWheel:
                     {
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
                         
@@ -1242,7 +1239,7 @@ namespace vl {
 
                     }
                         
-                    case NSKeyDown:
+                    case NSEventTypeKeyDown:
                     {
                         NativeWindowKeyInfo info = CreateKeyInfo(nsWindow, event);
                         
@@ -1251,7 +1248,7 @@ namespace vl {
                             listeners[i]->KeyDown(info);
                         }
                         
-                        NativeWindowCharInfo charInfo;
+                        NativeWindowCharInfo charInfo{};
                         if(GetCocoaInputService()->ConvertToPrintable(charInfo, event))
                         {
                             for(vint i=0; i<listeners.Count(); ++i)
@@ -1262,7 +1259,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSKeyUp:
+                    case NSEventTypeKeyUp:
                     {
                         NativeWindowKeyInfo info = CreateKeyInfo(nsWindow, event);
                         
@@ -1273,7 +1270,7 @@ namespace vl {
                         break;
                     }
                         
-                    case NSFlagsChanged: // modifier flags
+                    case NSEventTypeFlagsChanged: // modifier flags
                         break;
                         
                     default:
@@ -1324,12 +1321,12 @@ namespace vl {
 - (BOOL)canBecomeKeyWindow
 {
     // NSPanel
-    return (self.parentWindow != nil) ? (self.styleMask & NSBorderlessWindowMask): YES;
+    return (self.parentWindow != nil) ? (self.styleMask & NSWindowStyleMaskBorderless): YES;
 }
 
 - (BOOL)canBecomeMainWindow
 {
-    return (self.parentWindow != nil) ? NO : YES;
+    return self.parentWindow == nil;
 }
 
 
