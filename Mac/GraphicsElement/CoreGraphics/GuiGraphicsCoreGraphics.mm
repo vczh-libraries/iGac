@@ -417,12 +417,12 @@ namespace vl {
                         CGContextRestoreGState((CGContextRef)GetCGContext());
                     }
                 }
-                
+
                 Rect GetClipper()
                 {
                     if(clippers.Count()==0)
                     {
-                        return Rect(Point(0, 0), window->GetClientSize());
+                        return Rect(Point(0, 0), window->Convert(window->GetClientSize()));
                     }
                     else
                     {
@@ -565,7 +565,7 @@ namespace vl {
             {
             protected:
                 CoreGraphicsView*       nativeView;
-                Size                    previousSize;
+                NativeSize              previousSize;
                 INativeWindow*          window;
                 
             public:
@@ -575,10 +575,10 @@ namespace vl {
                     nativeView = [[CoreGraphicsView alloc] initWithCocoaWindow:dynamic_cast<CocoaWindow*>(_window)];
                 }
                 
-                void RebuildLayer(Size size)
+                void RebuildLayer(NativeSize size)
                 {
                     if(previousSize != size)
-                        [nativeView resize:CGSizeMake(size.x, size.y)];
+                        [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
                     previousSize = size;
                 }
                 

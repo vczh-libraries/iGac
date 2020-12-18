@@ -102,29 +102,29 @@ namespace vl {
                 
                 currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
             }
-            
-            Rect CocoaWindow::GetBounds()
+
+            NativeRect CocoaWindow::GetBounds()
             {
                 NSRect nsbounds = [nsWindow frame];
                 
                 return FlipRect(nsWindow,
-                                Rect(nsbounds.origin.x,
+                                NativeRect(nsbounds.origin.x,
                                      nsbounds.origin.y,
                                      nsbounds.size.width + nsbounds.origin.x,
                                      nsbounds.size.height + nsbounds.origin.y));
             }
 
-            void CocoaWindow::SetBounds(const Rect& bounds) 
+            void CocoaWindow::SetBounds(const NativeRect& bounds)
             {
-                Rect newBounds = bounds;
+                NativeRect newBounds = bounds;
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->Moving(newBounds, true);
                 }
-                NSRect nsbounds = NSMakeRect(newBounds.Left(),
-                                             FlipY(nsWindow, newBounds.Bottom()),
-                                             newBounds.Width(),
-                                             newBounds.Height());
+                NSRect nsbounds = NSMakeRect(newBounds.Left().value,
+                                             FlipY(nsWindow, newBounds.Bottom().value),
+                                             newBounds.Width().value,
+                                             newBounds.Height().value);
                 
                 [nsWindow setFrame:nsbounds display:YES];
                 
@@ -132,25 +132,25 @@ namespace vl {
                 //Show();
             }
 
-            Size CocoaWindow::GetClientSize() 
+            NativeSize CocoaWindow::GetClientSize()
             {
                 return GetClientBoundsInScreen().GetSize();
             }
 
-            void CocoaWindow::SetClientSize(Size size) 
+            void CocoaWindow::SetClientSize(NativeSize size)
             {
-                Rect bounds = GetBounds();
-                Rect newBounds = Rect(bounds.Left(), bounds.Top(), size.x, size.y);
+                NativeRect bounds = GetBounds();
+                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x, size.y);
 
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->Moving(newBounds, true);
                 }
                 
-                [nsWindow setContentSize:NSMakeSize(newBounds.Width(), newBounds.Height())];
+                [nsWindow setContentSize:NSMakeSize(newBounds.Width().value, newBounds.Height().value)];
             }
 
-            Rect CocoaWindow::GetClientBoundsInScreen() 
+            NativeRect CocoaWindow::GetClientBoundsInScreen()
             {
                 NSRect contentFrame = [nsWindow convertRectToScreen:[nsWindow.contentView frame]];
                 
@@ -158,7 +158,7 @@ namespace vl {
                     contentFrame = [nsWindow frame];
                 
                 return FlipRect(nsWindow,
-                                Rect(contentFrame.origin.x,
+                                NativeRect(contentFrame.origin.x,
                                      contentFrame.origin.y,
                                      contentFrame.size.width + contentFrame.origin.x,
                                      contentFrame.size.height + contentFrame.origin.y));
@@ -189,12 +189,12 @@ namespace vl {
                 [nsWindow invalidateCursorRectsForView:nsWindow.contentView];
             }
 
-            Point CocoaWindow::GetCaretPoint()
+            NativePoint CocoaWindow::GetCaretPoint()
             {
                 return caretPoint;
             }
             
-            void CocoaWindow::SetCaretPoint(Point point)
+            void CocoaWindow::SetCaretPoint(NativePoint point)
             {
                 caretPoint = point;
                 
@@ -769,9 +769,9 @@ namespace vl {
                 }
             }
             
-            void CocoaWindow::HitTestMouseDown(vint x, vint y)
+            void CocoaWindow::HitTestMouseDown(NativeCoordinate x, NativeCoordinate y)
             {
-                Point p(x, y);
+                NativePoint p(x, y);
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     INativeWindowListener::HitTestResult r = listeners[i]->HitTest(p);
@@ -801,9 +801,9 @@ namespace vl {
                 }
             }
             
-            void CocoaWindow::HitTestMouseMove(vint x, vint y)
+            void CocoaWindow::HitTestMouseMove(NativeCoordinate x, NativeCoordinate y)
             {
-                Point p(x, y);
+                NativePoint p(x, y);
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     INativeWindowListener::HitTestResult r = listeners[i]->HitTest(p);
@@ -829,7 +829,7 @@ namespace vl {
                 }
             }
             
-            void CocoaWindow::HitTestMouseUp(vint x, vint y)
+            void CocoaWindow::HitTestMouseUp(NativeCoordinate x, NativeCoordinate y)
             {
                 if(resizing)
                 {
@@ -843,7 +843,7 @@ namespace vl {
                 }
                 else
                 {
-                    Point p(x, y);
+                    NativePoint p(x, y);
                     for(vint i=0;i<listeners.Count();i++)
                     {
                         switch(listeners[i]->HitTest(p))
@@ -879,7 +879,7 @@ namespace vl {
                 vint diffX = [NSEvent mouseLocation].x - mouseDownX;
                 vint diffY = -([NSEvent mouseLocation].y - mouseDownY);
                 
-                Rect bounds = lastBorder;
+                NativeRect bounds = lastBorder;
                 
                 bounds.x1 += diffX;
                 bounds.y1 += diffY;
@@ -908,7 +908,7 @@ namespace vl {
                 vint diffX = [NSEvent mouseLocation].x - mouseDownX;
                 vint diffY = -([NSEvent mouseLocation].y - mouseDownY);
                 
-                Rect bounds = lastBorder;
+                NativeRect bounds = lastBorder;
                 NSScreen* screen = GetWindowScreen(nsWindow);
                 
 #define CHECK_X1 if(bounds.x1 > bounds.x2 - 1) bounds.x1 = bounds.x2 - 1;
@@ -991,10 +991,10 @@ namespace vl {
                     bounds.y2 = visibleFrame.size.height + visibleFrame.origin.y;
                 
                 bounds = FlipRect(nsWindow, bounds);
-                NSRect nsBounds = NSMakeRect((CGFloat)bounds.Left(),
-                                             (CGFloat)bounds.Top(),
-                                             (CGFloat)bounds.Width(),
-                                             (CGFloat)bounds.Height());
+                NSRect nsBounds = NSMakeRect((CGFloat)bounds.Left().value,
+                                             (CGFloat)bounds.Top().value,
+                                             (CGFloat)bounds.Width().value,
+                                             (CGFloat)bounds.Height().value);
                 [nsWindow setFrame:nsBounds  display:YES];
             }
             
@@ -1095,8 +1095,8 @@ namespace vl {
                         {
                             listeners[i]->MouseMoving(info);
                         }
-                        mouseLastX = info.x;
-                        mouseLastY = info.y;
+                        mouseLastX = info.x.value;
+                        mouseLastY = info.y.value;
                         
                         if(customFrameMode)
                         {
@@ -1311,16 +1311,48 @@ namespace vl {
                 draggingListeners.Remove(listener);
             }
 
-            Margin CocoaWindow::GetCustomFramePadding() {
-                return Margin();
+            NativeMargin CocoaWindow::GetCustomFramePadding()
+            {
+                return NativeMargin(0, 0, 0, 0);
             }
 
-            Ptr<GuiImageData> CocoaWindow::GetIcon() {
+            Ptr<GuiImageData> CocoaWindow::GetIcon()
+            {
                 return Ptr<GuiImageData>();
             }
 
-            void CocoaWindow::SetIcon(Ptr<GuiImageData> icon) {
+            void CocoaWindow::SetIcon(Ptr<GuiImageData> icon)
+            {
+            }
 
+            Point CocoaWindow::Convert(NativePoint value)
+            {
+                return Point(value.x.value, value.y.value);
+            }
+
+            NativePoint CocoaWindow::Convert(Point value)
+            {
+                return NativePoint(value.x, value.y);
+            }
+
+            Size CocoaWindow::Convert(NativeSize value)
+            {
+                return Size(value.x.value, value.y.value);
+            }
+
+            NativeSize CocoaWindow::Convert(Size value)
+            {
+                return NativeSize(value.x, value.y);
+            }
+
+            Margin CocoaWindow::Convert(NativeMargin value)
+            {
+                return Margin(value.left.value, value.top.value, value.right.value, value.bottom.value);
+            }
+
+            NativeMargin CocoaWindow::Convert(Margin value)
+            {
+                return NativeMargin(value.left, value.top, value.right, value.bottom);
             }
         }
     }

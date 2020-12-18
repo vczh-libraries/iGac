@@ -54,7 +54,7 @@ namespace vl {
             void CocoaCallbackService::InvokeMouseHook(CGEventType type, CGEventRef event)
             {
                 CGPoint cgLoc = CGEventGetLocation(event);
-                Point location(cgLoc.x, cgLoc.y);
+                NativePoint location(cgLoc.x, cgLoc.y);
                 switch(type)
                 {
                     case kCGEventMouseMoved:

@@ -239,14 +239,14 @@ namespace vl {
 //                    }
                 }
                 
-                INativeWindow* GetWindow(Point location)
+                INativeWindow* GetWindow(NativePoint location)
                 {
                     CocoaWindow* result = 0;
-                    Rect minRect(0, 0, 99999, 99999);
+                    NativeRect minRect(0, 0, 99999, 99999);
                     for(vint i=0; i<windows.Count(); ++i)
                     {
                         CocoaWindow* window = (CocoaWindow*)windows[i];
-                        Rect r = window->GetClientBoundsInScreen();
+                        NativeRect r = window->GetClientBoundsInScreen();
                         if(r.Contains(location))
                         {
                             if(!result)
@@ -339,7 +339,6 @@ namespace vl {
                     asyncService.ExecuteAsyncTasks();
                     callbackService.InvokeGlobalTimer();
                 }
-                
             };
             
             INativeController* CreateOSXNativeController()

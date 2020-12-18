@@ -55,7 +55,7 @@ namespace vl {
             WString     NSStringToWString(NSString* str);
             
 #ifdef GAC_OS_OSX
-            
+
             void EnumDesktopModes(void (*callback)(unsigned int w, unsigned int h, unsigned int bpp));
             
             NSCursor* MakeCursorFromData(unsigned char* data, int hotspot_x, int hotspot_y);
@@ -66,14 +66,14 @@ namespace vl {
             NSFontTraitMask GetTraitMask(const FontProperties& font);
             
             VKEY NSEventKeyCodeToGacKeyCode(unsigned short keycode);
-            Rect FlipRect(NSWindow* window, Rect rect);
+            NativeRect FlipRect(NSWindow* window, NativeRect rect);
             NSScreen* GetWindowScreen(NSWindow* window);
             CGFloat FlipY(NSWindow* window, CGFloat y);
             
 #endif
-            
-            
-            
+
+
+
         }
         
     }
