@@ -1310,6 +1310,10 @@ namespace vl {
             {
                 draggingListeners.Remove(listener);
             }
+
+            Margin CocoaWindow::GetCustomFramePadding() {
+                return Margin();
+            }
         }
     }
 }

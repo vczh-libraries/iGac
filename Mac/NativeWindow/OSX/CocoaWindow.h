@@ -157,7 +157,9 @@ namespace vl {
                 
                 void                InstallDraggingListener(IDraggingListener* listener);
                 void                UninstallDraggingListener(IDraggingListener* listener);
-                
+
+                Margin              GetCustomFramePadding() override;
+
             protected:
                 void                CreateWindow();
     
