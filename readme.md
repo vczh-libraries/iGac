@@ -24,5 +24,7 @@
 ##### TODO
 * GuiInnerShadowElementRenderer is not implemented yet
 * GuiFocusRectangleElementRenderer is not implemented yet
+* CocoaClipboardWriter and CocoaClipboardReader is not implemented yet
+* CocoaWindow's GetIcon and SetIcon is not implemented yet
 * VKEYS mapping is quite big, should be shotter
 * CMakeLists.txt only covers AddressBook/Animation/CalculatorAndStateMachine/Helloworld/Table

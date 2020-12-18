@@ -1314,6 +1314,14 @@ namespace vl {
             Margin CocoaWindow::GetCustomFramePadding() {
                 return Margin();
             }
+
+            Ptr<GuiImageData> CocoaWindow::GetIcon() {
+                return Ptr<GuiImageData>();
+            }
+
+            void CocoaWindow::SetIcon(Ptr<GuiImageData> icon) {
+
+            }
         }
     }
 }
