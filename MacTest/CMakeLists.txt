@@ -20,10 +20,14 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 
-set(GACUI_COMMON_FILES 
-	"../Release/Import/Vlpp.cpp" 
-	"../Release/Import/VlppWorkflowLibrary.cpp"
+set(GACUI_COMMON_FILES
 	"../Release/Import/GacUI.cpp"
+	"../Release/Import/Vlpp.cpp"
+	"../Release/Import/VlppOS.cpp"
+	"../Release/Import/VlppRegex.cpp"
+	"../Release/Import/VlppReflection.cpp"
+	"../Release/Import/VlppParser.cpp"
+	"../Release/Import/VlppWorkflowLibrary.cpp"
 )
 
 set(GACOSX_FILES
