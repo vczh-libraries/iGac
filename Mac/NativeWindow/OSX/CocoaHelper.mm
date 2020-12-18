@@ -311,14 +311,14 @@ namespace vl {
                 }
                 return c;
             }
-            
-            
-            Rect FlipRect(NSWindow* window, Rect rect)
+
+
+            NativeRect FlipRect(NSWindow* window, NativeRect rect)
             {
-                return Rect(rect.x1,
-                            [[window screen] frame].size.height - (rect.Top() + rect.Height()),
-                            rect.x2,
-                            [[window screen] frame].size.height - (rect.Bottom() - rect.Height()));
+                return NativeRect(rect.x1.value,
+                            [[window screen] frame].size.height - (rect.Top().value + rect.Height().value),
+                            rect.x2.value,
+                            [[window screen] frame].size.height - (rect.Bottom().value - rect.Height().value));
             }
             
             
