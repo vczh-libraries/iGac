@@ -35,14 +35,7 @@ using namespace vl::presentation::osx;
 
 inline CGContextRef GetCurrentCGContext()
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10 && defined(NSAppKitVersionNumber10_9)
-    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9)
-    {
-        return [[NSGraphicsContext currentContext] CGContext];
-    }
-    else
-#endif
-    return (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+    return [[NSGraphicsContext currentContext] CGContext];
 }
 
 @implementation CoreGraphicsView
@@ -306,7 +299,7 @@ namespace vl {
             {
                 g_coreGraphicsObjectProvider = provider;
             }
-            
+
             // todo
             class CoreGraphicsRenderTarget: public ICoreGraphicsRenderTarget
             {
@@ -331,33 +324,28 @@ namespace vl {
                 {
                     //[[nativeView window] setContentView:nil];
                 }
-                
+
                 void StartRendering()
                 {
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if(!context)
                         return;
-                    
+
                     SetCurrentRenderTarget(this);
-                    
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
-                                                                                                    flipped:true]];
-                    
-                    CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
-                    CGContextFillRect(context, [nativeView backbufferSize]);
-                    
+                                                                                                 flipped:true]];
                     CGContextSaveGState(context);
-                    // flip the context, since gac's origin is upper-left (0, 0)
+                    /*CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
+                    CGContextFillRect(context, [nativeView backbufferSize]);*/
+
+                    // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
-                    CGContextScaleCTM(context, 1.0f, -1.0f);
-                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height * 2);
-                    
-                    // scaling for retina display
-                    CGContextScaleCTM(context, nativeView.window.backingScaleFactor, nativeView.window.backingScaleFactor);
+                    CGContextScaleCTM(context, 1.0 * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
+                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height * nativeView.window.backingScaleFactor);
                 }
-                
+
                 RenderTargetFailure StopRendering()
                 {
                     CGContextRef context = (CGContextRef)GetCGContext();
@@ -581,7 +569,7 @@ namespace vl {
                         [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
                     previousSize = size;
                 }
-                
+
                 void Moved()
                 {
                     RebuildLayer(window->GetClientSize());
@@ -623,12 +611,12 @@ namespace vl {
                     window->UninstallListener(listener.Obj());
                 }
             };
-            
+
             namespace
             {
                 CoreGraphicsCocoaNativeControllerListener* g_cocoaListener;
             }
-            
+
             CoreGraphicsView* GetCoreGraphicsView(INativeWindow* window)
             {
                 vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
