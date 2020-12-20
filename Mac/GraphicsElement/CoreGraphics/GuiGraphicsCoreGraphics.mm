@@ -458,6 +458,9 @@ namespace vl {
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
                                                                                                  flipped:true]];
+
+                    CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
+                    CGContextFillRect(context, [nativeView backbufferSize]);
                     CGContextSaveGState(context);
 
                     // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)

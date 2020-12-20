@@ -16,10 +16,10 @@ using namespace vl::stream;
 void GuiMain()
 {
     {
-        List<GuiResourceError> errors;
         FileStream fileStream(osx::GetResourceFolder() + L"CalculatorAndStateMachine.bin", FileStream::ReadOnly);
-        auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-        GetResourceManager()->SetResource(resource);
+        auto resource = GuiResource::LoadPrecompiledBinary(fileStream);
+        GuiResourceError::List errors;
+        GetResourceManager()->SetResource(resource, errors);
     }
     demo::MainWindow window(new demo::Calculator);
     window.MoveToScreenCenter();
