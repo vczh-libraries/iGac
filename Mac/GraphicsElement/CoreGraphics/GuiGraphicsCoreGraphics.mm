@@ -35,14 +35,7 @@ using namespace vl::presentation::osx;
 
 inline CGContextRef GetCurrentCGContext()
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10 && defined(NSAppKitVersionNumber10_9)
-    if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_9)
-    {
-        return [[NSGraphicsContext currentContext] CGContext];
-    }
-    else
-#endif
-    return (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+    return [[NSGraphicsContext currentContext] CGContext];
 }
 
 @implementation CoreGraphicsView
@@ -261,12 +254,12 @@ namespace vl {
             
             class CoreGraphicsObjectProvider: public ICoreGrpahicsObjectProvider
             {
-                
+
                 void RecreateRenderTarget(INativeWindow* window)
                 {
                     // todo
                 }
-                
+
                 ICoreGraphicsRenderTarget* GetNativeCoreGraphicsRenderTarget(INativeWindow* window)
                 {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
@@ -291,6 +284,126 @@ namespace vl {
                 }
                 
             };
+
+            class CoreGraphicsCocoaNativeWindowListener: public Object, public INativeWindowListener
+            {
+            protected:
+                CoreGraphicsView*       nativeView;
+                NativeSize              previousSize;
+                INativeWindow*          window;
+                bool					rendering = false;
+                bool					movedWhileRendering = false;
+
+            public:
+                CoreGraphicsCocoaNativeWindowListener(INativeWindow* _window):
+                        window(_window)
+                {
+                    nativeView = [[CoreGraphicsView alloc] initWithCocoaWindow:dynamic_cast<CocoaWindow*>(_window)];
+                }
+
+                void RebuildLayer(NativeSize size)
+                {
+                    if(previousSize != size)
+                        [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
+                    previousSize = size;
+                }
+
+                void ResizeRenderTarget()
+                {
+                    RebuildLayer(window->GetClientSize());
+                }
+
+                void StartRendering()
+                {
+                    rendering = true;
+                }
+
+                void StopRendering()
+                {
+                    rendering = false;
+                }
+
+                bool RetrieveAndResetMovedWhileRendering()
+                {
+                    bool result = movedWhileRendering;
+                    movedWhileRendering = false;
+                    return result;
+                }
+
+                void Moved()
+                {
+                    if (rendering)
+                    {
+                        movedWhileRendering = true;
+                    }
+                    else
+                    {
+                        RebuildLayer(window->GetClientSize());
+                    }
+                }
+
+                void Paint()
+                {
+
+                }
+
+                CoreGraphicsView* GetCoreGraphicsView() const
+                {
+                    return nativeView;
+                }
+
+                void RecreateRenderTarget()
+                {
+                    RebuildLayer(window->GetClientSize());
+                }
+
+            };
+
+            class CoreGraphicsCocoaNativeControllerListener: public Object, public INativeControllerListener
+            {
+            public:
+                Dictionary<INativeWindow*, Ptr<CoreGraphicsCocoaNativeWindowListener>>  nativeWindowListeners;
+
+                void NativeWindowCreated(INativeWindow* window) override
+                {
+                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = new CoreGraphicsCocoaNativeWindowListener(window);
+                    window->InstallListener(listener.Obj());
+                    nativeWindowListeners.Add(window, listener);
+                }
+
+                void NativeWindowDestroying(INativeWindow* window) override
+                {
+                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = nativeWindowListeners[window];
+                    nativeWindowListeners.Remove(window);
+                    window->UninstallListener(listener.Obj());
+                }
+            };
+
+            namespace
+            {
+                CoreGraphicsCocoaNativeControllerListener* g_cocoaListener;
+            }
+
+            CoreGraphicsCocoaNativeWindowListener* GetNativeWindowListener(INativeWindow* window)
+            {
+                vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
+                return index == -1 ? 0 : g_cocoaListener->nativeWindowListeners.Values().Get(index).Obj();
+            }
+
+            CoreGraphicsView* GetCoreGraphicsView(INativeWindow* window)
+            {
+                vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
+                return index == -1 ? 0 : g_cocoaListener->nativeWindowListeners.Values().Get(index)->GetCoreGraphicsView();
+            }
+
+            void RecreateCoreGraphicsLayer(INativeWindow* window)
+            {
+                vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
+                if (index == -1)
+                {
+                    g_cocoaListener->nativeWindowListeners.Values().Get(index)->RecreateRenderTarget();
+                }
+            }
             
             namespace
             {
@@ -306,7 +419,7 @@ namespace vl {
             {
                 g_coreGraphicsObjectProvider = provider;
             }
-            
+
             // todo
             class CoreGraphicsRenderTarget: public ICoreGraphicsRenderTarget
             {
@@ -331,44 +444,51 @@ namespace vl {
                 {
                     //[[nativeView window] setContentView:nil];
                 }
-                
+
                 void StartRendering()
                 {
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if(!context)
                         return;
-                    
+
+                    auto listener = GetNativeWindowListener(window);
+                    listener->StartRendering();
+
                     SetCurrentRenderTarget(this);
-                    
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
-                                                                                                    flipped:true]];
-                    
+                                                                                                 flipped:true]];
+
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView backbufferSize]);
-                    
                     CGContextSaveGState(context);
-                    // flip the context, since gac's origin is upper-left (0, 0)
+
+                    // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
-                    CGContextScaleCTM(context, 1.0f, -1.0f);
-                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height * 2);
-                    
-                    // scaling for retina display
-                    CGContextScaleCTM(context, nativeView.window.backingScaleFactor, nativeView.window.backingScaleFactor);
+                    CGContextTranslateCTM(context, 0, nativeView.frame.size.height * nativeView.window.backingScaleFactor);
+                    CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
                 }
-                
+
                 RenderTargetFailure StopRendering()
                 {
                     CGContextRef context = (CGContextRef)GetCGContext();
-                    if(!context)
-                        return LostDevice;
-                    
-                    CGContextRestoreGState(context);
-                    [NSGraphicsContext restoreGraphicsState];
-                    SetCurrentRenderTarget(0);
-                    // todo succeed / not
-                    return None;
+                    if (context) {
+                        auto listener = GetNativeWindowListener(window);
+                        listener->StopRendering();
+
+                        CGContextRestoreGState(context);
+                        [NSGraphicsContext restoreGraphicsState];
+                        SetCurrentRenderTarget(0);
+
+                        bool moved = listener->RetrieveAndResetMovedWhileRendering();
+                        if (moved) {
+                            return RenderTargetFailure::ResizeWhileRendering;
+                        }
+
+                        return RenderTargetFailure::None;
+                    }
+                    return LostDevice;
                 }
                 
                 void PushClipper(Rect clipper)
@@ -547,104 +667,6 @@ namespace vl {
                 g_coreGraphicsResourceManager = rm;
             }
         }
-    }
-    
-}
-
-
-
-namespace vl {
-    
-    namespace presentation {
-        
-        namespace elements_coregraphics {
-            
-            using namespace collections;
-            
-            class CoreGraphicsCocoaNativeWindowListener: public Object, public INativeWindowListener
-            {
-            protected:
-                CoreGraphicsView*       nativeView;
-                NativeSize              previousSize;
-                INativeWindow*          window;
-                
-            public:
-                CoreGraphicsCocoaNativeWindowListener(INativeWindow* _window):
-                    window(_window)
-                {
-                    nativeView = [[CoreGraphicsView alloc] initWithCocoaWindow:dynamic_cast<CocoaWindow*>(_window)];
-                }
-                
-                void RebuildLayer(NativeSize size)
-                {
-                    if(previousSize != size)
-                        [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
-                    previousSize = size;
-                }
-                
-                void Moved()
-                {
-                    RebuildLayer(window->GetClientSize());
-                }
-                
-                void Paint()
-                {
-                    
-                }
-                
-                CoreGraphicsView* GetCoreGraphicsView() const
-                {
-                    return nativeView;
-                }
-                
-                void RecreateRenderTarget()
-                {
-                    RebuildLayer(window->GetClientSize());
-                }
-                
-            };
-            
-            class CoreGraphicsCocoaNativeControllerListener: public Object, public INativeControllerListener
-            {
-            public:
-                Dictionary<INativeWindow*, Ptr<CoreGraphicsCocoaNativeWindowListener>>  nativeWindowListeners;
-                
-                void NativeWindowCreated(INativeWindow* window) override
-                {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = new CoreGraphicsCocoaNativeWindowListener(window);
-                    window->InstallListener(listener.Obj());
-                    nativeWindowListeners.Add(window, listener);
-                }
-                
-                void NativeWindowDestroying(INativeWindow* window) override
-                {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = nativeWindowListeners[window];
-                    nativeWindowListeners.Remove(window);
-                    window->UninstallListener(listener.Obj());
-                }
-            };
-            
-            namespace
-            {
-                CoreGraphicsCocoaNativeControllerListener* g_cocoaListener;
-            }
-            
-            CoreGraphicsView* GetCoreGraphicsView(INativeWindow* window)
-            {
-                vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
-                return index == -1 ? 0 : g_cocoaListener->nativeWindowListeners.Values().Get(index)->GetCoreGraphicsView();
-            }
-            
-            void RecreateCoreGraphicsLayer(INativeWindow* window)
-            {
-                vint index = g_cocoaListener->nativeWindowListeners.Keys().IndexOf(window);
-                if (index == -1)
-                {
-                    g_cocoaListener->nativeWindowListeners.Values().Get(index)->RecreateRenderTarget();
-                }
-            }
-        }
-        
     }
     
 }

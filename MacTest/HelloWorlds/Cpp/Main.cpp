@@ -21,7 +21,9 @@ void GuiMain()
         FontProperties font;
         font.fontFamily = L"Lucida Calligraphy";
         font.antialias = true;
+        font.size = 32;
         label->SetFont(font);
+
         label->SetText(L"Welcome to GacUI Library!");
     }
 	window->AddChild(label);
