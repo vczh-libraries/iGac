@@ -459,14 +459,12 @@ namespace vl {
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
                                                                                                  flipped:true]];
                     CGContextSaveGState(context);
-                    /*CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
-                    CGContextFillRect(context, [nativeView backbufferSize]);*/
 
                     // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
-                    CGContextScaleCTM(context, 1.0 * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
-                    CGContextTranslateCTM(context, 0, -nativeView.frame.size.height * nativeView.window.backingScaleFactor);
+                    CGContextTranslateCTM(context, 0, nativeView.frame.size.height * nativeView.window.backingScaleFactor);
+                    CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
                 }
 
                 RenderTargetFailure StopRendering()
