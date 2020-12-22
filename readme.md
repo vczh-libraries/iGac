@@ -17,9 +17,7 @@
 ##### Known Issues/Limiations:
 * Global keyboard hook requires Accessibility priviledge
 * AsyncService::Semaphore::WaitForTime
-* Code is compiled under VCZH_DEBUG_NO_REFLECTION, if u need Reflection, remember to add remove VCZH_DEBUG_NO_REFLECTION in CMakeLists.txt and add all of Reflection cpp files.
-* Crash on Helloworld when setting label size
-* Subwindow closed but didn't set parent window as main window.
+* Code is compiled under VCZH_DEBUG_NO_REFLECTION, if u need Reflection, remember to remove VCZH_DEBUG_NO_REFLECTION in CMakeLists.txt and add all of Reflection cpp files.
 
 ##### TODO
 * GuiInnerShadowElementRenderer is not implemented yet
@@ -27,4 +25,4 @@
 * CocoaClipboardWriter and CocoaClipboardReader is not implemented yet
 * CocoaWindow's GetIcon and SetIcon is not implemented yet
 * VKEYS mapping is quite big, should be shotter
-* CMakeLists.txt only covers AddressBook/Animation/CalculatorAndStateMachine/Helloworld/Table
+* Replace cglayer with metal
