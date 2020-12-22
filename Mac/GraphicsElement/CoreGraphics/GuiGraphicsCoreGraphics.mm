@@ -86,13 +86,12 @@ inline CGContextRef GetCurrentCGContext()
 
     size.width *= [[self window] backingScaleFactor];
     size.height *= [[self window] backingScaleFactor];
-    
+
     _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
     if(_context)
     {
         CGContextSetShouldAntialias(_context, true);
         CGContextSetShouldSmoothFonts(_context, true);
-
         _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
         assert(_drawingLayer);
     }
@@ -103,7 +102,7 @@ inline CGContextRef GetCurrentCGContext()
     CGContextRef context = GetCurrentCGContext();
 
     // window already has scaling factor, don't scale twice
-    CGContextDrawLayerInRect(context, CGRectMake(0, 0, self.frame.size.width, self.frame.size.height), _drawingLayer);
+    CGContextDrawLayerInRect(context, self.frame, _drawingLayer);
 }
 
 - (CGContextRef)getLayerContext
@@ -451,23 +450,21 @@ namespace vl {
                     if(!context)
                         return;
 
-                    auto listener = GetNativeWindowListener(window);
-                    listener->StartRendering();
-
                     SetCurrentRenderTarget(this);
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context
                                                                                                  flipped:true]];
-
                     CGContextSetFillColorWithColor(context, [NSColor blackColor].CGColor);
                     CGContextFillRect(context, [nativeView backbufferSize]);
                     CGContextSaveGState(context);
-
                     // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)
                     // this can also be done just in the view when creating the context
                     // just putting it here for now
                     CGContextTranslateCTM(context, 0, nativeView.frame.size.height * nativeView.window.backingScaleFactor);
                     CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
+
+                    auto listener = GetNativeWindowListener(window);
+                    listener->StartRendering();
                 }
 
                 RenderTargetFailure StopRendering()
@@ -482,13 +479,9 @@ namespace vl {
                         SetCurrentRenderTarget(0);
 
                         bool moved = listener->RetrieveAndResetMovedWhileRendering();
-                        if (moved) {
-                            return RenderTargetFailure::ResizeWhileRendering;
-                        }
-
-                        return RenderTargetFailure::None;
+                        return !moved ? RenderTargetFailure::None : RenderTargetFailure::ResizeWhileRendering;;
                     }
-                    return LostDevice;
+                    return RenderTargetFailure::LostDevice;
                 }
                 
                 void PushClipper(Rect clipper)
@@ -515,7 +508,7 @@ namespace vl {
                             
                             CGContextSaveGState((CGContextRef)GetCGContext());
                             
-                            CGRect rect = CGRectMake(clipper.Left(), clipper.Top(), clipper.Width(), clipper.Height());
+                            CGRect rect = CGRectMake(currentClipper.Left(), currentClipper.Top(), currentClipper.Width(), currentClipper.Height());
                             CGContextClipToRect(context, rect);
                         }
                         else
@@ -615,7 +608,10 @@ namespace vl {
 
                 void ResizeRenderTarget(INativeWindow* window)
                 {
-                    //TODO resize
+                    if (auto listener = GetNativeWindowListener(window))
+                    {
+                        return listener->ResizeRenderTarget();
+                    }
                 }
 
                 Ptr<elements::text::CharMeasurer> CreateCharMeasurer(const FontProperties& font)

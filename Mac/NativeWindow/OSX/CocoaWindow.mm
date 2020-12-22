@@ -106,7 +106,7 @@ namespace vl {
             NativeRect CocoaWindow::GetBounds()
             {
                 NSRect nsbounds = [nsWindow frame];
-                
+
                 return FlipRect(nsWindow,
                                 NativeRect(nsbounds.origin.x,
                                      nsbounds.origin.y,
@@ -129,7 +129,7 @@ namespace vl {
                 [nsWindow setFrame:nsbounds display:YES];
                 
                 previousBounds = GetBounds();
-                //Show();
+                Show();
             }
 
             NativeSize CocoaWindow::GetClientSize()
@@ -140,7 +140,7 @@ namespace vl {
             void CocoaWindow::SetClientSize(NativeSize size)
             {
                 NativeRect bounds = GetBounds();
-                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x, size.y);
+                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
 
                 for(vint i=0; i<listeners.Count(); ++i)
                 {

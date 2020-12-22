@@ -316,9 +316,9 @@ namespace vl {
             NativeRect FlipRect(NSWindow* window, NativeRect rect)
             {
                 return NativeRect(rect.x1.value,
-                            [[window screen] frame].size.height - (rect.Top().value + rect.Height().value),
+                            [[window screen] frame].size.height - rect.Bottom().value,
                             rect.x2.value,
-                            [[window screen] frame].size.height - (rect.Bottom().value - rect.Height().value));
+                            [[window screen] frame].size.height - rect.Top().value);
             }
             
             

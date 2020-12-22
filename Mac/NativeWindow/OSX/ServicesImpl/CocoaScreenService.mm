@@ -47,12 +47,14 @@ namespace vl {
                 return screen == [NSScreen mainScreen];
             }
 
-            double CocoaScreen::GetScalingX() {
-                return 1;
+            double CocoaScreen::GetScalingX()
+            {
+                return 2.0;
             }
 
-            double CocoaScreen::GetScalingY() {
-                return 1;
+            double CocoaScreen::GetScalingY()
+            {
+                return 2.0;
             }
 
             CocoaScreenService::CocoaScreenService()
