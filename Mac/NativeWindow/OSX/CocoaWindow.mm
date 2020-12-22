@@ -337,12 +337,12 @@ namespace vl {
                 if (closeWindow)
                 {
                     [nsWindow close];
-                    opened = false;
                 }
                 else
                 {
                     [nsWindow setIsVisible:false];
                 }
+                opened = false;
                 InvokeClosed();
             }
 
