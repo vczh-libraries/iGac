@@ -76,24 +76,38 @@ inline CGContextRef GetCurrentCGContext()
     [self resize:self.frame.size];
 }
 
+- (CGLayerRef)copyLayer:(CGLayerRef *)layer size:(CGSize)newSize
+{
+    CGSize size = CGLayerGetSize(*layer);
+    CGContextRef context = CGBitmapContextCreate(0, newSize.width, newSize.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+    CGContextSetShouldAntialias(context, true);
+    CGContextSetShouldSmoothFonts(context, true);
+    CGLayerRef copyLayer = CGLayerCreateWithContext(context, newSize, NULL);
+    CGContextRef copyContext = CGLayerGetContext(copyLayer);
+    //CGContextDrawLayerInRect(copyContext, CGRectMake(0, 0, newSize.width, newSize.height), *layer);
+    CGContextDrawLayerInRect(copyContext, CGRectMake(0, 0, size.width, size.height), *layer);
+    CGContextRelease(context);
+    CGLayerRelease(*layer);
+    return copyLayer;
+}
+
 - (void)resize:(CGSize)size
 {
-    if(_drawingLayer)
-        CGLayerRelease(_drawingLayer);
-    
-    if(_context)
-        CGContextRelease(_context);
-
     size.width *= [[self window] backingScaleFactor];
     size.height *= [[self window] backingScaleFactor];
-
-    _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-    if(_context)
+    if (_drawingLayer)
     {
-        CGContextSetShouldAntialias(_context, true);
-        CGContextSetShouldSmoothFonts(_context, true);
-        _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
+        _drawingLayer = [self copyLayer:&_drawingLayer size:size];
         assert(_drawingLayer);
+    }
+    else
+    {
+        _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+        if (_context)
+        {
+            _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
+            assert(_drawingLayer);
+        }
     }
 }
 
@@ -343,7 +357,6 @@ namespace vl {
 
                 void Paint()
                 {
-
                 }
 
                 CoreGraphicsView* GetCoreGraphicsView() const
@@ -446,6 +459,9 @@ namespace vl {
 
                 void StartRendering()
                 {
+                    auto listener = GetNativeWindowListener(window);
+                    listener->StartRendering();
+
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if(!context)
                         return;
@@ -462,23 +478,19 @@ namespace vl {
                     // just putting it here for now
                     CGContextTranslateCTM(context, 0, nativeView.frame.size.height * nativeView.window.backingScaleFactor);
                     CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
-
-                    auto listener = GetNativeWindowListener(window);
-                    listener->StartRendering();
                 }
 
                 RenderTargetFailure StopRendering()
                 {
+                    auto listener = GetNativeWindowListener(window);
+                    listener->StopRendering();
+                    bool moved = listener->RetrieveAndResetMovedWhileRendering();
+
                     CGContextRef context = (CGContextRef)GetCGContext();
                     if (context) {
-                        auto listener = GetNativeWindowListener(window);
-                        listener->StopRendering();
-
                         CGContextRestoreGState(context);
                         [NSGraphicsContext restoreGraphicsState];
                         SetCurrentRenderTarget(0);
-
-                        bool moved = listener->RetrieveAndResetMovedWhileRendering();
                         return !moved ? RenderTargetFailure::None : RenderTargetFailure::ResizeWhileRendering;;
                     }
                     return RenderTargetFailure::LostDevice;

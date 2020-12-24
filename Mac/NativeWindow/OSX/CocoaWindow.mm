@@ -1475,7 +1475,6 @@ namespace vl {
 - (void)windowDidResize:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeMoved();
-
 }
 
 @end
