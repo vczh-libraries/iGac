@@ -141,7 +141,7 @@ namespace vl {
                                                                 [bitmapRep bitsPerPixel],
                                                                 [bitmapRep bytesPerRow],
                                                                 CGColorSpaceCreateDeviceRGB(),
-                                                                kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedLast,
+                                                                kCGBitmapByteOrderDefault | kCGImageAlphaLast,
                                                                 frameProvider,
                                                                 NULL,
                                                                 NO,
