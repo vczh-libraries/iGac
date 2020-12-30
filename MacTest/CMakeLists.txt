@@ -48,6 +48,7 @@ set(GACOSX_FILES
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaInputService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaResourceService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaScreenService.mm"
+	"../Mac/Theme/MacSkin.cpp"
 )
 
 add_library(GacUI STATIC ${GACUI_COMMON_FILES})
@@ -109,7 +110,6 @@ set(TESTAPP_SOURCE_FILES
 		"Controls/AddressBook/UI/Source/DemoPartialClasses.cpp"
 		"Controls/AddressBook/UI/Source/DemoReflection.cpp"
 		"Controls/AddressBook/UI/Source/MainWindow.cpp"
-		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 		)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -131,7 +131,6 @@ set(TESTAPP_SOURCE_FILES
 		"Controls/DataGrid/Main.cpp"
 		"Controls/DataGrid//UI/Source/DemoPartialClasses.cpp"
 		"Controls/DataGrid//UI/Source/DemoReflection.cpp"
-		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 		)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -148,7 +147,6 @@ set(TESTAPP_SOURCE_FILES
 		"Controls/ColorPicker/Main.cpp"
 		"Controls/ColorPicker/UI/Source/DemoPartialClasses.cpp"
 		"Controls/ColorPicker/UI/Source/DemoReflection.cpp"
-		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 		)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -165,7 +163,6 @@ set(TESTAPP_SOURCE_FILES
 		"Controls/Animation/Main.cpp"
 		"Controls/Animation/DemoPartialClasses.cpp"
 		"Controls/Animation/DemoReflection.cpp"
-		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 		)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -182,7 +179,6 @@ set(TESTAPP_SOURCE_FILES
 		"Controls/CalculatorAndStateMachine/Main.cpp"
 		"Controls/CalculatorAndStateMachine/DemoPartialClasses.cpp"
 		"Controls/CalculatorAndStateMachine/DemoReflection.cpp"
-		"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 		)
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
@@ -229,7 +225,6 @@ set(APP_NAME "Test_Layouts_Table")
 set(TESTAPP_SOURCE_FILES 
 	"Layouts/Table/Main.cpp"
 	"Layouts/Table/DemoPartialClasses.cpp"
-	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
