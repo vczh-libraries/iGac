@@ -93,8 +93,8 @@ inline CGContextRef GetCurrentCGContext()
 
 - (void)resize:(CGSize)size
 {
-    size.width *= [[self window] backingScaleFactor];
-    size.height *= [[self window] backingScaleFactor];
+    size.width = MAX([[self window] backingScaleFactor], size.width * [[self window] backingScaleFactor]);
+    size.height = MAX([[self window] backingScaleFactor], size.height * [[self window] backingScaleFactor]);
     if (_drawingLayer)
     {
         _drawingLayer = [self copyLayer:&_drawingLayer size:size];
