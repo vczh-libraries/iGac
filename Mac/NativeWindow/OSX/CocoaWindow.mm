@@ -140,11 +140,6 @@ namespace vl {
             void CocoaWindow::SetClientSize(NativeSize size)
             {
                 NativeRect bounds = GetBounds();
-                if (bounds.Height().value > 0)
-                {
-                    //#24 if window's height has been set, we should not apply newly adopted size anymore.
-                    size.y = bounds.Height();
-                }
                 NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
                 SetBounds(newBounds);
             }
@@ -347,7 +342,7 @@ namespace vl {
 
             bool CocoaWindow::IsVisible()
             {
-                return [nsWindow isVisible] && [nsWindow frame].size.width > 0;
+                return [nsWindow isVisible];
             }
 
             void CocoaWindow::Enable() 
