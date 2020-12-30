@@ -64,7 +64,8 @@ namespace vl {
             public:
                 CocoaInputService(MouseTapFunc mouseTap, TimerFunc timer);
                 virtual ~CocoaInputService();
-                
+                void    RestartTimer();
+
                 // INativeInputService
                 
                 void    StartHookMouse() override;

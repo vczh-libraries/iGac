@@ -12,8 +12,8 @@
 
 #include "../../NativeWindow/OSX/CocoaHelper.h"
 #include "../../NativeWindow/OSX/CocoaWindow.h"
-#include "../../NativeWindow/OSX/CocoaNativeController.h"
 #include "../../NativeWindow/OSX/CocoaBaseView.h"
+#include "../../NativeWindow/OSX/ServicesImpl/CocoaCallbackService.h"
 
 #import <Cocoa/Cocoa.h>
 #import <GacUI.h>
@@ -76,38 +76,21 @@ inline CGContextRef GetCurrentCGContext()
     [self resize:self.frame.size];
 }
 
-- (CGLayerRef)copyLayer:(CGLayerRef *)layer size:(CGSize)newSize
-{
-    CGSize size = CGLayerGetSize(*layer);
-    CGContextRef context = CGBitmapContextCreate(0, newSize.width, newSize.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-    CGContextSetShouldAntialias(context, true);
-    CGContextSetShouldSmoothFonts(context, true);
-    CGLayerRef copyLayer = CGLayerCreateWithContext(context, newSize, NULL);
-    CGContextRef copyContext = CGLayerGetContext(copyLayer);
-    //CGContextDrawLayerInRect(copyContext, CGRectMake(0, 0, newSize.width, newSize.height), *layer);
-    CGContextDrawLayerInRect(copyContext, CGRectMake(0, 0, size.width, size.height), *layer);
-    CGContextRelease(context);
-    CGLayerRelease(*layer);
-    return copyLayer;
-}
-
 - (void)resize:(CGSize)size
 {
     size.width = MAX([[self window] backingScaleFactor], size.width * [[self window] backingScaleFactor]);
     size.height = MAX([[self window] backingScaleFactor], size.height * [[self window] backingScaleFactor]);
+    if (_context)
+        CGContextRelease(_context);
+
     if (_drawingLayer)
+        CGLayerRelease(_drawingLayer);
+
+    _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
+    if (_context)
     {
-        _drawingLayer = [self copyLayer:&_drawingLayer size:size];
+        _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
         assert(_drawingLayer);
-    }
-    else
-    {
-        _context = CGBitmapContextCreate(0, size.width, size.height, 8, 0, CGColorSpaceCreateDeviceRGB(), kCGImageAlphaPremultipliedLast);
-        if (_context)
-        {
-            _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
-            assert(_drawingLayer);
-        }
     }
 }
 
@@ -316,9 +299,17 @@ namespace vl {
 
                 void RebuildLayer(NativeSize size)
                 {
-                    if(previousSize != size)
+                    if (previousSize != size)
+                    {
                         [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
-                    previousSize = size;
+                        GetCurrentController()->InputService()->StopTimer();
+                        dynamic_cast<CocoaCallbackService *>(GetCurrentController()->CallbackService())->InvokeGlobalTimer();
+                        previousSize = size;
+                    }
+                    else
+                    {
+                        GetCurrentController()->InputService()->StartTimer();
+                    }
                 }
 
                 void ResizeRenderTarget()
@@ -353,10 +344,6 @@ namespace vl {
                     {
                         RebuildLayer(window->GetClientSize());
                     }
-                }
-
-                void Paint()
-                {
                 }
 
                 CoreGraphicsView* GetCoreGraphicsView() const
