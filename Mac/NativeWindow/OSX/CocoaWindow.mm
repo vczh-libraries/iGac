@@ -140,14 +140,13 @@ namespace vl {
             void CocoaWindow::SetClientSize(NativeSize size)
             {
                 NativeRect bounds = GetBounds();
-                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
-
-                for(vint i=0; i<listeners.Count(); ++i)
+                if (bounds.Height().value > 0)
                 {
-                    listeners[i]->Moving(newBounds, true);
+                    //#24 if window's height has been set, we should not apply newly adopted size anymore.
+                    size.y = bounds.Height();
                 }
-                
-                [nsWindow setContentSize:NSMakeSize(newBounds.Width().value, newBounds.Height().value)];
+                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
+                SetBounds(newBounds);
             }
 
             NativeRect CocoaWindow::GetClientBoundsInScreen()
