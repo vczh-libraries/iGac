@@ -342,7 +342,7 @@ namespace vl {
 
             bool CocoaWindow::IsVisible()
             {
-                return [nsWindow isVisible];
+                return [nsWindow isVisible] && [nsWindow frame].size.width > 0;
             }
 
             void CocoaWindow::Enable() 

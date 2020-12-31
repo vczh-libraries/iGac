@@ -24,6 +24,7 @@ using namespace vl::presentation::osx;
 @interface CoreGraphicsView: CocoaBaseView
 
 @property (readonly) CGLayer* drawingLayer;
+@property (nonatomic, assign) bool needRepaint;
 
 - (id)initWithCocoaWindow:(CocoaWindow*)cocoaWindow;
 
@@ -40,7 +41,6 @@ inline CGContextRef GetCurrentCGContext()
 
 @implementation CoreGraphicsView
 {
-    void* _bytes;
     CGContextRef _context;
 }
 
@@ -78,8 +78,8 @@ inline CGContextRef GetCurrentCGContext()
 
 - (void)resize:(CGSize)size
 {
-    size.width = MAX([[self window] backingScaleFactor], size.width * [[self window] backingScaleFactor]);
-    size.height = MAX([[self window] backingScaleFactor], size.height * [[self window] backingScaleFactor]);
+    size.width = MAX(1, size.width * [[self window] backingScaleFactor]);
+    size.height = MAX(1, size.height * [[self window] backingScaleFactor]);
     if (_context)
         CGContextRelease(_context);
 
@@ -91,13 +91,19 @@ inline CGContextRef GetCurrentCGContext()
     {
         _drawingLayer = CGLayerCreateWithContext(_context, size, NULL);
         assert(_drawingLayer);
+        _needRepaint = true;
     }
 }
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    CGContextRef context = GetCurrentCGContext();
+    if (_needRepaint)
+    {
+        dynamic_cast<CocoaCallbackService *>(GetCurrentController()->CallbackService())->InvokeGlobalTimer();
+        _needRepaint = false;
+    }
 
+    CGContextRef context = GetCurrentCGContext();
     // window already has scaling factor, don't scale twice
     CGContextDrawLayerInRect(context, self.frame, _drawingLayer);
 }
@@ -302,13 +308,7 @@ namespace vl {
                     if (previousSize != size)
                     {
                         [nativeView resize:CGSizeMake(size.x.value, size.y.value)];
-                        GetCurrentController()->InputService()->StopTimer();
-                        dynamic_cast<CocoaCallbackService *>(GetCurrentController()->CallbackService())->InvokeGlobalTimer();
                         previousSize = size;
-                    }
-                    else
-                    {
-                        GetCurrentController()->InputService()->StartTimer();
                     }
                 }
 
