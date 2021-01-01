@@ -15,6 +15,7 @@
 #include "GuiGraphicsCoreGraphicsRenderers.h"
 
 #include <vector>
+#import <VlppRegex.h>
 
 using namespace vl::presentation;
 using namespace vl::presentation::elements_coregraphics;
@@ -662,8 +663,9 @@ namespace vl {
                         return false;
                     if(caretPos != -1)
                         CloseCaret();
-                    
+
                     caretPos = _caret;
+                    printf("%d\n", caretPos);
                     caretColor = _color;
                     caretFrontSide = _frontSide;
                     return true;
@@ -722,17 +724,17 @@ namespace vl {
                     
                     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
                     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:rect.origin];
-                    
+
                     if(caretPos != -1)
                     {
                         Rect caretBounds = GetCaretBounds(caretPos, caretFrontSide);
                         vint x = caretBounds.x1 + bounds.x1;
                         vint y1 = caretBounds.y1 + bounds.y1;
-                        vint y2 = y1 + caretBounds.Height();
+                        vint y2 = y1 + (vint)(caretBounds.Height() * 1.5);
                         
                         CGPoint points[2];
                         CGContextSetLineWidth(context, 2.0f);
-                        CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+                        CGContextSetRGBStrokeColor(context, 255, 255, 255, 1);
                         
                         points[0] = CGPointMake(x, y1);
                         points[1] = CGPointMake(x, y2);
@@ -1047,14 +1049,10 @@ namespace vl {
                             
                             NSRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
                                                                                       effectiveRange:&lineFragmentRange];
-                            
-                            if(paragraphText[lineFragmentRange.location + lineFragmentRange.length - 2] == L'\r')
-                            {
+
+                            vl::regex::Regex regexLine(L"\r\n$");
+                            if (regexLine.Match(paragraphText)) {
                                 lineFragmentRange.length -= 2;
-                            }
-                            else if(paragraphText[lineFragmentRange.location + lineFragmentRange.length - 1] == L'\n')
-                            {
-                                lineFragmentRange.length -= 1;
                             }
                             metrics.push_back(BoundingMetrics(lineFragmentRange.location,
                                                               lineFragmentRange.length,

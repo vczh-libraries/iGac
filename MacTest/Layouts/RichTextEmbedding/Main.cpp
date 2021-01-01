@@ -6,7 +6,7 @@
 int main(int argc, const char * argv[])
 {
     SetupOSXCoreGraphicsRenderer();
-    
+
     return 0;
 }
 
@@ -16,7 +16,7 @@ using namespace vl::stream;
 class ViewModel : public Object, public virtual demo::IViewModel
 {
 public:
-	void OpenUrl(WString url)override
+    void OpenUrl(const WString& url)override
 	{
         osx::LaunchURL(url.Buffer());
 	}
@@ -24,13 +24,13 @@ public:
 
 void GuiMain()
 {
-	{
-		List<WString> errors;
+    {
         FileStream fileStream(osx::GetResourceFolder() + L"RichTextEmbedding.bin", FileStream::ReadOnly);
-		auto resource = GuiResource::LoadPrecompiledBinary(fileStream, errors);
-		GetResourceManager()->SetResource(L"Resource", resource);
-	}
-	demo::MainWindow window(new ViewModel);
-	window.MoveToScreenCenter();
-	GetApplication()->Run(&window);
+        auto resource = GuiResource::LoadPrecompiledBinary(fileStream);
+        GuiResourceError::List errors;
+        GetResourceManager()->SetResource(resource, errors);
+    }
+    demo::MainWindow window(new ViewModel);
+    window.MoveToScreenCenter();
+    GetApplication()->Run(&window);
 }

@@ -77,7 +77,6 @@ set(SHARED_RESOURCES "")
 set(APP_NAME "Test_HellWorld_Cpp")
 set(TESTAPP_SOURCE_FILES 
 	"HelloWorlds/Cpp/Main.cpp"
-	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})

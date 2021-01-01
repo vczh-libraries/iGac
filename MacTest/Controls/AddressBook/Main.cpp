@@ -252,7 +252,7 @@ public:
 		if (auto category = dynamic_cast<Category*>(selectedCategory.Obj()))
 		{
 			auto contact = new Contact(category);
-			contact->Update(L"Mr. New Contact", DateTime::LocalTime(), L"(123)-456-7890", L"110 st, New York, NY 10118");
+            contact->Update(L"", DateTime::LocalTime(), L"(123)-456-7890", L"110 st, New York, NY 10118");
 			return contact;
 		}
 		return nullptr;
