@@ -665,7 +665,6 @@ namespace vl {
                         CloseCaret();
 
                     caretPos = _caret;
-                    printf("%d\n", caretPos);
                     caretColor = _color;
                     caretFrontSide = _frontSide;
                     return true;
