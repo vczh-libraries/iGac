@@ -334,15 +334,12 @@ namespace vl {
                     // so maybe a better way is just hooking window level events and send to InputService
                     // however that won't be global key states...
                     auto keyCode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-
-                    wprintf(L"%s event\n", GetKeyName(NSEventKeyCodeToGacKeyCode(keyCode)).Buffer());
-
-                    if(keyCode < 256)
+                    if (keyCode < 256)
                         globalKeyStates[keyCode] = static_cast<vint8_t>(keyCode);
                 }
                 else
                 {
-                    if(isHookingMouse)
+                    if (isHookingMouse)
                     {
                         mouseTapFunc(type, event);
                     }
@@ -433,15 +430,23 @@ namespace vl {
                 }
                 return false;
             }
-            
+
             WString CocoaInputService::GetKeyName(VKEY code)
             {
-                return keyNames[(int)code];
+                if (0 <= (vint)code && (vint)code < keyNames.Count())
+                {
+                    return keyNames[(vint)code];
+                }
+                else
+                {
+                    return L"?";
+                }
             }
 
             VKEY CocoaInputService::GetKey(const WString& name)
             {
-                return keys.Get(name);
+                vint index = keys.Keys().IndexOf(name);
+                return index == -1 ? VKEY::_UNKNOWN : keys.Values()[index];
             }
             
             //
