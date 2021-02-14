@@ -125,9 +125,8 @@ namespace vl {
                                              FlipY(nsWindow, newBounds.Bottom().value),
                                              newBounds.Width().value,
                                              newBounds.Height().value);
-                
+
                 [nsWindow setFrame:nsbounds display:YES];
-                
                 previousBounds = GetBounds();
                 Show();
             }
@@ -139,6 +138,10 @@ namespace vl {
 
             void CocoaWindow::SetClientSize(NativeSize size)
             {
+                if (nsWindow.contentMinSize.width < size.x.value)
+                {
+                    [nsWindow setContentMinSize:NSMakeSize(size.x.value, size.y.value)];
+                }
                 NativeRect bounds = GetBounds();
                 NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
                 SetBounds(newBounds);
