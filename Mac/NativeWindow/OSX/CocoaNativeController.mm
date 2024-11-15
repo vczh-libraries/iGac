@@ -359,13 +359,13 @@ namespace vl {
                 return cocoaController;
             }
             
-            void StartSXNativeController()
+            void StartOSXNativeController()
             {
                 if (cocoaController) return;
                 cocoaController = new CocoaController();
             }
             
-            void StopOSXNativeController(INativeController* controller)
+            void StopOSXNativeController()
             {
                 if (!cocoaController) return;
                 delete cocoaController;

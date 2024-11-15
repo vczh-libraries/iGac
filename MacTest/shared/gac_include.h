@@ -28,7 +28,7 @@ void RunGacWindow()
     delete window;
 }
 
-#include "Theme/MacSkin.h"
+#include "Skins/DarkSkin/DarkSkin.h"
 
 class OSXSkinPlugin : public Object, public IGuiPlugin
 {
@@ -39,12 +39,12 @@ public:
         GUI_PLUGIN_DEPEND(GacGen_DarkSkinResourceLoader);
     }
 
-    void Load()override
+    void Load(bool controllerUnrelatedPlugins, bool controllerRelatedPlugins)override
     {
-        RegisterTheme(MakePtr<darkskin_osx::Theme>());
+        RegisterTheme(Ptr(new darkskin::Theme));
     }
 
-    void Unload()override
+    void Unload(bool controllerUnrelatedPlugins, bool controllerRelatedPlugins)override
     {
     }
 };

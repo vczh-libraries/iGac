@@ -28,7 +28,7 @@ namespace osx {
     {
         NSData* data = [str dataUsingEncoding: NSUTF32LittleEndianStringEncoding];
         
-        return vl::WString((wchar_t*)[data bytes], vl::vint([data length]/sizeof(wchar_t)));
+        return vl::WString::CopyFrom((wchar_t*)[data bytes], vl::vint([data length]/sizeof(wchar_t)));
     }
 
     vl::WString GetSysVerString()

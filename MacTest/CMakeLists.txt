@@ -21,7 +21,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 
 set(GACUI_COMMON_FILES
-	"../Release/Import/GacUI.cpp"
 	"../Release/Import/Vlpp.cpp"
 	"../Release/Import/Vlpp.Linux.cpp"
 	"../Release/Import/VlppOS.cpp"
@@ -31,6 +30,8 @@ set(GACUI_COMMON_FILES
 	"../Release/Import/VlppParser.cpp"
 	"../Release/Import/VlppGlrParser.cpp"
 	"../Release/Import/VlppWorkflowLibrary.cpp"
+	"../Release/Import/GacUI.cpp"
+	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 
 set(GACOSX_FILES
@@ -49,7 +50,6 @@ set(GACOSX_FILES
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaInputService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaResourceService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaScreenService.mm"
-	"../Mac/Theme/MacSkin.cpp"
 )
 
 add_library(GacUI STATIC ${GACUI_COMMON_FILES})
@@ -84,7 +84,7 @@ add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} 
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
-add_dependencies(${APP_NAME} CopyResources)
+# add_dependencies(${APP_NAME} CopyResources)
 
 #[[
 #

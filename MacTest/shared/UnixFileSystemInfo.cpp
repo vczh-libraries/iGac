@@ -26,7 +26,7 @@ vl::WString GetUserHome()
 {
     struct passwd* pw = getpwuid(getuid());
     
-    return atow(vl::AString(pw->pw_dir, (vl::vint)strlen(pw->pw_dir)));
+    return atow(vl::AString::CopyFrom(pw->pw_dir, (vl::vint)strlen(pw->pw_dir)));
 }
 
 void SearchDirectoriesAndFiles(const vl::WString& path, vl::collections::List<vl::WString>& directories, vl::collections::List<vl::WString>& files)
@@ -49,9 +49,9 @@ void SearchDirectoriesAndFiles(const vl::WString& path, vl::collections::List<vl
                    entry->d_name[0] != '.')
                 {
                     if(entry->d_type == DT_REG)
-                        files.Add(atow(vl::AString(entry->d_name, (vl::vint)entry->d_namlen)));
+                        files.Add(atow(vl::AString::CopyFrom(entry->d_name, (vl::vint)entry->d_namlen)));
                     else if(entry->d_type == DT_DIR)
-                        directories.Add(atow(vl::AString(entry->d_name, (vl::vint)entry->d_namlen)));
+                        directories.Add(atow(vl::AString::CopyFrom(entry->d_name, (vl::vint)entry->d_namlen)));
                 }
             }
             else
@@ -107,7 +107,7 @@ vl::WString FileModificationTimeToString(timespec spec)
         return L"Unknown";
 
     buf[len] = '\0';
-    return atow(vl::AString(buf, (vl::vint)len));
+    return atow(vl::AString::CopyFrom(buf, (vl::vint)len));
 }
 
 vl::vint64_t GetFileSize(const vl::WString& file)
@@ -163,8 +163,8 @@ void FileProperties::Load()
     {
 #if defined(__APPLE__)
         
-        smallIcon       =   new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(24, 24)), 0);
-        bigIcon         =   new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(48, 48)), 0);
+        smallIcon       =   vl::Ptr(new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(24, 24)), 0));
+        bigIcon         =   vl::Ptr(new vl::presentation::GuiImageData(osx::GetFileIconImage(fullPath, vl::presentation::Size(48, 48)), 0));
         
         lastWriteTime   =   osx::GetFileModificationTime(fullPath);
         size            =   osx::GetFileSize(fullPath);
