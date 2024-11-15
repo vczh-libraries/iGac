@@ -17,14 +17,13 @@ using namespace vl::presentation::osx;
 
 int SetupOSXCoreGraphicsRenderer()
 {
-    INativeController* controller = CreateOSXNativeController();
-    SetCurrentController(controller);
+    StartOSXNativeController();
+    SetNativeController(GetOSXNativeController());
     
     {
         CoreGraphicsMain();
     }
     
-    DestroyOSXNativeController(controller);
-    
+    StopOSXNativeController();
     return 0;
 }

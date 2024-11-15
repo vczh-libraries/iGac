@@ -7,6 +7,7 @@
 //
 
 #include "CocoaWindow.h"
+#include "CocoaNativeController.h"
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
@@ -44,7 +45,8 @@ namespace vl {
         
         namespace osx {
             
-            CocoaWindow::CocoaWindow(WindowMode _windowMode):
+            CocoaWindow::CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode):
+                cocoaController(_cocoaController),
                 parentWindow(0),
                 mouseLastX(0),
                 mouseLastY(0),
@@ -100,7 +102,7 @@ namespace vl {
                 nsDelegate = [[CocoaWindowDelegate alloc] initWithNativeWindow:this];
                 [window setDelegate:nsDelegate];
                 
-                currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
+                currentCursor = cocoaController->ResourceService()->GetDefaultSystemCursor();
             }
 
             bool CocoaWindow::IsActivelyRefreshing()
@@ -129,7 +131,7 @@ namespace vl {
                 NativeRect newBounds = bounds;
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
-                    listeners[i]->Moving(newBounds, true);
+                    listeners[i]->Moving(newBounds, true, false);
                 }
                 NSRect nsbounds = NSMakeRect(newBounds.Left().value,
                                              FlipY(nsWindow, newBounds.Bottom().value),
@@ -236,7 +238,7 @@ namespace vl {
                 parentWindow = cocoaParent;
             }
 
-            INativeWindow::GetWindowMode CocoaWindow::GetWindowMode() override
+            INativeWindow::WindowMode CocoaWindow::GetWindowMode()
             {
                 return windowMode;
             }
@@ -634,25 +636,16 @@ namespace vl {
                 bool cancel = false;
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
-                    listeners[i]->Closing(cancel);
+                    listeners[i]->BeforeClosing(cancel);
+                }
+                if (!cancel)
+                {
+                    for(vint i=0; i<listeners.Count(); ++i)
+                    {
+                        listeners[i]->AfterClosing();
+                    }
                 }
                 return cancel;
-            }
-            
-            void CocoaWindow::InvokeAcivate()
-            {
-                for(vint i=0; i<listeners.Count(); ++i)
-                {
-                    listeners[i]->Activated();
-                }
-            }
-            
-            void CocoaWindow::InvokeDeactivate()
-            {
-                for(vint i=0; i<listeners.Count(); ++i)
-                {
-                    listeners[i]->Deactivated();
-                }
             }
             
             void CocoaWindow::InvokeGotFocus()
@@ -743,7 +736,7 @@ namespace vl {
             void CocoaWindow::SetResizingBorder(INativeWindowListener::HitTestResult border)
             {
                 resizingBorder = border;
-                INativeResourceService* resourceService = GetCurrentController()->ResourceService();
+                INativeResourceService* resourceService = cocoaController->ResourceService();
 
                 switch(border)
                 {
@@ -841,12 +834,12 @@ namespace vl {
                 if(resizing)
                 {
                     resizing = false;
-                    SetWindowCursor(GetCurrentController()->ResourceService()->GetDefaultSystemCursor());
+                    SetWindowCursor(cocoaController->ResourceService()->GetDefaultSystemCursor());
                 }
                 else if(moving)
                 {
                     moving = false;
-                    SetWindowCursor(GetCurrentController()->ResourceService()->GetDefaultSystemCursor());
+                    SetWindowCursor(cocoaController->ResourceService()->GetDefaultSystemCursor());
                 }
                 else
                 {
@@ -1443,13 +1436,11 @@ namespace vl {
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeGotFocus();
-    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeAcivate();
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification
 {
     (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeLostFocus();
-    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeDeactivate();
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)notification

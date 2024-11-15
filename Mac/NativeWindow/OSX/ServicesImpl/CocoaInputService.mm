@@ -216,65 +216,65 @@ namespace vl {
                 memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
                 memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
                 
-                asciiLowerMap[(int)VKEY::_0] = L'0';
-                asciiLowerMap[(int)VKEY::_1] = L'1';
-                asciiLowerMap[(int)VKEY::_2] = L'2';
-                asciiLowerMap[(int)VKEY::_3] = L'3';
-                asciiLowerMap[(int)VKEY::_4] = L'4';
-                asciiLowerMap[(int)VKEY::_5] = L'5';
-                asciiLowerMap[(int)VKEY::_6] = L'6';
-                asciiLowerMap[(int)VKEY::_7] = L'7';
-                asciiLowerMap[(int)VKEY::_8] = L'8';
-                asciiLowerMap[(int)VKEY::_9] = L'9';
-                asciiLowerMap[(int)VKEY::_OEM_1] = L';';
-                asciiLowerMap[(int)VKEY::_OEM_6] = L'[';
-                asciiLowerMap[(int)VKEY::_OEM_4] = L']';
-                asciiLowerMap[(int)VKEY::_OEM_7] = L'\'';
-                asciiLowerMap[(int)VKEY::_OEM_COMMA] = L',';
-                asciiLowerMap[(int)VKEY::_OEM_PERIOD] = L'.';
-                asciiLowerMap[(int)VKEY::_OEM_2] = L'/';
-                asciiLowerMap[(int)VKEY::_OEM_5] = L'\\';
-                asciiLowerMap[(int)VKEY::_OEM_MINUS] = L'-';
-                asciiLowerMap[(int)VKEY::_OEM_PLUS] = L'=';
-                asciiLowerMap[(int)VKEY::_OEM_3] = L'`';
-                asciiLowerMap[(int)VKEY::_SPACE] = L' ';
-                asciiLowerMap[(int)VKEY::_RETURN] = (int)VKEY::_RETURN;
-                asciiLowerMap[(int)VKEY::_ESCAPE] = (int)VKEY::_ESCAPE;
-                asciiLowerMap[(int)VKEY::_BACK] = (int)VKEY::_BACK;
-                for(int i=(int)VKEY::_A; i<=(int)VKEY::_Z; ++i)
-                    asciiLowerMap[i] = L'a' + (i-(int)VKEY::_A);
-                for(int i=(int)VKEY::_NUMPAD0; i<(int)VKEY::_NUMPAD9; ++i)
-                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::_NUMPAD0);
+                asciiLowerMap[(int)VKEY::KEY_0] = L'0';
+                asciiLowerMap[(int)VKEY::KEY_1] = L'1';
+                asciiLowerMap[(int)VKEY::KEY_2] = L'2';
+                asciiLowerMap[(int)VKEY::KEY_3] = L'3';
+                asciiLowerMap[(int)VKEY::KEY_4] = L'4';
+                asciiLowerMap[(int)VKEY::KEY_5] = L'5';
+                asciiLowerMap[(int)VKEY::KEY_6] = L'6';
+                asciiLowerMap[(int)VKEY::KEY_7] = L'7';
+                asciiLowerMap[(int)VKEY::KEY_8] = L'8';
+                asciiLowerMap[(int)VKEY::KEY_9] = L'9';
+                asciiLowerMap[(int)VKEY::KEY_OEM_1] = L';';
+                asciiLowerMap[(int)VKEY::KEY_OEM_6] = L'[';
+                asciiLowerMap[(int)VKEY::KEY_OEM_4] = L']';
+                asciiLowerMap[(int)VKEY::KEY_OEM_7] = L'\'';
+                asciiLowerMap[(int)VKEY::KEY_OEM_COMMA] = L',';
+                asciiLowerMap[(int)VKEY::KEY_OEM_PERIOD] = L'.';
+                asciiLowerMap[(int)VKEY::KEY_OEM_2] = L'/';
+                asciiLowerMap[(int)VKEY::KEY_OEM_5] = L'\\';
+                asciiLowerMap[(int)VKEY::KEY_OEM_MINUS] = L'-';
+                asciiLowerMap[(int)VKEY::KEY_OEM_PLUS] = L'=';
+                asciiLowerMap[(int)VKEY::KEY_OEM_3] = L'`';
+                asciiLowerMap[(int)VKEY::KEY_SPACE] = L' ';
+                asciiLowerMap[(int)VKEY::KEY_RETURN] = (int)VKEY::KEY_RETURN;
+                asciiLowerMap[(int)VKEY::KEY_ESCAPE] = (int)VKEY::KEY_ESCAPE;
+                asciiLowerMap[(int)VKEY::KEY_BACK] = (int)VKEY::KEY_BACK;
+                for(int i=(int)VKEY::KEY_A; i<=(int)VKEY::KEY_Z; ++i)
+                    asciiLowerMap[i] = L'a' + (i-(int)VKEY::KEY_A);
+                for(int i=(int)VKEY::KEY_NUMPAD0; i<(int)VKEY::KEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::KEY_NUMPAD0);
                 
-                asciiUpperMap[(int)VKEY::_0] = L')';
-                asciiUpperMap[(int)VKEY::_1] = L'!';
-                asciiUpperMap[(int)VKEY::_2] = L'@';
-                asciiUpperMap[(int)VKEY::_3] = L'#';
-                asciiUpperMap[(int)VKEY::_4] = L'$';
-                asciiUpperMap[(int)VKEY::_5] = L'%';
-                asciiUpperMap[(int)VKEY::_6] = L'^';
-                asciiUpperMap[(int)VKEY::_7] = L'&';
-                asciiUpperMap[(int)VKEY::_8] = L'*';
-                asciiUpperMap[(int)VKEY::_9] = L'(';
-                asciiUpperMap[(int)VKEY::_OEM_1] = L':';
-                asciiUpperMap[(int)VKEY::_OEM_6] = L'{';
-                asciiUpperMap[(int)VKEY::_OEM_4] = L'}';
-                asciiUpperMap[(int)VKEY::_OEM_7] = L'\"';
-                asciiUpperMap[(int)VKEY::_OEM_COMMA] = L'<';
-                asciiUpperMap[(int)VKEY::_OEM_PERIOD] = L'>';
-                asciiUpperMap[(int)VKEY::_OEM_2] = L'?';
-                asciiUpperMap[(int)VKEY::_OEM_5] = L'|';
-                asciiUpperMap[(int)VKEY::_OEM_MINUS] = L'_';
-                asciiUpperMap[(int)VKEY::_OEM_PLUS] = L'+';
-                asciiUpperMap[(int)VKEY::_OEM_3] = L'~';
-                asciiUpperMap[(int)VKEY::_SPACE] = L' ';
-                asciiUpperMap[(int)VKEY::_RETURN] = (int)VKEY::_RETURN;
-                asciiUpperMap[(int)VKEY::_ESCAPE] = (int)VKEY::_ESCAPE;
-                asciiUpperMap[(int)VKEY::_BACK] = (int)VKEY::_BACK;
-                for(int i=(int)VKEY::_A; i<=(int)VKEY::_Z; ++i)
-                    asciiUpperMap[i] = L'A' + (i-(int)VKEY::_A);
-                for(int i=(int)VKEY::_NUMPAD0; i<(int)VKEY::_NUMPAD9; ++i)
-                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::_NUMPAD0);
+                asciiUpperMap[(int)VKEY::KEY_0] = L')';
+                asciiUpperMap[(int)VKEY::KEY_1] = L'!';
+                asciiUpperMap[(int)VKEY::KEY_2] = L'@';
+                asciiUpperMap[(int)VKEY::KEY_3] = L'#';
+                asciiUpperMap[(int)VKEY::KEY_4] = L'$';
+                asciiUpperMap[(int)VKEY::KEY_5] = L'%';
+                asciiUpperMap[(int)VKEY::KEY_6] = L'^';
+                asciiUpperMap[(int)VKEY::KEY_7] = L'&';
+                asciiUpperMap[(int)VKEY::KEY_8] = L'*';
+                asciiUpperMap[(int)VKEY::KEY_9] = L'(';
+                asciiUpperMap[(int)VKEY::KEY_OEM_1] = L':';
+                asciiUpperMap[(int)VKEY::KEY_OEM_6] = L'{';
+                asciiUpperMap[(int)VKEY::KEY_OEM_4] = L'}';
+                asciiUpperMap[(int)VKEY::KEY_OEM_7] = L'\"';
+                asciiUpperMap[(int)VKEY::KEY_OEM_COMMA] = L'<';
+                asciiUpperMap[(int)VKEY::KEY_OEM_PERIOD] = L'>';
+                asciiUpperMap[(int)VKEY::KEY_OEM_2] = L'?';
+                asciiUpperMap[(int)VKEY::KEY_OEM_5] = L'|';
+                asciiUpperMap[(int)VKEY::KEY_OEM_MINUS] = L'_';
+                asciiUpperMap[(int)VKEY::KEY_OEM_PLUS] = L'+';
+                asciiUpperMap[(int)VKEY::KEY_OEM_3] = L'~';
+                asciiUpperMap[(int)VKEY::KEY_SPACE] = L' ';
+                asciiUpperMap[(int)VKEY::KEY_RETURN] = (int)VKEY::KEY_RETURN;
+                asciiUpperMap[(int)VKEY::KEY_ESCAPE] = (int)VKEY::KEY_ESCAPE;
+                asciiUpperMap[(int)VKEY::KEY_BACK] = (int)VKEY::KEY_BACK;
+                for(int i=(int)VKEY::KEY_A; i<=(int)VKEY::KEY_Z; ++i)
+                    asciiUpperMap[i] = L'A' + (i-(int)VKEY::KEY_A);
+                for(int i=(int)VKEY::KEY_NUMPAD0; i<(int)VKEY::KEY_NUMPAD9; ++i)
+                    asciiLowerMap[i] = L'0' + (i-(int)VKEY::KEY_NUMPAD0);
             }
             
             void CocoaInputService::StartGCDTimer()
@@ -320,27 +320,27 @@ namespace vl {
                 
                 switch(code)
                 {
-                    case VKEY::_CAPITAL:
+                    case VKEY::KEY_CAPITAL:
                         return modifierFlags & NSEventModifierFlagCapsLock;
                         
-                    case VKEY::_SHIFT:
+                    case VKEY::KEY_SHIFT:
                         return modifierFlags & NSEventModifierFlagShift;
                         
-                    case VKEY::_CONTROL:
+                    case VKEY::KEY_CONTROL:
                         return modifierFlags & NSEventModifierFlagControl;
                         
-                    case VKEY::_LMENU:
-                    case VKEY::_RMENU:
+                    case VKEY::KEY_LMENU:
+                    case VKEY::KEY_RMENU:
                         return modifierFlags & NSEventModifierFlagOption;
                         
-                    case VKEY::_LWIN:
-                    case VKEY::_RWIN:
+                    case VKEY::KEY_LWIN:
+                    case VKEY::KEY_RWIN:
                         return modifierFlags & NSEventModifierFlagCommand;
                         
-                    case VKEY::_NUMLOCK:
+                    case VKEY::KEY_NUMLOCK:
                         return modifierFlags & NSEventModifierFlagNumericPad;
                         
-                    case VKEY::_HELP:
+                    case VKEY::KEY_HELP:
                         return modifierFlags & NSEventModifierFlagHelp;
                 }
                 return false;
@@ -361,7 +361,7 @@ namespace vl {
             VKEY CocoaInputService::GetKey(const WString& name)
             {
                 vint index = keys.Keys().IndexOf(name);
-                return index == -1 ? VKEY::_UNKNOWN : keys.Values()[index];
+                return index == -1 ? VKEY::KEY_UNKNOWN : keys.Values()[index];
             }
 
             vint CocoaInputService::RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)

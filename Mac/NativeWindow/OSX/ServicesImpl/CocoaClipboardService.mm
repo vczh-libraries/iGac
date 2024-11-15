@@ -65,14 +65,14 @@ namespace vl {
             {
                 if (!reader)
                 {
-                    reader = new CocoaClipboardReader(this);
+                    reader = Ptr(new CocoaClipboardReader(this));
                 }
                 return reader;
             }
 
             Ptr<INativeClipboardWriter>		CocoaClipboardService::WriteClipboard()
             {
-                return new CocoaClipboardWriter(this);
+                return Ptr(new CocoaClipboardWriter(this));
             }
         }
     }

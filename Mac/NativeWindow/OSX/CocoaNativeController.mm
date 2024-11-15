@@ -196,7 +196,7 @@ namespace vl {
                 
                 INativeWindow* CreateNativeWindow(INativeWindow::WindowMode windowMode)
                 {
-                    CocoaWindow* window = new CocoaWindow(windowMode);
+                    CocoaWindow* window = new CocoaWindow(this, windowMode);
                     callbackService.InvokeNativeWindowCreated(window);
                     windows.Add(window);
                     return window;
@@ -351,15 +351,25 @@ namespace vl {
                     callbackService.InvokeGlobalTimer();
                 }
             };
+
+            CocoaController* cocoaController = nullptr;
             
-            INativeController* CreateOSXNativeController()
+            INativeController* GetOSXNativeController()
             {
-                return new CocoaController();
+                return cocoaController;
             }
             
-            void DestroyOSXNativeController(INativeController* controller)
+            void StartSXNativeController()
             {
-                delete controller;
+                if (cocoaController) return;
+                cocoaController = new CocoaController();
+            }
+            
+            void StopOSXNativeController(INativeController* controller)
+            {
+                if (!cocoaController) return;
+                delete cocoaController;
+                cocoaController = nullptr;
             }
     
             void GlobalTimerFunc()

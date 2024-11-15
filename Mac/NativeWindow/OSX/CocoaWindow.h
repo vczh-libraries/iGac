@@ -27,6 +27,7 @@ namespace vl {
             class CocoaWindow : public Object, public INativeWindow
             {
             protected:
+                INativeController*                              cocoaController;
                 NativePoint                                     caretPoint;
                 CocoaWindow*                                    parentWindow;
                 bool                                            alwaysPassFocusToParent;
@@ -59,7 +60,7 @@ namespace vl {
                 CocoaWindowDelegate*                            nsDelegate;
             
             public:
-                CocoaWindow(WindowMode _windowMode);
+                CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode);
                 virtual ~CocoaWindow();
                 
                 NSWindow*           GetNativeWindow() const;
@@ -148,8 +149,6 @@ namespace vl {
                 void                InvokeClosed();
                 void                InvokeOpened();
                 bool                InvokeClosing();
-                void                InvokeAcivate();
-                void                InvokeDeactivate();
                 void                InvokeGotFocus();
                 void                InvokeLostFocus();
                 void                InvokeMoved();

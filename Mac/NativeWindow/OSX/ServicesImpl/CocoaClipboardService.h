@@ -49,7 +49,7 @@ namespace vl {
                 friend class OSXClipboardReader;
                 friend class OSXClipboardWriter;
             protected:
-                CocoaClipboardReader*			reader = nullptr;
+                Ptr<CocoaClipboardReader>			reader = nullptr;
             public:
                 Ptr<INativeClipboardReader>		ReadClipboard()override;
                 Ptr<INativeClipboardWriter>		WriteClipboard()override;

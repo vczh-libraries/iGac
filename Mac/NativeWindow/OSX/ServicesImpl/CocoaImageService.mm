@@ -148,11 +148,11 @@ namespace vl {
                                                                 kCGRenderingIntentDefault);
                             
                             CGDataProviderRelease(frameProvider);
-                            frame = new CocoaImageFrame(this, cgFrame);
+                            frame = Ptr(new CocoaImageFrame(this, cgFrame));
                         }
                         else
                         {
-                            frame = new CocoaImageFrame(this, [imageRep CGImageForProposedRect:nil context:nil hints:nil]);
+                            frame = Ptr(new CocoaImageFrame(this, [imageRep CGImageForProposedRect:nil context:nil hints:nil]));
                         }
                         
                     }
@@ -172,7 +172,7 @@ namespace vl {
                 NSImage* image = [[NSImage alloc] initWithContentsOfFile:WStringToNSString(path)];
                 if(image)
                 {
-                    return new CocoaImage(this, image);
+                    return Ptr(new CocoaImage(this, image));
                 }
                 return nullptr;
             }
@@ -183,7 +183,7 @@ namespace vl {
                 NSImage* image = [[NSImage alloc] initWithData:data];
                 if(image)
                 {
-                    return new CocoaImage(this, image);
+                    return Ptr(new CocoaImage(this, image));
                 }
                 return nullptr;
             }
@@ -220,9 +220,9 @@ namespace vl {
                         [image drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.f];
                         [smallIcon unlockFocus];
                         
-                        return new CocoaImage(this, smallIcon);
+                        return Ptr(new CocoaImage(this, smallIcon));
                     }
-                    return new CocoaImage(this, image);
+                    return Ptr(new CocoaImage(this, image));
                 }
                 return nullptr;
             }

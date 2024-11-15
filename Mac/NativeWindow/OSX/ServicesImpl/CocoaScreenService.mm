@@ -69,7 +69,7 @@ namespace vl {
                 NSArray* nsscreens = [NSScreen screens];
                 [nsscreens enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
                 {
-                    screens.Add((new CocoaScreen((NSScreen*)obj)));
+                    screens.Add(Ptr(new CocoaScreen((NSScreen*)obj)));
                 }];
             }
             

@@ -183,7 +183,7 @@ namespace vl {
                     systemCursors.Resize(INativeCursor::SystemCursorCount);
                     for(vint i=0;i<systemCursors.Count();i++)
                     {
-                        systemCursors[i]=new CocoaCursor((INativeCursor::SystemCursorType)i);
+                        systemCursors[i]=Ptr(new CocoaCursor((INativeCursor::SystemCursorType)i));
                     }
                 }
                 {

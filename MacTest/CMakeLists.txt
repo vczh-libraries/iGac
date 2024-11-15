@@ -43,8 +43,6 @@ set(GACOSX_FILES
 	"../Mac/NativeWindow/OSX/CocoaNativeController.mm"
 	"../Mac/NativeWindow/OSX/CocoaWindow.mm"
 	"../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaAsyncService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaCallbackService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaClipboardService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaDialogService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaImageService.mm"
