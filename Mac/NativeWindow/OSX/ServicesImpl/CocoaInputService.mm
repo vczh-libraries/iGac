@@ -22,19 +22,10 @@ namespace vl {
                 CocoaInputService* g_inputService;
             }
             
-            CGEventRef InputTapFunc(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
-            {
-                CocoaInputService* inputService = (CocoaInputService*)refcon;
-                inputService->InvokeInputHook(type, event);
-                return event;
-            }
-            
-            
-            CocoaInputService::CocoaInputService(MouseTapFunc mouseTap, TimerFunc timer):
+            CocoaInputService::CocoaInputService(TimerFunc timer):
                 eventSource(0),
                 isTimerEnabled(false),
                 isHookingMouse(false),
-                mouseTapFunc(mouseTap),
                 timerFunc(timer),
                 inputTapPort(0),
                 inputTapRunLoopSource(0)
@@ -48,8 +39,6 @@ namespace vl {
                 CGEventSourceSetLocalEventsSuppressionInterval(eventSource, 0.0);
                 
                 memset(globalKeyStates, 0, sizeof(vint8_t) * 256);
-                
-                HookInput();
             }
             
             CocoaInputService::~CocoaInputService()
@@ -288,80 +277,6 @@ namespace vl {
                     asciiLowerMap[i] = L'0' + (i-(int)VKEY::_NUMPAD0);
             }
             
-            void CocoaInputService::HookInput()
-            {
-                int eventMask = (CGEventMaskBit(kCGEventMouseMoved)) |
-                                (CGEventMaskBit(kCGEventLeftMouseDown)) |
-                                (CGEventMaskBit(kCGEventLeftMouseUp)) |
-                                (CGEventMaskBit(kCGEventRightMouseDown)) |
-                                (CGEventMaskBit(kCGEventRightMouseUp)) |
-                                (CGEventMaskBit(kCGEventKeyDown)) |
-                                (CGEventMaskBit(kCGEventKeyUp));
-                inputTapPort =  CGEventTapCreate(kCGSessionEventTap,
-                                                 kCGHeadInsertEventTap,
-                                                 kCGEventTapOptionDefault,
-                                                 eventMask,
-                                                 &InputTapFunc,
-                                                 this);
-                if (inputTapPort == NULL)
-                {
-                    throw EventTapException(L"Failed to create CGEventTap");
-                }
-                else
-                {
-                    inputTapRunLoopSource = CFMachPortCreateRunLoopSource(NULL, inputTapPort, 0);
-                    if (inputTapRunLoopSource == 0)
-                    {
-                        throw EventTapException(L"Failed to create run loop for the mouse even tap");
-                    }
-                    else
-                    {
-                        CFRunLoopRef runLoop =  CFRunLoopGetCurrent();
-                        CFRunLoopAddSource(runLoop, inputTapRunLoopSource, kCFRunLoopCommonModes);
-                        
-                        CGEventTapEnable(inputTapPort, true);
-                    }
-                }
-
-            }
-            
-            void CocoaInputService::InvokeInputHook(CGEventType type, CGEventRef event)
-            {
-                if(type == kCGEventKeyDown ||
-                   type == kCGEventKeyUp)
-                {
-                    // this won't work is OSX Accessibility is turned on for our app (think about the case of Steam)
-                    // so maybe a better way is just hooking window level events and send to InputService
-                    // however that won't be global key states...
-                    auto keyCode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-                    if (keyCode < 256)
-                        globalKeyStates[keyCode] = static_cast<vint8_t>(keyCode);
-                }
-                else
-                {
-                    if (isHookingMouse)
-                    {
-                        mouseTapFunc(type, event);
-                    }
-                }
-            }
-            
-            void CocoaInputService::StartHookMouse()
-            {
-                isHookingMouse = true;
-            }
-            
-            void CocoaInputService::StopHookMouse()
-            {
-                isHookingMouse = false;
-                
-            }
-            
-            bool CocoaInputService::IsHookingMouse()
-            {
-                return isHookingMouse;
-            }
-            
             void CocoaInputService::StartGCDTimer()
             {
                 double delayInMilliseconds = 16;
@@ -447,6 +362,16 @@ namespace vl {
             {
                 vint index = keys.Keys().IndexOf(name);
                 return index == -1 ? VKEY::_UNKNOWN : keys.Values()[index];
+            }
+
+            vint CocoaInputService::RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)
+            {
+                CHECK_FAIL(L"Not Implemented!");
+            }
+
+			bool CocoaInputService::UnregisterGlobalShortcutKey(vint id)
+            {
+                CHECK_FAIL(L"Not Implemented!");
             }
             
             //

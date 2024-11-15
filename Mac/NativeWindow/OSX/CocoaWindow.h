@@ -53,12 +53,13 @@ namespace vl {
 
                 collections::List<IDraggingListener*>           draggingListeners;
                 
+                WindowMode                                      windowMode;
                 NSWindow*                                       nsWindow;
                 NSWindowController*                             nsController;
                 CocoaWindowDelegate*                            nsDelegate;
             
             public:
-                CocoaWindow();
+                CocoaWindow(WindowMode _windowMode);
                 virtual ~CocoaWindow();
                 
                 NSWindow*           GetNativeWindow() const;
@@ -69,6 +70,8 @@ namespace vl {
                 
                 // INativeWindow
                 
+                bool                IsActivelyRefreshing() override;
+                NativeSize			GetRenderingOffset() override;
                 NativeRect			GetBounds() override;
                 void				SetBounds(const NativeRect& bounds) override;
                 NativeSize			GetClientSize() override;
@@ -83,6 +86,7 @@ namespace vl {
                 
                 INativeWindow*		GetParent() override;
                 void				SetParent(INativeWindow* parent) override;
+                WindowMode          GetWindowMode() override;
                 void				EnableCustomFrameMode() override;
                 void				DisableCustomFrameMode() override;
                 bool				IsCustomFrameModeEnabled() override;
@@ -100,6 +104,7 @@ namespace vl {
                 bool				IsEnabled() override;
                 void				SetActivate() override;
                 bool				IsActivated() override;
+                bool				IsRenderingAsActivated() override;
                 void				ShowInTaskBar() override;
                 void				HideInTaskBar() override;
                 bool				IsAppearedInTaskBar() override;

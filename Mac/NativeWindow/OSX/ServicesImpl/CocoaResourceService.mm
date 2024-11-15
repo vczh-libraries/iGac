@@ -240,6 +240,10 @@ namespace vl {
                 defaultFont = value;
             }
 
+            void CocoaResourceService::EnumerateFonts(collections::List<WString>& fonts)
+            {
+                CHECK_FAIL(L"Not Implemented!");
+            }
         }
 
     }

@@ -45,7 +45,6 @@ namespace vl {
                 bool                                    isTimerEnabled;
                 bool                                    isHookingMouse;
                 
-                MouseTapFunc                            mouseTapFunc;
                 TimerFunc                               timerFunc;
                 
                 CFMachPortRef                           inputTapPort;
@@ -58,19 +57,14 @@ namespace vl {
                 
             protected:
                 void StartGCDTimer();
-                // for global key states & mouse hooking
-                void HookInput();
                 
             public:
-                CocoaInputService(MouseTapFunc mouseTap, TimerFunc timer);
+                CocoaInputService(TimerFunc timer);
                 virtual ~CocoaInputService();
                 void    RestartTimer();
 
                 // INativeInputService
                 
-                void    StartHookMouse() override;
-                void    StopHookMouse() override;
-                bool    IsHookingMouse() override;
                 void    StartTimer() override;
                 void    StopTimer() override;
                 bool    IsTimerEnabled() override;
@@ -79,12 +73,14 @@ namespace vl {
                 bool    IsKeyToggled(VKEY code) override;
                 
                 WString GetKeyName(VKEY code) override;
-                VKEY GetKey(const WString& name) override;
+                VKEY    GetKey(const WString& name) override;
+
+				vint    RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)override;
+				bool    UnregisterGlobalShortcutKey(vint id)override;
                 
                 ///
                 
                 void    InitKeyMapping();
-                void    InvokeInputHook(CGEventType type, CGEventRef event);
                 bool    ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event);
             };
             

@@ -13,7 +13,6 @@
 #include "../../NativeWindow/OSX/CocoaHelper.h"
 #include "../../NativeWindow/OSX/CocoaWindow.h"
 #include "../../NativeWindow/OSX/CocoaBaseView.h"
-#include "../../NativeWindow/OSX/ServicesImpl/CocoaCallbackService.h"
 
 #import <Cocoa/Cocoa.h>
 #import <GacUI.h>
@@ -99,7 +98,7 @@ inline CGContextRef GetCurrentCGContext()
 {
     if (_needRepaint)
     {
-        dynamic_cast<CocoaCallbackService *>(GetCurrentController()->CallbackService())->InvokeGlobalTimer();
+        GetCurrentController()->CallbackService()->Invoker()->InvokeGlobalTimer();
         _needRepaint = false;
     }
 

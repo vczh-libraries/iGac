@@ -12,10 +12,8 @@
 #include "CocoaHelper.h"
 
 #include "ServicesImpl/CocoaInputService.h"
-#include "ServicesImpl/CocoaCallbackService.h"
 #include "ServicesImpl/CocoaScreenService.h"
 #include "ServicesImpl/CocoaResourceService.h"
-#include "ServicesImpl/CocoaAsyncService.h"
 #include "ServicesImpl/CocoaClipboardService.h"
 #include "ServicesImpl/CocoaDialogService.h"
 #include "ServicesImpl/CocoaImageService.h"
@@ -147,7 +145,6 @@ namespace vl {
             using namespace collections;
             
             void GlobalTimerFunc();
-            void MouseTapFunc(CGEventType type, CGEventRef event);
             
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
@@ -155,11 +152,11 @@ namespace vl {
                 List<CocoaWindow*>                      windows;
                 INativeWindow*                          mainWindow;
                 
-                CocoaCallbackService                    callbackService;
+                SharedCallbackService                   callbackService;
                 CocoaInputService                       inputService;
                 CocoaResourceService                    resourceService;
                 CocoaScreenService                      screenService;
-                CocoaAsyncService                       asyncService;
+                SharedAsyncService                      asyncService;
                 CocoaClipboardService                   clipboardService;
                 CocoaImageService                       imageService;
                 CocoaDialogService                      dialogService;
@@ -169,7 +166,7 @@ namespace vl {
             public:
                 CocoaController():
                     mainWindow(0),
-                    inputService(&MouseTapFunc, &GlobalTimerFunc)
+                    inputService(&GlobalTimerFunc)
                 {
                     [NSApplication sharedApplication];
                     
@@ -185,12 +182,21 @@ namespace vl {
                 ~CocoaController()
                {
                     inputService.StopTimer();
-                    inputService.StopHookMouse();
+                }
+
+                const NativeWindowFrameConfig&	GetMainWindowFrameConfig() override
+                {
+                    return NativeWindowFrameConfig::Default;
+                }
+
+                const NativeWindowFrameConfig&	GetNonMainWindowFrameConfig() override
+                {
+                    return NativeWindowFrameConfig::Default;
                 }
                 
-                INativeWindow* CreateNativeWindow()
+                INativeWindow* CreateNativeWindow(INativeWindow::WindowMode windowMode)
                 {
-                    CocoaWindow* window = new CocoaWindow();
+                    CocoaWindow* window = new CocoaWindow(windowMode);
                     callbackService.InvokeNativeWindowCreated(window);
                     windows.Add(window);
                     return window;
@@ -201,7 +207,7 @@ namespace vl {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
                     if(window != 0 && windows.Contains(cocoaWindow))
                     {
-                        callbackService.InvokeNativeWindowDestroyed(window);
+                        callbackService.InvokeNativeWindowDestroying(window);
                         windows.Remove(cocoaWindow);
                         
                         if(cocoaWindow == mainWindow)
@@ -237,6 +243,11 @@ namespace vl {
 //                            sleep(1);
 //                        }
 //                    }
+                }
+
+                bool RunOneCycle() override
+                {
+                    CHECK_FAIL(L"Not Implemented!");
                 }
                 
                 INativeWindow* GetWindow(NativePoint location)
@@ -354,12 +365,6 @@ namespace vl {
             void GlobalTimerFunc()
             {
                 dynamic_cast<CocoaController*>(GetCurrentController())->InvokeGlobalTimer();
-            }
-            
-            void MouseTapFunc(CGEventType type, CGEventRef event)
-            {
-                INativeCallbackService* cb = dynamic_cast<CocoaController*>(GetCurrentController())->CallbackService();
-                dynamic_cast<CocoaCallbackService*>(cb)->InvokeMouseHook(type, event);
             }
         }
         

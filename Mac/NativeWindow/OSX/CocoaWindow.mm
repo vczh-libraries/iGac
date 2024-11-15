@@ -44,7 +44,7 @@ namespace vl {
         
         namespace osx {
             
-            CocoaWindow::CocoaWindow():
+            CocoaWindow::CocoaWindow(WindowMode _windowMode):
                 parentWindow(0),
                 mouseLastX(0),
                 mouseLastY(0),
@@ -60,6 +60,7 @@ namespace vl {
                 moving(false),
                 opened(false),
                 resizingBorder(INativeWindowListener::NoDecision),
+                windowMode(_windowMode),
                 nsWindow(0),
                 nsController(0),
                 nsDelegate(0)
@@ -100,6 +101,16 @@ namespace vl {
                 [window setDelegate:nsDelegate];
                 
                 currentCursor = GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
+            }
+
+            bool CocoaWindow::IsActivelyRefreshing()
+            {
+                return true;
+            }
+
+            NativeSize CocoaWindow::GetRenderingOffset()
+            {
+				return { 0,0 };
             }
 
             NativeRect CocoaWindow::GetBounds()
@@ -223,6 +234,11 @@ namespace vl {
                     }
                 }
                 parentWindow = cocoaParent;
+            }
+
+            INativeWindow::GetWindowMode CocoaWindow::GetWindowMode() override
+            {
+                return windowMode;
             }
 
             void CocoaWindow::EnableCustomFrameMode() 
@@ -372,6 +388,14 @@ namespace vl {
             {
                 return [nsWindow isKeyWindow];
             }
+
+			bool CocoaWindow::IsRenderingAsActivated()
+			{
+				// TODO: should render as activated when
+				//   is activated
+				//   is a parent window of one that rendering as activated
+				return IsActivated();
+			}
 
             void CocoaWindow::ShowInTaskBar() 
             {
