@@ -14,7 +14,7 @@ find_library(COREGRAPHICS_LIBRARIES CoreGraphics)
 find_library(COCOA_LIBRARIES Cocoa)
 set(OS_LIBRARIES ${COREFOUNDATION_LIBRARIES} ${QUARTZ_LIBRARIES} ${COREGRAPHICS_LIBRARIES} ${COCOA_LIBRARIES} ${OS_LIBRARIES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wno-missing-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wno-missing-declarations")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
@@ -23,10 +23,13 @@ add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 set(GACUI_COMMON_FILES
 	"../Release/Import/GacUI.cpp"
 	"../Release/Import/Vlpp.cpp"
+	"../Release/Import/Vlpp.Linux.cpp"
 	"../Release/Import/VlppOS.cpp"
+	"../Release/Import/VlppOS.Linux.cpp"
 	"../Release/Import/VlppRegex.cpp"
 	"../Release/Import/VlppReflection.cpp"
 	"../Release/Import/VlppParser.cpp"
+	"../Release/Import/VlppGlrParser.cpp"
 	"../Release/Import/VlppWorkflowLibrary.cpp"
 )
 
@@ -85,6 +88,7 @@ set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_T
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 add_dependencies(${APP_NAME} CopyResources)
 
+#[[
 #
 set(SHARED_RESOURCES "Controls/AddressBook/AddressBook.bin"
 		"Controls/AddressBook/UI/NewFolder.png"
@@ -282,3 +286,4 @@ target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} 
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 add_dependencies(${APP_NAME} CopyResources)
+]]
