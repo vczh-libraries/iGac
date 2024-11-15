@@ -181,15 +181,9 @@ namespace vl {
                         start(_start),
                         end(_end)
                     {
-                        
                     }
-                    
-                    bool operator == (const TextRange& range) const { return start == range.start; }
-                    bool operator != (const TextRange& range) const { return start != range.start; }
-                    bool operator <  (const TextRange& range) const { return start <  range.start; }
-                    bool operator <= (const TextRange& range) const { return start <= range.start; }
-                    bool operator >  (const TextRange& range) const { return start >  range.start; }
-                    bool operator >= (const TextRange& range) const { return start >= range.start; }
+
+					GUI_DEFINE_COMPARE_OPERATORS(TextRange)
                 };
                 
                 struct TextCellContainer
@@ -1297,7 +1291,7 @@ namespace vl {
             
             Ptr<elements::IGuiGraphicsParagraph> CoreTextLayoutProvider::CreateParagraph(const WString& text, elements::IGuiGraphicsRenderTarget* renderTarget, elements::IGuiGraphicsParagraphCallback* callback)
             {
-                return new CoreTextParagraph(this, text, (ICoreGraphicsRenderTarget*)renderTarget, callback);
+                return Ptr(new CoreTextParagraph(this, text, dynamic_cast<ICoreGraphicsRenderTarget*>(renderTarget), callback));
             }
             
         }

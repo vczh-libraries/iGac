@@ -46,7 +46,6 @@ namespace vl {
             
             CocoaWindow::CocoaWindow():
                 parentWindow(0),
-                alwaysPassFocusToParent(false),
                 mouseLastX(0),
                 mouseLastY(0),
                 mouseDownX(0),
@@ -167,7 +166,7 @@ namespace vl {
                 return NSStringToWString(title);
             }
 
-            void CocoaWindow::SetTitle(WString title) 
+            void CocoaWindow::SetTitle(const WString& title) 
             {
                 [nsWindow setTitle:WStringToNSString(title)];
             }
@@ -224,16 +223,6 @@ namespace vl {
                     }
                 }
                 parentWindow = cocoaParent;
-            }
-
-            bool CocoaWindow::GetAlwaysPassFocusToParent() 
-            {
-                return alwaysPassFocusToParent;
-            }
-
-            void CocoaWindow::SetAlwaysPassFocusToParent(bool value) 
-            {
-                alwaysPassFocusToParent = value;
             }
 
             void CocoaWindow::EnableCustomFrameMode() 
@@ -369,7 +358,7 @@ namespace vl {
                 return enabled;
             }
 
-            void CocoaWindow::SetFocus() 
+            void CocoaWindow::SetActivate() 
             {
                 [nsWindow makeKeyWindow];
                 [nsWindow makeFirstResponder:nsWindow.contentView];
@@ -379,19 +368,8 @@ namespace vl {
                 }
             }
 
-            bool CocoaWindow::IsFocused() 
-            {
-                return [nsWindow isKeyWindow];
-            }
-
-            void CocoaWindow::SetActivate() 
-            {
-                [nsWindow makeKeyWindow];
-            }
-
             bool CocoaWindow::IsActivated() 
             {
-                // todo
                 return [nsWindow isKeyWindow];
             }
 

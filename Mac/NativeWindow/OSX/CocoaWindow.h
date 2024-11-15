@@ -75,7 +75,7 @@ namespace vl {
                 void				SetClientSize(NativeSize size) override;
                 NativeRect			GetClientBoundsInScreen() override;
                 WString				GetTitle() override;
-                void				SetTitle(WString title) override;
+                void				SetTitle(const WString& title) override;
                 INativeCursor*		GetWindowCursor() override;
                 void				SetWindowCursor(INativeCursor* cursor) override;
                 NativePoint			GetCaretPoint() override;
@@ -83,8 +83,6 @@ namespace vl {
                 
                 INativeWindow*		GetParent() override;
                 void				SetParent(INativeWindow* parent) override;
-                bool				GetAlwaysPassFocusToParent() override;
-                void				SetAlwaysPassFocusToParent(bool value) override;
                 void				EnableCustomFrameMode() override;
                 void				DisableCustomFrameMode() override;
                 bool				IsCustomFrameModeEnabled() override;
@@ -100,8 +98,6 @@ namespace vl {
                 void				Enable() override;
                 void				Disable() override;
                 bool				IsEnabled() override;
-                void				SetFocus() override;
-                bool				IsFocused() override;
                 void				SetActivate() override;
                 bool				IsActivated() override;
                 void				ShowInTaskBar() override;

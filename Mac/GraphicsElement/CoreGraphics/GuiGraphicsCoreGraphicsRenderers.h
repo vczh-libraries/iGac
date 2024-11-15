@@ -46,28 +46,31 @@ namespace vl {
             using namespace elements;
             
 #define DEFINE_ELEMENT_RENDERER(TELEMENT, TRENDERER, TBRUSHPROPERTY)\
-    DEFINE_GUI_GRAPHICS_RENDERER(TELEMENT, TRENDERER, ICoreGraphicsRenderTarget)\
             public:\
-            TRENDERER();\
-            void    Render(Rect bounds) override;\
-            void    OnElementStateChanged() override;\
-            void    InitializeInternal();\
-            void    FinalizeInternal();\
-            void    RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);\
+                TRENDERER();\
+                void    Render(Rect bounds) override;\
+                void    OnElementStateChanged() override;\
+                void    InitializeInternal();\
+                void    FinalizeInternal();\
+                void    RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);\
 
             
-            class GuiSolidBorderElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiSolidBorderElementRenderer : public GuiElementRendererBase<GuiSolidBorderElement, GuiSolidBorderElementRenderer, ICoreGraphicsRenderTarget>
             {
+                friend class GuiElementRendererBase<GuiSolidBorderElement, GuiSolidBorderElementRenderer, ICoreGraphicsRenderTarget>;
                 DEFINE_ELEMENT_RENDERER(GuiSolidBorderElement, GuiSolidBorderElementRenderer, Color)
             };
 
-            class GuiSolidBackgroundElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiSolidBackgroundElementRenderer : public GuiElementRendererBase<GuiSolidBackgroundElement, GuiSolidBackgroundElementRenderer, ICoreGraphicsRenderTarget>
             {
+                friend class GuiElementRendererBase<GuiSolidBackgroundElement, GuiSolidBackgroundElementRenderer, ICoreGraphicsRenderTarget>;
                 DEFINE_ELEMENT_RENDERER(GuiSolidBackgroundElement, GuiSolidBackgroundElementRenderer, Color)
             };
             
-            class GuiGradientBackgroundElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiGradientBackgroundElementRenderer : public GuiElementRendererBase<GuiGradientBackgroundElement, GuiGradientBackgroundElementRenderer, ICoreGraphicsRenderTarget>
             {
+                friend class GuiElementRendererBase<GuiGradientBackgroundElement, GuiGradientBackgroundElementRenderer, ICoreGraphicsRenderTarget>;
+
                 typedef collections::Pair<Color, Color> ColorPair;
                 DEFINE_ELEMENT_RENDERER(GuiGradientBackgroundElement, GuiGradientBackgroundElementRenderer, ColorPair)
                 
@@ -81,9 +84,9 @@ namespace vl {
                 void CreateCGGradient();
             };
             
-            class GuiSolidLabelElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiSolidLabelElementRenderer : public GuiElementRendererBase<GuiSolidLabelElement, GuiSolidLabelElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(GuiSolidLabelElement, GuiSolidLabelElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiSolidLabelElement, GuiSolidLabelElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                 Color                       oldColor;
@@ -113,9 +116,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class GuiPolygonElementRenderer: public Object, public IGuiGraphicsRenderer
+            class GuiPolygonElementRenderer: public GuiElementRendererBase<GuiPolygonElement, GuiPolygonElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(GuiPolygonElement, GuiPolygonElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiPolygonElement, GuiPolygonElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                 collections::Array<Point>   oldPoints;
@@ -139,9 +142,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class GuiImageFrameElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiImageFrameElementRenderer : public GuiElementRendererBase<GuiImageFrameElement, GuiImageFrameElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(GuiImageFrameElement, GuiImageFrameElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiImageFrameElement, GuiImageFrameElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                                 
@@ -156,9 +159,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class GuiColorizedTextElementRenderer : public Object, public IGuiGraphicsRenderer, public GuiColorizedTextElement::ICallback
+            class GuiColorizedTextElementRenderer : public GuiElementRendererBase<GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget>, public GuiColorizedTextElement::ICallback
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget>;
                 
             public:
                 struct ColorItemResource
@@ -200,9 +203,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class Gui3DBorderElementRenderer : public Object, public IGuiGraphicsRenderer
+            class Gui3DBorderElementRenderer : public GuiElementRendererBase<Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                 
@@ -217,9 +220,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class Gui3DSplitterElementRenderer : public Object, public IGuiGraphicsRenderer
+            class Gui3DSplitterElementRenderer : public GuiElementRendererBase<Gui3DSplitterElement, Gui3DSplitterElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(Gui3DSplitterElement, Gui3DSplitterElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<Gui3DSplitterElement, Gui3DSplitterElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                 void InitializeInternal();
@@ -233,9 +236,9 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class GuiCoreGraphicsElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiCoreGraphicsElementRenderer : public GuiElementRendererBase<GuiCoreGraphicsElement, GuiCoreGraphicsElementRenderer, ICoreGraphicsRenderTarget>
             {
-                DEFINE_GUI_GRAPHICS_RENDERER(GuiCoreGraphicsElement, GuiCoreGraphicsElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiCoreGraphicsElement, GuiCoreGraphicsElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
                 
@@ -250,9 +253,9 @@ namespace vl {
                 void OnElementStateChanged()override;
             };
 
-            class GuiInnerShadowElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiInnerShadowElementRenderer : public GuiElementRendererBase<GuiInnerShadowElement, GuiInnerShadowElementRenderer, ICoreGraphicsRenderTarget>
             {
-            DEFINE_GUI_GRAPHICS_RENDERER(GuiInnerShadowElement, GuiInnerShadowElementRenderer, ICoreGraphicsRenderTarget)
+            friend class GuiElementRendererBase<GuiInnerShadowElement, GuiInnerShadowElementRenderer, ICoreGraphicsRenderTarget>;
 
             protected:
                 void InitializeInternal();
@@ -266,9 +269,9 @@ namespace vl {
                 void OnElementStateChanged()override;
             };
 
-            class GuiFocusRectangleElementRenderer : public Object, public IGuiGraphicsRenderer
+            class GuiFocusRectangleElementRenderer : public GuiElementRendererBase<GuiFocusRectangleElement, GuiFocusRectangleElementRenderer, ICoreGraphicsRenderTarget>
             {
-            DEFINE_GUI_GRAPHICS_RENDERER(GuiFocusRectangleElement, GuiFocusRectangleElementRenderer, ICoreGraphicsRenderTarget)
+                friend class GuiElementRendererBase<GuiFocusRectangleElement, GuiFocusRectangleElementRenderer, ICoreGraphicsRenderTarget>;
 
             protected:
                 void InitializeInternal();

@@ -1025,14 +1025,13 @@ namespace vl {
             {
                 if(renderTarget)
                 {
-                    
-                    renderTarget->PushClipper(bounds);
+                    renderTarget->PushClipper(bounds, element);
                     if(!renderTarget->IsClipperCoverWholeTarget())
                     {
                         GuiCoreGraphicsElementEventArgs arguments(element, bounds, GetCurrentCGContextFromRenderTarget());
                         element->Rendering.Execute(arguments);
                     }
-                    renderTarget->PopClipper();
+                    renderTarget->PopClipper(element);
                 }
             }
             

@@ -6,6 +6,7 @@ CMakeFiles
 Makefile
 MacTest/bin/
 bin/
+libGacUI.a
 
 # our stuff
 _OUTPUT_/

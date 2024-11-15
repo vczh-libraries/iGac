@@ -143,10 +143,8 @@ namespace vl {
             using namespace osx;
             using namespace collections;
             
-            class CachedCoreTextFontPackageAllocator
+            class CachedCoreTextFontPackageAllocator : public GuiCachedResourceAllocatorBase<CachedCoreTextFontPackageAllocator, FontProperties, Ptr<CoreTextFontPackage>>
             {
-                DEFINE_CACHED_RESOURCE_ALLOCATOR(FontProperties, Ptr<CoreTextFontPackage>)
-                
             public:
                 
                 ~CachedCoreTextFontPackageAllocator()
@@ -163,7 +161,7 @@ namespace vl {
                 
                 static Ptr<CoreTextFontPackage> CreateCoreTextFontPackage(const FontProperties& font)
                 {                    
-                    Ptr<CoreTextFontPackage> coreTextFont = new CoreTextFontPackage;
+                    auto coreTextFont = Ptr(new CoreTextFontPackage);
                     
                     coreTextFont->font = CreateFontWithGacFont(font);
                     
@@ -196,10 +194,8 @@ namespace vl {
                 }
             };
             
-            class CachedCharMeasurerAllocator
+            class CachedCharMeasurerAllocator : public GuiCachedResourceAllocatorBase<CachedCharMeasurerAllocator, FontProperties, Ptr<text::CharMeasurer>>
             {
-                DEFINE_CACHED_RESOURCE_ALLOCATOR(FontProperties, Ptr<text::CharMeasurer>)
-                
             protected:
                 class CoreGraphicsCharMeasurer: public text::CharMeasurer
                 {
@@ -221,7 +217,7 @@ namespace vl {
                     
                     Size MeasureInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
                     {
-                        WString str(character);
+                        auto str = WString::FromChar(character);
                         NSString* nsStr = WStringToNSString(str);
                         
                         CGSize size = [nsStr sizeWithAttributes:coreTextFont->attributes];
@@ -243,10 +239,12 @@ namespace vl {
                         return MeasureInternal(L' ', renderTarget).y;
                     }
                 };
+
+            public:
                 
                 Ptr<text::CharMeasurer> CreateInternal(const FontProperties& font)
                 {
-                    return new CoreGraphicsCharMeasurer(CachedCoreTextFontPackageAllocator::CreateCoreTextFontPackage(font));
+                    return Ptr(new CoreGraphicsCharMeasurer(CachedCoreTextFontPackageAllocator::CreateCoreTextFontPackage(font)));
                 }
             };
             
@@ -365,14 +363,14 @@ namespace vl {
 
                 void NativeWindowCreated(INativeWindow* window) override
                 {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = new CoreGraphicsCocoaNativeWindowListener(window);
+                    auto listener = Ptr(new CoreGraphicsCocoaNativeWindowListener(window));
                     window->InstallListener(listener.Obj());
                     nativeWindowListeners.Add(window, listener);
                 }
 
                 void NativeWindowDestroying(INativeWindow* window) override
                 {
-                    Ptr<CoreGraphicsCocoaNativeWindowListener> listener = nativeWindowListeners[window];
+                    auto listener = Ptr(nativeWindowListeners[window]);
                     nativeWindowListeners.Remove(window);
                     window->UninstallListener(listener.Obj());
                 }
@@ -444,7 +442,22 @@ namespace vl {
                     //[[nativeView window] setContentView:nil];
                 }
 
-                void StartRendering()
+                void StartRenderingOnNativeWindow() override
+                {
+                    CHECK_FAIL(L"StartRenderingOnNativeWindow not supported!");
+                }
+
+				RenderTargetFailure StopRenderingOnNativeWindow() override
+                {
+                    CHECK_FAIL(L"StopRenderingOnNativeWindow not supported!");
+                }
+
+				Size GetCanvasSize() override
+                {
+                    return window->Convert(window->GetClientSize());
+                }
+
+                void StartRendering() override
                 {
                     auto listener = GetNativeWindowListener(window);
                     listener->StartRendering();
@@ -467,7 +480,7 @@ namespace vl {
                     CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
                 }
 
-                RenderTargetFailure StopRendering()
+                RenderTargetFailure StopRendering() override
                 {
                     auto listener = GetNativeWindowListener(window);
                     listener->StopRendering();
@@ -482,71 +495,27 @@ namespace vl {
                     }
                     return RenderTargetFailure::LostDevice;
                 }
-                
-                void PushClipper(Rect clipper)
-                {
-                    if(clipperCoverWholeTargetCounter > 0)
-                    {
-                        clipperCoverWholeTargetCounter++;
-                    }
-                    else
-                    {
-                        Rect previousClipper = GetClipper();
-                        Rect currentClipper;
-                        
-                        currentClipper.x1 = (previousClipper.x1>clipper.x1?previousClipper.x1:clipper.x1);
-                        currentClipper.y1 = (previousClipper.y1>clipper.y1?previousClipper.y1:clipper.y1);
-                        currentClipper.x2 = (previousClipper.x2<clipper.x2?previousClipper.x2:clipper.x2);
-                        currentClipper.y2 = (previousClipper.y2<clipper.y2?previousClipper.y2:clipper.y2);
-                        
-                        if(currentClipper.x1 < currentClipper.x2 && currentClipper.y1 < currentClipper.y2)
-                        {
-                            clippers.Add(currentClipper);
-                            
-                            CGContextRef context = (CGContextRef)GetCGContext();
-                            
-                            CGContextSaveGState((CGContextRef)GetCGContext());
-                            
-                            CGRect rect = CGRectMake(currentClipper.Left(), currentClipper.Top(), currentClipper.Width(), currentClipper.Height());
-                            CGContextClipToRect(context, rect);
-                        }
-                        else
-                        {
-                            clipperCoverWholeTargetCounter++;
-                        }
-                    }
-                }
-                
-                void PopClipper()
-                {
-                    if(clipperCoverWholeTargetCounter>0)
-                    {
-                        clipperCoverWholeTargetCounter--;
-                    }
-                    else if(clippers.Count()>0)
-                    {
-                        clippers.RemoveAt(clippers.Count()-1);
-                        CGContextRestoreGState((CGContextRef)GetCGContext());
-                    }
-                }
 
-                Rect GetClipper()
-                {
-                    if(clippers.Count()==0)
-                    {
-                        return Rect(Point(0, 0), window->Convert(window->GetClientSize()));
-                    }
-                    else
-                    {
-                        return clippers[clippers.Count()-1];
-                    }
-                }
-                
-                bool IsClipperCoverWholeTarget()
-                {
-                    return clipperCoverWholeTargetCounter > 0;
-                }
-                
+				void AfterPushedClipper(Rect clipper, Rect validArea, reflection::DescriptableObject* generator) override
+				{
+                    CGContextRef context = (CGContextRef)GetCGContext();
+                    CGContextSaveGState((CGContextRef)GetCGContext());
+                    CGRect rect = CGRectMake(validArea.Left(), validArea.Top(), validArea.Width(), validArea.Height());
+                    CGContextClipToRect(context, rect);
+				}
+
+				void AfterPushedClipperAndBecameInvalid(Rect clipper, reflection::DescriptableObject* generator) override
+				{
+				}
+
+				void AfterPoppedClipperAndBecameValid(Rect validArea, bool clipperExists, reflection::DescriptableObject* generator) override
+				{
+				}
+
+				void AfterPoppedClipper(Rect validArea, bool clipperExists, reflection::DescriptableObject* generator) override
+				{
+                    CGContextRestoreGState((CGContextRef)GetCGContext());
+				}
                 
                 /////
                 CGContextRef GetCGContext() const
@@ -571,7 +540,7 @@ namespace vl {
                 {
                     g_coreGraphicsObjectProvider = new CoreGraphicsObjectProvider;
                     
-                    layoutProvider = new CoreTextLayoutProvider;
+                    layoutProvider = Ptr(new CoreTextLayoutProvider);
                 }
                 
                 IGuiGraphicsRenderTarget* GetRenderTarget(INativeWindow* window)
@@ -593,14 +562,14 @@ namespace vl {
                 
                 void NativeWindowCreated(INativeWindow* window)
                 {
-                    CoreGraphicsRenderTarget* renderTarget = new CoreGraphicsRenderTarget(window);
+                    auto renderTarget = Ptr(new CoreGraphicsRenderTarget(window));
                     renderTargets.Add(renderTarget);
-                    GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, renderTarget);
+                    GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, renderTarget.Obj());
                 }
                 
                 void NativeWindowDestroying(INativeWindow* window)
                 {
-                    CoreGraphicsRenderTarget* renderTarget = dynamic_cast<CoreGraphicsRenderTarget*>(GetCoreGraphicsObjectProvider()->GetBindedRenderTarget(window));
+                    auto renderTarget = dynamic_cast<CoreGraphicsRenderTarget*>(GetCoreGraphicsObjectProvider()->GetBindedRenderTarget(window));
                     renderTargets.Remove(renderTarget);
                     GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, 0);
                 }

@@ -38,8 +38,8 @@ namespace vl {
             
             class GuiCoreGraphicsElement : public GuiElementBase<GuiCoreGraphicsElement>
             {
-                DEFINE_GUI_GRAPHICS_ELEMENT(GuiCoreGraphicsElement, L"CoreGraphicsElement")
-                
+				friend class GuiElementBase<GuiCoreGraphicsElement>;
+				static constexpr const wchar_t* ElementTypeName = L"CoreGraphicsElement";
             protected:
                 GuiCoreGraphicsElement();
                 
@@ -59,7 +59,7 @@ namespace vl {
             
             using namespace elements;
             
-            class ICoreGraphicsRenderTarget : public elements::IGuiGraphicsRenderTarget
+            class ICoreGraphicsRenderTarget : public elements::GuiGraphicsRenderTarget
             {
             public:
                 virtual CGContextRef GetCGContext() const = 0;
