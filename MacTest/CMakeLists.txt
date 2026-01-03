@@ -27,7 +27,6 @@ set(GACUI_COMMON_FILES
 	"../Release/Import/VlppOS.Linux.cpp"
 	"../Release/Import/VlppRegex.cpp"
 	"../Release/Import/VlppReflection.cpp"
-	"../Release/Import/VlppParser.cpp"
 	"../Release/Import/VlppGlrParser.cpp"
 	"../Release/Import/VlppWorkflowLibrary.cpp"
 	"../Release/Import/GacUI.cpp"

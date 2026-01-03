@@ -60,7 +60,7 @@
 - (BOOL)acceptsFirstResponder
 {
     // as borderless window will not be included in the responder chain by default
-    return [cocoaWindow->GetNativeWindow() styleMask] & NSBorderlessWindowMask ? YES : [super acceptsFirstResponder];
+    return [cocoaWindow->GetNativeWindow() styleMask] & NSWindowStyleMaskBorderless ? YES : [super acceptsFirstResponder];
 }
 
 - (BOOL)becomeFirstResponder

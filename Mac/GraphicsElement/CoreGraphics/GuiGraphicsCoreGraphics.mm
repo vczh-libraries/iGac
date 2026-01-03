@@ -193,61 +193,6 @@ namespace vl {
                 }
             };
             
-            class CachedCharMeasurerAllocator : public GuiCachedResourceAllocatorBase<CachedCharMeasurerAllocator, FontProperties, Ptr<text::CharMeasurer>>
-            {
-            protected:
-                class CoreGraphicsCharMeasurer: public text::CharMeasurer
-                {
-                protected:
-                    Ptr<CoreTextFontPackage> coreTextFont;
-                    
-                public:
-                    CoreGraphicsCharMeasurer(Ptr<CoreTextFontPackage> font):
-                    text::CharMeasurer(font->font.pointSize),
-                        coreTextFont(font)
-                    {
-                        coreTextFont->Retain();
-                    }
-                    
-                    ~CoreGraphicsCharMeasurer()
-                    {
-                        coreTextFont->Release();
-                    }
-                    
-                    Size MeasureInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
-                    {
-                        auto str = WString::FromChar(character);
-                        NSString* nsStr = WStringToNSString(str);
-                        
-                        CGSize size = [nsStr sizeWithAttributes:coreTextFont->attributes];
-                        return Size(size.width, size.height);
-                    }
-                    
-                    vint MeasureWidthInternal(wchar_t character, IGuiGraphicsRenderTarget* renderTarget)
-                    {
-                        return MeasureInternal(character, renderTarget).x;
-                    }
-
-                    vint MeasureWidthInternal(::elements::text::UnicodeCodePoint codePoint, IGuiGraphicsRenderTarget *renderTarget)
-                    {
-                        return MeasureInternal(codePoint.character, renderTarget).x;
-                    }
-
-                    vint GetRowHeightInternal(IGuiGraphicsRenderTarget* renderTarget)
-                    {
-                        return MeasureInternal(L' ', renderTarget).y;
-                    }
-                };
-
-            public:
-                
-                Ptr<text::CharMeasurer> CreateInternal(const FontProperties& font)
-                {
-                    return Ptr(new CoreGraphicsCharMeasurer(CachedCoreTextFontPackageAllocator::CreateCoreTextFontPackage(font)));
-                }
-            };
-            
-            
             CoreGraphicsView*   GetCoreGraphicsView(INativeWindow* window);
             void                RecreateCoreGraphicsLayer(INativeWindow* window);
             
@@ -517,7 +462,7 @@ namespace vl {
 				}
                 
                 /////
-                CGContextRef GetCGContext() const
+                CGContextRef GetCGContext() const override
                 {
                     return [nativeView getLayerContext];
                 }
@@ -530,7 +475,6 @@ namespace vl {
                 SortedList<Ptr<CoreGraphicsRenderTarget>>   renderTargets;
                 
                 CachedCoreTextFontPackageAllocator          coreTextFonts;
-                CachedCharMeasurerAllocator                 charMeasurers;
                 
                 Ptr<CoreTextLayoutProvider>                 layoutProvider;
                 
@@ -542,64 +486,58 @@ namespace vl {
                     layoutProvider = Ptr(new CoreTextLayoutProvider);
                 }
                 
-                IGuiGraphicsRenderTarget* GetRenderTarget(INativeWindow* window)
+                IGuiGraphicsRenderTarget* GetRenderTarget(INativeWindow* window) override
                 {
                     return GetCoreGraphicsObjectProvider()->GetBindedRenderTarget(window);
                 }
                 
-                void RecreateRenderTarget(INativeWindow* window)
+                void RecreateRenderTarget(INativeWindow* window) override
                 {
                     NativeWindowDestroying(window);
                     GetCoreGraphicsObjectProvider()->RecreateRenderTarget(window);
                     NativeWindowCreated(window);
                 }
                 
-                IGuiGraphicsLayoutProvider* GetLayoutProvider()
+                IGuiGraphicsLayoutProvider* GetLayoutProvider() override
                 {
                     return layoutProvider.Obj();
                 }
                 
-                void NativeWindowCreated(INativeWindow* window)
+                void NativeWindowCreated(INativeWindow* window) override
                 {
                     auto renderTarget = Ptr(new CoreGraphicsRenderTarget(window));
                     renderTargets.Add(renderTarget);
                     GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, renderTarget.Obj());
                 }
                 
-                void NativeWindowDestroying(INativeWindow* window)
+                void NativeWindowDestroying(INativeWindow* window) override
                 {
                     auto renderTarget = dynamic_cast<CoreGraphicsRenderTarget*>(GetCoreGraphicsObjectProvider()->GetBindedRenderTarget(window));
                     renderTargets.Remove(renderTarget);
                     GetCoreGraphicsObjectProvider()->SetBindedRenderTarget(window, 0);
                 }
 
-                void ResizeRenderTarget(INativeWindow* window)
+                void ResizeRenderTarget(INativeWindow* window) override
                 {
                     if (auto listener = GetNativeWindowListener(window))
                     {
                         return listener->ResizeRenderTarget();
                     }
                 }
-
-                Ptr<elements::text::CharMeasurer> CreateCharMeasurer(const FontProperties& font)
-                {
-                    return charMeasurers.Create(font);
-                }
                 
-                Ptr<CoreTextFontPackage> CreateCoreTextFont(const FontProperties& font)
+                Ptr<CoreTextFontPackage> CreateCoreTextFont(const FontProperties& font) override
                 {
                     return coreTextFonts.Create(font);
                 }
-
-
-                void DestroyCharMeasurer(const FontProperties& font)
-                {
-                    charMeasurers.Destroy(font);
-                }
                 
-                void DestroyCoreTextFont(const FontProperties& font)
+                void DestroyCoreTextFont(const FontProperties& font) override
                 {
                     coreTextFonts.Destroy(font);
+                }
+
+                Ptr<IGuiGraphicsElement> CreateRawElement() override
+                {
+                    CHECK_FAIL(L"Not Implemented!");
                 }
             };
             
@@ -657,16 +595,13 @@ void CoreGraphicsMain()
     elements_coregraphics::GuiSolidLabelElementRenderer::Register();
     elements_coregraphics::GuiImageFrameElementRenderer::Register();
     elements_coregraphics::GuiPolygonElementRenderer::Register();
-    elements_coregraphics::GuiColorizedTextElementRenderer::Register();
     elements_coregraphics::GuiCoreGraphicsElementRenderer::Register();
     elements_coregraphics::GuiInnerShadowElementRenderer::Register();
     elements_coregraphics::GuiFocusRectangleElementRenderer::Register();
-
-    elements::GuiDocumentElement::GuiDocumentElementRenderer::Register();
+    elements::GuiDocumentElementRenderer::Register();
     
     {
         GuiApplicationMain();
-        
     }
     
     GetCurrentController()->CallbackService()->UninstallListener(g_cocoaListener);

@@ -159,50 +159,6 @@ namespace vl {
                 void OnElementStateChanged() override;
             };
             
-            class GuiColorizedTextElementRenderer : public GuiElementRendererBase<GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget>, public GuiColorizedTextElement::ICallback
-            {
-                friend class GuiElementRendererBase<GuiColorizedTextElement, GuiColorizedTextElementRenderer, ICoreGraphicsRenderTarget>;
-                
-            public:
-                struct ColorItemResource
-                {
-                    Color   text;
-                    Color   background;
-                };
-                
-                struct ColorEntryResource
-                {
-                    ColorItemResource			normal;
-                    ColorItemResource			selectedFocused;
-                    ColorItemResource			selectedUnfocused;
-                    
-                    bool						operator==(const ColorEntryResource& value){return false;}
-                    bool						operator!=(const ColorEntryResource& value){return true;}
-                };
-                
-                typedef collections::Array<ColorEntryResource>			ColorArray;
-                
-            protected:
-                Ptr<CoreTextFontPackage>        coreTextFont;
-                FontProperties                  oldFont;
-                ColorArray                      colors;
-                __unsafe_unretained NSMutableDictionary*            nsAttributes;
-                
-                void InitializeInternal();
-                void FinalizeInternal();
-                void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
-                
-                void ColorChanged() override;
-                void FontChanged() override;
-                
-            public:
-                GuiColorizedTextElementRenderer();
-                ~GuiColorizedTextElementRenderer();
-                
-                void Render(Rect bounds) override;
-                void OnElementStateChanged() override;
-            };
-            
             class Gui3DBorderElementRenderer : public GuiElementRendererBase<Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget>
             {
                 friend class GuiElementRendererBase<Gui3DBorderElement, Gui3DBorderElementRenderer, ICoreGraphicsRenderTarget>;

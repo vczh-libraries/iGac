@@ -81,12 +81,8 @@ namespace vl {
             class ICoreGraphicsResourceManager: public Interface
             {
             public:
-                virtual Ptr<elements::text::CharMeasurer>   CreateCharMeasurer(const FontProperties& fontProperties) = 0;
-                virtual void                                DestroyCharMeasurer(const FontProperties& fontProperties) = 0;
-                
                 virtual Ptr<CoreTextFontPackage>            CreateCoreTextFont(const FontProperties& fontProperties) = 0;
                 virtual void                                DestroyCoreTextFont(const FontProperties& fontProperties) = 0;
-                
             };
             
             

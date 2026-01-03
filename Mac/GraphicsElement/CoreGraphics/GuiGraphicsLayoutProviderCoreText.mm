@@ -353,15 +353,15 @@ namespace vl {
                     switch(value)
                     {
                         case Alignment::Left:
-                            [paragrahStyle setAlignment:NSLeftTextAlignment];
+                            [paragrahStyle setAlignment:NSTextAlignmentLeft];
                             break;
                             
                         case Alignment::Right:
-                            [paragrahStyle setAlignment:NSRightTextAlignment];
+                            [paragrahStyle setAlignment:NSTextAlignmentRight];
                             break;
                             
                         case Alignment::Center:
-                            [paragrahStyle setAlignment:NSCenterTextAlignment];
+                            [paragrahStyle setAlignment:NSTextAlignmentCenter];
                             break;
                     }
                     textAlignment = value;
@@ -644,11 +644,11 @@ namespace vl {
                     return true;
                 }
                 
-                vint GetHeight() override
+                Size GetSize() override
                 {
                     [layoutManager glyphRangeForTextContainer:textContainer];
-                    
-                    return [layoutManager usedRectForTextContainer:textContainer].size.height;
+                    auto size = [layoutManager usedRectForTextContainer:textContainer].size;
+                    return Size(size.width, size.height);
                 }
                 
                 bool OpenCaret(vint _caret, Color _color, bool _frontSide) override
@@ -834,7 +834,7 @@ namespace vl {
                     GenerateFormatData();
                     
                     if(!IsValidCaret(caret)) return Rect();
-                    if(paragraphText.Length() == 0) return Rect(Point(0, 0), Size(0, GetHeight()));
+                    if(paragraphText.Length() == 0) return Rect(Point(0, 0), Size(0, GetSize().y));
                     
                     vint frontLineIndex = -1;
                     vint backLineIndex = -1;
