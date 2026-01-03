@@ -374,7 +374,10 @@ namespace vl {
     
             void GlobalTimerFunc()
             {
-                dynamic_cast<CocoaController*>(GetCurrentController())->InvokeGlobalTimer();
+                if (auto controller = GetCurrentController())
+                {
+                    controller->CallbackService()->Invoker()->InvokeGlobalTimer();
+                }
             }
         }
         
