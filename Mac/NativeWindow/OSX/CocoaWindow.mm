@@ -1323,6 +1323,11 @@ namespace vl {
                 }
             }
 
+            void CocoaWindow::SuggestMinClientSize(NativeSize size)
+            {
+                [nsWindow setContentMinSize:NSMakeSize(size.x.value, size.y.value)];
+            }
+
             Ptr<GuiImageData> CocoaWindow::GetIcon()
             {
                 return Ptr<GuiImageData>();

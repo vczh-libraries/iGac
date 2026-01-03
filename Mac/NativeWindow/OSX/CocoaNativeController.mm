@@ -90,7 +90,7 @@
     [[appMenu addItemWithTitle:@"Hide Others"
                         action:@selector(hideOtherApplications:)
                  keyEquivalent:@"h"]
-     setKeyEquivalentModifierMask:NSAlternateKeyMask | NSCommandKeyMask];
+     setKeyEquivalentModifierMask:NSEventModifierFlagOption | NSEventModifierFlagCommand];
     [appMenu addItemWithTitle:@"Show All"
                        action:@selector(unhideAllApplications:)
                 keyEquivalent:@""];
@@ -123,7 +123,7 @@
         [[windowMenu addItemWithTitle:@"Enter Full Screen"
                                action:@selector(toggleFullScreen:)
                         keyEquivalent:@"f"]
-         setKeyEquivalentModifierMask:NSControlKeyMask | NSCommandKeyMask];
+         setKeyEquivalentModifierMask:NSEventModifierFlagControl | NSEventModifierFlagCommand];
     }
 #endif
 }
@@ -194,7 +194,7 @@ namespace vl {
                     return NativeWindowFrameConfig::Default;
                 }
                 
-                INativeWindow* CreateNativeWindow(INativeWindow::WindowMode windowMode)
+                INativeWindow* CreateNativeWindow(INativeWindow::WindowMode windowMode) override
                 {
                     CocoaWindow* window = new CocoaWindow(this, windowMode);
                     callbackService.InvokeNativeWindowCreated(window);
@@ -202,7 +202,7 @@ namespace vl {
                     return window;
                 }
                 
-                void DestroyNativeWindow(INativeWindow* window)
+                void DestroyNativeWindow(INativeWindow* window) override
                 {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
                     if(window != 0 && windows.Contains(cocoaWindow))
@@ -216,12 +216,12 @@ namespace vl {
                     }
                 }
                 
-                INativeWindow* GetMainWindow()
+                INativeWindow* GetMainWindow() override
                 {
                     return mainWindow;
                 }
                 
-                void Run(INativeWindow* window)
+                void Run(INativeWindow* window) override
                 {
                     mainWindow = window;
                     mainWindow->Show();
@@ -250,7 +250,7 @@ namespace vl {
                     CHECK_FAIL(L"Not Implemented!");
                 }
                 
-                INativeWindow* GetWindow(NativePoint location)
+                INativeWindow* GetWindow(NativePoint location) override
                 {
                     CocoaWindow* result = 0;
                     NativeRect minRect(0, 0, 99999, 99999);
@@ -288,47 +288,47 @@ namespace vl {
                 
                 //=======================================================================
                 
-                INativeCallbackService* CallbackService()
+                INativeCallbackService* CallbackService() override
                 {
                     return &callbackService;
                 }
                 
-                INativeResourceService* ResourceService()
+                INativeResourceService* ResourceService() override
                 {
                     return &resourceService;
                 }
                 
-                INativeAsyncService* AsyncService()
+                INativeAsyncService* AsyncService() override
                 {
                     return &asyncService;
                 }
                 
-                INativeClipboardService* ClipboardService()
+                INativeClipboardService* ClipboardService() override
                 {
                     return &clipboardService;
                 }
                 
-                INativeImageService* ImageService()
+                INativeImageService* ImageService() override
                 {
                     return &imageService;
                 }
                 
-                INativeScreenService* ScreenService()
+                INativeScreenService* ScreenService() override
                 {
                     return &screenService;
                 }
                 
-                INativeInputService* InputService()
+                INativeInputService* InputService() override
                 {
                     return &inputService;
                 }
                 
-                INativeDialogService* DialogService()
+                INativeDialogService* DialogService() override
                 {
                     return &dialogService;
                 }
                 
-                INativeWindowService* WindowService()
+                INativeWindowService* WindowService() override
                 {
                     return this;
                 }
@@ -338,7 +338,7 @@ namespace vl {
                     return NSStringToWString(vl::presentation::osx::GetOSVersion());
                 }
                 
-                WString GetExecutablePath()
+                WString GetExecutablePath() override
                 {
                     return NSStringToWString(GetApplicationPath());
                 }

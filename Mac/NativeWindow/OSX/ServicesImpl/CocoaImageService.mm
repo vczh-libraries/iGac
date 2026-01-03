@@ -141,7 +141,7 @@ namespace vl {
                                                                 [bitmapRep bitsPerPixel],
                                                                 [bitmapRep bytesPerRow],
                                                                 CGColorSpaceCreateDeviceRGB(),
-                                                                kCGBitmapByteOrderDefault | kCGImageAlphaLast,
+                                                                (CGBitmapInfo)kCGBitmapByteOrderDefault | (CGBitmapInfo)kCGImageAlphaLast,
                                                                 frameProvider,
                                                                 NULL,
                                                                 NO,
@@ -217,7 +217,7 @@ namespace vl {
                         [smallIcon lockFocus];
                         [image setSize: newSize];
                         [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-                        [image drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.f];
+                        [image drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositingOperationCopy fraction:1.f];
                         [smallIcon unlockFocus];
                         
                         return Ptr(new CocoaImage(this, smallIcon));

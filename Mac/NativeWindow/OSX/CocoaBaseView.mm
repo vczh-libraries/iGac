@@ -234,12 +234,12 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
     NSPasteboard* pasteboard = [sender draggingPasteboard];
-    NSArray* files = [pasteboard propertyListForType:NSFilenamesPboardType];
+    NSArray* files = [pasteboard readObjectsForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey: @YES}];
     
     vl::collections::List<vl::WString> vlFiles;
-    for(NSString* fn in files)
+    for(NSURL* url in files)
     {
-        vlFiles.Add(vl::presentation::osx::NSStringToWString(fn));
+        vlFiles.Add(vl::presentation::osx::NSStringToWString([url path]));
     }
     cocoaWindow->PerformFileDrag(vlFiles);
     

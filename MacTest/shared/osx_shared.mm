@@ -55,11 +55,11 @@ namespace osx {
 
     vl::WString GetFileDisplayType(const vl::WString& file)
     {
-        CFStringRef kind = nil;
         NSString* path = WStringToNSString(file);
         NSURL *url = [NSURL fileURLWithPath:[path stringByExpandingTildeInPath]];
-        LSCopyKindStringForURL((__bridge CFURLRef)url, (CFStringRef *)&kind);
-        return kind ? NSStringToWString((__bridge NSString*)kind) : L"???";
+        NSString* kind = nil;
+        [url getResourceValue:&kind forKey:NSURLLocalizedTypeDescriptionKey error:nil];
+        return kind ? NSStringToWString(kind) : L"???";
     }
 
     void FindDirectoriesAndFiles(const vl::WString& path, vl::collections::List<vl::WString>& directories, vl::collections::List<vl::WString>& files)

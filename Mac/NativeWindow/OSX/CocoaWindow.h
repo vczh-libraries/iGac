@@ -135,6 +135,7 @@ namespace vl {
                 bool				UninstallListener(INativeWindowListener* listener) override;
                 void				RedrawContent() override;
                 NativeMargin        GetCustomFramePadding() override;
+                void                SuggestMinClientSize(NativeSize size) override;
                 Ptr<GuiImageData>   GetIcon() override;
                 void                SetIcon(Ptr<GuiImageData> icon) override;
                 Point               Convert(NativePoint value) override;

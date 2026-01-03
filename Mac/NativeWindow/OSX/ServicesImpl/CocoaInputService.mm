@@ -342,6 +342,9 @@ namespace vl {
                         
                     case VKEY::KEY_HELP:
                         return modifierFlags & NSEventModifierFlagHelp;
+                    
+                    default:
+                        break;
                 }
                 return false;
             }

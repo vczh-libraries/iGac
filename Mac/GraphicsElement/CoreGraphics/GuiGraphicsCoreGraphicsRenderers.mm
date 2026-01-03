@@ -216,6 +216,9 @@ namespace vl {
                         CGPathRelease(path);
                         break;
                     }
+                    
+                    default:
+                        break;
                 }
             }
             
@@ -308,15 +311,15 @@ namespace vl {
                 switch(element->GetHorizontalAlignment())
                 {
                     case Alignment::Left:
-                        [nsParagraphStyle setAlignment:NSLeftTextAlignment];
+                        [nsParagraphStyle setAlignment:NSTextAlignmentLeft];
                         break;
                         
                     case Alignment::Right:
-                        [nsParagraphStyle setAlignment:NSRightTextAlignment];
+                        [nsParagraphStyle setAlignment:NSTextAlignmentRight];
                         break;
                         
                     case Alignment::Center:
-                        [nsParagraphStyle setAlignment:NSCenterTextAlignment];
+                        [nsParagraphStyle setAlignment:NSTextAlignmentCenter];
                         break;
                 }
                 

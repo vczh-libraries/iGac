@@ -10,6 +10,8 @@
 #include "../CocoaHelper.h"
 #include "../CocoaIntrospection.h"
 
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+
 @interface NSPanelProxy: NSWindow
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag;
@@ -27,7 +29,7 @@
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-    aStyle &= ~NSUtilityWindowMask;
+    aStyle &= ~NSWindowStyleMaskUtilityWindow;
     self = [self initWithContentRect_Fake:contentRect
                                 styleMask:aStyle
                                   backing:bufferingType
@@ -38,7 +40,7 @@
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen
 {
-    aStyle &= ~NSUtilityWindowMask;
+    aStyle &= ~NSWindowStyleMaskUtilityWindow;
     self = [self initWithContentRect_Fake:contentRect
                                 styleMask:aStyle
                                   backing:bufferingType
@@ -128,8 +130,8 @@ const CGFloat HackedButtonSideMargin = 9.0f;
 {
     NSButton* button = [[NSButton alloc] initWithFrame: frame];
     
-    [button setButtonType:NSMomentaryLightButton];
-    [button setBezelStyle:NSRegularSquareBezelStyle];
+    [button setButtonType:NSButtonTypeMomentaryLight];
+    [button setBezelStyle:NSBezelStyleFlexiblePush];
     [button setTitle:text];
     
     [button setAction:clicked];
@@ -554,7 +556,7 @@ namespace vl {
                 
                 if(![delegate isCancelled])
                 {
-                    NSColor* color = [[colorPanel color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+                    NSColor* color = [[colorPanel color] colorUsingType:NSColorTypeComponentBased];
                     selection = Color([color redComponent] * 255.0,
                                       [color greenComponent] * 255.0,
                                       [color blueComponent] * 255.0,
@@ -643,7 +645,7 @@ namespace vl {
                     selectionFont.size = [selectedFont pointSize];
                     selectionFont.fontFamily = NSStringToWString([selectedFont familyName]);
                     
-                    NSColor* color = [[colorPanel color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+                    NSColor* color = [[colorPanel color] colorUsingType:NSColorTypeComponentBased];
                     selectionColor = Color([color redComponent] * 255.0,
                                            [color greenComponent] * 255.0,
                                            [color blueComponent] * 255.0,
@@ -701,7 +703,13 @@ namespace vl {
                 {
                     NSOpenPanel* op = [NSOpenPanel openPanel];
                     
-                    [op setAllowedFileTypes:filters];
+                    NSMutableArray<UTType*>* contentTypes = [[NSMutableArray alloc] init];
+                    for(NSString* ext in filters)
+                    {
+                        UTType* type = [UTType typeWithFilenameExtension:ext];
+                        if(type) [contentTypes addObject:type];
+                    }
+                    if([contentTypes count] > 0) [op setAllowedContentTypes:contentTypes];
                     [op setDirectoryURL: [NSURL fileURLWithPath:WStringToNSString(initialDirectory)]];
                     [op setTitle:WStringToNSString(title)];
                     [op setNameFieldStringValue:WStringToNSString(initialFileName)];
@@ -718,7 +726,7 @@ namespace vl {
                         [op setResolvesAliases:YES];
                     }
                     
-                    if([op runModal] == NSFileHandlingPanelOKButton)
+                    if([op runModal] == NSModalResponseOK)
                     {
                         selectionFileNames.Clear();
                         
@@ -736,13 +744,19 @@ namespace vl {
                 {
                     NSSavePanel* op = [NSSavePanel savePanel];
                     
-                    [op setAllowedFileTypes:filters];
+                    NSMutableArray<UTType*>* contentTypes = [[NSMutableArray alloc] init];
+                    for(NSString* ext in filters)
+                    {
+                        UTType* type = [UTType typeWithFilenameExtension:ext];
+                        if(type) [contentTypes addObject:type];
+                    }
+                    if([contentTypes count] > 0) [op setAllowedContentTypes:contentTypes];
                     [op setDirectoryURL: [NSURL fileURLWithPath:WStringToNSString(initialDirectory)]];
                     [op setTitle:WStringToNSString(title)];
                     [op setNameFieldStringValue:WStringToNSString(initialFileName)];
                     [op setAllowsOtherFileTypes:allowAnyTypes];
                     
-                    if([op runModal] == NSFileHandlingPanelOKButton)
+                    if([op runModal] == NSModalResponseOK)
                     {
                         selectionFileNames.Clear();
                         selectionFileNames.Add(NSStringToWString([op URL].path));

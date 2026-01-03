@@ -91,23 +91,14 @@ namespace vl {
             {
                 CGDisplayModeRef cgmode = CGDisplayCopyDisplayMode(kCGDirectMainDisplay);
                 
-                int bpp = 0;
-                
-                // main resolution
-                // todo , CGDisplayModeCopyPixelEncoding deprecated in 10.11
-                CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(cgmode);
-                if(CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                    bpp = 32;
-                else if(CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                    bpp = 16;
-                else if(CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                    bpp = 8;
+                // Modern macOS displays use 32-bit color depth
+                // CGDisplayModeCopyPixelEncoding is deprecated since 10.11
+                int bpp = 32;
                 
                 callback((unsigned int)CGDisplayModeGetWidth(cgmode),
                          (unsigned int)CGDisplayModeGetHeight(cgmode),
                          bpp);
                 
-                CFRelease(pixEnc);
                 CGDisplayModeRelease(cgmode);
                 
                 // additional
@@ -117,16 +108,8 @@ namespace vl {
                 
                 for (CFIndex index = 0; index < count; index++) {
                     CGDisplayModeRef cgmode = (CGDisplayModeRef)CFArrayGetValueAtIndex(modes, index);
-                    bpp = 0;
-                    
-                    CFStringRef pixEnc = CGDisplayModeCopyPixelEncoding(cgmode);
-                    if(CFStringCompare(pixEnc, CFSTR(IO32BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                        bpp = 32;
-                    else if(CFStringCompare(pixEnc, CFSTR(IO16BitDirectPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                        bpp = 16;
-                    else if(CFStringCompare(pixEnc, CFSTR(IO8BitIndexedPixels), kCFCompareCaseInsensitive) == kCFCompareEqualTo)
-                        bpp = 8;
-                    CFRelease(pixEnc);
+                    // Modern displays use 32-bit color depth
+                    bpp = 32;
                     
                     callback((unsigned int)CGDisplayModeGetWidth(cgmode),
                              (unsigned int)CGDisplayModeGetHeight(cgmode),
