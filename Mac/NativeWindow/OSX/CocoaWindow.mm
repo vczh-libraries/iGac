@@ -1464,7 +1464,25 @@ namespace vl {
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-    (dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosed();
+    osx::CocoaWindow* cocoaWindow = dynamic_cast<osx::CocoaWindow*>(_nativeWindow);
+    cocoaWindow->InvokeClosed();
+    
+    // If the main window is closed, stop the application
+    if (vl::presentation::GetCurrentController()->WindowService()->GetMainWindow() == _nativeWindow)
+    {
+        [NSApp stop:nil];
+        // Post an empty event to ensure the run loop wakes up and processes the stop
+        NSEvent* event = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                                            location:NSMakePoint(0, 0)
+                                       modifierFlags:0
+                                           timestamp:0
+                                        windowNumber:0
+                                             context:nil
+                                             subtype:0
+                                               data1:0
+                                               data2:0];
+        [NSApp postEvent:event atStart:YES];
+    }
 }
 
 - (void)windowDidResize:(NSNotification *)notification

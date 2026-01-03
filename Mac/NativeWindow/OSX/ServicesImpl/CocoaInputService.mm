@@ -43,9 +43,14 @@ namespace vl {
             
             CocoaInputService::~CocoaInputService()
             {
-                CFRunLoopRemoveSource(CFRunLoopGetCurrent(), inputTapRunLoopSource, kCFRunLoopDefaultMode);
-                CFMachPortInvalidate(inputTapPort);
-                
+                if (inputTapRunLoopSource)
+                {
+                    CFRunLoopRemoveSource(CFRunLoopGetCurrent(), inputTapRunLoopSource, kCFRunLoopDefaultMode);
+                }
+                if (inputTapPort)
+                {
+                    CFMachPortInvalidate(inputTapPort);
+                }
             }
             
             void CocoaInputService::InitKeyMapping()
