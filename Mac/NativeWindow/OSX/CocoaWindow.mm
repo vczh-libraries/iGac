@@ -337,17 +337,20 @@ namespace vl {
 
             void CocoaWindow::Hide(bool closeWindow)
             {
-                // actually close it as we need to trigger closing / closed events for GuiMenu to work
-                if (closeWindow)
+                // On Windows, Hide() always posts WM_CLOSE regardless of closeWindow.
+                // For the main window this triggers the close sequence and app exit.
+                // For non-main windows, WM_CLOSE hides without destroying.
+                // Match that behavior here: always go through [nsWindow close] for the main window.
+                if (closeWindow || GetCurrentController()->WindowService()->GetMainWindow() == this)
                 {
                     [nsWindow close];
                 }
                 else
                 {
                     [nsWindow setIsVisible:false];
+                    opened = false;
+                    InvokeClosed();
                 }
-                opened = false;
-                InvokeClosed();
             }
 
             bool CocoaWindow::IsVisible()

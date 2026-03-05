@@ -374,9 +374,9 @@ namespace vl {
     
             void GlobalTimerFunc()
             {
-                if (auto controller = GetCurrentController())
+                if (cocoaController)
                 {
-                    controller->CallbackService()->Invoker()->InvokeGlobalTimer();
+                    cocoaController->InvokeGlobalTimer();
                 }
             }
         }
