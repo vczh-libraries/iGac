@@ -73,6 +73,7 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test.sh --unblock     # Run in background, prints PID
 
 ./testFC.sh             # Run Full Control Test (BlackSkin)
+./testFC.sh --hosted    # Run Full Control Test in hosted mode (single window)
 ./testFC.sh --unblock   # Run in background, prints PID
 ```
 

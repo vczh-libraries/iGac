@@ -24,7 +24,7 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 - This is the **macOS port** of GacUI. The GacUI framework source code lives in `Release/Import/` and must NOT be modified — it is a git submodule.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
-- Test with `./testFC.sh` (full control test) or `./test.sh` (hello world).
+- Test with `./testFC.sh` (full control test), `./testFC.sh --hosted` (hosted mode), or `./test.sh` (hello world).
 - The code compiles with `VCZH_DEBUG_NO_REFLECTION`.
 
 ## When You Make Changes

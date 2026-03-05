@@ -16,15 +16,14 @@ In standard mode, each GacUI window maps to a separate `NSWindow` (via `CocoaWin
 
 ### How Windows Does It
 
-The Windows implementation (in `GacUI.Windows.cpp`) provides:
-- `SetupHostedWindowsDirect2DRenderer()` / `SetupHostedWindowsGDIRenderer()` — entry points that wrap the native controller with `GuiHostedController`.
-- `GuiHostedController` — platform-independent class in `GacUI.cpp` that implements `INativeController` by delegation, virtualizes `INativeWindowService`, manages virtual window hierarchy via `hosted_window_manager::WindowManager<GuiHostedWindow*>`, and routes mouse/keyboard events to the correct virtual window.
-- `GuiHostedGraphicsResourceManager` — wraps the native `IGuiGraphicsResourceManager` so all virtual windows share the same render target (the single native window's render target).
-- Three `IGuiHostedWindowProxy` implementations — platform-specific proxies that bridge virtual window operations to the real native window (for the main window) or to no-ops (for non-main virtual windows and placeholders).
+The Windows implementation (in `GacUI.Windows.cpp`) provides only the entry points:
+- `SetupHostedWindowsDirect2DRenderer()` / `SetupHostedWindowsGDIRenderer()` — these wrap the native controller with `GuiHostedController` and the resource manager with `GuiHostedGraphicsResourceManager`.
+
+Everything else is platform-independent — `GuiHostedController`, `GuiHostedGraphicsResourceManager`, the three `IGuiHostedWindowProxy` implementations, and `GuiHostedWindow` all live in `GacUI.cpp`. They operate through `INativeController` and `INativeWindow` interfaces, meaning they work with any platform backend (including `CocoaWindow`) without modification.
 
 ### What's Already Platform-Independent (Reusable)
 
-All of these live in `Release/Import/GacUI.cpp` and `GacUI.h`:
+All of these live in `Release/Import/GacUI.cpp` and `GacUI.h` — they are **not** platform-specific:
 - `GuiHostedController` — complete window virtualization, input routing, focus management, hover tracking
 - `GuiHostedGraphicsResourceManager` — render target redirection (all virtual windows → one native render target)
 - `GuiHostedWindow` — virtual `INativeWindow` implementation
@@ -32,10 +31,13 @@ All of these live in `Release/Import/GacUI.cpp` and `GacUI.h`:
 - `hosted_window_manager::WindowManager` — z-order, visibility, hit testing, activation
 - `IGuiHostedApplication` — host window access interface
 - `GuiGraphicsRenderTarget` base class — already handles `StartHostedRendering`/`StopHostedRendering` lifecycle (calls `StartRenderingOnNativeWindow` once, then allows multiple `StartRendering`/`StopRendering` cycles)
+- `IGuiHostedWindowProxy` and its three implementations (`GuiMainHostedWindowProxy`, `GuiNonMainHostedWindowProxy`, `GuiPlaceholderHostedWindowProxy`) — these operate entirely through the `INativeWindow` interface, so they work with `CocoaWindow` out of the box. The factory functions `CreateMainHostedWindowProxy()`, `CreateNonMainHostedWindowProxy()`, and `CreatePlaceholderHostedWindowProxy()` are called by `GuiHostedController` internally.
 
 ## What Needs to Be Done
 
 ### Step 1: Fix CoreGraphicsRenderTarget to Use Base Class Rendering Chain
+
+**Prerequisite for all other steps.**
 
 **Problem**: The current `CoreGraphicsRenderTarget` (in `GuiGraphicsCoreGraphics.mm`) overrides `StartRendering()` and `StopRendering()` directly, bypassing the `GuiGraphicsRenderTarget` base class. The base class methods `StartRenderingOnNativeWindow()` and `StopRenderingOnNativeWindow()` are implemented as `CHECK_FAIL` (crash). This means the hosted rendering lifecycle — where `StartHostedRendering()` calls `StartRenderingOnNativeWindow()` once, then `StartRendering()`/`StopRendering()` run multiple times without touching the native window — cannot work.
 
@@ -47,36 +49,7 @@ The rendering setup code currently in `StartRendering()` (getting CGContext, sav
 
 Note: The `SetCurrentRenderTarget(this)` / `SetCurrentRenderTarget(0)` calls and the per-frame black fill should happen in `StartRenderingOnNativeWindow()` / `StopRenderingOnNativeWindow()` since they are once-per-frame operations.
 
-### Step 2: Implement IGuiHostedWindowProxy for macOS
-
-Three proxy implementations are needed. These are simple — the Windows implementations are straightforward and the macOS versions are nearly identical.
-
-#### PlaceholderHostedWindowProxy
-- All methods are no-ops except `Show*()` which calls `CHECK_FAIL` (crash — placeholder windows should never be shown).
-- **Identical to the Windows version.** Can be copied directly.
-
-#### MainHostedWindowProxy
-- Bridges property updates to the real `CocoaWindow` (the single native `NSWindow`):
-  - `UpdateBounds()` → `nativeWindow->SetClientSize(data->wmWindow.bounds.GetSize())`
-  - `UpdateTitle()` → `nativeWindow->SetTitle(data->windowTitle)`
-  - `UpdateIcon()` → `nativeWindow->SetIcon(data->windowIcon)`
-  - `UpdateTopMost()` → `nativeWindow->SetTopMost(data->wmWindow.topMost)`
-  - `Show()` → `data->wmWindow.Activate()` + `nativeWindow->Show()`
-  - `Close()` → `nativeWindow->Hide(true)`
-  - etc.
-- `FixBounds()` forces position to `{0,0}` (main window always fills host).
-- `CheckAndSyncProperties()` synchronizes all properties to the native window and calls `AssignFrameConfig` on listeners.
-- **Nearly identical to the Windows version.** The main difference is that macOS `SetMaximizedBox`/`SetMinimizedBox`/`SetBorder`/`SetSizeBox` map to `CocoaWindow`'s boolean flags + `UpdateStyleMask()`, but this is already abstracted behind `INativeWindow`.
-
-#### NonMainHostedWindowProxy
-- Most property updates are no-ops (non-main windows are virtual — no native window to configure).
-- `Show()` / `ShowDeactivated()` → `data->wmWindow.SetVisible(true)` + optional `Activate()`
-- `Hide()` → `data->wmWindow.SetVisible(false)`
-- `Close()` → `Hide()`
-- Enforces that non-main windows must either use custom frame mode or have no system border (Border=false, SizeBox=false, TitleBar=false) when visible.
-- **Nearly identical to the Windows version.** Can be copied directly.
-
-### Step 3: New Entry Point — SetupOSXHostedCoreGraphicsRenderer
+### Step 2: New Entry Point — SetupOSXHostedCoreGraphicsRenderer
 
 Create a new entry point function in `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm`:
 
@@ -101,7 +74,7 @@ int SetupOSXHostedCoreGraphicsRenderer()
 }
 ```
 
-### Step 4: Update CoreGraphicsMain to Accept Optional GuiHostedController
+### Step 3: Update CoreGraphicsMain to Accept Optional GuiHostedController
 
 Modify `CoreGraphicsMain()` (in `GuiGraphicsCoreGraphics.mm`) to accept an optional `GuiHostedController*` parameter:
 
@@ -144,17 +117,52 @@ void CoreGraphicsMain(GuiHostedController* hostedController = nullptr)
 }
 ```
 
-### Step 5: Declare the New Entry Point
+### Step 4: Declare the New Entry Point
 
-Add the declaration `int SetupOSXHostedCoreGraphicsRenderer();` to an appropriate header (likely `CoreGraphicsApp.h`).
+Add the declaration `int SetupOSXHostedCoreGraphicsRenderer();` to `CoreGraphicsApp.h`.
+
+### Step 5: Add --hosted Command Line Argument to MacFullControlTest
+
+Modify `MacFullControlTest/Main.mm` to check `argv` for `--hosted`:
+
+```cpp
+int main(int argc, const char * argv[])
+{
+    bool hosted = false;
+    for (int i = 1; i < argc; i++)
+    {
+        if (strcmp(argv[i], "--hosted") == 0) hosted = true;
+    }
+
+    if (hosted)
+        SetupOSXHostedCoreGraphicsRenderer();
+    else
+        SetupOSXCoreGraphicsRenderer();
+    return 0;
+}
+```
+
+Update `testFC.sh` to forward `--hosted` to the app:
+
+```bash
+if [[ "$1" == "--hosted" ]]; then
+    "$APP" --hosted
+elif [[ "$1" == "--unblock" ]]; then
+    "$APP" &
+    echo $!
+else
+    "$APP"
+fi
+```
 
 ### Step 6: Testing
 
-- **Basic test**: Change `main()` to call `SetupOSXHostedCoreGraphicsRenderer()` instead of `SetupOSXCoreGraphicsRenderer()`. The full control test should render inside a single window.
-- **Window tests**: Verify that popups, menus, combo boxes, tooltips all appear correctly within the single window.
-- **Modal dialogs**: Verify modal windows block their owner but not the whole app.
-- **Resize**: Verify that resizing the host window correctly resizes the main virtual window and triggers re-layout.
-- **Focus**: Verify keyboard focus routing to the correct virtual window.
+Run `./testFC.sh --hosted` to launch the full control test in hosted mode. Verify:
+- The application renders inside a single `NSWindow`.
+- Popups, menus, combo boxes, and tooltips all appear correctly within that window.
+- Modal dialogs block their owner but not the whole app.
+- Resizing the host window correctly resizes the main virtual window and triggers re-layout.
+- Keyboard focus routes to the correct virtual window.
 
 ## Rendering Architecture Comparison
 
@@ -185,17 +193,18 @@ Per frame (hosted mode):
 ## Implementation Order
 
 1. **Step 1** (render target refactor) — must be done first; it's a prerequisite for hosted rendering.
-2. **Steps 2–5** (proxies, entry point, CoreGraphicsMain update) — can be done together.
-3. **Step 6** (testing) — after all code changes.
+2. **Steps 2–4** (entry point, CoreGraphicsMain update, header declaration) — can be done together.
+3. **Step 5** (CLI argument + testFC.sh) — wire up testing.
+4. **Step 6** (testing) — after all code changes.
 
 ## Files to Create or Modify
 
 | File | Action |
 |------|--------|
-| `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm` | Refactor `CoreGraphicsRenderTarget` (Step 1), update `CoreGraphicsMain` (Step 4) |
-| `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm` | Add `SetupOSXHostedCoreGraphicsRenderer()` (Step 3) |
-| `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` | Declare `SetupOSXHostedCoreGraphicsRenderer()` (Step 5) |
-| New file: `Mac/NativeWindow/OSX/HostedWindowProxy.mm` | Three `IGuiHostedWindowProxy` implementations (Step 2) |
-| `MacShared/CMakeLists.txt` | Add `HostedWindowProxy.mm` to GacOSX sources |
+| `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm` | Refactor `CoreGraphicsRenderTarget` (Step 1), update `CoreGraphicsMain` (Step 3) |
+| `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm` | Add `SetupOSXHostedCoreGraphicsRenderer()` (Step 2) |
+| `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` | Declare `SetupOSXHostedCoreGraphicsRenderer()` (Step 4) |
+| `MacFullControlTest/Main.mm` | Parse `--hosted` CLI arg, call hosted entry point (Step 5) |
+| `testFC.sh` | Forward `--hosted` argument to the app (Step 5) |
 | `doc/OSProvider.md` | Add hosted mode section |
-| `readme.md` | Update doc list, update TODO (remove hosted mode) |
+| `readme.md` | Update running section, update TODO (remove hosted mode) |
