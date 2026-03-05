@@ -282,7 +282,16 @@ namespace vl {
                     graphicsElements.Add(TextRange(0, _text.Length()), 0);
                     backgroundColors.Add(TextRange(0, _text.Length()), Color(0, 0, 0, 0));
 
-                    textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text) attributes:@{NSParagraphStyleAttributeName: [NSParagraphStyle defaultParagraphStyle]}];
+                    FontProperties defaultFontProperties = GetCurrentController()->ResourceService()->GetDefaultFont();
+                    NSFont* defaultFont = CreateFontWithGacFont(defaultFontProperties);
+                    if (!defaultFont)
+                    {
+                        defaultFont = CreateFontWithFontFamily(GAC_APPLE_DEFAULT_FONT_FAMILY_NAME, 0, 12);
+                    }
+                    textStorage = [[NSTextStorage alloc] initWithString:WStringToNSString(_text) attributes:@{
+                        NSParagraphStyleAttributeName: [NSParagraphStyle defaultParagraphStyle],
+                        NSFontAttributeName: defaultFont
+                    }];
                     
                     textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(maxWidth == -1 ? CGFLOAT_MAX : maxWidth, CGFLOAT_MAX)];
                     layoutManager = [[NSLayoutManager alloc] init];
@@ -680,6 +689,18 @@ namespace vl {
                 {
                     [layoutManager glyphRangeForTextContainer:textContainer];
                     auto size = [layoutManager usedRectForTextContainer:textContainer].size;
+                    if (size.height < 1 && textStorage.length == 0)
+                    {
+                        // Empty text: NSLayoutManager reports 0 height since there are no glyphs.
+                        // Match D2D/GDI behavior: return the default font's line height.
+                        FontProperties defaultFontProperties = GetCurrentController()->ResourceService()->GetDefaultFont();
+                        NSFont* font = CreateFontWithGacFont(defaultFontProperties);
+                        if (!font)
+                        {
+                            font = CreateFontWithFontFamily(GAC_APPLE_DEFAULT_FONT_FAMILY_NAME, 0, 12);
+                        }
+                        size.height = [layoutManager defaultLineHeightForFont:font];
+                    }
                     return Size(size.width, size.height);
                 }
                 
