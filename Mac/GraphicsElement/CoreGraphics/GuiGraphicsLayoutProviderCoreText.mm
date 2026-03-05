@@ -75,6 +75,17 @@ public:
         }
     }
     
+    vl::presentation::Color bgColor = _properties.backgroundColor;
+    if(bgColor.a != 0)
+    {
+        bgColor.a /= 2;
+        CGContextRef context = (CGContextRef)(vl::presentation::elements_coregraphics::GetCurrentRenderTarget()->GetCGContext());
+        CGContextSetRGBFillColor(context, bgColor.r / 255.0f, bgColor.g / 255.0f, bgColor.b / 255.0f, bgColor.a / 255.0f);
+        CGRect bgRect = CGRectMake(cellFrame.origin.x - 0.5f, cellFrame.origin.y - 0.5f,
+                                   _properties.size.x + 1.0f, _properties.size.y + 1.0f);
+        CGContextFillRect(context, bgRect);
+    }
+    
     if(_properties.callbackId != -1)
     {
         if(auto paraCallback = _callback->GetParagraphCallback())
@@ -556,16 +567,35 @@ namespace vl {
                 
                 bool SetInlineObject(vint start, vint length, const InlineObjectProperties& properties) override
                 {
-                    if(inlineElements.Keys().Contains(properties.backgroundImage.Obj()))
-                    {
-                        return false;
-                    }
+                    vint reuseIndex = -1;
                     for(vint i = 0; i < inlineElements.Count(); ++i)
                     {
                         GuiElementsTextCell* cell = inlineElements.Values().Get(i).textCell;
-                        if(start < cell.textRange.location + cell.textRange.length &&
-                           cell.textRange.location < start + length)
-                            return false;
+                        if(start == (vint)cell.textRange.location && length == (vint)cell.textRange.length)
+                        {
+                            auto&& inlineProps = cell.properties;
+                            if(inlineProps.callbackId != properties.callbackId) return false;
+                            if(inlineProps.backgroundImage != properties.backgroundImage) return false;
+                            reuseIndex = i;
+                        }
+                        else
+                        {
+                            if(inlineElements.Keys().Contains(properties.backgroundImage.Obj()))
+                            {
+                                return false;
+                            }
+                            if(start < (vint)(cell.textRange.location + cell.textRange.length) &&
+                               (vint)cell.textRange.location < start + length)
+                                return false;
+                        }
+                    }
+                    
+                    if(reuseIndex != -1)
+                    {
+                        GuiElementsTextCell* cell = inlineElements.Values().Get(reuseIndex).textCell;
+                        cell.properties = properties;
+                        needFormatData = true;
+                        return true;
                     }
                     
                     GuiElementsTextCell* textCell = [[GuiElementsTextCell alloc] initWithGraphicsElement:properties.backgroundImage
