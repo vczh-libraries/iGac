@@ -38,7 +38,9 @@ iGac/
 │   └── Tools/                  Build tools and scripts
 │
 ├── doc/                        Documentation
-│   └── OSProvider.md           macOS OS provider implementation details
+│   ├── OSProvider.md           macOS OS provider: controller, services, entry point
+│   ├── OSProvider_Window.md    macOS OS provider: INativeWindow, CocoaWindow, popups
+│   └── OSProvider_Graphics.md  macOS OS provider: CoreGraphics rendering, elements, fonts
 │
 ├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
@@ -84,7 +86,9 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 
 ## Documentation
 
-- [doc/OSProvider.md](doc/OSProvider.md) — How GacUI's platform abstraction interfaces (INativeController, INativeWindow, graphics resource manager) are implemented on macOS.
+- [doc/OSProvider.md](doc/OSProvider.md) — Controller, services, entry point, and overall architecture of the macOS platform layer.
+- [doc/OSProvider_Window.md](doc/OSProvider_Window.md) — INativeWindow implementation (CocoaWindow): window lifecycle, Show/Hide, popups, child windows, custom frame, key differences from Windows.
+- [doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md) — CoreGraphics rendering backend: render targets, element renderers, text layout, font management.
 
 ## Current Status
 
@@ -105,3 +109,4 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 - `CocoaWindow::GetIcon` and `SetIcon` is not implemented yet
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
+- Hosted window mode

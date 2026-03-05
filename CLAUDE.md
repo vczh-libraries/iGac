@@ -5,7 +5,9 @@
 **You MUST read these files before doing any work:**
 
 1. **[readme.md](readme.md)** — Project structure, build commands, script descriptions.
-2. **[doc/OSProvider.md](doc/OSProvider.md)** — How GacUI's platform abstraction (INativeController, INativeWindow, graphics resource manager) is implemented on macOS. Contains critical information about window lifecycle, popup management, coordinate systems, and differences from Windows.
+2. **[doc/OSProvider.md](doc/OSProvider.md)** — Controller, services, entry point, overall architecture.
+3. **[doc/OSProvider_Window.md](doc/OSProvider_Window.md)** — INativeWindow (CocoaWindow): window lifecycle, popup management, coordinate systems, differences from Windows.
+4. **[doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md)** — CoreGraphics rendering: render targets, element renderers, text layout, font management.
 
 Read them thoroughly. Most macOS porting bugs come from behavioral differences between Win32 and Cocoa that are documented there.
 
@@ -21,7 +23,9 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 **You MUST update the documentation if your changes affect anything documented:**
 
-- If you modify window behavior (Show, Hide, SetBounds, SetParent, popups, focus, etc.) → update [doc/OSProvider.md](doc/OSProvider.md).
+- If you modify window behavior (Show, Hide, SetBounds, SetParent, popups, focus, etc.) → update [doc/OSProvider_Window.md](doc/OSProvider_Window.md).
+- If you modify rendering, element renderers, text layout, or font management → update [doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md).
+- If you modify the controller, services, or entry point → update [doc/OSProvider.md](doc/OSProvider.md).
 - If you add/remove/rename files, directories, scripts, or CMake targets → update [readme.md](readme.md).
 - If you add new documentation files → add them to the Documentation section in [readme.md](readme.md).
 - If you change build steps or script behavior → update [readme.md](readme.md).
