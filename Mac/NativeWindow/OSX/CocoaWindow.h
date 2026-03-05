@@ -30,6 +30,7 @@ namespace vl {
                 INativeController*                              cocoaController;
                 NativePoint                                     caretPoint;
                 CocoaWindow*                                    parentWindow;
+                collections::List<CocoaWindow*>                 childWindows;
                 bool                                            alwaysPassFocusToParent;
                 collections::List<INativeWindowListener*>       listeners;
                 vint                                            mouseLastX;
@@ -171,6 +172,9 @@ namespace vl {
                 
                 void                InstallDraggingListener(IDraggingListener* listener);
                 void                UninstallDraggingListener(IDraggingListener* listener);
+
+                void                ClosePopups(CocoaWindow* activatedWindow);
+                static void         ClosePopupsOf(CocoaWindow* owner, collections::SortedList<CocoaWindow*>& exceptions);
 
             protected:
                 void                CreateWindow();

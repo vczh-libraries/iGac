@@ -222,21 +222,18 @@ namespace vl {
             void CocoaWindow::SetParent(INativeWindow* parent) 
             {
                 CocoaWindow* cocoaParent = dynamic_cast<CocoaWindow*>(parent);
-                if(!cocoaParent)
+                if(parentWindow)
                 {
-                    if(parentWindow) {
-                        [parentWindow->GetNativeWindow() removeChildWindow:nsWindow];
-                    }
+                    [parentWindow->GetNativeWindow() removeChildWindow:nsWindow];
+                    parentWindow->childWindows.Remove(this);
                 }
-                else
+                if(cocoaParent)
                 {
-                    if(!parentWindow)
-                    {
-                        [cocoaParent->GetNativeWindow() addChildWindow:nsWindow ordered:NSWindowAbove];
-                        
-                        // why prior to 10.10 this will be disabled...
-                        [nsWindow setAcceptsMouseMovedEvents:YES];
-                    }
+                    [cocoaParent->GetNativeWindow() addChildWindow:nsWindow ordered:NSWindowAbove];
+                    cocoaParent->childWindows.Add(this);
+                    
+                    // why prior to 10.10 this will be disabled...
+                    [nsWindow setAcceptsMouseMovedEvents:YES];
                 }
                 parentWindow = cocoaParent;
             }
@@ -668,6 +665,7 @@ namespace vl {
             
             void CocoaWindow::InvokeGotFocus()
             {
+                ClosePopups(this);
                 [nsWindow makeFirstResponder:nsWindow.contentView];
 
                 for(vint i=0; i<listeners.Count(); ++i)
@@ -1020,6 +1018,17 @@ namespace vl {
             {
                 switch([event type])
                 {
+                    case NSEventTypeLeftMouseDown:
+                    case NSEventTypeRightMouseDown:
+                    case NSEventTypeOtherMouseDown:
+                        ClosePopups(this);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch([event type])
+                {
                     case NSEventTypeCursorUpdate:
 //                        SetWindowCursor(currentCursor);
                         break;
@@ -1327,6 +1336,40 @@ namespace vl {
             void CocoaWindow::UninstallDraggingListener(IDraggingListener* listener)
             {
                 draggingListeners.Remove(listener);
+            }
+
+            void CocoaWindow::ClosePopupsOf(CocoaWindow* owner, collections::SortedList<CocoaWindow*>& exceptions)
+            {
+                for (vint i = 0; i < owner->childWindows.Count(); i++)
+                {
+                    auto popup = owner->childWindows[i];
+                    if (popup->windowMode != Normal && popup->IsVisible())
+                    {
+                        if (!exceptions.Contains(popup))
+                        {
+                            popup->Hide(false);
+                        }
+                    }
+                    ClosePopupsOf(popup, exceptions);
+                }
+            }
+
+            void CocoaWindow::ClosePopups(CocoaWindow* activatedWindow)
+            {
+                collections::SortedList<CocoaWindow*> exceptions;
+
+                if (activatedWindow)
+                {
+                    auto current = activatedWindow;
+                    exceptions.Add(current);
+                    while (auto parent = current->parentWindow)
+                    {
+                        current = parent;
+                        exceptions.Add(parent);
+                    }
+                }
+
+                ClosePopupsOnActivation(this, &exceptions);
             }
 
             NativeMargin CocoaWindow::GetCustomFramePadding()

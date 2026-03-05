@@ -133,6 +133,11 @@
     [self createMenu];
 }
 
+- (void)applicationDidResignActive:(NSNotification *)notification
+{
+    vl::presentation::osx::ClosePopupsOnActivation(nullptr, nullptr);
+}
+
 @end
 
 
@@ -354,6 +359,11 @@ namespace vl {
                 {
                     asyncService.ExecuteAsyncTasks();
                 }
+
+                List<CocoaWindow*>& GetWindows()
+                {
+                    return windows;
+                }
             };
 
             CocoaController* cocoaController = nullptr;
@@ -382,6 +392,24 @@ namespace vl {
                 {
                     cocoaController->ExecuteAsyncTasks();
                     cocoaController->InvokeGlobalTimer();
+                }
+            }
+
+            void ClosePopupsOnActivation(CocoaWindow* activatedWindow, SortedList<CocoaWindow*>* exceptions)
+            {
+                if (!cocoaController) return;
+
+                SortedList<CocoaWindow*> emptyExceptions;
+                SortedList<CocoaWindow*>& exRef = exceptions ? *exceptions : emptyExceptions;
+
+                auto& allWindows = cocoaController->GetWindows();
+                for (vint i = 0; i < allWindows.Count(); i++)
+                {
+                    auto window = allWindows[i];
+                    if (window->GetWindowMode() == INativeWindow::Normal)
+                    {
+                        CocoaWindow::ClosePopupsOf(window, exRef);
+                    }
                 }
             }
         }

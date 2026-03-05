@@ -21,6 +21,9 @@ namespace vl {
             extern INativeController*   GetOSXNativeController();
             extern void                 StartOSXNativeController();
             extern void                 StopOSXNativeController();
+
+            class CocoaWindow;
+            extern void                 ClosePopupsOnActivation(CocoaWindow* activatedWindow, collections::SortedList<CocoaWindow*>* exceptions);
             
         }
         
