@@ -107,6 +107,7 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 
 - `GuiInnerShadowElementRenderer` is not implemented yet
 - `GuiFocusRectangleElementRenderer` is not implemented yet
+- `GuiGradientBackgroundElement` does not work with round-rect yet.
 - `CocoaClipboardWriter` and `CocoaClipboardReader` is not implemented yet
 - `CocoaWindow::GetIcon` and `SetIcon` is not implemented yet
 - VKEY mapping is quite big, should be shorter
