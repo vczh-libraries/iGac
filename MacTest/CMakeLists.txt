@@ -3,6 +3,7 @@ project(GacOSXTests)
 
 include_directories("../Release/Import")
 include_directories("../Mac")
+include_directories("../MacShared")
 
 include_directories(${DEPENDENCIES_INCLUDE_DIRS})
 link_directories(${DEPENDENCIES_LIBRARY_DIRS})
@@ -21,47 +22,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 
-set(GACUI_COMMON_FILES
-	"../Release/Import/Vlpp.cpp"
-	"../Release/Import/Vlpp.Linux.cpp"
-	"../Release/Import/VlppOS.cpp"
-	"../Release/Import/VlppOS.Linux.cpp"
-	"../Release/Import/VlppRegex.cpp"
-	"../Release/Import/VlppReflection.cpp"
-	"../Release/Import/VlppGlrParser.cpp"
-	"../Release/Import/VlppWorkflowLibrary.cpp"
-	"../Release/Import/GacUI.cpp"
-	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
-)
-
-set(GACOSX_FILES
-	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm"
-	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphicsRenderers.mm"
-	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsLayoutProviderCoreText.mm"
-	"../Mac/NativeWindow/OSX/CocoaBaseView.mm"
-	"../Mac/NativeWindow/OSX/CocoaHelper.mm"
-	"../Mac/NativeWindow/OSX/CocoaIntrospection.mm"
-	"../Mac/NativeWindow/OSX/CocoaNativeController.mm"
-	"../Mac/NativeWindow/OSX/CocoaWindow.mm"
-	"../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaClipboardService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaDialogService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaImageService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaInputService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaResourceService.mm"
-	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaScreenService.mm"
-)
-
-add_library(GacUI STATIC ${GACUI_COMMON_FILES})
-add_library(GacOSX STATIC ${GACOSX_FILES})
-
 set(DEPENDENCIES_LIBRARIES ${DEPENDENCIES_LIBRARIES} ${OS_LIBRARIES})
-set(GACUI_LIBRARIES "GacUI" "GacOSX")
-
-set(GACOSX_TESTS_COMMON_FILES
-	"shared/osx_shared.mm"
-	"shared/UnixFileSystemInfo.cpp"
-)
+set(GACUI_LIBRARIES "GacUI" "GacOSX" "GacOSXShared")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
@@ -80,7 +42,7 @@ set(TESTAPP_SOURCE_FILES
 	"HelloWorlds/Cpp/Main.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
-add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${SHARED_RESOURCES})
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} 
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )

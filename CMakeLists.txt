@@ -3,5 +3,6 @@ project(GacOSX)
 
 set(CMAKE_CXX_STANDARD 23)
 
+add_subdirectory(MacShared)
 add_subdirectory(MacTest)
 add_subdirectory(MacFullControlTest)

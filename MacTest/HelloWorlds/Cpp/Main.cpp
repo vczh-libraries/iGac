@@ -1,5 +1,5 @@
-#include "../../shared/osx_shared.h"
-#include "../../shared/gac_include.h"
+#include "osx_shared.h"
+#include "gac_include.h"
 
 int main(int argc, const char * argv[])
 {

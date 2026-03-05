@@ -1,5 +1,5 @@
-#include "../MacTest/shared/osx_shared.h"
-#include "../MacTest/shared/gac_include.h"
+#include "osx_shared.h"
+#include "gac_include.h"
 #include "UI/FullControlTest/Source/Demo.h"
 
 using namespace vl;

@@ -3,6 +3,7 @@ project(MacFullControlTest)
 
 include_directories("../Release/Import")
 include_directories("../Mac")
+include_directories("../MacShared")
 
 set(OS_LIBRARIES "pthread")
 find_library(COREFOUNDATION_LIBRARIES CoreFoundation)
@@ -20,13 +21,8 @@ add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 
 set(DEPENDENCIES_LIBRARIES ${DEPENDENCIES_LIBRARIES} ${OS_LIBRARIES})
 
-# Reuse GacUI and GacOSX libraries built by MacTest
-set(GACUI_LIBRARIES "GacUI" "GacOSX")
-
-set(GACOSX_TESTS_COMMON_FILES
-	"../MacTest/shared/osx_shared.mm"
-	"../MacTest/shared/UnixFileSystemInfo.cpp"
-)
+# Reuse libraries built by MacShared
+set(GACUI_LIBRARIES "GacUI" "GacOSX" "GacOSXShared")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
@@ -45,7 +41,7 @@ set(TESTAPP_SOURCE_FILES
 	"UI/FullControlTest/Source/MainWindow.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
-add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${GACOSX_TESTS_COMMON_FILES} ${SHARED_RESOURCES})
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${SHARED_RESOURCES})
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties(${APP_NAME} PROPERTIES
 	MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE}
