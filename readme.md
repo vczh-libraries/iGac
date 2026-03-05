@@ -101,7 +101,8 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 - Global keyboard hook requires Accessibility privilege
 - `AsyncService::Semaphore::WaitForTime` not fully implemented
 - `IGuiGraphicsParagraph` (document/rich text layout) not fully working yet
-
+- Hosted Mode
+  - Open file dialog crashes.
 
 ### TODO
 
