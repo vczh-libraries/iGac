@@ -61,6 +61,9 @@ namespace vl {
                 resizing(false),
                 moving(false),
                 opened(false),
+                hasBorder(true),
+                hasSizeBox(true),
+                hasMinimizedBox(true),
                 resizingBorder(INativeWindowListener::NoDecision),
                 windowMode(_windowMode),
                 nsWindow(0),
@@ -247,12 +250,14 @@ namespace vl {
             {
                 customFrameMode = true;
                 [nsWindow setMovableByWindowBackground:YES];
+                UpdateStyleMask();
             }
 
             void CocoaWindow::DisableCustomFrameMode() 
             {
                 customFrameMode = false;
                 [nsWindow setMovableByWindowBackground:NO];
+                UpdateStyleMask();
             }
 
             bool CocoaWindow::IsCustomFrameModeEnabled() 
@@ -463,7 +468,7 @@ namespace vl {
                 if(visible)
                     behavior |= NSWindowCollectionBehaviorFullScreenPrimary;
                 else
-                    behavior ^= NSWindowCollectionBehaviorFullScreenPrimary;
+                    behavior &= ~NSWindowCollectionBehaviorFullScreenPrimary;
                 [nsWindow setCollectionBehavior:behavior];
                 
                 [[nsWindow standardWindowButton:NSWindowZoomButton] setHidden:!visible];
@@ -471,52 +476,36 @@ namespace vl {
 
             bool CocoaWindow::GetMinimizedBox() 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                return styleMask & NSWindowStyleMaskMiniaturizable;
+                return hasMinimizedBox;
             }
 
             void CocoaWindow::SetMinimizedBox(bool visible) 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                if(visible)
-                    styleMask |= NSWindowStyleMaskMiniaturizable;
-                else
-                    styleMask ^= NSWindowStyleMaskMiniaturizable;
-                [nsWindow setStyleMask:styleMask];
-                
+                hasMinimizedBox = visible;
+                UpdateStyleMask();
                 [[nsWindow standardWindowButton:NSWindowMiniaturizeButton] setHidden:!visible];
             }
 
             bool CocoaWindow::GetBorder() 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                return !(styleMask & NSWindowStyleMaskBorderless);
+                return hasBorder;
             }
 
             void CocoaWindow::SetBorder(bool visible) 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                if(visible)
-                    styleMask ^= NSWindowStyleMaskBorderless;
-                else 
-                    styleMask = NSWindowStyleMaskBorderless;
-                [nsWindow setStyleMask:styleMask];
+                hasBorder = visible;
+                UpdateStyleMask();
             }
 
             bool CocoaWindow::GetSizeBox() 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                return styleMask & NSWindowStyleMaskResizable;
+                return hasSizeBox;
             }
 
             void CocoaWindow::SetSizeBox(bool visible) 
             {
-                NSWindowStyleMask styleMask = [nsWindow styleMask];
-                if(visible)
-                    styleMask |= NSWindowStyleMaskResizable;
-                else
-                    styleMask ^= NSWindowStyleMaskResizable;
-                [nsWindow setStyleMask:styleMask];
+                hasSizeBox = visible;
+                UpdateStyleMask();
             }
 
             bool CocoaWindow::GetIconVisible() 
@@ -532,12 +521,14 @@ namespace vl {
 
             bool CocoaWindow::GetTitleBar() 
             {
-                return GetBorder();
+                return hasBorder;
             }
 
             void CocoaWindow::SetTitleBar(bool visible) 
             {
-                SetBorder(visible);
+                // On macOS, title bar visibility is tied to the border/titled state
+                hasBorder = visible;
+                UpdateStyleMask();
             }
 
             bool CocoaWindow::GetTopMost() 
@@ -605,6 +596,30 @@ namespace vl {
             Interface* CocoaWindow::GetGraphicsHandler() const
             {
                 return graphicsHandler;
+            }
+
+            void CocoaWindow::UpdateStyleMask()
+            {
+                NSWindowStyleMask styleMask = 0;
+                if (customFrameMode)
+                {
+                    // Custom frame: borderless window, GacUI draws the frame
+                    // Keep resizable if requested so the OS still handles edge resize
+                    styleMask = NSWindowStyleMaskBorderless;
+                    if (hasSizeBox)
+                        styleMask |= NSWindowStyleMaskResizable;
+                }
+                else
+                {
+                    // System frame: use native window decorations
+                    if (hasBorder)
+                        styleMask |= NSWindowStyleMaskTitled | NSWindowStyleMaskClosable;
+                    if (hasMinimizedBox)
+                        styleMask |= NSWindowStyleMaskMiniaturizable;
+                    if (hasSizeBox)
+                        styleMask |= NSWindowStyleMaskResizable;
+                }
+                [nsWindow setStyleMask:styleMask];
             }
             
             void CocoaWindow::InvokeMoved()

@@ -45,6 +45,9 @@ namespace vl {
                 bool                                            resizing;
                 bool                                            moving;
                 bool                                            opened;
+                bool                                            hasBorder;
+                bool                                            hasSizeBox;
+                bool                                            hasMinimizedBox;
                 INativeWindowListener::HitTestResult            resizingBorder;
                 
                 NativeRect                                      lastBorder;
@@ -68,6 +71,7 @@ namespace vl {
                 
                 void                SetGraphicsHandler(Interface* handelr);
                 Interface*          GetGraphicsHandler() const;
+                void                UpdateStyleMask();
                 
                 // INativeWindow
                 
