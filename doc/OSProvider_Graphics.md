@@ -30,6 +30,8 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 
 ### Per-Window Lifecycle
 
+`CoreGraphicsCocoaNativeControllerListener` and `CoreGraphicsResourceManager` are installed as listeners on the **native** controller's callback service (not the hosted controller's). This is critical: in hosted mode, `GuiHostedController` fires `NativeWindowCreated` for virtual `GuiHostedWindow` objects that are not real `CocoaWindow`s. Attempting to create `CoreGraphicsRenderTarget` for a virtual window would crash.
+
 `CoreGraphicsCocoaNativeControllerListener` listens for `NativeWindowCreated` and `NativeWindowDestroying` callbacks. On creation, it installs a `CoreGraphicsCocoaNativeWindowListener` on the window, which:
 - Creates the `CoreGraphicsView` and sets it as the window's content view
 - Manages layer rebuild on window resize
