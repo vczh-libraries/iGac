@@ -144,7 +144,6 @@ namespace vl {
 
                 [nsWindow setFrame:nsbounds display:YES];
                 previousBounds = GetBounds();
-                Show();
             }
 
             NativeSize CocoaWindow::GetClientSize()
@@ -535,12 +534,12 @@ namespace vl {
 
             bool CocoaWindow::GetTopMost() 
             {
-                return [nsWindow isKeyWindow];
+                return [nsWindow level] > NSNormalWindowLevel;
             }
 
             void CocoaWindow::SetTopMost(bool topmost) 
             {
-                [nsWindow makeKeyAndOrderFront:nil];
+                [nsWindow setLevel:topmost ? NSPopUpMenuWindowLevel : NSNormalWindowLevel];
             }
 
             void CocoaWindow::SupressAlt()
