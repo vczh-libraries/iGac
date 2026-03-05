@@ -235,6 +235,7 @@ namespace vl {
                 vint									caretPos;
                 Color									caretColor;
                 bool									caretFrontSide;
+                bool                                    caretVisible;
                 
                 Alignment                               textAlignment;
                 
@@ -261,6 +262,7 @@ namespace vl {
                     maxWidth(-1),
                     caretPos(-1),
                     caretFrontSide(false),
+                    caretVisible(false),
                     textAlignment(Alignment::Left),
                     paraCallback(_callback)
                 {
@@ -651,24 +653,30 @@ namespace vl {
                     return Size(size.width, size.height);
                 }
                 
-                bool OpenCaret(vint _caret, Color _color, bool _frontSide) override
+                bool EnableCaret(vint _caret, Color _color, bool _frontSide) override
                 {
                     if(!IsValidCaret(_caret))
                         return false;
                     if(caretPos != -1)
-                        CloseCaret();
+                        DisableCaret();
 
                     caretPos = _caret;
                     caretColor = _color;
                     caretFrontSide = _frontSide;
+                    caretVisible = true;
                     return true;
                 }
                 
-                bool CloseCaret() override
+                void DisableCaret() override
                 {
-                    if(caretPos == -1)
-                        return false;
+                    caretVisible = false;
                     caretPos = -1;
+                }
+
+                bool BlinkCaret() override
+                {
+                    if (caretPos == -1) return false;
+                    caretVisible = !caretVisible;
                     return true;
                 }
                 
