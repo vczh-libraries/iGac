@@ -99,6 +99,9 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 
 ### TODO
 
+- `GuiInnerShadowElementRenderer` is not implemented yet
+- `GuiFocusRectangleElementRenderer` is not implemented yet
+- `CocoaClipboardWriter` and `CocoaClipboardReader` is not implemented yet
+- `CocoaWindow::GetIcon` and `SetIcon` is not implemented yet
+- VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
-- Implement `CocoaWindow::GetIcon` / `SetIcon`
-- Improve VKEY mapping coverage
