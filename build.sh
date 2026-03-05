@@ -5,8 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 cd "$SCRIPT_DIR"
 
-# Clean everything
-git clean -xdf
+if [[ "$1" == "--rebuild" ]]; then
+    # Clean everything
+    git clean -xdf
+fi
 
 # Copy required source files for MacFullControlTest
 ./testFC_Update.sh
