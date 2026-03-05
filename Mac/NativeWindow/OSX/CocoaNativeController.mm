@@ -347,8 +347,12 @@ namespace vl {
                 
                 void InvokeGlobalTimer()
                 {
-                    asyncService.ExecuteAsyncTasks();
                     callbackService.InvokeGlobalTimer();
+                }
+
+                void ExecuteAsyncTasks()
+                {
+                    asyncService.ExecuteAsyncTasks();
                 }
             };
 
@@ -376,6 +380,7 @@ namespace vl {
             {
                 if (cocoaController)
                 {
+                    cocoaController->ExecuteAsyncTasks();
                     cocoaController->InvokeGlobalTimer();
                 }
             }
