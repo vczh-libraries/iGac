@@ -44,6 +44,8 @@ namespace vl {
     namespace presentation {
         
         namespace osx {
+
+            static bool suppressClosePopups = false;
             
             CocoaWindow::CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode):
                 cocoaController(_cocoaController),
@@ -89,7 +91,6 @@ namespace vl {
                                                                       backing:NSBackingStoreBuffered
                                                                         defer:YES];
                 NSWindowController* controller = [[NSWindowController alloc] initWithWindow:window];
-                [window orderFrontRegardless];
                 
                 [window setAcceptsMouseMovedEvents:YES];
                 
@@ -229,7 +230,9 @@ namespace vl {
                 }
                 if(cocoaParent)
                 {
+                    suppressClosePopups = true;
                     [cocoaParent->GetNativeWindow() addChildWindow:nsWindow ordered:NSWindowAbove];
+                    suppressClosePopups = false;
                     cocoaParent->childWindows.Add(this);
                     
                     // why prior to 10.10 this will be disabled...
@@ -291,8 +294,10 @@ namespace vl {
 
             void CocoaWindow::ShowDeactivated() 
             {
+                suppressClosePopups = true;
                 [nsWindow orderFront:nil];
                 [nsWindow makeFirstResponder:nsWindow.contentView];
+                suppressClosePopups = false;
 
                 if(!opened)
                 {
@@ -357,7 +362,7 @@ namespace vl {
 
             bool CocoaWindow::IsVisible()
             {
-                return [nsWindow isVisible] && [nsWindow frame].size.width > 0;
+                return [nsWindow isVisible];
             }
 
             void CocoaWindow::Enable() 
@@ -665,7 +670,10 @@ namespace vl {
             
             void CocoaWindow::InvokeGotFocus()
             {
-                ClosePopups(this);
+                if (!suppressClosePopups)
+                {
+                    ClosePopups(this);
+                }
                 [nsWindow makeFirstResponder:nsWindow.contentView];
 
                 for(vint i=0; i<listeners.Count(); ++i)
@@ -1356,6 +1364,7 @@ namespace vl {
 
             void CocoaWindow::ClosePopups(CocoaWindow* activatedWindow)
             {
+                if (suppressClosePopups) return;
                 collections::SortedList<CocoaWindow*> exceptions;
 
                 if (activatedWindow)
