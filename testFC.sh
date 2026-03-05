@@ -3,12 +3,11 @@
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-APP="$SCRIPT_DIR/build/MacTest/bin/Test_HellWorld_Cpp.app/Contents/MacOS/Test_HellWorld_Cpp"
+APP="$SCRIPT_DIR/build/MacFullControlTest/bin/Test_FullControlTest.app/Contents/MacOS/Test_FullControlTest"
 
 if [[ "$1" == "--unblock" ]]; then
     "$APP" &
     echo $!
 else
-    # Run the output binary
     "$APP"
 fi
