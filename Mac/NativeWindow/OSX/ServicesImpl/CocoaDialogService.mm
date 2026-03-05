@@ -580,7 +580,9 @@ namespace vl {
                 NSColorPanel* colorPanel = [NSColorPanel sharedColorPanel];
                 StopInterceptNSPanel();
                 
-                WindowCloseOpenDelegate* cpDelegate = [[WindowCloseOpenDelegate alloc] init];
+                WindowCloseOpenDelegate* cpDelegate = [[WindowCloseOpenDelegate alloc] initWithPanel:colorPanel
+                                                                                       contentView:[colorPanel contentView]
+                                                                                         topMargin:4];
                 WindowCloseDelegate* fpDelegate = [[WindowCloseDelegate alloc] initWithPanel:fontPanel
                                                                                  contentView:[fontPanel contentView]
                                                                                    topMargin:4];
@@ -594,13 +596,11 @@ namespace vl {
                     [fontPanel setPanelFont:defaultFont isMultiple:NO];
                 }
                 
-                // from wxWidgets
-                
-                // force modal dialog
-                // here we need both font and color dialog because the font dialog may open a color dialog
-            
-                // if a color dialog is opened, we exit font modal loop and enter color loop
-                // until the color panel is closed
+                // Force modal dialog.
+                // The font panel may open a color panel via its color button.
+                // We run a modal session on the font panel, and if the color panel opens,
+                // we switch to a modal session on the color panel until it closes.
+                // When the font panel closes (OK/Cancel), we also force-close the color panel.
                 
                 do
                 {
@@ -617,6 +617,13 @@ namespace vl {
                     
                     [NSApp endModalSession:session];
                     
+                    // If the font panel was closed, also close the color panel if it's open
+                    if([fpDelegate isClosed] && [cpDelegate isOpen] && ![cpDelegate isClosed])
+                    {
+                        [colorPanel close];
+                        break;
+                    }
+                    
                     // if the color dialog is opened
                     if([cpDelegate isOpen])
                     {
@@ -625,7 +632,7 @@ namespace vl {
                         {
                             [NSApp runModalSession:session];
                             
-                            if([cpDelegate isClosed])
+                            if([cpDelegate isClosed] || [fpDelegate isClosed])
                                 break;
                         }
                         

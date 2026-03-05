@@ -252,7 +252,20 @@ namespace vl {
 
                 bool RunOneCycle() override
                 {
-                    CHECK_FAIL(L"Not Implemented!");
+                    // Process one event from the event queue (blocks until an event arrives,
+                    // matching Windows' GetMessage behavior). GCD timers dispatched to the
+                    // main queue will fire during this call as run loop sources.
+                    NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
+                                                        untilDate:[NSDate distantFuture]
+                                                           inMode:NSDefaultRunLoopMode
+                                                          dequeue:YES];
+                    if (event != nil)
+                    {
+                        [NSApp sendEvent:event];
+                        [NSApp updateWindows];
+                    }
+                    asyncService.ExecuteAsyncTasks();
+                    return mainWindow != nullptr;
                 }
                 
                 INativeWindow* GetWindow(NativePoint location) override

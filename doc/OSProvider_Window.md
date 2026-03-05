@@ -146,3 +146,73 @@ These are currently no-ops on macOS. On Windows, `DisableActivate` sets `WS_EX_N
 | Window creation | Window starts hidden until `ShowWindow` | Window starts hidden (not ordered). Only becomes visible on `Show()` / `ShowDeactivated()`. |
 | Popup close trigger | `WM_ACTIVATEAPP` + mouse messages | `windowDidBecomeKey:` → `InvokeGotFocus()`, mouse-down in `HandleEventInternal`, `applicationDidResignActive:` |
 | Render loop gate | `IsWindowVisible(handle)` — true for 0×0 windows | `[nsWindow isVisible]` — true for 0×0 windows (they are ordered on screen). The render loop must be able to run for 0×0 popup windows to compute their content size. |
+| Event loop | `GetMessage` / `TranslateMessage` / `DispatchMessage` | `[NSApp run]` for main loop; `nextEventMatchingMask:` + `sendEvent:` for `RunOneCycle`. |
+| Modal windows | Framework-level. `RunOneCycle` pumps messages in a loop. | Framework-level. `RunOneCycle` pumps events via `nextEventMatchingMask:`. |
+
+## RunOneCycle and Modal Windows
+
+**File:** `Mac/NativeWindow/OSX/CocoaNativeController.mm`
+
+### Overview
+
+GacUI modal windows (`ShowModal` / `ShowModalAsync`) are entirely framework-level — they do not use native modal APIs. Instead, the framework:
+
+1. Disables the owner window
+2. Shows the modal dialog
+3. Spins a mini event loop: `while (!exit && app->RunOneCycle())`
+4. When the dialog closes, the callback fires, re-enables the owner, and the loop exits
+
+This requires `RunOneCycle()` to process OS events and return, just like a single iteration of the main event loop.
+
+### Windows Implementation (Reference)
+
+```cpp
+inline bool RunOneCycleInternal() {
+    MSG message;
+    if (!GetMessage(&message, NULL, 0, 0)) return false;  // blocks until a message arrives
+    TranslateMessage(&message);
+    DispatchMessage(&message);
+    asyncService.ExecuteAsyncTasks();
+    return true;
+}
+```
+
+`GetMessage` **blocks** until a message is available, processes exactly one message, runs async tasks, then returns. Returns `false` on `WM_QUIT`.
+
+### macOS Implementation
+
+```objc
+bool RunOneCycle() override {
+    NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
+                                        untilDate:[NSDate distantFuture]
+                                           inMode:NSDefaultRunLoopMode
+                                          dequeue:YES];
+    if (event != nil) {
+        [NSApp sendEvent:event];
+        [NSApp updateWindows];
+    }
+    asyncService.ExecuteAsyncTasks();
+    return mainWindow != nullptr;
+}
+```
+
+Key design decisions:
+
+- **`[NSDate distantFuture]`** makes `nextEventMatchingMask:` block until an event arrives, matching Windows' `GetMessage` behavior. `[NSDate distantPast]` would poll without blocking and cause 100% CPU usage.
+- **GCD timers still fire** during `nextEventMatchingMask:` because `dispatch_after` on the main queue is processed as a run loop source in `NSDefaultRunLoopMode`. The 16ms timer from `CocoaInputService` continues to work.
+- **Return value**: Returns `false` when `mainWindow` is `nullptr` (set when `DestroyNativeWindow` destroys the main window), signaling the app is shutting down.
+- **Nested event pumping**: `RunOneCycle` is called from within `[NSApp run]`'s event loop (since modal dialogs are triggered by user actions processed by `[NSApp run]`). This creates a nested run loop, which is standard practice on macOS — the same pattern is used by `NSModalSession`.
+- **`[NSApp updateWindows]`** is called after dispatching the event to ensure window display updates happen synchronously, matching the behavior of `[NSApp run]`'s internal loop.
+
+### Interaction with `[NSApp run]`
+
+The main event loop uses `[NSApp run]`:
+```objc
+void Run(INativeWindow* window) override {
+    mainWindow = window;
+    mainWindow->Show();
+    [NSApp run];
+}
+```
+
+When a modal dialog is shown during `[NSApp run]`, `RunOneCycle` creates a nested event pump inside the `[NSApp run]` call stack. When `DestroyNativeWindow` is called for the main window, it calls `[NSApp stop:nil]` which causes `[NSApp run]` to exit after the current event cycle completes.

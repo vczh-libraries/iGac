@@ -911,6 +911,8 @@ namespace vl {
                     GetLineIndexFromTextPos(caret, frontLineIndex, backLineIndex);
                     vint lineIndex = frontSide ? frontLineIndex : backLineIndex;
                     
+                    if(lineIndex == -1) return Rect(Point(0, 0), Size(0, GetSize().y));
+                    
                     BoundingMetrics& lineMetrics = lineFragments[lineIndex];
                     
                     vint lineStart = lineMetrics.textPosition;
@@ -1114,9 +1116,28 @@ namespace vl {
                             NSRect lineFragmentRect = [layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex
                                                                                       effectiveRange:&lineFragmentRange];
 
-                            vl::regex::Regex regexLine(L"\r\n$");
-                            if (regexLine.Match(paragraphText)) {
-                                lineFragmentRange.length -= 2;
+                            // Determine newline length at end of this line fragment
+                            // (matching D2D's DWRITE_LINE_METRICS::newlineLength behavior)
+                            NSUInteger fullLength = lineFragmentRange.length;
+                            if (lineFragmentRange.length > 0)
+                            {
+                                NSUInteger lastGlyph = lineFragmentRange.location + lineFragmentRange.length - 1;
+                                NSUInteger lastChar = [layoutManager characterIndexForGlyphAtIndex:lastGlyph];
+                                if (lastChar < (NSUInteger)paragraphText.Length())
+                                {
+                                    if (paragraphText[lastChar] == L'\n')
+                                    {
+                                        lineFragmentRange.length--;
+                                        if (lastChar > 0 && paragraphText[lastChar - 1] == L'\r' && lineFragmentRange.length > 0)
+                                        {
+                                            lineFragmentRange.length--;
+                                        }
+                                    }
+                                    else if (paragraphText[lastChar] == L'\r')
+                                    {
+                                        lineFragmentRange.length--;
+                                    }
+                                }
                             }
                             metrics.push_back(BoundingMetrics(lineFragmentRange.location,
                                                               lineFragmentRange.length,
@@ -1134,7 +1155,7 @@ namespace vl {
                                 charLineFragmentsMap.Set(charIndex, metrics.size()-1);
                             }
                             
-                            glyphIndex += lineFragmentRange.length;
+                            glyphIndex += fullLength;
                             
                         }
                         lineFragments.Resize(metrics.size());
@@ -1148,6 +1169,16 @@ namespace vl {
                 vint GetLineIndexFromY(vint y)
                 {
                     if(paragraphText.Length() == 0) return 0;
+                    if(lineFragments.Count() == 0) return 0;
+                    if(y < lineFragments[0].boundingRect.Top())
+                    {
+                        return 0;
+                    }
+                    const BoundingMetrics& lastLine = lineFragments[lineFragments.Count()-1];
+                    if(y >= lastLine.boundingRect.Bottom())
+                    {
+                        return lineFragments.Count()-1;
+                    }
                     for(vint i=0; i<lineFragments.Count(); ++i)
                     {
                         const BoundingMetrics& metrics = lineFragments[i];
@@ -1157,7 +1188,7 @@ namespace vl {
                             return i;
                         }
                     }
-                    return -1;
+                    return 0;
                 }
                 
                 vint GetCaretFromXWithLine(vint x, vint lineIndex)
