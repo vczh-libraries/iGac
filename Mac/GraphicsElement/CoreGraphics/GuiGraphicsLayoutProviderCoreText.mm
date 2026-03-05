@@ -942,6 +942,7 @@ namespace vl {
                 vint GetCaretFromPoint(Point point) override
                 {
                     GenerateFormatData();
+                    if(paragraphText.Length() == 0) return 0;
                     
                     vint lineIndex = GetLineIndexFromY(point.y);
                     return GetCaretFromXWithLine(point.x, lineIndex);
@@ -1146,6 +1147,7 @@ namespace vl {
                 
                 vint GetLineIndexFromY(vint y)
                 {
+                    if(paragraphText.Length() == 0) return 0;
                     for(vint i=0; i<lineFragments.Count(); ++i)
                     {
                         const BoundingMetrics& metrics = lineFragments[i];
