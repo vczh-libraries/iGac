@@ -1,28 +1,104 @@
-#### OSX implementation w CoreGraphics/Quartz2D for [GacLib](http://www.gaclib.net)
+# iGac — macOS Port of GacUI
 
-[![Build Status](https://travis-ci.org/vczh-libraries/iGac.svg?branch=master)](https://travis-ci.org/vczh-libraries/iGac)
+macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraphics/Quartz2D.
 
-![GacOSX](https://darkfall.me/resource/gac_osx.jpg)
-
-##### License
+## License
 
 **Read the [LICENSE](https://github.com/vczh-libraries/iGac/blob/master/LICENSE.md) first.**
 
-##### Current Progress:
-* Finalizing & Bug fixes
+## Project Structure
 
-##### iOS
-* iOS proof of concept implementation is in iOS branch, which may not be updated / synced with the main branch as its just something for fun.
+```
+iGac/
+├── Mac/                        macOS platform implementation
+│   ├── NativeWindow/OSX/       Cocoa windowing (controller, window, view, input)
+│   │   ├── ServicesImpl/       Service implementations (screen, clipboard, dialog, ...)
+│   │   └── CoreGraphics/       CoreGraphics app entry point
+│   └── GraphicsElement/
+│       └── CoreGraphics/       CoreGraphics rendering engine (renderers, layout, resource manager)
+│
+├── MacShared/                  Shared static libraries and test utilities
+│   ├── CMakeLists.txt          Builds GacUI, GacOSX, GacOSXShared static libraries
+│   ├── gac_include.h           Convenience header: includes GacUI, registers DarkSkin theme
+│   ├── osx_shared.h/mm         OS X helpers (string conversion, file utils, resource folder)
+│   └── UnixFileSystemInfo.*    Cross-platform file system utilities
+│
+├── MacTest/                    Simple test app (Hello World)
+│   ├── CMakeLists.txt
+│   └── HelloWorlds/Cpp/Main.cpp
+│
+├── MacFullControlTest/         Full-featured test app using BlackSkin control template
+│   ├── CMakeLists.txt
+│   ├── Main.mm
+│   └── UI/FullControlTest/     Generated UI source files (copied by testFC_Update.sh)
+│
+├── Release/                    Git submodule: GacUI release imports, tools, tutorials
+│   ├── Import/                 Amalgamated GacUI source files (Vlpp, GacUI, Workflow, ...)
+│   ├── Tutorial/               Tutorial projects and resources
+│   └── Tools/                  Build tools and scripts
+│
+├── doc/                        Documentation
+│   └── OSProvider.md           macOS OS provider implementation details
+│
+├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
+├── build.sh                    Build script (incremental by default, --rebuild for clean)
+├── test.sh                     Run MacTest Hello World app (--unblock for background)
+├── testFC.sh                   Run MacFullControlTest app (--unblock for background)
+└── testFC_Update.sh            Copy BlackSkin UI sources from Release/Tutorial to MacFullControlTest
+```
 
-##### Known Issues/Limiations:
-* Global keyboard hook requires Accessibility priviledge
-* AsyncService::Semaphore::WaitForTime
-* Code is compiled under VCZH_DEBUG_NO_REFLECTION, if u need Reflection, remember to remove VCZH_DEBUG_NO_REFLECTION in CMakeLists.txt and add all of Reflection cpp files.
+## Building
 
-##### TODO
-* GuiInnerShadowElementRenderer is not implemented yet
-* GuiFocusRectangleElementRenderer is not implemented yet
-* CocoaClipboardWriter and CocoaClipboardReader is not implemented yet
-* CocoaWindow's GetIcon and SetIcon is not implemented yet
-* VKEYS mapping is quite big, should be shotter
-* Replace cglayer with metal
+```bash
+./build.sh              # Incremental build
+./build.sh --rebuild    # Clean build (git clean -xdf + full rebuild)
+```
+
+Build output goes to `build/`. The build system uses CMake with C++23.
+
+### Static Libraries (built by MacShared/CMakeLists.txt)
+
+- **GacUI** — Core GacUI amalgamated sources (Vlpp, VlppOS, VlppRegex, VlppReflection, VlppGlrParser, VlppWorkflowLibrary, GacUI, DarkSkin)
+- **GacOSX** — All macOS platform code (Cocoa windowing, CoreGraphics rendering, services)
+- **GacOSXShared** — Shared test helpers (osx_shared, UnixFileSystemInfo)
+
+Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remove this define from `MacShared/CMakeLists.txt` and add all reflection `.cpp` files.
+
+## Running
+
+```bash
+./test.sh               # Run Hello World test
+./test.sh --unblock     # Run in background, prints PID
+
+./testFC.sh             # Run Full Control Test (BlackSkin)
+./testFC.sh --unblock   # Run in background, prints PID
+```
+
+### Updating MacFullControlTest Sources
+
+```bash
+./testFC_Update.sh
+```
+
+Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/BlackSkin/` to `MacFullControlTest/UI/`, excluding reflection files. Also copies `BlackSkin.bin` resource.
+
+## Documentation
+
+- [doc/OSProvider.md](doc/OSProvider.md) — How GacUI's platform abstraction interfaces (INativeController, INativeWindow, graphics resource manager) are implemented on macOS.
+
+## Current Status
+
+Work in progress: porting and stabilizing GacUI controls on macOS.
+
+### Known Issues / Limitations
+
+- Global keyboard hook requires Accessibility privilege
+- `AsyncService::Semaphore::WaitForTime` not fully implemented
+- `IGuiGraphicsParagraph` (document/rich text layout) not fully working yet
+- Hosted window mode not implemented yet
+
+### TODO
+
+- Replace CGLayer with Metal for rendering
+- Implement `CocoaWindow::GetIcon` / `SetIcon`
+- Improve VKEY mapping coverage
