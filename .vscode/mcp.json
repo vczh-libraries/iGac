@@ -1,0 +1,10 @@
+{
+    "inputs": [],
+    "servers": {
+        "lldb": {
+            "type": "stdio",
+            "command": "/Users/vczh/.local/bin/lldb-mcp",
+            "args": []
+        }
+    }
+}

@@ -11,6 +11,10 @@
 
 Read them thoroughly. Most macOS porting bugs come from behavioral differences between Win32 and Cocoa that are documented there.
 
+**Debugging reference:**
+
+6. **[doc/lldb.md](doc/lldb.md)** — LLDB MCP server setup, debugging workflow, graceful app termination, and known MCP limitations.
+
 **Critical reference — GacUI Knowledge Base:**
 
 5. **[Release/.github/KnowledgeBase/Index.md](Release/.github/KnowledgeBase/Index.md)** — The master index for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
