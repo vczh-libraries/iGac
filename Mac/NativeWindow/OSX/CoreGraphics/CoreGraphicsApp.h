@@ -9,9 +9,9 @@
 #ifndef __GAC_OSX_CORE_GRAPHICS_APP_H__
 #define __GAC_OSX_CORE_GRAPHICS_APP_H__
 
-namespace vl { namespace presentation { class GuiHostedController; } }
+namespace vl { namespace presentation { class GuiHostedController; class INativeController; } }
 
-extern void CoreGraphicsMain(vl::presentation::GuiHostedController* hostedController = nullptr);
+extern void CoreGraphicsMain(vl::presentation::INativeController* nativeController, vl::presentation::GuiHostedController* hostedController = nullptr);
 
 int SetupOSXCoreGraphicsRenderer();
 int SetupOSXHostedCoreGraphicsRenderer();

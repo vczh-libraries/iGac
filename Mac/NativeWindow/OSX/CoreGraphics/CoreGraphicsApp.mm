@@ -20,10 +20,11 @@ using namespace vl::presentation::osx;
 int SetupOSXCoreGraphicsRenderer()
 {
     StartOSXNativeController();
-    SetNativeController(GetOSXNativeController());
+    auto nativeController = GetOSXNativeController();
+    SetNativeController(nativeController);
     
     {
-        CoreGraphicsMain();
+        CoreGraphicsMain(nativeController);
     }
     
     StopOSXNativeController();
@@ -40,7 +41,7 @@ int SetupOSXHostedCoreGraphicsRenderer()
     SetHostedApplication(hostedController->GetHostedApplication());
 
     {
-        CoreGraphicsMain(hostedController);
+        CoreGraphicsMain(nativeController, hostedController);
     }
 
     SetNativeController(nullptr);

@@ -560,16 +560,18 @@ namespace vl {
 using namespace vl::presentation::osx;
 using namespace vl::presentation::elements_coregraphics;
 
-void CoreGraphicsMain(GuiHostedController* hostedController)
+void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* hostedController)
 {
-    // actually this has to init before ResourceManager
-    // as we need to create underlying views first
+    // Listeners must be installed on the native controller's callback service,
+    // not the hosted controller's. In hosted mode, GuiHostedController fires
+    // NativeWindowCreated for virtual GuiHostedWindow objects, which are not
+    // real CocoaWindows and cannot be used to create CoreGraphicsRenderTargets.
     g_cocoaListener = new CoreGraphicsCocoaNativeControllerListener();
-    GetCurrentController()->CallbackService()->InstallListener(g_cocoaListener);
+    nativeController->CallbackService()->InstallListener(g_cocoaListener);
     
     CoreGraphicsResourceManager resourceManager;
     SetCoreGraphicsResourceManager(&resourceManager);
-    GetCurrentController()->CallbackService()->InstallListener(&resourceManager);
+    nativeController->CallbackService()->InstallListener(&resourceManager);
     
     // Wrap resource manager for hosted mode
     elements::GuiHostedGraphicsResourceManager* hostedResourceManager = nullptr;
@@ -607,7 +609,7 @@ void CoreGraphicsMain(GuiHostedController* hostedController)
     SetGuiGraphicsResourceManager(nullptr);
     if (hostedResourceManager) delete hostedResourceManager;
     
-    GetCurrentController()->CallbackService()->UninstallListener(g_cocoaListener);
+    nativeController->CallbackService()->UninstallListener(g_cocoaListener);
     delete g_cocoaListener;
 
 }
