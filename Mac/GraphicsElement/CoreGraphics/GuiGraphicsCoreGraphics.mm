@@ -366,14 +366,11 @@ namespace vl {
             {
             protected:
                 CoreGraphicsView*       nativeView;
-                List<Rect>              clippers;
-                vint                    clipperCoverWholeTargetCounter;
                 INativeWindow*          window;
                 
             public:
                 CoreGraphicsRenderTarget(INativeWindow* _window):
                     nativeView(0),
-                    clipperCoverWholeTargetCounter(0),
                     window(_window)
                 {
                     nativeView = GetCoreGraphicsView(window);
@@ -387,21 +384,6 @@ namespace vl {
                 }
 
                 void StartRenderingOnNativeWindow() override
-                {
-                    CHECK_FAIL(L"StartRenderingOnNativeWindow not supported!");
-                }
-
-				RenderTargetFailure StopRenderingOnNativeWindow() override
-                {
-                    CHECK_FAIL(L"StopRenderingOnNativeWindow not supported!");
-                }
-
-				Size GetCanvasSize() override
-                {
-                    return window->Convert(window->GetClientSize());
-                }
-
-                void StartRendering() override
                 {
                     auto listener = GetNativeWindowListener(window);
                     listener->StartRendering();
@@ -418,13 +400,11 @@ namespace vl {
                     CGContextFillRect(context, [nativeView backbufferSize]);
                     CGContextSaveGState(context);
                     // flip the context and scaling for retina display, since gac's origin is upper-left (0, 0)
-                    // this can also be done just in the view when creating the context
-                    // just putting it here for now
                     CGContextTranslateCTM(context, 0, nativeView.frame.size.height * nativeView.window.backingScaleFactor);
                     CGContextScaleCTM(context, 1.0f * nativeView.window.backingScaleFactor, -1.0f * nativeView.window.backingScaleFactor);
                 }
 
-                RenderTargetFailure StopRendering() override
+				RenderTargetFailure StopRenderingOnNativeWindow() override
                 {
                     auto listener = GetNativeWindowListener(window);
                     listener->StopRendering();
@@ -438,6 +418,11 @@ namespace vl {
                         return !moved ? RenderTargetFailure::None : RenderTargetFailure::ResizeWhileRendering;;
                     }
                     return RenderTargetFailure::LostDevice;
+                }
+
+				Size GetCanvasSize() override
+                {
+                    return window->Convert(window->GetClientSize());
                 }
 
 				void AfterPushedClipper(Rect clipper, Rect validArea, reflection::DescriptableObject* generator) override
@@ -575,7 +560,7 @@ namespace vl {
 using namespace vl::presentation::osx;
 using namespace vl::presentation::elements_coregraphics;
 
-void CoreGraphicsMain()
+void CoreGraphicsMain(GuiHostedController* hostedController)
 {
     // actually this has to init before ResourceManager
     // as we need to create underlying views first
@@ -583,9 +568,20 @@ void CoreGraphicsMain()
     GetCurrentController()->CallbackService()->InstallListener(g_cocoaListener);
     
     CoreGraphicsResourceManager resourceManager;
-    SetGuiGraphicsResourceManager(&resourceManager);
     SetCoreGraphicsResourceManager(&resourceManager);
     GetCurrentController()->CallbackService()->InstallListener(&resourceManager);
+    
+    // Wrap resource manager for hosted mode
+    elements::GuiHostedGraphicsResourceManager* hostedResourceManager = nullptr;
+    if (hostedController)
+    {
+        hostedResourceManager = new elements::GuiHostedGraphicsResourceManager(hostedController, &resourceManager);
+        SetGuiGraphicsResourceManager(hostedResourceManager);
+    }
+    else
+    {
+        SetGuiGraphicsResourceManager(&resourceManager);
+    }
     
     elements_coregraphics::GuiSolidBorderElementRenderer::Register();
     elements_coregraphics::Gui3DBorderElementRenderer::Register();
@@ -599,10 +595,17 @@ void CoreGraphicsMain()
     elements_coregraphics::GuiInnerShadowElementRenderer::Register();
     elements_coregraphics::GuiFocusRectangleElementRenderer::Register();
     elements::GuiDocumentElementRenderer::Register();
+
+    if (hostedController) hostedController->Initialize();
     
     {
         GuiApplicationMain();
     }
+
+    if (hostedController) hostedController->Finalize();
+    
+    SetGuiGraphicsResourceManager(nullptr);
+    if (hostedResourceManager) delete hostedResourceManager;
     
     GetCurrentController()->CallbackService()->UninstallListener(g_cocoaListener);
     delete g_cocoaListener;

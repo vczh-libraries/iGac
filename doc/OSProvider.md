@@ -18,12 +18,27 @@ Shared test utilities live in `MacShared/`.
 
 ## Entry Point
 
-The app entry point is `SetupOSXCoreGraphicsRenderer()` (in `CoreGraphicsApp.mm`), called from `main()`. It:
+### Standard Mode — `SetupOSXCoreGraphicsRenderer()`
+
+The standard mode entry point is `SetupOSXCoreGraphicsRenderer()` (in `CoreGraphicsApp.mm`), called from `main()`. It:
 
 1. Calls `StartOSXNativeController()` — instantiates the Cocoa controller
 2. Calls `SetNativeController(GetOSXNativeController())` — registers it as the global controller
 3. Calls `CoreGraphicsMain()` — sets up the graphics resource manager, registers element renderers, and runs `GuiApplicationMain()`
 4. Calls `StopOSXNativeController()` — cleans up
+
+### Hosted Mode — `SetupOSXHostedCoreGraphicsRenderer()`
+
+The hosted mode entry point is `SetupOSXHostedCoreGraphicsRenderer()` (in `CoreGraphicsApp.mm`). In hosted mode, the entire GacUI application runs inside a single native `NSWindow` — all sub-windows, dialogs, menus, and popups are rendered as graphics within that one window. It:
+
+1. Calls `StartOSXNativeController()` — instantiates the Cocoa controller
+2. Creates a `GuiHostedController` wrapping the native controller — virtualizes window management
+3. Calls `SetNativeController(hostedController)` — registers the hosted controller as the global controller
+4. Calls `SetHostedApplication(hostedController->GetHostedApplication())` — makes the hosted application interface available
+5. Calls `CoreGraphicsMain(hostedController)` — sets up the resource manager (wrapped in `GuiHostedGraphicsResourceManager`), registers element renderers, calls `hostedController->Initialize()`/`Finalize()`, and runs `GuiApplicationMain()`
+6. Cleans up the hosted controller and calls `StopOSXNativeController()`
+
+`GuiHostedController`, `GuiHostedGraphicsResourceManager`, and all supporting types are platform-independent and live in `GacUI.cpp`/`GacUI.h`.
 
 ## INativeController — CocoaController
 

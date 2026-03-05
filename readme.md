@@ -101,7 +101,7 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 - Global keyboard hook requires Accessibility privilege
 - `AsyncService::Semaphore::WaitForTime` not fully implemented
 - `IGuiGraphicsParagraph` (document/rich text layout) not fully working yet
-- Hosted window mode not implemented yet
+
 
 ### TODO
 
@@ -112,4 +112,3 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 - `CocoaWindow::GetIcon` and `SetIcon` is not implemented yet
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
-- Hosted window mode

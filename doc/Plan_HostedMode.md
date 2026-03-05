@@ -1,6 +1,6 @@
-# Plan: macOS Hosted Mode
+# Plan: macOS Hosted Mode — IMPLEMENTED
 
-This document describes the plan for implementing hosted mode on macOS. In hosted mode, the entire GacUI application runs inside a **single native NSWindow** — all GacUI sub-windows, dialogs, menus, and popups are rendered as graphics within that one window rather than creating additional native windows.
+This document describes the plan for implementing hosted mode on macOS. All steps have been implemented and the project builds successfully. In hosted mode, the entire GacUI application runs inside a **single native NSWindow** — all GacUI sub-windows, dialogs, menus, and popups are rendered as graphics within that one window rather than creating additional native windows.
 
 ## Background
 

@@ -19,10 +19,14 @@ A subclass of `CocoaBaseView` that manages a `CGLayer` for double-buffered drawi
 
 ### Render Target
 
-`CoreGraphicsRenderTarget` implements `ICoreGraphicsRenderTarget`:
-- `StartRendering()` — Gets the `CGContext` from the layer, sets up a flipped and scaled coordinate system for retina displays
-- `StopRendering()` — Restores the graphics state, detects if the window moved during rendering (which requires a re-render)
+`CoreGraphicsRenderTarget` implements `ICoreGraphicsRenderTarget` (which extends `GuiGraphicsRenderTarget`):
+- `StartRenderingOnNativeWindow()` — Gets the `CGContext` from the layer, sets up a flipped and scaled coordinate system for retina displays, fills the black background
+- `StopRenderingOnNativeWindow()` — Restores the graphics state, detects if the window moved during rendering (which requires a re-render)
 - Clipper push/pop uses `CGContextSaveGState` / `CGContextRestoreGState` with `CGContextClipToRect`
+
+The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRendering()` lifecycle and routes to `StartRenderingOnNativeWindow()`/`StopRenderingOnNativeWindow()` appropriately for both standard and hosted modes:
+- **Standard mode**: `StartRendering()` calls `StartRenderingOnNativeWindow()` each frame
+- **Hosted mode**: `StartHostedRendering()` calls `StartRenderingOnNativeWindow()` once, then `StartRendering()`/`StopRendering()` run multiple times per frame (once per virtual window) without touching the native window again, then `StopHostedRendering()` calls `StopRenderingOnNativeWindow()` once
 
 ### Per-Window Lifecycle
 
