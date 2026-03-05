@@ -11,6 +11,14 @@
 
 Read them thoroughly. Most macOS porting bugs come from behavioral differences between Win32 and Cocoa that are documented there.
 
+**Critical reference — GacUI Knowledge Base:**
+
+5. **[Release/.github/KnowledgeBase/Index.md](Release/.github/KnowledgeBase/Index.md)** — The master index for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
+   - `KB_GacUI_Design_PlatformInitialization.md` — Entry points, hosted/raw/standard modes, renderer setup, service registration.
+   - `KB_GacUI_Design_MainWindowModalWindow.md` — Modal windows, hosted mode considerations, event loop architecture.
+   - `KB_GacUI_Design_ImplementingIGuiGraphicsElement.md` — Element lifecycle, renderer registration, render target abstraction.
+   - `KB_GacUI_Design_LayoutAndGuiGraphicsComposition.md` — Layout system, composition hierarchy, invalidation chain.
+
 ## Key Facts
 
 - This is the **macOS port** of GacUI. The GacUI framework source code lives in `Release/Import/` and must NOT be modified — it is a git submodule.
