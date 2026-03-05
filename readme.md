@@ -98,16 +98,14 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 
 Work in progress: porting and stabilizing GacUI controls on macOS.
 
+### Work Immediately
+
+- ShowModal crashes.
+- macos native file dialog just drop the color dialog.
+
 ### Known Issues / Limitations
 
-- Global keyboard hook requires Accessibility privilege
 - `AsyncService::Semaphore::WaitForTime` not fully implemented
-- `IGuiGraphicsParagraph` (document/rich text layout) not fully working yet
-- Hosted Mode
-  - Open file dialog crashes.
-
-### TODO
-
 - `GuiInnerShadowElementRenderer` is not implemented yet
 - `GuiFocusRectangleElementRenderer` is not implemented yet
 - `GuiGradientBackgroundElement` does not work with round-rect yet.
