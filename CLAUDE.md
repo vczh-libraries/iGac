@@ -53,6 +53,20 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 - macOS Cocoa uses bottom-left origin coordinates. All coordinate conversions go through `FlipY()`/`FlipRect()` in `CocoaHelper`.
 - `NSWindowStyleMaskBorderless = 0`. Bitwise XOR/AND operations on style masks do not work as expected with this value. Use explicit flag-based reconstruction (see `UpdateStyleMask()`).
 
+## Testing Rules
+
+- After launching a test app (via `./testFC.sh`, `./test.sh`, or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
+- Use `--unblock` to launch in background and get the PID for later cleanup.
+- Use the following to find and kill test processes:
+
+```bash
+# Find all running test processes
+pgrep -fl 'Test_FullControlTest|Test_HellWorld'
+
+# Kill all test processes
+pkill -f 'Test_FullControlTest|Test_HellWorld'
+```
+
 ## Files You Should Never Modify
 
 - Anything under `Release/` — this is a git submodule containing the upstream GacUI release.

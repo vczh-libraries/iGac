@@ -330,7 +330,14 @@ namespace vl {
                     wrapLine = value;
                     
                     NSMutableParagraphStyle* paragrahStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-                    [paragrahStyle setLineBreakMode:value ? NSLineBreakByTruncatingTail : NSLineBreakByWordWrapping];
+                    [paragrahStyle setLineBreakMode:value ? NSLineBreakByWordWrapping : NSLineBreakByClipping];
+                    
+                    // When wrapLine=false, container must be wide enough to prevent wrapping
+                    // When wrapLine=true, container uses maxWidth
+                    CGFloat containerWidth = value
+                        ? (maxWidth != -1 ? maxWidth : CGFLOAT_MAX)
+                        : CGFLOAT_MAX;
+                    [textContainer setContainerSize:NSMakeSize(containerWidth, CGFLOAT_MAX)];
                     
                     [textStorage beginEditing];
                     [textStorage enumerateAttributesInRange:NSMakeRange(0, textStorage.length)
@@ -359,7 +366,11 @@ namespace vl {
                 void SetMaxWidth(vint value) override
                 {
                     maxWidth = value;
-                    [textContainer setContainerSize:NSMakeSize(value != -1 ? value : CGFLOAT_MAX, CGFLOAT_MAX)];
+                    // When wrapLine=false, container stays wide regardless of maxWidth
+                    CGFloat containerWidth = wrapLine
+                        ? (value != -1 ? value : CGFLOAT_MAX)
+                        : CGFLOAT_MAX;
+                    [textContainer setContainerSize:NSMakeSize(containerWidth, CGFLOAT_MAX)];
                     needFormatData = true;
                 }
                 
@@ -701,7 +712,7 @@ namespace vl {
                         }
                         size.height = [layoutManager defaultLineHeightForFont:font];
                     }
-                    return Size(size.width, size.height);
+                    return Size(wrapLine ? 0 : size.width, size.height);
                 }
                 
                 bool EnableCaret(vint _caret, Color _color, bool _frontSide) override
