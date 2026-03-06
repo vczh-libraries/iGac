@@ -241,75 +241,6 @@ const CGFloat HackedButtonSideMargin = 9.0f;
 
 @end
 
-
-@interface WindowCloseOpenDelegate: WindowCloseDelegate
-
-- (id)init;
-- (id)initWithPanel:(NSPanel*)panel contentView:(NSView*)contentView topMargin:(CGFloat)topMargin;
-
-- (void)windowDidUpdate:(NSNotification *)notification;
-- (BOOL)isClosed;
-- (BOOL)isOpen;
-
-@end
-
-@implementation WindowCloseOpenDelegate
-{
-    bool opened;
-}
-
-- (id)init
-{
-    if(self = [super init])
-    {
-        closed = false;
-        opened = false;
-    }
-    
-    return self;
-}
-
-- (id)initWithPanel:(NSPanel*)panel contentView:(NSView*)contentView topMargin:(CGFloat)topMargin
-{
-    if(self = [super initWithPanel:panel contentView:contentView topMargin:topMargin])
-    {
-        closed = false;
-        opened = false;
-    }
-    
-    return self;
-}
-
-- (void)close
-{
-    opened = false;
-    [super close];
-}
-
-- (void)windowDidUpdate:(NSNotification *)notification
-{
-    if(!opened)
-    {
-        closed = false;
-        opened = true;
-        
-        [NSApp abortModal];
-        [NSApp stopModal];
-    }
-}
-
-- (BOOL)isClosed
-{
-    return closed;
-}
-
-- (BOOL)isOpen
-{
-    return opened;
-}
-
-@end
-
 namespace vl {
     
     namespace presentation {
@@ -577,18 +508,13 @@ namespace vl {
                 
                 StartInterceptNSPanel();
                 NSFontPanel* fontPanel = [NSFontPanel sharedFontPanel];
-                NSColorPanel* colorPanel = [NSColorPanel sharedColorPanel];
                 StopInterceptNSPanel();
                 
-                WindowCloseOpenDelegate* cpDelegate = [[WindowCloseOpenDelegate alloc] initWithPanel:colorPanel
-                                                                                       contentView:[colorPanel contentView]
-                                                                                         topMargin:4];
                 WindowCloseDelegate* fpDelegate = [[WindowCloseDelegate alloc] initWithPanel:fontPanel
                                                                                  contentView:[fontPanel contentView]
                                                                                    topMargin:4];
                 
                 [fontPanel setDelegate:fpDelegate];
-                [colorPanel setDelegate:cpDelegate];
                 
                 if(selected)
                 {
@@ -596,50 +522,17 @@ namespace vl {
                     [fontPanel setPanelFont:defaultFont isMultiple:NO];
                 }
                 
-                // Force modal dialog.
-                // The font panel may open a color panel via its color button.
-                // We run a modal session on the font panel, and if the color panel opens,
-                // we switch to a modal session on the color panel until it closes.
-                // When the font panel closes (OK/Cancel), we also force-close the color panel.
+                NSModalSession session = [NSApp beginModalSessionForWindow:fontPanel];
                 
-                do
+                for(;;)
                 {
-                    NSModalSession session = [NSApp beginModalSessionForWindow:fontPanel];
+                    [NSApp runModalSession:session];
                     
-                    for(;;)
-                    {
-                        [NSApp runModalSession:session];
-                        
-                        // break if closed or color panel opened
-                        if([cpDelegate isOpen] || [fpDelegate isClosed])
-                            break;
-                    }
-                    
-                    [NSApp endModalSession:session];
-                    
-                    // If the font panel was closed, also close the color panel if it's open
-                    if([fpDelegate isClosed] && [cpDelegate isOpen] && ![cpDelegate isClosed])
-                    {
-                        [colorPanel close];
+                    if([fpDelegate isClosed])
                         break;
-                    }
-                    
-                    // if the color dialog is opened
-                    if([cpDelegate isOpen])
-                    {
-                        NSModalSession session = [NSApp beginModalSessionForWindow:colorPanel];
-                        for(;;)
-                        {
-                            [NSApp runModalSession:session];
-                            
-                            if([cpDelegate isClosed] || [fpDelegate isClosed])
-                                break;
-                        }
-                        
-                        [NSApp endModalSession:session];
-                    }
-                    
-                } while(![fpDelegate isClosed]);
+                }
+                
+                [NSApp endModalSession:session];
                 
                 if(![fpDelegate isCancelled])
                 {
@@ -651,12 +544,6 @@ namespace vl {
                     
                     selectionFont.size = [selectedFont pointSize];
                     selectionFont.fontFamily = NSStringToWString([selectedFont familyName]);
-                    
-                    NSColor* color = [[colorPanel color] colorUsingType:NSColorTypeComponentBased];
-                    selectionColor = Color([color redComponent] * 255.0,
-                                           [color greenComponent] * 255.0,
-                                           [color blueComponent] * 255.0,
-                                           [color alphaComponent] * 255.0);
                 }
                 
                 return ![fpDelegate isCancelled];
@@ -724,6 +611,7 @@ namespace vl {
                     [op setCanChooseFiles:YES];
                     [op setCanChooseDirectories:YES];
                     [op setAllowsOtherFileTypes:allowAnyTypes];
+                    [op setShowsTagField:NO];
                     if(options & FileDialogAllowMultipleSelection)
                     {
                         [op setAllowsMultipleSelection:YES];
@@ -762,6 +650,7 @@ namespace vl {
                     [op setTitle:WStringToNSString(title)];
                     [op setNameFieldStringValue:WStringToNSString(initialFileName)];
                     [op setAllowsOtherFileTypes:allowAnyTypes];
+                    [op setShowsTagField:NO];
                     
                     if([op runModal] == NSModalResponseOK)
                     {
