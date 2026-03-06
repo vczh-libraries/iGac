@@ -33,6 +33,11 @@ void GuiMain()
     }
     {
         demo::MainWindow window;
+        if (!GetHostedApplication())
+        {
+            // TODO: In hosted mode this doesn't work, maybe needs to call the underlying INativeWindow
+            window.SetControlThemeName(theme::ThemeName::Window);
+        }
         window.ForceCalculateSizeImmediately();
         window.MoveToScreenCenter();
         GetApplication()->Run(&window);

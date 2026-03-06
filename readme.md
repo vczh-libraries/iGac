@@ -94,16 +94,19 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 - [doc/lldb.md](doc/lldb.md) — LLDB MCP server setup, debugging workflow, graceful app termination.
 - [doc/Plan_HostedMode.md](doc/Plan_HostedMode.md) — Implementation plan for macOS hosted mode (single-window rendering).
 
-## Current Status
+## Known Issues / Limitations
 
-Work in progress: porting and stabilizing GacUI controls on macOS.
-
-### Work Immediately
-
-- ShowModal crashes.
-
-### Known Issues / Limitations
-
+- `IGuiGraphicsParagraph`
+  - Removing hyperlink should cancel any overlapped complete hyperlinks
+    - It works on Windows
+    - On macos a complete hyperlink needs to precisely selected
+    - When removed the style is gone but the underline remains, editing styles won't remove the underline except editing text.
+  - In `Preview` mode hyperlink won't react to cursor or clicking.
+  - Need to test inserting image
+- HostedMode
+  - `ShowModal` and `ShowModalAsync` fixed but opening a modal `GuiDialog` still crashes.
+- `FakeDialogService`
+  - File dialog shows empty local disk.
 - `AsyncService::Semaphore::WaitForTime` not fully implemented
 - `GuiInnerShadowElementRenderer` is not implemented yet
 - `GuiFocusRectangleElementRenderer` is not implemented yet

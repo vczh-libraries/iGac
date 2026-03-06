@@ -42,7 +42,10 @@ public:
     void Load(bool controllerUnrelatedPlugins, bool controllerRelatedPlugins)override
     {
         auto theme = Ptr(new darkskin::Theme);
-        theme->PreferCustomFrameWindow = Nullable<bool>(false);
+        if (!GetHostedApplication())
+        {
+            theme->PreferCustomFrameWindow = Nullable<bool>(false);
+        }
         RegisterTheme(theme);
     }
 
