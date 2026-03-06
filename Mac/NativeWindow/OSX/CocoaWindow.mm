@@ -58,7 +58,7 @@ namespace vl {
                 graphicsHandler(0),
                 customFrameMode(false),
                 supressingAlt(false),
-                enabled(false),
+                enabled(true),
                 capturing(false),
                 resizing(false),
                 moving(false),
@@ -366,18 +366,14 @@ namespace vl {
 
             void CocoaWindow::Enable() 
             {
-                // todo
-                [nsWindow orderFront:nil];
-                [nsWindow makeFirstResponder:nsWindow];
                 enabled = true;
+                [nsWindow setIgnoresMouseEvents:NO];
             }
 
             void CocoaWindow::Disable() 
             {
-                // todo
-                [nsWindow orderOut:nil];
-                [nsWindow makeFirstResponder:nil];
                 enabled = false;
+                [nsWindow setIgnoresMouseEvents:YES];
             }
 
             bool CocoaWindow::IsEnabled() 

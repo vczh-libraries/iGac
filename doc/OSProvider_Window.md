@@ -110,7 +110,7 @@ Without this guard, opening a popup would immediately trigger its own closing.
 An `NSWindowDelegate` that bridges Cocoa window events to GacUI:
 
 - `windowShouldClose:` → `InvokeClosing()`
-- `windowWillClose:` → `InvokeClosed()`; if main window, posts a dummy event to unblock `[NSApp run]` and calls `[NSApp stop:nil]`
+- `windowWillClose:` → `InvokeClosed()`
 - `windowDidResize:` → `InvokeMoved()`
 - `windowDidBecomeKey:` → `InvokeGotFocus()`
 - `windowDidResignKey:` → `InvokeLostFocus()`
@@ -119,6 +119,12 @@ An `NSWindowDelegate` that bridges Cocoa window events to GacUI:
 ### EnableActivate / DisableActivate
 
 These are currently no-ops on macOS. On Windows, `DisableActivate` sets `WS_EX_NOACTIVATE` to prevent a window from gaining activation when clicked. GacUI calls `SetEnabledActivate(false)` on popup windows, but the macOS implementation relies on `ShowDeactivated()` and `canBecomeKeyWindow` to achieve similar behavior.
+
+### Enable / Disable
+
+On Windows, `EnableWindow(hwnd, FALSE)` prevents user input (mouse clicks, keyboard) without hiding or moving the window. The macOS implementation uses `[nsWindow setIgnoresMouseEvents:YES]` in `Disable()` to achieve the same effect. The `enabled` flag defaults to `true`, matching Windows where a newly created window is enabled by default (`IsWindowEnabled` returns `TRUE`).
+
+**Previous bug:** `Disable()` used `[nsWindow orderOut:nil]` (which hides the window) and `Enable()` used `[nsWindow orderFront:nil]` (which shows it). This was wrong because `ShowModal` calls `owner->SetEnabled(false)` to disable the owner — hiding the owner window caused visual glitches and callback cascading. Additionally, `enabled` was initialized to `false`, causing `ShowModal`'s `CHECK_ERROR(owner && owner->GetEnabled())` to fail because the owner appeared disabled even though no one had explicitly disabled it.
 
 ## CocoaBaseView
 
@@ -140,6 +146,7 @@ These are currently no-ops on macOS. On Windows, `DisableActivate` sets `WS_EX_N
 | Show without activation | `ShowWindow(SW_SHOWNOACTIVATE)` | `[nsWindow orderFront:nil]` — does not make key or main. |
 | TopMost | `WS_EX_TOPMOST` via `SetWindowPos` | `[nsWindow setLevel:NSPopUpMenuWindowLevel]` |
 | Disable activation | `WS_EX_NOACTIVATE` | No-op. Handled by `canBecomeKeyWindow` returning NO for child borderless windows. |
+| Enable/Disable | `EnableWindow(hwnd, FALSE/TRUE)` — toggles input, no visibility change | `[nsWindow setIgnoresMouseEvents:YES/NO]` — toggles mouse input, no visibility change. |
 | Hide | `PostMessage(WM_CLOSE)` always | Main window: `[nsWindow close]`. Others: `[nsWindow setIsVisible:false]`. |
 | SetBounds | `MoveWindow` / `SetWindowPos` — no visibility side effects | `[nsWindow setFrame:display:YES]` — no visibility side effects. |
 | Custom frame | Style flags via `SetWindowLongPtr` | `NSWindowStyleMaskBorderless` + manual hit testing in `HandleEventInternal`. Note: `NSWindowStyleMaskBorderless = 0`, so XOR-based toggling does not work. |
