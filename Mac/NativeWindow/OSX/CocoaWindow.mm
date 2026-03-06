@@ -377,12 +377,12 @@ namespace vl {
                 [nsWindow orderOut:nil];
                 opened = false;
                 InvokeClosed();
-                if (GetCurrentController()->WindowService()->GetMainWindow() == this)
+                if (cocoaController->WindowService()->GetMainWindow() == this)
                 {
                     // Defer destruction to avoid deleting 'this' while still in Hide().
                     // On Windows, PostMessage(WM_CLOSE) is async — destruction
                     // happens after the caller returns.
-                    auto controller = GetCurrentController();
+                    auto controller = cocoaController;
                     auto self = this;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         controller->WindowService()->DestroyNativeWindow(self);

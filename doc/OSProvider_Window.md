@@ -26,7 +26,7 @@ The window is **not shown at creation time**. It only becomes visible when GacUI
 
 **`ShowDeactivated()`** — Used for popups. Calls `[nsWindow orderFront:nil]` + `makeFirstResponder` without making the window key or main. Wrapped in `suppressClosePopups = true/false` to prevent re-entrant popup closing (see below). On first call, fires `InvokeOpened()`.
 
-**`Hide(bool closeWindow)`** — Matches Windows' `PostMessage(WM_CLOSE)` semantics. The `closeWindow` argument is reserved and not used. Calls `InvokeClosing()` first — if cancelled, returns immediately. Otherwise hides the window via `[nsWindow orderOut:nil]`, fires `InvokeClosed()`. For the main window, additionally defers `DestroyNativeWindow` via `dispatch_async` to trigger app exit (the deferral avoids deleting `this` while still inside `Hide()`, matching Windows' async `PostMessage` behavior).
+**`Hide(bool closeWindow)`** — Matches Windows' `PostMessage(WM_CLOSE)` semantics. The `closeWindow` argument is reserved and not used. Calls `InvokeClosing()` first — if cancelled, returns immediately. Otherwise hides the window via `[nsWindow orderOut:nil]`, fires `InvokeClosed()`. For the main window, additionally defers `DestroyNativeWindow` via `dispatch_async` to trigger app exit (the deferral avoids deleting `this` while still inside `Hide()`, matching Windows' async `PostMessage` behavior). The main window check uses `cocoaController` (the native controller stored at construction) rather than `GetCurrentController()`, because in hosted mode `GetCurrentController()` returns the `GuiHostedController` whose `GetMainWindow()` returns a `GuiHostedWindow`, not the native `CocoaWindow`.
 
 ### IsVisible
 

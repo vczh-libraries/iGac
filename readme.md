@@ -103,8 +103,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
     - When removed the style is gone but the underline remains, editing styles won't remove the underline except editing text.
   - In `Preview` mode hyperlink won't react to cursor or clicking.
   - Need to test inserting image
-- HostedMode
-  - `ShowModal` and `ShowModalAsync` fixed but opening a modal `GuiDialog` still crashes.
 - `FakeDialogService`
   - File dialog shows empty local disk.
 - `AsyncService::Semaphore::WaitForTime` not fully implemented

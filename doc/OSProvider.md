@@ -96,7 +96,7 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 |---------|-------------|
 | **CocoaInputService** | Implements `INativeInputService`. Uses a GCD timer for periodic timer callbacks. Maps macOS key codes to VKEY codes. Tracks key state via `CGEventSource`. |
 | **CocoaScreenService** | `CocoaScreen` wraps `NSScreen`; reports bounds, client bounds, name, primary status, DPI scaling. `CocoaScreenService` enumerates all screens. |
-| **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Provides default font ("Helvetica"), system font enumeration. |
+| **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Provides default font ("Helvetica"), font enumeration via `NSFontManager`. |
 | **CocoaClipboardService** | Clipboard read/write via `NSPasteboard`. Supports text, document, and image content types. |
 | **CocoaDialogService** | Message boxes, color picker, font picker, file open/save dialogs using native macOS panels. |
 | **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` wraps `CGImageRef`. Creates images from file, memory, or stream. |
