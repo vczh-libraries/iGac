@@ -931,66 +931,47 @@ namespace vl {
                 CGFloat y2 = y1 + (CGFloat)t * SCALING_FACTOR;
                 CGFloat x3 = x4 - (CGFloat)t * SCALING_FACTOR;
                 CGFloat y3 = y4 - (CGFloat)t * SCALING_FACTOR;
-                CGFloat radius = (CGFloat)t * SCALING_FACTOR;
 
-                // Top side
-                if (x3 > x2)
+                // Use a transparency layer with lighten blend so that in corner
+                // overlap regions, max(horizontal_shadow, vertical_shadow) wins,
+                // producing rectangular corners instead of quarter circles.
+                CGContextSaveGState(context);
+                CGContextBeginTransparencyLayer(context, NULL);
+                CGContextSetBlendMode(context, kCGBlendModeLighten);
+
+                // Top strip - full width
                 {
                     CGContextSaveGState(context);
-                    CGContextClipToRect(context, CGRectMake(x2, y1, x3 - x2, y2 - y1));
+                    CGContextClipToRect(context, CGRectMake(x1, y1, x4 - x1, y2 - y1));
                     CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x2, y1), CGPointMake(x2, y2), 0);
                     CGContextRestoreGState(context);
                 }
 
-                // Bottom side
-                if (x3 > x2)
+                // Bottom strip - full width
                 {
                     CGContextSaveGState(context);
-                    CGContextClipToRect(context, CGRectMake(x2, y3, x3 - x2, y4 - y3));
+                    CGContextClipToRect(context, CGRectMake(x1, y3, x4 - x1, y4 - y3));
                     CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x2, y4), CGPointMake(x2, y3), 0);
                     CGContextRestoreGState(context);
                 }
 
-                // Left side
-                if (y3 > y2)
+                // Left strip - full height
                 {
                     CGContextSaveGState(context);
-                    CGContextClipToRect(context, CGRectMake(x1, y2, x2 - x1, y3 - y2));
+                    CGContextClipToRect(context, CGRectMake(x1, y1, x2 - x1, y4 - y1));
                     CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x1, y2), CGPointMake(x2, y2), 0);
                     CGContextRestoreGState(context);
                 }
 
-                // Right side
-                if (y3 > y2)
+                // Right strip - full height
                 {
                     CGContextSaveGState(context);
-                    CGContextClipToRect(context, CGRectMake(x3, y2, x4 - x3, y3 - y2));
+                    CGContextClipToRect(context, CGRectMake(x3, y1, x4 - x3, y4 - y1));
                     CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x4, y2), CGPointMake(x3, y2), 0);
                     CGContextRestoreGState(context);
                 }
 
-                // Top-left corner
-                CGContextSaveGState(context);
-                CGContextClipToRect(context, CGRectMake(x1, y1, x2 - x1, y2 - y1));
-                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x2, y2), 0, CGPointMake(x2, y2), radius, 0);
-                CGContextRestoreGState(context);
-
-                // Top-right corner
-                CGContextSaveGState(context);
-                CGContextClipToRect(context, CGRectMake(x3, y1, x4 - x3, y2 - y1));
-                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x3, y2), 0, CGPointMake(x3, y2), radius, 0);
-                CGContextRestoreGState(context);
-
-                // Bottom-left corner
-                CGContextSaveGState(context);
-                CGContextClipToRect(context, CGRectMake(x1, y3, x2 - x1, y4 - y3));
-                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x2, y3), 0, CGPointMake(x2, y3), radius, 0);
-                CGContextRestoreGState(context);
-
-                // Bottom-right corner
-                CGContextSaveGState(context);
-                CGContextClipToRect(context, CGRectMake(x3, y3, x4 - x3, y4 - y3));
-                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x3, y3), 0, CGPointMake(x3, y3), radius, 0);
+                CGContextEndTransparencyLayer(context);
                 CGContextRestoreGState(context);
             }
 
