@@ -182,6 +182,10 @@ namespace vl {
 
             void CocoaWindow::SetWindowCursor(INativeCursor* cursor) 
             {
+                if (!cursor)
+                {
+                    cursor = cocoaController->ResourceService()->GetDefaultSystemCursor();
+                }
                 currentCursor = cursor;
                 
                 dynamic_cast<CocoaCursor*>(cursor)->Set();

@@ -206,7 +206,12 @@
 
 - (void)resetCursorRects
 {
-    vl::presentation::osx::CocoaCursor* cursor = dynamic_cast<vl::presentation::osx::CocoaCursor*>(cocoaWindow->GetWindowCursor());
+    vl::presentation::INativeCursor* rawCursor = cocoaWindow->GetWindowCursor();
+    if (!rawCursor)
+    {
+        rawCursor = vl::presentation::GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
+    }
+    vl::presentation::osx::CocoaCursor* cursor = dynamic_cast<vl::presentation::osx::CocoaCursor*>(rawCursor);
     
     [self addCursorRect:[self bounds] cursor:cursor->GetNativeCursor()];
 }
