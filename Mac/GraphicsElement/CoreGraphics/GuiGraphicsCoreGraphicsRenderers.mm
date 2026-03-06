@@ -216,9 +216,23 @@ namespace vl {
                         CGPathRelease(path);
                         break;
                     }
-                    
-                    default:
+                        
+                    case ElementShapeType::RoundRect:
+                    {
+                        auto shape = element->GetShape();
+                        CGContextSaveGState(context);
+                        
+                        CGRect cgRect = ConvertToCGRect(bounds);
+                        CGPathRef path = CGPathCreateWithRoundedRect(cgRect, (CGFloat)shape.radiusX * SCALING_FACTOR, (CGFloat)shape.radiusY * SCALING_FACTOR, NULL);
+                        CGContextAddPath(context, path);
+                        CGContextClip(context);
+                        
+                        CGContextDrawLinearGradient(context, cgGradient, points[0], points[1], kCGGradientDrawsBeforeStartLocation);
+                        
+                        CGContextRestoreGState(context);
+                        CGPathRelease(path);
                         break;
+                    }
                 }
             }
             
@@ -844,49 +858,161 @@ namespace vl {
 
             ///////
 
+            void GuiInnerShadowElementRenderer::CreateCGGradient()
+            {
+                oldColor = element->GetColor();
+                if (cgGradient)
+                {
+                    CGGradientRelease(cgGradient);
+                    cgGradient = nullptr;
+                }
+                CGFloat components[8] = {
+                    oldColor.r / 255.0f, oldColor.g / 255.0f, oldColor.b / 255.0f, oldColor.a / 255.0f,
+                    oldColor.r / 255.0f, oldColor.g / 255.0f, oldColor.b / 255.0f, 0.0f
+                };
+                CGFloat locations[2] = { 0.0f, 1.0f };
+                cgGradient = CGGradientCreateWithColorComponents(cgColorSpace, components, locations, 2);
+            }
+
+            void GuiInnerShadowElementRenderer::DestroyCGGradient()
+            {
+                if (cgGradient)
+                {
+                    CGGradientRelease(cgGradient);
+                    cgGradient = nullptr;
+                }
+            }
+
             void GuiInnerShadowElementRenderer::InitializeInternal()
             {
-
+                CreateCGGradient();
             }
 
             void GuiInnerShadowElementRenderer::FinalizeInternal()
             {
-
+                DestroyCGGradient();
             }
 
             void GuiInnerShadowElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
             {
+                CreateCGGradient();
             }
 
             GuiInnerShadowElementRenderer::GuiInnerShadowElementRenderer()
             {
-
+                cgColorSpace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
             }
 
             GuiInnerShadowElementRenderer::~GuiInnerShadowElementRenderer()
             {
-
+                DestroyCGGradient();
+                if (cgColorSpace)
+                {
+                    CGColorSpaceRelease(cgColorSpace);
+                }
             }
 
             void GuiInnerShadowElementRenderer::Render(Rect bounds)
             {
+                vint w = bounds.Width();
+                vint h = bounds.Height();
+                vint t = element->GetThickness();
+                vint maxT = (w < h ? w : h) / 2;
+                if (t > maxT) t = maxT;
+                if (t <= 0) return;
+
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+
+                CGFloat x1 = (CGFloat)bounds.Left() * SCALING_FACTOR;
+                CGFloat y1 = (CGFloat)bounds.Top() * SCALING_FACTOR;
+                CGFloat x4 = (CGFloat)bounds.Right() * SCALING_FACTOR;
+                CGFloat y4 = (CGFloat)bounds.Bottom() * SCALING_FACTOR;
+                CGFloat x2 = x1 + (CGFloat)t * SCALING_FACTOR;
+                CGFloat y2 = y1 + (CGFloat)t * SCALING_FACTOR;
+                CGFloat x3 = x4 - (CGFloat)t * SCALING_FACTOR;
+                CGFloat y3 = y4 - (CGFloat)t * SCALING_FACTOR;
+                CGFloat radius = (CGFloat)t * SCALING_FACTOR;
+
+                // Top side
+                if (x3 > x2)
+                {
+                    CGContextSaveGState(context);
+                    CGContextClipToRect(context, CGRectMake(x2, y1, x3 - x2, y2 - y1));
+                    CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x2, y1), CGPointMake(x2, y2), 0);
+                    CGContextRestoreGState(context);
+                }
+
+                // Bottom side
+                if (x3 > x2)
+                {
+                    CGContextSaveGState(context);
+                    CGContextClipToRect(context, CGRectMake(x2, y3, x3 - x2, y4 - y3));
+                    CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x2, y4), CGPointMake(x2, y3), 0);
+                    CGContextRestoreGState(context);
+                }
+
+                // Left side
+                if (y3 > y2)
+                {
+                    CGContextSaveGState(context);
+                    CGContextClipToRect(context, CGRectMake(x1, y2, x2 - x1, y3 - y2));
+                    CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x1, y2), CGPointMake(x2, y2), 0);
+                    CGContextRestoreGState(context);
+                }
+
+                // Right side
+                if (y3 > y2)
+                {
+                    CGContextSaveGState(context);
+                    CGContextClipToRect(context, CGRectMake(x3, y2, x4 - x3, y3 - y2));
+                    CGContextDrawLinearGradient(context, cgGradient, CGPointMake(x4, y2), CGPointMake(x3, y2), 0);
+                    CGContextRestoreGState(context);
+                }
+
+                // Top-left corner
+                CGContextSaveGState(context);
+                CGContextClipToRect(context, CGRectMake(x1, y1, x2 - x1, y2 - y1));
+                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x2, y2), 0, CGPointMake(x2, y2), radius, 0);
+                CGContextRestoreGState(context);
+
+                // Top-right corner
+                CGContextSaveGState(context);
+                CGContextClipToRect(context, CGRectMake(x3, y1, x4 - x3, y2 - y1));
+                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x3, y2), 0, CGPointMake(x3, y2), radius, 0);
+                CGContextRestoreGState(context);
+
+                // Bottom-left corner
+                CGContextSaveGState(context);
+                CGContextClipToRect(context, CGRectMake(x1, y3, x2 - x1, y4 - y3));
+                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x2, y3), 0, CGPointMake(x2, y3), radius, 0);
+                CGContextRestoreGState(context);
+
+                // Bottom-right corner
+                CGContextSaveGState(context);
+                CGContextClipToRect(context, CGRectMake(x3, y3, x4 - x3, y4 - y3));
+                CGContextDrawRadialGradient(context, cgGradient, CGPointMake(x3, y3), 0, CGPointMake(x3, y3), radius, 0);
+                CGContextRestoreGState(context);
             }
 
             void GuiInnerShadowElementRenderer::OnElementStateChanged()
             {
-
+                if (renderTarget)
+                {
+                    if (oldColor != element->GetColor())
+                    {
+                        CreateCGGradient();
+                    }
+                }
             }
 
             ///////
 
             void GuiFocusRectangleElementRenderer::InitializeInternal()
             {
-
             }
 
             void GuiFocusRectangleElementRenderer::FinalizeInternal()
             {
-
             }
 
             void GuiFocusRectangleElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
@@ -895,21 +1021,39 @@ namespace vl {
 
             GuiFocusRectangleElementRenderer::GuiFocusRectangleElementRenderer()
             {
-
             }
 
             GuiFocusRectangleElementRenderer::~GuiFocusRectangleElementRenderer()
             {
-
             }
 
             void GuiFocusRectangleElementRenderer::Render(Rect bounds)
             {
+                CGContextRef context = GetCurrentCGContextFromRenderTarget();
+                CGContextSaveGState(context);
+
+                NSColor *focusColor = [NSColor keyboardFocusIndicatorColor];
+                CGFloat r = 0, g = 0, b = 0, a = 1;
+                [[focusColor colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
+                CGContextSetRGBStrokeColor(context, r, g, b, a);
+
+                CGFloat dashPattern[] = { 1.0, 1.0 };
+                CGContextSetLineDash(context, 0, dashPattern, 2);
+                CGContextSetLineWidth(context, 1.0);
+
+                CGRect cgRect = CGRectMake(
+                    (CGFloat)bounds.Left() * SCALING_FACTOR + 0.5f,
+                    (CGFloat)bounds.Top() * SCALING_FACTOR + 0.5f,
+                    (CGFloat)bounds.Width() * SCALING_FACTOR - 1.0f,
+                    (CGFloat)bounds.Height() * SCALING_FACTOR - 1.0f
+                );
+                CGContextStrokeRect(context, cgRect);
+
+                CGContextRestoreGState(context);
             }
 
             void GuiFocusRectangleElementRenderer::OnElementStateChanged()
             {
-
             }
         }
     }

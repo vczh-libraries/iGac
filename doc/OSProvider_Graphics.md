@@ -47,13 +47,13 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 | `Gui3DBorderElementRenderer` | 3D-style beveled borders |
 | `Gui3DSplitterElementRenderer` | 3D-style splitter lines |
 | `GuiSolidBackgroundElementRenderer` | Solid color filled rectangles |
-| `GuiGradientBackgroundElementRenderer` | Gradient fills using `CGGradient` |
+| `GuiGradientBackgroundElementRenderer` | Gradient fills using `CGGradient`. Supports Rectangle, Ellipse, and RoundRect shapes. |
 | `GuiSolidLabelElementRenderer` | Text rendering using CoreText |
 | `GuiImageFrameElementRenderer` | Image display |
 | `GuiPolygonElementRenderer` | Polygon shapes using `CGMutablePathRef` |
 | `GuiCoreGraphicsElementRenderer` | Custom CoreGraphics drawing element |
-| `GuiInnerShadowElementRenderer` | Inner shadow effect |
-| `GuiFocusRectangleElementRenderer` | Focus indicator rectangles |
+| `GuiInnerShadowElementRenderer` | Inner shadow effect using linear gradients (4 sides) and radial gradients (4 corners). Thickness is clamped to `min(width/2, height/2)`. |
+| `GuiFocusRectangleElementRenderer` | Focus indicator drawn as a 1px dashed border using macOS `keyboardFocusIndicatorColor`. |
 
 ### Text Layout
 

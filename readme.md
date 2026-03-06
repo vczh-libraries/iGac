@@ -109,9 +109,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 - Replace CGLayer with Metal for rendering
 - Not Implemented:
   - `AsyncService::Semaphore::WaitForTime`
-  - `GuiInnerShadowElementRenderer`
-  - `GuiFocusRectangleElementRenderer`
-  - `GuiGradientBackgroundElement` does not work with round-rect.
   - `CoreGraphicsResourceManager::CreateRawElement`
   - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
   - `CocoaClipboardWriter` and `CocoaClipboardReader`

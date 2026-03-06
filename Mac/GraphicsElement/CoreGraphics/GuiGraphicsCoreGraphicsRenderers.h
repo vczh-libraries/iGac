@@ -214,6 +214,13 @@ namespace vl {
             friend class GuiElementRendererBase<GuiInnerShadowElement, GuiInnerShadowElementRenderer, ICoreGraphicsRenderTarget>;
 
             protected:
+                Color               oldColor;
+                CGGradientRef       cgGradient = nullptr;
+                CGColorSpaceRef     cgColorSpace = nullptr;
+
+                void CreateCGGradient();
+                void DestroyCGGradient();
+
                 void InitializeInternal();
                 void FinalizeInternal();
                 void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
