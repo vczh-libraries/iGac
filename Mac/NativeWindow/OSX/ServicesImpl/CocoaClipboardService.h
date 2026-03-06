@@ -19,9 +19,11 @@ namespace vl {
 
             class CocoaClipboardService;
 
-            class CocoaClipboardReader : public INativeClipboardReader
+            class CocoaClipboardReader : public Object, public INativeClipboardReader
             {
                 friend class CocoaClipboardService;
+            protected:
+                CocoaClipboardService*		service;
             public:
                 CocoaClipboardReader(CocoaClipboardService* _service);
                 bool ContainsText() override;
@@ -30,12 +32,16 @@ namespace vl {
                 Ptr<DocumentModel> GetDocument() override;
                 bool ContainsImage() override;
                 Ptr<INativeImage> GetImage() override;
-
             };
 
-            class CocoaClipboardWriter : public INativeClipboardWriter
+            class CocoaClipboardWriter : public Object, public INativeClipboardWriter
             {
                 friend class CocoaClipboardService;
+            protected:
+                CocoaClipboardService*		service;
+                Nullable<WString>			textData;
+                Ptr<DocumentModel>			documentData;
+                Ptr<INativeImage>			imageData;
             public:
                 CocoaClipboardWriter(CocoaClipboardService* _service);
                 void SetText(const WString &value) override;
@@ -46,19 +52,15 @@ namespace vl {
 
             class CocoaClipboardService: public Object, public INativeClipboardService
             {
-                friend class OSXClipboardReader;
-                friend class OSXClipboardWriter;
-            protected:
-                Ptr<CocoaClipboardReader>			reader = nullptr;
+                friend class CocoaClipboardReader;
+                friend class CocoaClipboardWriter;
             public:
-                Ptr<INativeClipboardReader>		ReadClipboard()override;
-                Ptr<INativeClipboardWriter>		WriteClipboard()override;
+                Ptr<INativeClipboardReader>		ReadClipboard() override;
+                Ptr<INativeClipboardWriter>		WriteClipboard() override;
             };
-
 
         }
     }
 }
-
 
 #endif
