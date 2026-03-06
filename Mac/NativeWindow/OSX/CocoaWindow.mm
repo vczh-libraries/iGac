@@ -47,30 +47,9 @@ namespace vl {
 
             static bool suppressClosePopups = false;
             
-            CocoaWindow::CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode):
-                cocoaController(_cocoaController),
-                parentWindow(0),
-                mouseLastX(0),
-                mouseLastY(0),
-                mouseDownX(0),
-                mouseDownY(0),
-                mouseHoving(false),
-                graphicsHandler(0),
-                customFrameMode(false),
-                supressingAlt(false),
-                enabled(true),
-                capturing(false),
-                resizing(false),
-                moving(false),
-                opened(false),
-                hasBorder(true),
-                hasSizeBox(true),
-                hasMinimizedBox(true),
-                resizingBorder(INativeWindowListener::NoDecision),
-                windowMode(_windowMode),
-                nsWindow(0),
-                nsController(0),
-                nsDelegate(0)
+            CocoaWindow::CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode)
+                : cocoaController(_cocoaController)
+                , windowMode(_windowMode)
             {
                 CreateWindow();
             }

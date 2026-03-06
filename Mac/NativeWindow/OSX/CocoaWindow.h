@@ -27,41 +27,40 @@ namespace vl {
             class CocoaWindow : public Object, public INativeWindow
             {
             protected:
-                INativeController*                              cocoaController;
+                INativeController*                              cocoaController = nullptr;
                 NativePoint                                     caretPoint;
-                CocoaWindow*                                    parentWindow;
+                CocoaWindow*                                    parentWindow = nullptr;
                 collections::List<CocoaWindow*>                 childWindows;
-                bool                                            alwaysPassFocusToParent;
                 collections::List<INativeWindowListener*>       listeners;
-                vint                                            mouseLastX;
-                vint                                            mouseLastY;
-                vint                                            mouseDownX;
-                vint                                            mouseDownY;
-                vint                                            mouseHoving;
-                Interface*                                      graphicsHandler;
-                bool                                            customFrameMode;
-                bool                                            supressingAlt;
-                bool                                            enabled;
-                bool                                            capturing;
-                bool                                            resizing;
-                bool                                            moving;
-                bool                                            opened;
-                bool                                            hasBorder;
-                bool                                            hasSizeBox;
-                bool                                            hasMinimizedBox;
-                INativeWindowListener::HitTestResult            resizingBorder;
+                vint                                            mouseLastX = 0;
+                vint                                            mouseLastY = 0;
+                vint                                            mouseDownX = 0;
+                vint                                            mouseDownY = 0;
+                vint                                            mouseHoving = false;
+                Interface*                                      graphicsHandler = nullptr;
+                bool                                            customFrameMode = false;
+                bool                                            supressingAlt = false;
+                bool                                            enabled = true;
+                bool                                            capturing = false;
+                bool                                            resizing = false;
+                bool                                            moving = false;
+                bool                                            opened = false;
+                bool                                            hasBorder = true;
+                bool                                            hasSizeBox = true;
+                bool                                            hasMinimizedBox = true;
+                INativeWindowListener::HitTestResult            resizingBorder = INativeWindowListener::NoDecision;
                 
                 NativeRect                                      lastBorder;
                 INativeCursor*                                  currentCursor;
                 NativeRect                                      previousBounds;
-                NativeMargin						            customFramePadding;
+                NativeMargin						            customFramePadding = { 8,8,8,8 };
 
                 collections::List<IDraggingListener*>           draggingListeners;
                 
                 WindowMode                                      windowMode;
-                NSWindow*                                       nsWindow;
-                NSWindowController*                             nsController;
-                CocoaWindowDelegate*                            nsDelegate;
+                NSWindow*                                       nsWindow = nullptr;
+                NSWindowController*                             nsController = nullptr;
+                CocoaWindowDelegate*                            nsDelegate = nullptr;
             
             public:
                 CocoaWindow(INativeController* _cocoaController, WindowMode _windowMode);
