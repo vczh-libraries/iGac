@@ -146,7 +146,7 @@ These are currently no-ops on macOS. On Windows, `DisableActivate` sets `WS_EX_N
 | Window creation | Window starts hidden until `ShowWindow` | Window starts hidden (not ordered). Only becomes visible on `Show()` / `ShowDeactivated()`. |
 | Popup close trigger | `WM_ACTIVATEAPP` + mouse messages | `windowDidBecomeKey:` → `InvokeGotFocus()`, mouse-down in `HandleEventInternal`, `applicationDidResignActive:` |
 | Render loop gate | `IsWindowVisible(handle)` — true for 0×0 windows | `[nsWindow isVisible]` — true for 0×0 windows (they are ordered on screen). The render loop must be able to run for 0×0 popup windows to compute their content size. |
-| Event loop | `GetMessage` / `TranslateMessage` / `DispatchMessage` | `[NSApp run]` for main loop; `nextEventMatchingMask:` + `sendEvent:` for `RunOneCycle`. |
+| Event loop | `GetMessage` / `TranslateMessage` / `DispatchMessage` | `nextEventMatchingMask:` + `sendEvent:` for both main loop and `RunOneCycle`. |
 | Modal windows | Framework-level. `RunOneCycle` pumps messages in a loop. | Framework-level. `RunOneCycle` pumps events via `nextEventMatchingMask:`. |
 
 ## RunOneCycle and Modal Windows
@@ -167,6 +167,12 @@ This requires `RunOneCycle()` to process OS events and return, just like a singl
 ### Windows Implementation (Reference)
 
 ```cpp
+void Run(INativeWindow* window) override {
+    mainWindow = ...;
+    mainWindow->Show();
+    while (RunOneCycleInternal());  // same function as RunOneCycle()
+}
+
 inline bool RunOneCycleInternal() {
     MSG message;
     if (!GetMessage(&message, NULL, 0, 0)) return false;  // blocks until a message arrives
@@ -177,42 +183,63 @@ inline bool RunOneCycleInternal() {
 }
 ```
 
-`GetMessage` **blocks** until a message is available, processes exactly one message, runs async tasks, then returns. Returns `false` on `WM_QUIT`.
+Key point: `Run()` and `RunOneCycle()` use **the same function** (`RunOneCycleInternal`). The main event loop is just `while (RunOneCycleInternal())`. When a modal dialog calls `RunOneCycle()` in a nested loop, it's the exact same code path — a nested call to the same pump. `GetMessage` **blocks** until a message is available, processes exactly one message, runs async tasks, then returns. Returns `false` on `WM_QUIT`.
 
 ### macOS Implementation
 
 ```objc
+void Run(INativeWindow* window) override {
+    mainWindow = window;
+    mainWindow->Show();
+    while (RunOneCycle());   // same function — matches Windows pattern
+}
+
 bool RunOneCycle() override {
-    NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
-                                        untilDate:[NSDate distantFuture]
-                                           inMode:NSDefaultRunLoopMode
-                                          dequeue:YES];
-    if (event != nil) {
-        [NSApp sendEvent:event];
-        [NSApp updateWindows];
+    @autoreleasepool {
+        NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
+                                            untilDate:[NSDate distantFuture]
+                                               inMode:NSDefaultRunLoopMode
+                                              dequeue:YES];
+        if (event != nil) {
+            [NSApp sendEvent:event];
+            [NSApp updateWindows];
+        }
+        asyncService.ExecuteAsyncTasks();
     }
-    asyncService.ExecuteAsyncTasks();
     return mainWindow != nullptr;
 }
 ```
 
-Key design decisions:
+### Why `Run()` Must NOT Use `[NSApp run]`
 
-- **`[NSDate distantFuture]`** makes `nextEventMatchingMask:` block until an event arrives, matching Windows' `GetMessage` behavior. `[NSDate distantPast]` would poll without blocking and cause 100% CPU usage.
-- **GCD timers still fire** during `nextEventMatchingMask:` because `dispatch_after` on the main queue is processed as a run loop source in `NSDefaultRunLoopMode`. The 16ms timer from `CocoaInputService` continues to work.
-- **Return value**: Returns `false` when `mainWindow` is `nullptr` (set when `DestroyNativeWindow` destroys the main window), signaling the app is shutting down.
-- **Nested event pumping**: `RunOneCycle` is called from within `[NSApp run]`'s event loop (since modal dialogs are triggered by user actions processed by `[NSApp run]`). This creates a nested run loop, which is standard practice on macOS — the same pattern is used by `NSModalSession`.
+The previous implementation used `[NSApp run]` for the main loop and `RunOneCycle()` (via `nextEventMatchingMask:`) for framework-level modal sub-loops. This caused crashes because:
+
+1. **Two different event pumps.** `[NSApp run]` is Cocoa's opaque event loop with its own internal state. `RunOneCycle()` is a manual pump using `nextEventMatchingMask:`. When a modal dialog's `RunOneCycle` loop runs *inside* `[NSApp run]`'s dispatch chain, the two mechanisms fight over event queue ownership and run loop state.
+
+2. **`[NSApp stop:nil]` targets the wrong loop.** When the main window is destroyed, `[NSApp stop:nil]` tells `[NSApp run]` to exit. But if we're inside a nested `RunOneCycle` loop (e.g., a framework modal dialog), `[NSApp stop:nil]` doesn't affect our manual pump — it affects the outer `[NSApp run]`, causing it to exit prematurely when the nested loop returns.
+
+3. **`mainWindow` was a dangling pointer.** `DestroyNativeWindow` deleted the window but never set `mainWindow = nullptr`, so `RunOneCycle()` returned `mainWindow != nullptr` → always `true`, never terminating.
+
+The fix: make `Run()` use `while(RunOneCycle())` — identical to Windows. Both the main loop and modal sub-loops use the same `RunOneCycle()` function. Nested calls to `RunOneCycle` are just nested calls to `nextEventMatchingMask:` + `sendEvent:`, which is the standard macOS pattern for nested event loops (same as `NSModalSession`).
+
+### Key Design Decisions
+
+- **`[NSDate distantFuture]`** makes `nextEventMatchingMask:` block until an event arrives, matching Windows' `GetMessage` behavior. No busy-waiting, no CPU cost while idle. `[NSDate distantPast]` would poll without blocking and cause 100% CPU usage.
+- **GCD timers still fire** during `nextEventMatchingMask:` because `dispatch_after` on the main queue is processed as a run loop source in `NSDefaultRunLoopMode`. The 16ms timer from `CocoaInputService` continues to work — its callback (`GlobalTimerFunc`) executes *during* the `nextEventMatchingMask:` call, processing rendering and timer events without waiting for an NSEvent.
+- **`@autoreleasepool`** wraps each iteration. `[NSApp run]` creates autorelease pools automatically per iteration; our custom loop must do this explicitly to prevent memory buildup from temporary Cocoa objects.
 - **`[NSApp updateWindows]`** is called after dispatching the event to ensure window display updates happen synchronously, matching the behavior of `[NSApp run]`'s internal loop.
 
-### Interaction with `[NSApp run]`
+### App Shutdown Sequence
 
-The main event loop uses `[NSApp run]`:
-```objc
-void Run(INativeWindow* window) override {
-    mainWindow = window;
-    mainWindow->Show();
-    [NSApp run];
-}
-```
+When the main window is destroyed via `DestroyNativeWindow`:
 
-When a modal dialog is shown during `[NSApp run]`, `RunOneCycle` creates a nested event pump inside the `[NSApp run]` call stack. When `DestroyNativeWindow` is called for the main window, it calls `[NSApp stop:nil]` which causes `[NSApp run]` to exit after the current event cycle completes.
+1. `mainWindow` is set to `nullptr`.
+2. A dummy `NSEventTypeApplicationDefined` event is posted to wake `nextEventMatchingMask:` (in case it's blocked waiting for events).
+3. `RunOneCycle()` returns `mainWindow != nullptr` → `false`.
+4. The `while(RunOneCycle())` loop in `Run()` exits.
+
+The dummy event is necessary because `DestroyNativeWindow` may be called from an async task executed *during* `nextEventMatchingMask:` (via a GCD timer → `GlobalTimerFunc` → `ExecuteAsyncTasks`). In that case, `nextEventMatchingMask:` would continue blocking after the async task returns unless we post an event to wake it.
+
+If `DestroyNativeWindow` is called during `sendEvent:` dispatch (the normal case — user clicks close), we're already past `nextEventMatchingMask:`, so the dummy event is harmless — it's simply ignored on the next iteration.
+
+`CocoaWindowDelegate::windowWillClose:` only calls `InvokeClosed()`. It does NOT call `[NSApp stop:nil]` or post events — app termination is handled entirely by `DestroyNativeWindow` setting `mainWindow = nullptr`.

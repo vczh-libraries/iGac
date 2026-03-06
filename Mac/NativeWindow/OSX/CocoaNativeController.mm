@@ -215,9 +215,29 @@ namespace vl {
                         callbackService.InvokeNativeWindowDestroying(window);
                         windows.Remove(cocoaWindow);
                         
-                        if(cocoaWindow == mainWindow)
-                            [NSApp stop:nil];
+                        bool isMainWindow = (cocoaWindow == mainWindow);
+                        if(isMainWindow)
+                        {
+                            mainWindow = nullptr;
+                        }
                         delete cocoaWindow;
+                        
+                        if(isMainWindow)
+                        {
+                            // Post a dummy event to wake nextEventMatchingMask:
+                            // so RunOneCycle returns and the while loop checks
+                            // the now-null mainWindow to exit.
+                            NSEvent* event = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                                                                location:NSMakePoint(0, 0)
+                                                           modifierFlags:0
+                                                               timestamp:0
+                                                            windowNumber:0
+                                                                 context:nil
+                                                                 subtype:0
+                                                                   data1:0
+                                                                   data2:0];
+                            [NSApp postEvent:event atStart:YES];
+                        }
                     }
                 }
                 
@@ -230,41 +250,24 @@ namespace vl {
                 {
                     mainWindow = window;
                     mainWindow->Show();
-                    
-                    [NSApp run];
-//                    // todo
-//                    for (;;)
-//                    {
-//                        NSEvent* event = [NSApp nextEventMatchingMask:NSAnyEventMask
-//                                                            untilDate:[NSDate distantPast]
-//                                                               inMode:NSDefaultRunLoopMode
-//                                                              dequeue:YES];
-//                        if (event != nil)
-//                        {
-//                            [NSApp sendEvent:event];
-//                        }
-//                        else
-//                        {
-//                            sleep(1);
-//                        }
-//                    }
+                    while(RunOneCycle());
                 }
 
                 bool RunOneCycle() override
                 {
-                    // Process one event from the event queue (blocks until an event arrives,
-                    // matching Windows' GetMessage behavior). GCD timers dispatched to the
-                    // main queue will fire during this call as run loop sources.
-                    NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
-                                                        untilDate:[NSDate distantFuture]
-                                                           inMode:NSDefaultRunLoopMode
-                                                          dequeue:YES];
-                    if (event != nil)
+                    @autoreleasepool
                     {
-                        [NSApp sendEvent:event];
-                        [NSApp updateWindows];
+                        NSEvent* event = [NSApp nextEventMatchingMask:NSEventMaskAny
+                                                            untilDate:[NSDate distantFuture]
+                                                               inMode:NSDefaultRunLoopMode
+                                                              dequeue:YES];
+                        if (event != nil)
+                        {
+                            [NSApp sendEvent:event];
+                            [NSApp updateWindows];
+                        }
+                        asyncService.ExecuteAsyncTasks();
                     }
-                    asyncService.ExecuteAsyncTasks();
                     return mainWindow != nullptr;
                 }
                 
