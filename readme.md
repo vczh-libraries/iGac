@@ -104,7 +104,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - `AsyncService::Semaphore::WaitForTime`
   - `CoreGraphicsResourceManager::CreateRawElement`
   - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
-  - `CocoaClipboardWriter` and `CocoaClipboardReader`
   - `CocoaWindow::GetIcon` and `SetIcon`
 
 ## Upstream Issues
