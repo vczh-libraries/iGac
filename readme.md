@@ -101,7 +101,6 @@ Work in progress: porting and stabilizing GacUI controls on macOS.
 ### Work Immediately
 
 - ShowModal crashes.
-- macos native file dialog just drop the color dialog.
 
 ### Known Issues / Limitations
 
