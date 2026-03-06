@@ -105,11 +105,14 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - Need to test inserting image
 - `FakeDialogService`
   - File dialog shows empty local disk.
-- `AsyncService::Semaphore::WaitForTime` not fully implemented
-- `GuiInnerShadowElementRenderer` is not implemented yet
-- `GuiFocusRectangleElementRenderer` is not implemented yet
-- `GuiGradientBackgroundElement` does not work with round-rect yet.
-- `CocoaClipboardWriter` and `CocoaClipboardReader` is not implemented yet
-- `CocoaWindow::GetIcon` and `SetIcon` is not implemented yet
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
+- Not Implemented:
+  - `AsyncService::Semaphore::WaitForTime`
+  - `GuiInnerShadowElementRenderer`
+  - `GuiFocusRectangleElementRenderer`
+  - `GuiGradientBackgroundElement` does not work with round-rect.
+  - `CoreGraphicsResourceManager::CreateRawElement`
+  - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
+  - `CocoaClipboardWriter` and `CocoaClipboardReader`
+  - `CocoaWindow::GetIcon` and `SetIcon`
