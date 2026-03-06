@@ -147,13 +147,16 @@ namespace vl {
                 friend class GuiElementRendererBase<GuiImageFrameElement, GuiImageFrameElementRenderer, ICoreGraphicsRenderTarget>;
                 
             protected:
-                                
+                CGImageRef                  disabledImage = nullptr;
+                
                 void InitializeInternal();
                 void FinalizeInternal();
                 void RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget);
+                CGImageRef                  GetDisabledImage(CGImageRef sourceImage);
                 
             public:
                 GuiImageFrameElementRenderer();
+                ~GuiImageFrameElementRenderer();
                 
                 void Render(Rect bounds) override;
                 void OnElementStateChanged() override;

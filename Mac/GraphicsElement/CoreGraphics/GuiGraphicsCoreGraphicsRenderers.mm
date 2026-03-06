@@ -596,6 +596,15 @@ namespace vl {
 
             }
             
+            GuiImageFrameElementRenderer::~GuiImageFrameElementRenderer()
+            {
+                if(disabledImage)
+                {
+                    CGImageRelease(disabledImage);
+                    disabledImage = nullptr;
+                }
+            }
+            
             void GuiImageFrameElementRenderer::InitializeInternal()
             {
                 
@@ -603,12 +612,54 @@ namespace vl {
             
             void GuiImageFrameElementRenderer::FinalizeInternal()
             {
-                
+                if(disabledImage)
+                {
+                    CGImageRelease(disabledImage);
+                    disabledImage = nullptr;
+                }
             }
             
             void GuiImageFrameElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldRenderTarget, ICoreGraphicsRenderTarget* newRenderTarget)
             {
                 
+            }
+            
+            CGImageRef GuiImageFrameElementRenderer::GetDisabledImage(CGImageRef sourceImage)
+            {
+                if(!disabledImage)
+                {
+                    size_t width = CGImageGetWidth(sourceImage);
+                    size_t height = CGImageGetHeight(sourceImage);
+                    
+                    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+                    CGContextRef bitmapContext = CGBitmapContextCreate(
+                        nullptr, width, height, 8, width * 4,
+                        colorSpace, kCGImageAlphaPremultipliedLast);
+                    CGColorSpaceRelease(colorSpace);
+                    
+                    CGContextDrawImage(bitmapContext, CGRectMake(0, 0, width, height), sourceImage);
+                    uint8_t* data = (uint8_t*)CGBitmapContextGetData(bitmapContext);
+                    
+                    size_t count = width * height;
+                    uint8_t* pixel = data;
+                    for(size_t i = 0; i < count; i++)
+                    {
+                        // Match Windows formula: g = (r + g + b) / 6 + a / 2
+                        uint8_t r = pixel[0];
+                        uint8_t g = pixel[1];
+                        uint8_t b = pixel[2];
+                        uint8_t a = pixel[3];
+                        uint8_t gray = (r + g + b) / 6 + a / 2;
+                        pixel[0] = gray;
+                        pixel[1] = gray;
+                        pixel[2] = gray;
+                        pixel += 4;
+                    }
+                    
+                    disabledImage = CGBitmapContextCreateImage(bitmapContext);
+                    CGContextRelease(bitmapContext);
+                }
+                return disabledImage;
             }
             
             void GuiImageFrameElementRenderer::Render(Rect bounds)
@@ -619,7 +670,7 @@ namespace vl {
                 {
                     CocoaImageFrame* frame = static_cast<CocoaImageFrame*>(element->GetImage()->GetFrame(element->GetFrameIndex()));
                     
-                    CGImageRef image = frame->GetCGImage();
+                    CGImageRef image = element->GetEnabled() ? frame->GetCGImage() : GetDisabledImage(frame->GetCGImage());
                     
                     CGRect dest;
                     if(element->GetStretch())
@@ -677,10 +728,22 @@ namespace vl {
             
             void GuiImageFrameElementRenderer::OnElementStateChanged()
             {
+                if(disabledImage)
+                {
+                    CGImageRelease(disabledImage);
+                    disabledImage = nullptr;
+                }
                 if(element->GetImage())
                 {
-                    INativeImageFrame* frame = element->GetImage()->GetFrame(element->GetFrameIndex());
-                    minSize = frame->GetSize();
+                    if(element->GetStretch())
+                    {
+                        minSize = Size(0, 0);
+                    }
+                    else
+                    {
+                        INativeImageFrame* frame = element->GetImage()->GetFrame(element->GetFrameIndex());
+                        minSize = frame->GetSize();
+                    }
                 }
                 else
                     minSize = Size(0, 0);
