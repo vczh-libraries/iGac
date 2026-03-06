@@ -103,8 +103,7 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
     - When removed the style is gone but the underline remains, editing styles won't remove the underline except editing text.
   - In `Preview` mode hyperlink won't react to cursor or clicking.
   - Need to test inserting image
-- `FakeDialogService`
-  - File dialog shows empty local disk. The issue is in VlppOS, fix it and test here again.
+- Hosted Mode: when a cursor is moving to no-decision it seems to fails to fallback to the default option in the context.
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
 - Not Implemented:
@@ -113,3 +112,8 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
   - `CocoaClipboardWriter` and `CocoaClipboardReader`
   - `CocoaWindow::GetIcon` and `SetIcon`
+
+## Upstream Issues
+
+- `FakeDialogService`
+  - File dialog shows empty local disk. The issue is in VlppOS, fix it and test here again.
