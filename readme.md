@@ -94,10 +94,14 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 - [doc/lldb.md](doc/lldb.md) — LLDB MCP server setup, debugging workflow, graceful app termination.
 - [doc/Plan_HostedMode.md](doc/Plan_HostedMode.md) — Implementation plan for macOS hosted mode (single-window rendering).
 
-## Known Issues / Limitations
+## TODO
 
 - `IGuiGraphicsParagraph`
-  - Need to test inserting image
+  - Need to test inserting image.
+  - Test CocoaClipboardService when image is tested.
+
+## Known Issues
+
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
 - Not Implemented:
