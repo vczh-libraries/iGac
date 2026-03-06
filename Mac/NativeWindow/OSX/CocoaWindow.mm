@@ -80,13 +80,11 @@ namespace vl {
                 if(nsWindow)
                 {
                     // Clear delegate to prevent further Cocoa callbacks after destruction.
-                    // Only call close if the window is still visible (i.e., not already
-                    // being closed via windowWillClose: -> DestroyNativeWindow -> delete).
                     [nsWindow setDelegate:nil];
-                    if([nsWindow isVisible])
-                    {
-                        [nsWindow close];
-                    }
+                    // Close the NSWindow to release it from Cocoa.
+                    // Since windowShouldClose: always returns NO (we manage lifecycle),
+                    // windows may still be alive at this point. Close cleans them up.
+                    [nsWindow close];
                     nsWindow = nil;
                 }
             }
@@ -364,19 +362,31 @@ namespace vl {
 
             void CocoaWindow::Hide(bool closeWindow)
             {
-                // On Windows, Hide() always posts WM_CLOSE regardless of closeWindow.
-                // For the main window this triggers the close sequence and app exit.
-                // For non-main windows, WM_CLOSE hides without destroying.
-                // Match that behavior here: always go through [nsWindow close] for the main window.
-                if (closeWindow || GetCurrentController()->WindowService()->GetMainWindow() == this)
+                // On Windows, Hide() posts WM_CLOSE which:
+                //   1. Fires BeforeClosing/AfterClosing
+                //   2. ShowWindow(SW_HIDE) — hides the window
+                //   3. For non-main: skips DefWindowProc (no DestroyWindow)
+                //   4. For main: DefWindowProc → DestroyWindow → WM_DESTROY → DestroyNativeWindow
+                // The closeWindow argument is reserved and not used.
+                // Match that behavior here.
+                if (InvokeClosing())
                 {
-                    [nsWindow close];
+                    // Cancelled
+                    return;
                 }
-                else
+                [nsWindow orderOut:nil];
+                opened = false;
+                InvokeClosed();
+                if (GetCurrentController()->WindowService()->GetMainWindow() == this)
                 {
-                    [nsWindow setIsVisible:false];
-                    opened = false;
-                    InvokeClosed();
+                    // Defer destruction to avoid deleting 'this' while still in Hide().
+                    // On Windows, PostMessage(WM_CLOSE) is async — destruction
+                    // happens after the caller returns.
+                    auto controller = GetCurrentController();
+                    auto self = this;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        controller->WindowService()->DestroyNativeWindow(self);
+                    });
                 }
             }
 
@@ -1563,20 +1573,21 @@ namespace vl {
 
 - (BOOL)windowShouldClose:(id)sender
 {
-    // !cancel
-    return !(dynamic_cast<osx::CocoaWindow*>(_nativeWindow))->InvokeClosing();
+    // Match Windows WM_CLOSE semantics by delegating to Hide().
+    // Hide() fires BeforeClosing/AfterClosing, hides, fires Closed,
+    // and triggers DestroyNativeWindow for the main window.
+    // Always return NO to prevent Cocoa from releasing the NSWindow —
+    // we manage the window lifecycle ourselves.
+    osx::CocoaWindow* cocoaWindow = dynamic_cast<osx::CocoaWindow*>(_nativeWindow);
+    cocoaWindow->Hide(true);
+    return NO;
 }
 
 - (void)windowWillClose:(NSNotification *)notification
 {
-    osx::CocoaWindow* cocoaWindow = dynamic_cast<osx::CocoaWindow*>(_nativeWindow);
-    cocoaWindow->InvokeClosed();
-    // On Windows, WM_CLOSE on the main window leads to DestroyWindow -> WM_DESTROY
-    // -> DestroyNativeWindow. Match that: trigger destruction for the main window.
-    if (vl::presentation::GetCurrentController()->WindowService()->GetMainWindow() == cocoaWindow)
-    {
-        vl::presentation::GetCurrentController()->WindowService()->DestroyNativeWindow(cocoaWindow);
-    }
+    // This is only reached when [nsWindow close] is called directly
+    // (e.g., from the destructor cleanup). The main close logic is
+    // handled in windowShouldClose: via Hide().
 }
 
 - (void)windowDidResize:(NSNotification *)notification

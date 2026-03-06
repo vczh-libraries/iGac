@@ -22,11 +22,11 @@ The window is **not shown at creation time**. It only becomes visible when GacUI
 
 ### Show / ShowDeactivated / Hide
 
-**`Show()`** — For the main window (no parent): `[nsWindow makeKeyAndOrderFront:nil]` + `[nsWindow makeMainWindow]`. For child windows (has parent): `[nsWindow orderFront:nil]` + `[nsWindow makeFirstResponder:nsWindow.contentView]`. On first call, fires `InvokeOpened()`.
+**`Show()`** — For the main window (no parent): `[nsWindow makeKeyAndOrderFront:nil]` + `[nsWindow makeMainWindow]`. For child windows with non-borderless style (modal dialogs): `[nsWindow makeKeyAndOrderFront:nil]` + `makeFirstResponder`. For borderless child windows (popups): `[nsWindow orderFront:nil]` + `makeFirstResponder`. On first call, fires `InvokeOpened()`.
 
 **`ShowDeactivated()`** — Used for popups. Calls `[nsWindow orderFront:nil]` + `makeFirstResponder` without making the window key or main. Wrapped in `suppressClosePopups = true/false` to prevent re-entrant popup closing (see below). On first call, fires `InvokeOpened()`.
 
-**`Hide(bool closeWindow)`** — If `closeWindow` is true or this is the main window, calls `[nsWindow close]` (which triggers the close sequence and app exit for the main window). Otherwise calls `[nsWindow setIsVisible:false]` and fires `InvokeClosed()`.
+**`Hide(bool closeWindow)`** — Matches Windows' `PostMessage(WM_CLOSE)` semantics. The `closeWindow` argument is reserved and not used. Calls `InvokeClosing()` first — if cancelled, returns immediately. Otherwise hides the window via `[nsWindow orderOut:nil]`, fires `InvokeClosed()`. For the main window, additionally defers `DestroyNativeWindow` via `dispatch_async` to trigger app exit (the deferral avoids deleting `this` while still inside `Hide()`, matching Windows' async `PostMessage` behavior).
 
 ### IsVisible
 
@@ -102,15 +102,15 @@ Without this guard, opening a popup would immediately trigger its own closing.
 
 `CocoaNSWindow` is an `NSWindow` subclass that overrides:
 
-- `canBecomeKeyWindow` — Returns `YES` for top-level windows (no parent). For child windows, returns `YES` only if the window has a non-zero style mask (i.e., it is NOT borderless). This means modal dialog child windows (which have title bars) can become key and receive keyboard input, while borderless popup child windows cannot.
+- `canBecomeKeyWindow` — Returns `NO` for disabled windows (prevents modal-owner from stealing key status during modal dialogs). Returns `YES` for top-level windows (no parent). For child windows, returns `YES` only if the window has a non-zero style mask (i.e., it is NOT borderless). This means modal dialog child windows (which have title bars) can become key and receive keyboard input, while borderless popup child windows cannot.
 - `canBecomeMainWindow` — Returns `YES` only if there is no parent window.
 
 ### CocoaWindowDelegate
 
 An `NSWindowDelegate` that bridges Cocoa window events to GacUI:
 
-- `windowShouldClose:` → `InvokeClosing()`
-- `windowWillClose:` → `InvokeClosed()`; for the main window, also calls `DestroyNativeWindow` to trigger the destruction sequence and app exit (matching Windows' `WM_CLOSE` → `DestroyWindow` → `WM_DESTROY` → `DestroyNativeWindow` flow)
+- `windowShouldClose:` — Delegates to `Hide(true)` to perform the full close sequence (BeforeClosing/AfterClosing, hide, Closed). Always returns `NO` to prevent Cocoa from releasing the NSWindow — the lifecycle is managed entirely by the C++ side.
+- `windowWillClose:` — No-op. Only reached when `[nsWindow close]` is called directly (e.g., from the `~CocoaWindow` destructor cleanup).
 - `windowDidResize:` → `InvokeMoved()`
 - `windowDidBecomeKey:` → `InvokeGotFocus()`
 - `windowDidResignKey:` → `InvokeLostFocus()`
@@ -154,7 +154,7 @@ The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEna
 | TopMost | `WS_EX_TOPMOST` via `SetWindowPos` | `[nsWindow setLevel:NSPopUpMenuWindowLevel]` |
 | Disable activation | `WS_EX_NOACTIVATE` | No-op. Handled by `canBecomeKeyWindow` returning NO for child borderless windows. |
 | Enable/Disable | `EnableWindow(hwnd, FALSE/TRUE)` — toggles input, no visibility change | `enabled` flag only. `canBecomeKeyWindow` returns `NO` for disabled windows. |
-| Hide | `PostMessage(WM_CLOSE)` always | Main window: `[nsWindow close]`. Others: `[nsWindow setIsVisible:false]`. |
+| Hide | `PostMessage(WM_CLOSE)` always | `InvokeClosing()`, `[nsWindow orderOut:nil]`, `InvokeClosed()`. Main window defers `DestroyNativeWindow` via `dispatch_async`. |
 | SetBounds | `MoveWindow` / `SetWindowPos` — no visibility side effects | `[nsWindow setFrame:display:YES]` — no visibility side effects. |
 | Custom frame | Style flags via `SetWindowLongPtr` | `NSWindowStyleMaskBorderless` + manual hit testing in `HandleEventInternal`. Note: `NSWindowStyleMaskBorderless = 0`, so XOR-based toggling does not work. |
 | Window creation | Window starts hidden until `ShowWindow` | Window starts hidden (not ordered). Only becomes visible on `Show()` / `ShowDeactivated()`. |
@@ -256,4 +256,4 @@ The dummy event is necessary because `DestroyNativeWindow` may be called from an
 
 If `DestroyNativeWindow` is called during `sendEvent:` dispatch (the normal case — user clicks close), we're already past `nextEventMatchingMask:`, so the dummy event is harmless — it's simply ignored on the next iteration.
 
-`CocoaWindowDelegate::windowWillClose:` only calls `InvokeClosed()`. It does NOT call `[NSApp stop:nil]` or post events — app termination is handled entirely by `DestroyNativeWindow` setting `mainWindow = nullptr`.
+`CocoaWindowDelegate::windowShouldClose:` delegates to `Hide(true)` and always returns NO. `windowWillClose:` is a no-op. The close button does NOT call `[NSApp stop:nil]` or post events — app termination is handled entirely by `DestroyNativeWindow` setting `mainWindow = nullptr` (deferred via `dispatch_async` from `Hide()`).
