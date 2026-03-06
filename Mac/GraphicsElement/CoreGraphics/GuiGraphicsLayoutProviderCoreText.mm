@@ -512,22 +512,20 @@ namespace vl {
                          }
                          [textStorage addAttribute:NSFontAttributeName value:font range:range];
                          
-                         if(value & TextStyle::Underline)
+                         // Always remove underline/strikeline attributes first;
+                         // they will be re-added below only if the flags are set.
+                         // This matches Windows D2D behavior where SetUnderline/SetStrikethrough
+                         // are always called with TRUE or FALSE.
+                         NSNumber* underlineStyle = [attrs objectForKey:NSUnderlineStyleAttributeName];
+                         if(underlineStyle)
                          {
-                             NSNumber* style = [attrs objectForKey:NSUnderlineStyleAttributeName];
-                             if(style)
-                             {
-                                 [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
-                             }
+                             [textStorage removeAttribute:NSUnderlineStyleAttributeName range:range];
                          }
                          
-                         if(value & TextStyle::Strikeline)
+                         NSNumber* strikeStyle = [attrs objectForKey:NSStrikethroughStyleAttributeName];
+                         if(strikeStyle)
                          {
-                             NSNumber* style = [attrs objectForKey:NSStrikethroughStyleAttributeName];
-                             if(style)
-                             {
-                                 [textStorage removeAttribute:NSStrikethroughStyleAttributeName range:range];
-                             }
+                             [textStorage removeAttribute:NSStrikethroughStyleAttributeName range:range];
                          }
                          needFormatData = true;
                     }];
@@ -971,7 +969,7 @@ namespace vl {
                             }
                         }
                     }
-                    return InlineObjectProperties();
+                    return Nullable<InlineObjectProperties>();
                 }
                 
                 vint GetNearestCaretFromTextPos(vint textPos, bool frontSide) override
