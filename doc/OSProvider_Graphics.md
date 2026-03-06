@@ -4,6 +4,7 @@ This document describes the CoreGraphics rendering backend for GacUI on macOS, i
 
 For the overall architecture (entry point, INativeController, services), see [OSProvider.md](OSProvider.md).
 For window management (INativeWindow, CocoaWindow, popups), see [OSProvider_Window.md](OSProvider_Window.md).
+For hosted mode (single-window rendering, virtual windows), see [OSProvider_HostedMode.md](OSProvider_HostedMode.md).
 
 ## Graphics Resource Manager
 

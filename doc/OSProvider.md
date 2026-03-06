@@ -4,6 +4,7 @@ This document describes how GacUI's platform abstraction interfaces are implemen
 
 For window management (INativeWindow, CocoaWindow, popups, child windows), see [OSProvider_Window.md](OSProvider_Window.md).
 For graphics rendering (CoreGraphics backend, element renderers, text layout), see [OSProvider_Graphics.md](OSProvider_Graphics.md).
+For hosted mode (single-window rendering, virtual windows), see [OSProvider_HostedMode.md](OSProvider_HostedMode.md).
 
 ## Overview
 

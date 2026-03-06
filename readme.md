@@ -41,6 +41,7 @@ iGac/
 │   ├── OSProvider.md           macOS OS provider: controller, services, entry point
 │   ├── OSProvider_Window.md    macOS OS provider: INativeWindow, CocoaWindow, popups
 │   ├── OSProvider_Graphics.md  macOS OS provider: CoreGraphics rendering, elements, fonts
+│   ├── OSProvider_HostedMode.md macOS hosted mode: virtual windows, render lifecycle
 │   └── lldb.md                 LLDB MCP server setup, debugging workflow
 │
 ├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
@@ -91,8 +92,8 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 - [doc/OSProvider.md](doc/OSProvider.md) — Controller, services, entry point, and overall architecture of the macOS platform layer.
 - [doc/OSProvider_Window.md](doc/OSProvider_Window.md) — INativeWindow implementation (CocoaWindow): window lifecycle, Show/Hide, popups, child windows, custom frame, key differences from Windows.
 - [doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md) — CoreGraphics rendering backend: render targets, element renderers, text layout, font management.
+- [doc/OSProvider_HostedMode.md](doc/OSProvider_HostedMode.md) — Hosted mode: single-window rendering, hosted controller, virtual windows, render target lifecycle.
 - [doc/lldb.md](doc/lldb.md) — LLDB MCP server setup, debugging workflow, graceful app termination.
-- [doc/Plan_HostedMode.md](doc/Plan_HostedMode.md) — Implementation plan for macOS hosted mode (single-window rendering).
 
 ## TODO
 

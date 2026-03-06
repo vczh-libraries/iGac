@@ -4,6 +4,7 @@ This document describes how `INativeWindow` is implemented on macOS via `CocoaWi
 
 For the overall architecture (entry point, INativeController, services), see [OSProvider.md](OSProvider.md).
 For graphics rendering and elements, see [OSProvider_Graphics.md](OSProvider_Graphics.md).
+For hosted mode (single-window rendering, virtual windows), see [OSProvider_HostedMode.md](OSProvider_HostedMode.md).
 
 ## CocoaWindow
 
