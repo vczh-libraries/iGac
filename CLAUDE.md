@@ -52,6 +52,7 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 - `SetBounds()` must not call `Show()`. On Windows, `MoveWindow`/`SetWindowPos` repositions without showing. GacUI calls `Show()`/`ShowDeactivated()` explicitly.
 - macOS Cocoa uses bottom-left origin coordinates. All coordinate conversions go through `FlipY()`/`FlipRect()` in `CocoaHelper`.
 - `NSWindowStyleMaskBorderless = 0`. Bitwise XOR/AND operations on style masks do not work as expected with this value. Use explicit flag-based reconstruction (see `UpdateStyleMask()`).
+- **Never use `GetCurrentController()` in OS provider code** (`Mac/`). In hosted mode, `GetCurrentController()` returns `GuiHostedController`, not the native `CocoaController`. The hosted controller has its own `CallbackService`, `WindowService`, etc. that manage virtual windows — calling them from the OS provider (which deals with real Cocoa objects) causes bugs. Use `GetOSXNativeController()` (declared in `CocoaNativeController.h`) instead. Test/app code (`MacShared/`, `MacTest/`, `MacFullControlTest/`) should continue using `GetCurrentController()`, as application-level code is meant to go through whichever controller is active.
 
 ## Testing Rules
 

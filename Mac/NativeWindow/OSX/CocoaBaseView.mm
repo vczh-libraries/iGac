@@ -10,6 +10,7 @@
 
 #include "CocoaWindow.h"
 #include "CocoaHelper.h"
+#include "CocoaNativeController.h"
 #include "ServicesImpl/CocoaResourceService.h"
 
 @implementation CocoaBaseView
@@ -216,7 +217,7 @@
     }
     if (!rawCursor)
     {
-        rawCursor = vl::presentation::GetCurrentController()->ResourceService()->GetDefaultSystemCursor();
+        rawCursor = vl::presentation::osx::GetOSXNativeController()->ResourceService()->GetDefaultSystemCursor();
     }
     vl::presentation::osx::CocoaCursor* cursor = dynamic_cast<vl::presentation::osx::CocoaCursor*>(rawCursor);
     

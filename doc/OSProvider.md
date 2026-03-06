@@ -40,6 +40,15 @@ The hosted mode entry point is `SetupOSXHostedCoreGraphicsRenderer()` (in `CoreG
 
 `GuiHostedController`, `GuiHostedGraphicsResourceManager`, and all supporting types are platform-independent and live in `GacUI.cpp`/`GacUI.h`.
 
+## GetCurrentController() vs GetOSXNativeController()
+
+In hosted mode, `SetNativeController()` registers the `GuiHostedController` as the global controller. This means `GetCurrentController()` returns `GuiHostedController`, **not** the native `CocoaController`. The hosted controller has its own `CallbackService`, `WindowService`, etc. that manage virtual windows. Calling these from OS provider code (which operates on real Cocoa objects) produces incorrect results:
+
+- **`CallbackService()`** — The hosted controller's callback service fires to virtual window listeners only. The native callback service fires to the hosted controller itself (which runs the hosted render loop) and to native window listeners. Calling the wrong one skips the hosted render loop entirely.
+- **`WindowService()`** — The hosted controller's window service manages virtual `GuiHostedWindow` objects, not native `CocoaWindow`s.
+
+**Rule:** All code under `Mac/` must use `GetOSXNativeController()` (declared in `CocoaNativeController.h`) to access the native controller. Test/app code (`MacShared/`, `MacTest/`, `MacFullControlTest/`) should use `GetCurrentController()` as normal, since application code is designed to work with whichever controller is active.
+
 ## INativeController — CocoaController
 
 **File:** `Mac/NativeWindow/OSX/CocoaNativeController.mm`

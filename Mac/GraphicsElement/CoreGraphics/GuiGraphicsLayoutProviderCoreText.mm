@@ -9,6 +9,7 @@
 #include "GuiGraphicsLayoutProviderCoreText.h"
 
 #include "../../NativeWindow/OSX/CocoaHelper.h"
+#include "../../NativeWindow/OSX/CocoaNativeController.h"
 #include "../../NativeWindow/OSX/ServicesImpl/CocoaImageService.h"
 
 #include "GuiGraphicsCoreGraphics.h"
@@ -282,7 +283,7 @@ namespace vl {
                     graphicsElements.Add(TextRange(0, _text.Length()), 0);
                     backgroundColors.Add(TextRange(0, _text.Length()), Color(0, 0, 0, 0));
 
-                    FontProperties defaultFontProperties = GetCurrentController()->ResourceService()->GetDefaultFont();
+                    FontProperties defaultFontProperties = GetOSXNativeController()->ResourceService()->GetDefaultFont();
                     NSFont* defaultFont = CreateFontWithGacFont(defaultFontProperties);
                     if (!defaultFont)
                     {
@@ -702,7 +703,7 @@ namespace vl {
                     {
                         // Empty text: NSLayoutManager reports 0 height since there are no glyphs.
                         // Match D2D/GDI behavior: return the default font's line height.
-                        FontProperties defaultFontProperties = GetCurrentController()->ResourceService()->GetDefaultFont();
+                        FontProperties defaultFontProperties = GetOSXNativeController()->ResourceService()->GetDefaultFont();
                         NSFont* font = CreateFontWithGacFont(defaultFontProperties);
                         if (!font)
                         {
