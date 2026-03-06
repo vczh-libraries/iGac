@@ -242,7 +242,12 @@ namespace vl {
 
             void CocoaResourceService::EnumerateFonts(collections::List<WString>& fonts)
             {
-                CHECK_FAIL(L"Not Implemented!");
+                NSFontManager* fontManager = [NSFontManager sharedFontManager];
+                NSArray<NSString*>* fontFamilies = [fontManager availableFontFamilies];
+                for (NSString* family in fontFamilies)
+                {
+                    fonts.Add(NSStringToWString(family));
+                }
             }
         }
 
