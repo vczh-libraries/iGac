@@ -72,6 +72,45 @@ const CGFloat HackedButtonSideMargin = 9.0f;
 
 // hack system color / font panels since they don't have a OK / Cancel button
 
+@interface FontPanelContentView: NSView
+{
+    NSColor* foregroundColor;
+}
+
+- (NSColor*)foregroundColor;
+
+@end
+
+@implementation FontPanelContentView
+
+- (NSFontPanelModeMask)validModesForFontPanel:(NSFontPanel *)fontPanel
+{
+    return NSFontPanelModeMaskFace
+         | NSFontPanelModeMaskSize
+         | NSFontPanelModeMaskCollection
+         | NSFontPanelModeMaskTextColorEffect;
+}
+
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+- (void)changeColor:(id)sender
+{
+    if([sender isKindOfClass:[NSColorPanel class]])
+    {
+        foregroundColor = [(NSColorPanel*)sender color];
+    }
+}
+
+- (NSColor*)foregroundColor
+{
+    return foregroundColor;
+}
+
+@end
+
 @interface WindowCloseDelegate: NSObject<NSWindowDelegate>
 {
 @protected
@@ -516,6 +555,12 @@ namespace vl {
                 
                 [fontPanel setDelegate:fpDelegate];
                 
+                // Insert a FontPanelContentView as first responder to control font panel modes
+                // and capture foreground color changes
+                FontPanelContentView* responderView = [[FontPanelContentView alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+                [[fontPanel contentView] addSubview:responderView];
+                [fontPanel makeFirstResponder:responderView];
+                
                 if(selected)
                 {
                     NSFont* defaultFont = CreateFontWithGacFont(selectionFont);
@@ -544,6 +589,16 @@ namespace vl {
                     
                     selectionFont.size = [selectedFont pointSize];
                     selectionFont.fontFamily = NSStringToWString([selectedFont familyName]);
+                    
+                    NSColor* fgColor = [responderView foregroundColor];
+                    if(fgColor)
+                    {
+                        NSColor* color = [fgColor colorUsingType:NSColorTypeComponentBased];
+                        selectionColor = Color([color redComponent] * 255.0,
+                                               [color greenComponent] * 255.0,
+                                               [color blueComponent] * 255.0,
+                                               [color alphaComponent] * 255.0);
+                    }
                 }
                 
                 return ![fpDelegate isCancelled];
