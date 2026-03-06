@@ -110,6 +110,13 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
   - `CocoaWindow::GetIcon` and `SetIcon`
 
+## Investigation
+
+- Non-Hosted mode
+  - Custom frame window seems to have two different cursors at the border.
+  - The outer one works fine.
+  - Dragging the inner one inwards result in keep appearing and disappearing, refreshing fast like glitch.
+
 ## Upstream Issues
 
 - `FakeDialogService`
