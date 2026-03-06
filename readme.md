@@ -104,7 +104,7 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - In `Preview` mode hyperlink won't react to cursor or clicking.
   - Need to test inserting image
 - `FakeDialogService`
-  - File dialog shows empty local disk.
+  - File dialog shows empty local disk. The issue is in VlppOS, fix it and test here again.
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
 - Not Implemented:
