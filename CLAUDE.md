@@ -56,15 +56,16 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 ## Testing Rules
 
 - After launching a test app (via `./testFC.sh`, `./test.sh`, or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
+- When LLDB or a test app is no longer needed, just kill the processes directly — do not rely on `lldb_terminate` or graceful shutdown, as those may hang or be unavailable.
 - Use `--unblock` to launch in background and get the PID for later cleanup.
-- Use the following to find and kill test processes:
+- Use the following to find and kill test/debugger processes:
 
 ```bash
 # Find all running test processes
-pgrep -fl 'Test_FullControlTest|Test_HellWorld'
+pgrep -fl 'Test_FullControlTest|Test_HellWorld|lldb'
 
-# Kill all test processes
-pkill -f 'Test_FullControlTest|Test_HellWorld'
+# Kill all test and debugger processes
+pkill -f 'Test_FullControlTest|Test_HellWorld|lldb'
 ```
 
 ## Files You Should Never Modify
