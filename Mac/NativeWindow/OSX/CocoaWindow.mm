@@ -77,7 +77,18 @@ namespace vl {
             
             CocoaWindow::~CocoaWindow()
             {
-                [nsWindow close];
+                if(nsWindow)
+                {
+                    // Clear delegate to prevent further Cocoa callbacks after destruction.
+                    // Only call close if the window is still visible (i.e., not already
+                    // being closed via windowWillClose: -> DestroyNativeWindow -> delete).
+                    [nsWindow setDelegate:nil];
+                    if([nsWindow isVisible])
+                    {
+                        [nsWindow close];
+                    }
+                    nsWindow = nil;
+                }
             }
             
             void CocoaWindow::CreateWindow()
@@ -274,7 +285,17 @@ namespace vl {
             {
                 if(parentWindow)
                 {
-                    [nsWindow orderFront:nil];
+                    if([nsWindow styleMask] != 0)
+                    {
+                        // Non-borderless child windows (e.g. modal dialogs)
+                        // should become key to receive keyboard input.
+                        [nsWindow makeKeyAndOrderFront:nil];
+                    }
+                    else
+                    {
+                        // Borderless child windows (popups) should not steal focus.
+                        [nsWindow orderFront:nil];
+                    }
                     [nsWindow makeFirstResponder:nsWindow.contentView];
                 }
                 else
@@ -367,13 +388,11 @@ namespace vl {
             void CocoaWindow::Enable() 
             {
                 enabled = true;
-                [nsWindow setIgnoresMouseEvents:NO];
             }
 
             void CocoaWindow::Disable() 
             {
                 enabled = false;
-                [nsWindow setIgnoresMouseEvents:YES];
             }
 
             bool CocoaWindow::IsEnabled() 
@@ -643,6 +662,14 @@ namespace vl {
                 for(vint i=0; i<listeners.Count(); ++i)
                 {
                     listeners[i]->Closed();
+                }
+            }
+
+            void CocoaWindow::InvokeDestroying()
+            {
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Destroying();
                 }
             }
 
@@ -1441,8 +1468,21 @@ namespace vl {
 
 - (BOOL)canBecomeKeyWindow
 {
-    // NSPanel
-    return (self.parentWindow != nil) ? (self.styleMask & NSWindowStyleMaskBorderless): YES;
+    // Disabled windows should not become key (matching Windows EnableWindow(FALSE) behavior)
+    CocoaWindowDelegate* del = (CocoaWindowDelegate*)self.delegate;
+    if (del && del.nativeWindow)
+    {
+        osx::CocoaWindow* cocoaWindow = dynamic_cast<osx::CocoaWindow*>(del.nativeWindow);
+        if (cocoaWindow && !cocoaWindow->IsEnabled()) return NO;
+    }
+    if (self.parentWindow != nil)
+    {
+        // Borderless child windows (popups) should not become key.
+        // Non-borderless child windows (modal dialogs) should become key.
+        // NSWindowStyleMaskBorderless == 0, so borderless windows have styleMask == 0.
+        return self.styleMask != 0;
+    }
+    return YES;
 }
 
 - (BOOL)canBecomeMainWindow
@@ -1531,6 +1571,12 @@ namespace vl {
 {
     osx::CocoaWindow* cocoaWindow = dynamic_cast<osx::CocoaWindow*>(_nativeWindow);
     cocoaWindow->InvokeClosed();
+    // On Windows, WM_CLOSE on the main window leads to DestroyWindow -> WM_DESTROY
+    // -> DestroyNativeWindow. Match that: trigger destruction for the main window.
+    if (vl::presentation::GetCurrentController()->WindowService()->GetMainWindow() == cocoaWindow)
+    {
+        vl::presentation::GetCurrentController()->WindowService()->DestroyNativeWindow(cocoaWindow);
+    }
 }
 
 - (void)windowDidResize:(NSNotification *)notification

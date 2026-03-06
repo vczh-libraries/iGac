@@ -212,6 +212,7 @@ namespace vl {
                     CocoaWindow* cocoaWindow = dynamic_cast<CocoaWindow*>(window);
                     if(window != 0 && windows.Contains(cocoaWindow))
                     {
+                        cocoaWindow->InvokeDestroying();
                         callbackService.InvokeNativeWindowDestroying(window);
                         windows.Remove(cocoaWindow);
                         

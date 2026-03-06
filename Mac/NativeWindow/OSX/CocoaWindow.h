@@ -153,6 +153,7 @@ namespace vl {
                 ///
                 void                HandleEventInternal(NSEvent* event);
                 void                InvokeClosed();
+                void                InvokeDestroying();
                 void                InvokeOpened();
                 bool                InvokeClosing();
                 void                InvokeGotFocus();

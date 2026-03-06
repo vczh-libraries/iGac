@@ -102,7 +102,7 @@ Without this guard, opening a popup would immediately trigger its own closing.
 
 `CocoaNSWindow` is an `NSWindow` subclass that overrides:
 
-- `canBecomeKeyWindow` — Returns `YES` unless the window has a parent AND uses `NSWindowStyleMaskBorderless` (value 0, so `styleMask & Borderless` is always 0 for borderless windows). This prevents popup windows from stealing keyboard focus.
+- `canBecomeKeyWindow` — Returns `YES` for top-level windows (no parent). For child windows, returns `YES` only if the window has a non-zero style mask (i.e., it is NOT borderless). This means modal dialog child windows (which have title bars) can become key and receive keyboard input, while borderless popup child windows cannot.
 - `canBecomeMainWindow` — Returns `YES` only if there is no parent window.
 
 ### CocoaWindowDelegate
@@ -110,7 +110,7 @@ Without this guard, opening a popup would immediately trigger its own closing.
 An `NSWindowDelegate` that bridges Cocoa window events to GacUI:
 
 - `windowShouldClose:` → `InvokeClosing()`
-- `windowWillClose:` → `InvokeClosed()`
+- `windowWillClose:` → `InvokeClosed()`; for the main window, also calls `DestroyNativeWindow` to trigger the destruction sequence and app exit (matching Windows' `WM_CLOSE` → `DestroyWindow` → `WM_DESTROY` → `DestroyNativeWindow` flow)
 - `windowDidResize:` → `InvokeMoved()`
 - `windowDidBecomeKey:` → `InvokeGotFocus()`
 - `windowDidResignKey:` → `InvokeLostFocus()`
@@ -122,9 +122,16 @@ These are currently no-ops on macOS. On Windows, `DisableActivate` sets `WS_EX_N
 
 ### Enable / Disable
 
-On Windows, `EnableWindow(hwnd, FALSE)` prevents user input (mouse clicks, keyboard) without hiding or moving the window. The macOS implementation uses `[nsWindow setIgnoresMouseEvents:YES]` in `Disable()` to achieve the same effect. The `enabled` flag defaults to `true`, matching Windows where a newly created window is enabled by default (`IsWindowEnabled` returns `TRUE`).
+On Windows, `EnableWindow(hwnd, FALSE)` prevents user input (mouse clicks, keyboard) without hiding or moving the window. The macOS implementation simply sets the `enabled` flag. The `enabled` flag defaults to `true`, matching Windows where a newly created window is enabled by default (`IsWindowEnabled` returns `TRUE`).
 
-**Previous bug:** `Disable()` used `[nsWindow orderOut:nil]` (which hides the window) and `Enable()` used `[nsWindow orderFront:nil]` (which shows it). This was wrong because `ShowModal` calls `owner->SetEnabled(false)` to disable the owner — hiding the owner window caused visual glitches and callback cascading. Additionally, `enabled` was initialized to `false`, causing `ShowModal`'s `CHECK_ERROR(owner && owner->GetEnabled())` to fail because the owner appeared disabled even though no one had explicitly disabled it.
+On Windows, `EnableWindow(FALSE)` prevents the window from becoming the active/focus window at the OS level. On macOS, this is handled by `canBecomeKeyWindow` returning `NO` for disabled windows — see the `CocoaNSWindow` section below.
+
+The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEnabled()`, so when `ShowModal` calls `owner->SetEnabled(false)`, the owner's `GetEnabled()` returns false, and the framework won't process input on it.
+
+**Previous bugs:**
+- `enabled` was initialized to `false` (should be `true`), causing `ShowModal`'s `CHECK_ERROR(owner && owner->GetEnabled())` to fail.
+- `Disable()` used `[nsWindow orderOut:nil]` which hid the window entirely.
+- Later `Disable()` used `[nsWindow setIgnoresMouseEvents:YES]` which made clicks pass through to whatever was behind the window, deactivating the app.
 
 ## CocoaBaseView
 
@@ -146,7 +153,7 @@ On Windows, `EnableWindow(hwnd, FALSE)` prevents user input (mouse clicks, keybo
 | Show without activation | `ShowWindow(SW_SHOWNOACTIVATE)` | `[nsWindow orderFront:nil]` — does not make key or main. |
 | TopMost | `WS_EX_TOPMOST` via `SetWindowPos` | `[nsWindow setLevel:NSPopUpMenuWindowLevel]` |
 | Disable activation | `WS_EX_NOACTIVATE` | No-op. Handled by `canBecomeKeyWindow` returning NO for child borderless windows. |
-| Enable/Disable | `EnableWindow(hwnd, FALSE/TRUE)` — toggles input, no visibility change | `[nsWindow setIgnoresMouseEvents:YES/NO]` — toggles mouse input, no visibility change. |
+| Enable/Disable | `EnableWindow(hwnd, FALSE/TRUE)` — toggles input, no visibility change | `enabled` flag only. `canBecomeKeyWindow` returns `NO` for disabled windows. |
 | Hide | `PostMessage(WM_CLOSE)` always | Main window: `[nsWindow close]`. Others: `[nsWindow setIsVisible:false]`. |
 | SetBounds | `MoveWindow` / `SetWindowPos` — no visibility side effects | `[nsWindow setFrame:display:YES]` — no visibility side effects. |
 | Custom frame | Style flags via `SetWindowLongPtr` | `NSWindowStyleMaskBorderless` + manual hit testing in `HandleEventInternal`. Note: `NSWindowStyleMaskBorderless = 0`, so XOR-based toggling does not work. |
