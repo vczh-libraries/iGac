@@ -8,6 +8,7 @@
 2. **[doc/OSProvider.md](doc/OSProvider.md)** — Controller, services, entry point, overall architecture.
 3. **[doc/OSProvider_Window.md](doc/OSProvider_Window.md)** — INativeWindow (CocoaWindow): window lifecycle, popup management, coordinate systems, differences from Windows.
 4. **[doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md)** — CoreGraphics rendering: render targets, element renderers, text layout, font management.
+5. **[doc/OSProvider_HostedMode.md](doc/OSProvider_HostedMode.md)** — Hosted mode: single-window rendering, hosted controller, virtual windows, render target lifecycle.
 
 Read them thoroughly. Most macOS porting bugs come from behavioral differences between Win32 and Cocoa that are documented there.
 
@@ -37,6 +38,7 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 - If you modify window behavior (Show, Hide, SetBounds, SetParent, popups, focus, etc.) → update [doc/OSProvider_Window.md](doc/OSProvider_Window.md).
 - If you modify rendering, element renderers, text layout, or font management → update [doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md).
+- If you modify hosted mode behavior (entry point, render target lifecycle, virtual windows) → update [doc/OSProvider_HostedMode.md](doc/OSProvider_HostedMode.md).
 - If you modify the controller, services, or entry point → update [doc/OSProvider.md](doc/OSProvider.md).
 - If you add/remove/rename files, directories, scripts, or CMake targets → update [readme.md](readme.md).
 - If you add new documentation files → add them to the Documentation section in [readme.md](readme.md).
