@@ -96,7 +96,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 
 ## Known Issues / Limitations
 
-- Hosted Mode: Resizing causes serious refreshing glitch
 - `IGuiGraphicsParagraph`
   - Need to test inserting image
 - VKEY mapping is quite big, should be shorter

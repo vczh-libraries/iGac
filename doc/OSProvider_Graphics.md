@@ -17,6 +17,8 @@ A subclass of `CocoaBaseView` that manages a `CGLayer` for double-buffered drawi
 - `resize:` creates a `CGBitmapContext` and `CGLayer` at retina scale
 - `drawRect:` triggers the global timer (which runs the render loop), then blits the layer to the screen
 
+`drawRect:` calls `GetOSXNativeController()->CallbackService()->Invoker()->InvokeGlobalTimer()` (the **native** controller, not `GetCurrentController()`). This is critical for hosted mode: in hosted mode, `GetCurrentController()` returns `GuiHostedController`, whose callback service only fires timer callbacks to virtual windows without triggering the hosted render loop. But `GuiHostedController::GlobalTimer()` — which contains the actual hosted render loop — is registered as a listener on the **native** controller's callback service. By firing the native controller's `InvokeGlobalTimer()`, `drawRect:` triggers the full rendering pipeline in both modes.
+
 ### Render Target
 
 `CoreGraphicsRenderTarget` implements `ICoreGraphicsRenderTarget` (which extends `GuiGraphicsRenderTarget`):
