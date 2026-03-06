@@ -78,6 +78,20 @@ In custom frame mode, `CocoaWindow` handles hit-testing manually in `HandleEvent
 
 Note: `NSWindowStyleMaskBorderless` has value 0. This means XOR-based toggling does not work — the style mask must be rebuilt from the boolean flags each time.
 
+#### Cursor Management and `borderOverrideCursor`
+
+In custom frame mode, `HandleEventInternal()` dispatches `MouseMoving` to all listeners first, then calls `HitTestMouseMove()` → `SetResizingBorder()`. This ordering matters: `GuiGraphicsHost::MouseMoving()` (a listener) sets the composition-level cursor on the window, then `SetResizingBorder()` overrides with a resize cursor if the mouse is on a border.
+
+`CocoaWindow` maintains two cursor states:
+- **`currentCursor`** — the application-managed cursor, set by `SetWindowCursor()` (called by `GuiGraphicsHost` via `GuiHostedWindow` in hosted mode, or directly in non-hosted mode).
+- **`borderOverrideCursor`** — a temporary override set by `SetResizingBorder()` when the mouse is on a window border. Set to `nullptr` when the mouse leaves the border.
+
+`SetResizingBorder()` does **not** call `SetWindowCursor()` for border cursors — it applies them visually without polluting `currentCursor`. When the mouse leaves the border (hit test returns `NoDecision`, `Title`, etc.), `borderOverrideCursor` is cleared and `currentCursor` is re-applied.
+
+This separation is critical for hosted mode. In hosted mode, `GuiHostedWindow::SetWindowCursor()` has an early-return optimization: if the cursor hasn't changed, it skips propagation to the native `CocoaWindow`. If `SetResizingBorder` polluted `currentCursor` with a resize cursor, the early return would prevent the framework from restoring the correct cursor when the mouse left the border area.
+
+`resetCursorRects` in `CocoaBaseView` checks `borderOverrideCursor` first, falling back to `currentCursor`.
+
 ### Popup Auto-Close
 
 Popups must close when the user clicks outside or the app loses focus. This is managed by three mechanisms:

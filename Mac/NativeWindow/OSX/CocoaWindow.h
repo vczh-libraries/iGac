@@ -52,6 +52,7 @@ namespace vl {
                 
                 NativeRect                                      lastBorder;
                 INativeCursor*                                  currentCursor;
+                INativeCursor*                                  borderOverrideCursor = nullptr;
                 NativeRect                                      previousBounds;
                 NativeMargin						            customFramePadding = { 8,8,8,8 };
 
@@ -169,6 +170,7 @@ namespace vl {
                 void                PrepareDrag();
                 void                PerformFileDrag(const vl::collections::List<WString>& files);
                 void                ConcludeDrag();
+                INativeCursor*      GetBorderOverrideCursor() const;
                 
                 void                InstallDraggingListener(IDraggingListener* listener);
                 void                UninstallDraggingListener(IDraggingListener* listener);

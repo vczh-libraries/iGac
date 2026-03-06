@@ -98,7 +98,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 
 - `IGuiGraphicsParagraph`
   - Need to test inserting image
-- Hosted Mode: when a cursor is moving to no-decision it seems to fails to fallback to the default option in the context.
 - VKEY mapping is quite big, should be shorter
 - Replace CGLayer with Metal for rendering
 - Not Implemented:

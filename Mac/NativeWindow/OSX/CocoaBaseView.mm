@@ -206,7 +206,14 @@
 
 - (void)resetCursorRects
 {
-    vl::presentation::INativeCursor* rawCursor = cocoaWindow->GetWindowCursor();
+    // Use the border override cursor if active, otherwise the application-managed cursor.
+    // In hosted mode, the border override cursor is set by SetResizingBorder without
+    // polluting currentCursor, so resetCursorRects must check for it explicitly.
+    vl::presentation::INativeCursor* rawCursor = cocoaWindow->GetBorderOverrideCursor();
+    if (!rawCursor)
+    {
+        rawCursor = cocoaWindow->GetWindowCursor();
+    }
     if (!rawCursor)
     {
         rawCursor = vl::presentation::GetCurrentController()->ResourceService()->GetDefaultSystemCursor();

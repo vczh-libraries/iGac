@@ -776,35 +776,55 @@ namespace vl {
             {
                 resizingBorder = border;
                 INativeResourceService* resourceService = cocoaController->ResourceService();
+                INativeCursor* newBorderCursor = nullptr;
 
                 switch(border)
                 {
                     case INativeWindowListener::BorderLeft:
                     case INativeWindowListener::BorderRight:
-                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeWE));
+                        newBorderCursor = resourceService->GetSystemCursor(INativeCursor::SizeWE);
                         break;
                         
                     case INativeWindowListener::BorderTop:
                     case INativeWindowListener::BorderBottom:
-                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNS));
+                        newBorderCursor = resourceService->GetSystemCursor(INativeCursor::SizeNS);
                         break;
                         
                     case INativeWindowListener::BorderLeftTop:
                     case INativeWindowListener::BorderRightBottom:
-                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNWSE));
+                        newBorderCursor = resourceService->GetSystemCursor(INativeCursor::SizeNWSE);
                         break;
                         
                     case INativeWindowListener::BorderRightTop:
                     case INativeWindowListener::BorderLeftBottom:
-                        SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::SizeNESW));
-                        break;
-                        
-                    case INativeWindowListener::Title:
-                       // SetWindowCursor(resourceService->GetSystemCursor(INativeCursor::Hand));
+                        newBorderCursor = resourceService->GetSystemCursor(INativeCursor::SizeNESW);
                         break;
                         
                     default:
                         break;
+                }
+
+                if (newBorderCursor)
+                {
+                    // Apply border resize cursor without updating currentCursor.
+                    // In hosted mode, currentCursor is managed by GuiGraphicsHost via
+                    // GuiHostedWindow; polluting it here causes a desync where the
+                    // hosted window's early-return optimization prevents the cursor
+                    // from being restored when the mouse leaves the border area.
+                    borderOverrideCursor = newBorderCursor;
+                    dynamic_cast<CocoaCursor*>(newBorderCursor)->Set();
+                    [nsWindow invalidateCursorRectsForView:nsWindow.contentView];
+                }
+                else if (borderOverrideCursor)
+                {
+                    // Leaving a border area: clear the override and restore
+                    // the application-managed cursor.
+                    borderOverrideCursor = nullptr;
+                    if (currentCursor)
+                    {
+                        dynamic_cast<CocoaCursor*>(currentCursor)->Set();
+                    }
+                    [nsWindow invalidateCursorRectsForView:nsWindow.contentView];
                 }
             }
             
@@ -873,11 +893,13 @@ namespace vl {
                 if(resizing)
                 {
                     resizing = false;
+                    borderOverrideCursor = nullptr;
                     SetWindowCursor(cocoaController->ResourceService()->GetDefaultSystemCursor());
                 }
                 else if(moving)
                 {
                     moving = false;
+                    borderOverrideCursor = nullptr;
                     SetWindowCursor(cocoaController->ResourceService()->GetDefaultSystemCursor());
                 }
                 else
@@ -1349,6 +1371,11 @@ namespace vl {
             void CocoaWindow::ConcludeDrag()
             {
                 
+            }
+            
+            INativeCursor* CocoaWindow::GetBorderOverrideCursor() const
+            {
+                return borderOverrideCursor;
             }
             
             void CocoaWindow::InstallDraggingListener(IDraggingListener* listener)
