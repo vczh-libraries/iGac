@@ -716,6 +716,7 @@ namespace vl {
                     
                     CGContextSaveGState(context);
                     
+                    CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
                     CGContextTranslateCTM(context, dest.origin.x, dest.origin.y + dest.size.height);
                     CGContextScaleCTM(context, 1.0, -1.0);
                     
