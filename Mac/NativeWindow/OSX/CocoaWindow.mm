@@ -1051,11 +1051,20 @@ namespace vl {
                 if(bounds.y2 > visibleFrame.size.height + visibleFrame.origin.y)
                     bounds.y2 = visibleFrame.size.height + visibleFrame.origin.y;
                 
-                bounds = FlipRect(nsWindow, bounds);
-                NSRect nsBounds = NSMakeRect((CGFloat)bounds.Left().value,
-                                             (CGFloat)bounds.Top().value,
-                                             (CGFloat)bounds.Width().value,
-                                             (CGFloat)bounds.Height().value);
+                // Let GacUI enforce minimum window size before applying the frame.
+                // This matches the Windows WM_SIZING behavior where Moving() is
+                // called with draggingBorder=true, allowing the framework to clamp
+                // the dragged edge instead of the opposite edge bouncing back.
+                for(vint i=0; i<listeners.Count(); ++i)
+                {
+                    listeners[i]->Moving(bounds, false, true);
+                }
+                
+                NativeRect flipped = FlipRect(nsWindow, bounds);
+                NSRect nsBounds = NSMakeRect((CGFloat)flipped.Left().value,
+                                             (CGFloat)flipped.Top().value,
+                                             (CGFloat)flipped.Width().value,
+                                             (CGFloat)flipped.Height().value);
                 [nsWindow setFrame:nsBounds  display:YES];
             }
             
