@@ -93,6 +93,10 @@ This separation is critical for hosted mode. In hosted mode, `GuiHostedWindow::S
 
 `resetCursorRects` in `CocoaBaseView` checks `borderOverrideCursor` first, falling back to `currentCursor`.
 
+#### Custom Frame Resize and Minimum Window Size
+
+`ResizingDragged()` handles border-drag resizing in custom frame mode. Before applying the new frame, it calls `Moving(bounds, false, true)` on all listeners — matching the Windows `WM_SIZING` behavior. The `draggingBorder=true` parameter tells `NativeWindowListener_Moving` to clamp the dragged edge (keeping the opposite edge fixed) when the window would shrink below minimum size. Without this, the frame would be set too small, triggering the framework to fix it asynchronously by moving the opposite edge, causing a visible bouncing glitch.
+
 ### Popup Auto-Close
 
 Popups must close when the user clicks outside or the app loses focus. This is managed by three mechanisms:

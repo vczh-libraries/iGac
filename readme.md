@@ -111,8 +111,6 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
   - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
   - `CocoaWindow::GetIcon` and `SetIcon`
 
-## Investigation
-
 ## Upstream Issues
 
 - `FakeDialogService`
