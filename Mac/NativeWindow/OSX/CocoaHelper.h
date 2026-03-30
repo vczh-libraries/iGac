@@ -66,6 +66,7 @@ namespace vl {
             NSFontTraitMask GetTraitMask(const FontProperties& font);
             
             VKEY NSEventKeyCodeToGacKeyCode(unsigned short keycode);
+            unsigned short GacKeyCodeToNSEventKeyCode(VKEY key);
             NativeRect FlipRect(NSWindow* window, NativeRect rect);
             NSScreen* GetWindowScreen(NSWindow* window);
             CGFloat FlipY(NSWindow* window, CGFloat y);

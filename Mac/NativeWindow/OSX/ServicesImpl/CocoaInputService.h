@@ -12,6 +12,7 @@
 #include "GacUI.h"
 
 #import <Quartz/Quartz.h>
+#import <Carbon/Carbon.h>
 
 namespace vl {
     
@@ -54,6 +55,10 @@ namespace vl {
                 
                 wchar_t                                 asciiLowerMap[256];
                 wchar_t                                 asciiUpperMap[256];
+                
+                vint                                    usedHotKeys = (vint)NativeGlobalShortcutKeyResult::ValidIdBegins;
+                collections::Dictionary<vint, EventHotKeyRef> registeredHotKeys;
+                EventHandlerRef                         hotKeyEventHandler = nullptr;
                 
             protected:
                 void StartGCDTimer();

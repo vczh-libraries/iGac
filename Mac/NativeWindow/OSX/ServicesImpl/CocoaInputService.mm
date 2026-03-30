@@ -8,6 +8,7 @@
 
 #include "CocoaInputService.h"
 #include "../CocoaHelper.h"
+#include "../CocoaNativeController.h"
 
 #import <AppKit/AppKit.h>
 
@@ -20,6 +21,15 @@ namespace vl {
             namespace
             {
                 CocoaInputService* g_inputService;
+                
+                OSStatus HotKeyEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* userData)
+                {
+                    EventHotKeyID hotKeyID;
+                    GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID);
+                    vint id = (vint)hotKeyID.id;
+                    GetOSXNativeController()->CallbackService()->Invoker()->InvokeGlobalShortcutKeyActivated(id);
+                    return noErr;
+                }
             }
             
             CocoaInputService::CocoaInputService(TimerFunc timer):
@@ -39,10 +49,28 @@ namespace vl {
                 CGEventSourceSetLocalEventsSuppressionInterval(eventSource, 0.0);
                 
                 memset(globalKeyStates, 0, sizeof(vint8_t) * 256);
+                
+                // Install Carbon event handler for global hotkeys
+                EventTypeSpec hotKeyEvent;
+                hotKeyEvent.eventClass = kEventClassKeyboard;
+                hotKeyEvent.eventKind = kEventHotKeyPressed;
+                InstallApplicationEventHandler(&HotKeyEventHandler, 1, &hotKeyEvent, NULL, &hotKeyEventHandler);
             }
             
             CocoaInputService::~CocoaInputService()
             {
+                // Unregister all hotkeys
+                for (vint i = 0; i < registeredHotKeys.Count(); i++)
+                {
+                    UnregisterEventHotKey(registeredHotKeys.Values()[i]);
+                }
+                registeredHotKeys.Clear();
+                
+                if (hotKeyEventHandler)
+                {
+                    RemoveEventHandler(hotKeyEventHandler);
+                }
+                
                 if (inputTapRunLoopSource)
                 {
                     CFRunLoopRemoveSource(CFRunLoopGetCurrent(), inputTapRunLoopSource, kCFRunLoopDefaultMode);
@@ -374,12 +402,37 @@ namespace vl {
 
             vint CocoaInputService::RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)
             {
-                CHECK_FAIL(L"Not Implemented!");
+                UInt32 carbonModifiers = 0;
+                if (ctrl) carbonModifiers |= cmdKey;
+                if (shift) carbonModifiers |= shiftKey;
+                if (alt) carbonModifiers |= optionKey;
+                
+                unsigned short macKeyCode = GacKeyCodeToNSEventKeyCode(key);
+                if (macKeyCode == 0xFFFF) return (vint)NativeGlobalShortcutKeyResult::NotSupported;
+                
+                vint id = ++usedHotKeys;
+                
+                EventHotKeyID hotKeyID;
+                hotKeyID.signature = 'GacH';
+                hotKeyID.id = (UInt32)id;
+                
+                EventHotKeyRef hotKeyRef = nullptr;
+                OSStatus status = RegisterEventHotKey(macKeyCode, carbonModifiers, hotKeyID, GetApplicationEventTarget(), 0, &hotKeyRef);
+                if (status != noErr) return (vint)NativeGlobalShortcutKeyResult::Occupied;
+                
+                registeredHotKeys.Add(id, hotKeyRef);
+                return id;
             }
 
 			bool CocoaInputService::UnregisterGlobalShortcutKey(vint id)
             {
-                CHECK_FAIL(L"Not Implemented!");
+                vint index = registeredHotKeys.Keys().IndexOf(id);
+                if (index == -1) return false;
+                
+                EventHotKeyRef hotKeyRef = registeredHotKeys.Values()[index];
+                OSStatus status = UnregisterEventHotKey(hotKeyRef);
+                registeredHotKeys.Remove(id);
+                return status == noErr;
             }
             
             //

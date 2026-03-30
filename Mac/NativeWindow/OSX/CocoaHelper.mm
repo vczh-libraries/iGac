@@ -255,6 +255,29 @@ namespace vl {
                 return table[keycode];
             }
             
+            unsigned short GacKeyCodeToNSEventKeyCode(VKEY key)
+            {
+                // Reverse mapping from GacKeyCode to macOS virtual key code
+                // Built from the NSEventKeyCodeToGacKeyCode table
+                static bool initialized = false;
+                static unsigned short reverseTable[256];
+                if (!initialized)
+                {
+                    memset(reverseTable, 0xFF, sizeof(reverseTable));
+                    for (unsigned short i = 0; i < 128; i++)
+                    {
+                        VKEY gacKey = NSEventKeyCodeToGacKeyCode(i);
+                        if (gacKey != VKEY::KEY_UNKNOWN)
+                        {
+                            reverseTable[(unsigned char)gacKey] = i;
+                        }
+                    }
+                    initialized = true;
+                }
+                unsigned short result = reverseTable[(unsigned char)key];
+                return result;
+            }
+            
             NSCursor* MakeCursorFromData(unsigned char* data, int hotspot_x, int hotspot_y)
             {
                 NSCursor *c = NULL;
