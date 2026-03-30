@@ -2,6 +2,8 @@
 
 macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraphics/Quartz2D.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vczh-libraries/iGac)
+
 ## License
 
 **Read the [LICENSE](https://github.com/vczh-libraries/iGac/blob/master/LICENSE.md) first.**
