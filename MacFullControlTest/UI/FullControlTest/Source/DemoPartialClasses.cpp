@@ -25847,7 +25847,7 @@ Class (::demo::MainWindowConstructor)
 		(this->dialogLocalShortcut = new ::vl::presentation::controls::GuiMessageDialog());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"dialogLocalShortcut"), ::vl::__vwsn::Box(this->dialogLocalShortcut));
 		{
-			::vl::__vwsn::This(this->dialogLocalShortcut)->SetText(::vl::WString::Unmanaged(L"You pressed Ctrl+Q!"));
+			::vl::__vwsn::This(this->dialogLocalShortcut)->SetText(::vl::WString::Unmanaged(L"You pressed Ctrl+Alt+Q!"));
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddComponent(static_cast<::vl::presentation::controls::GuiComponent*>(this->dialogLocalShortcut));
@@ -25862,7 +25862,7 @@ Class (::demo::MainWindowConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::controls::GuiToolstripCommand());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetShortcutBuilder(::vl::WString::Unmanaged(L"Ctrl+Q"));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetShortcutBuilder(::vl::WString::Unmanaged(L"Ctrl+Alt+Q"));
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddComponent(static_cast<::vl::presentation::controls::GuiComponent*>(this->__vwsn_precompile_0));
@@ -26217,7 +26217,7 @@ Class (::demo::MainWindowConstructor)
 			(this->__vwsn_precompile_46 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetText(::vl::WString::Unmanaged(L"Local shortcut key: Ctrl+Q"));
+			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetText(::vl::WString::Unmanaged(L"Local shortcut key: Ctrl+Alt+Q"));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_45)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_46)->GetBoundsComposition()));

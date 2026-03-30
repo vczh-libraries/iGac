@@ -11,7 +11,7 @@ if [[ "$1" == "--rebuild" ]]; then
 fi
 
 # Copy required source files for MacFullControlTest
-./testFC_Update.sh
+# ./testFC_Update.sh
 
 # Create build folder and build
 mkdir -p build
