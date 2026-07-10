@@ -1,4 +1,4 @@
-# CLAUDE.md — Instructions for AI Coding Agents
+# General Instructions
 
 ## Before You Start
 
