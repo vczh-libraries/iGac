@@ -5,8 +5,8 @@ from shutil import copyfile
 
 SCRIPT_PATH = path.dirname(path.realpath(__file__))
 RESOURCE_MAP = {
-	"Layouts/": "../Release/Tutorial/GacUI_Layout/UIRes",
-	"Controls/": "../Release/Tutorial/GacUI_Controls/UIRes",
+	"Layouts/": "../../Release/Tutorial/GacUI_Layout/UIRes",
+	"Controls/": "../../Release/Tutorial/GacUI_Controls/UIRes",
 }
 
 for (k, v) in RESOURCE_MAP.iteritems():

@@ -1,0 +1,94 @@
+enum RendererType
+{
+    FocusRectangle,
+    Raw,
+    SolidBorder,
+    SinkBorder,
+    SinkSplitter,
+    SolidBackground,
+    GradientBackground,
+    InnerShadow,
+    SolidLabel,
+    Polygon,
+    ImageFrame,
+    DocumentParagraph,
+}
+
+struct RendererCreation
+{
+    var id : int;
+    var type : RendererType;
+}
+
+message RendererCreated                             { request: RendererCreation[]; }
+message RendererDestroyed                           { request: int[]; }
+
+union OrdinaryElementDescVariant
+{
+    ElementDesc_SolidBorder,
+    ElementDesc_SinkBorder,
+    ElementDesc_SinkSplitter,
+    ElementDesc_SolidBackground,
+    ElementDesc_GradientBackground,
+    ElementDesc_InnerShadow,
+    ElementDesc_Polygon,
+    ElementDesc_SolidLabel,
+    ElementDesc_ImageFrame,
+}
+
+struct ElementBeginRendering
+{
+    var frameId : int;
+    var updatedElements : OrdinaryElementDescVariant[];
+}
+
+struct ElementRendering
+{
+    var id : int;
+    var bounds : Rect;
+    var areaClippedByParent : Rect;
+}
+
+struct ElementBoundary
+{
+    var id : int;
+    var hitTestResult : WindowHitTestResult?;
+    var cursor: WindowSystemCursorType?;
+    var bounds : Rect;
+    var areaClippedBySelf : Rect;
+}
+
+struct ElementMeasuring_FontHeight
+{
+    var fontFamily : string;
+    var fontSize : int;
+    var height : int;
+}
+
+struct ElementMeasuring_ElementMinSize
+{
+    var id : int;
+    var minSize : Size;
+}
+
+struct ElementMeasuring_InlineObjectBounds
+{
+    var elementId : int;
+    var callbackId : int;
+    var bounds : Rect;
+}
+
+struct ElementMeasurings
+{
+    var fontHeights : ElementMeasuring_FontHeight[];
+    var minSizes : ElementMeasuring_ElementMinSize[];
+    var createdImages : ImageMetadata[];
+    var inlineObjectBounds : ElementMeasuring_InlineObjectBounds[];
+}
+
+message RendererBeginRendering                      { request: ElementBeginRendering; }
+message RendererBeginBoundary                       { request: ElementBoundary; }
+message RendererRenderElement                       { request: ElementRendering; }
+message RendererEndBoundary                         {}
+message RendererEndRendering                        { response: ElementMeasurings; }
+message RendererIdle                                {}

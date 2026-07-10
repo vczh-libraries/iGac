@@ -14,11 +14,11 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 **Debugging reference:**
 
-6. **[doc/lldb.md](doc/lldb.md)** — LLDB MCP server setup, debugging workflow, graceful app termination, and known MCP limitations.
+6. **[doc/lldb.md](doc/lldb.md)** — Direct LLDB command-line debugging, launch validation, and process cleanup.
 
 **Critical reference — GacUI Knowledge Base:**
 
-5. **[Release/.github/KnowledgeBase/Index.md](Release/.github/KnowledgeBase/Index.md)** — The master index for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
+7. **[../Release/.github/KnowledgeBase/Index.md](../Release/.github/KnowledgeBase/Index.md)** — The master index in the sibling `Release` repository for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
    - `KB_GacUI_Design_PlatformInitialization.md` — Entry points, hosted/raw/standard modes, renderer setup, service registration.
    - `KB_GacUI_Design_MainWindowModalWindow.md` — Modal windows, hosted mode considerations, event loop architecture.
    - `KB_GacUI_Design_ImplementingIGuiGraphicsElement.md` — Element lifecycle, renderer registration, render target abstraction.
@@ -26,10 +26,12 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 ## Key Facts
 
-- This is the **macOS port** of GacUI. The GacUI framework source code lives in `Release/Import/` and must NOT be modified — it is a git submodule.
+- This is the **macOS port** of GacUI. The GacUI framework source code is committed under `Import/` and refreshed from the sibling `../Release/Import/` checkout by `./import.sh`.
+- **`Import/` is frozen after `./import.sh` completes. Never modify anything under `Import/` to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. To change the imported framework itself, update the sibling `../Release` repository and run `./import.sh` again.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
 - Test with `./testFC.sh` (full control test), `./testFC.sh --hosted` (hosted mode), or `./test.sh` (hello world).
+- Run `./testFC_Update.sh` to refresh the generated Full Control Test UI sources and `BlackSkin.bin` from `../Release/Tutorial/GacUI_ControlTemplate/`; reflection source files are intentionally excluded.
 - The code compiles with `VCZH_DEBUG_NO_REFLECTION`.
 
 ## When You Make Changes
@@ -48,8 +50,8 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 
 ## Architecture Notes
 
-- `Release/Import/GacUI.h` defines the platform abstraction interfaces (`INativeController`, `INativeWindow`, `INativeWindowListener`, etc.). Read the interface comments to understand the contract before implementing.
-- `Release/Import/GacUI.Windows.cpp` is the Windows implementation. When the macOS behavior is unclear, check how Windows does it — the macOS port should match Windows semantics.
+- `Import/GacUI.h` defines the platform abstraction interfaces (`INativeController`, `INativeWindow`, `INativeWindowListener`, etc.). Read the interface comments to understand the contract before implementing.
+- `Import/GacUI.Windows.cpp` is the Windows implementation. When the macOS behavior is unclear, check how Windows does it — the macOS port should match Windows semantics.
 - The render loop only runs when `INativeWindow::IsVisible()` returns true. Never add extra conditions to `IsVisible()` that would prevent 0×0 windows from being "visible" — popup windows start at 0×0 and rely on the render loop to compute their size.
 - `SetBounds()` must not call `Show()`. On Windows, `MoveWindow`/`SetWindowPos` repositions without showing. GacUI calls `Show()`/`ShowDeactivated()` explicitly.
 - macOS Cocoa uses bottom-left origin coordinates. All coordinate conversions go through `FlipY()`/`FlipRect()` in `CocoaHelper`.
@@ -73,5 +75,6 @@ pkill -f 'Test_FullControlTest|Test_HellWorld|lldb'
 
 ## Files You Should Never Modify
 
-- Anything under `Release/` — this is a git submodule containing the upstream GacUI release.
+- Anything under `Import/` — these files are copied from `../Release/Import/` by `import.sh` and should be changed upstream, then re-imported.
+- Anything under `../Release/` — this is the sibling upstream checkout and is outside this repository's change scope.
 - `build/` — generated build artifacts.

@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.20)
 project(MacFullControlTest)
 
-include_directories("../Release/Import")
+include_directories("../Import")
 include_directories("../Mac")
 include_directories("../MacShared")
 

@@ -1,0 +1,136 @@
+[@Cpp(::vl::presentation::elements::IGuiGraphicsParagraph::BreakCondition)]
+[@CppNamespace(::vl::presentation::elements::IGuiGraphicsParagraph)]
+enum BreakCondition
+{
+    StickToPreviousRun,
+    StickToNextRun,
+    Alone,
+}
+
+[@Cpp(::vl::presentation::elements::IGuiGraphicsParagraph::CaretRelativePosition)]
+[@CppNamespace(::vl::presentation::elements::IGuiGraphicsParagraph)]
+enum CaretRelativePosition
+{
+    CaretFirst,
+    CaretLast,
+    CaretLineFirst,
+    CaretLineLast,
+    CaretMoveLeft,
+    CaretMoveRight,
+    CaretMoveUp,
+    CaretMoveDown,
+}
+
+struct DocumentTextRunProperty
+{
+    var textColor : color;
+    var backgroundColor : color;
+    var fontProperties : FontProperties;
+}
+
+struct DocumentInlineObjectRunProperty
+{
+    var size : Size;
+    var baseline : int;
+    var breakCondition : BreakCondition;
+    var backgroundColor : color;
+    var backgroundElementId : int;
+    var callbackId : int;
+}
+
+union DocumentRunProperty
+{
+    DocumentTextRunProperty,
+    DocumentInlineObjectRunProperty,
+}
+
+struct DocumentRun
+{
+    var caretBegin : int;
+    var caretEnd : int;
+    var props : DocumentRunProperty;
+}
+
+struct ElementDesc_DocumentParagraph
+{
+    var id : int;
+    var text : string?;
+    var wrapLine : bool;
+    var maxWidth : int;
+    var alignment : ElementHorizontalAlignment;
+    var runsDiff : DocumentRun[];
+    var createdInlineObjects : int[];
+    var removedInlineObjects : int[];
+}
+
+struct UpdateElement_DocumentParagraphResponse
+{
+    var documentSize : Size;
+}
+
+message RendererUpdateElement_DocumentParagraph     { request: ElementDesc_DocumentParagraph; response: UpdateElement_DocumentParagraphResponse; }
+
+struct GetCaretRequest
+{
+    var id : int;
+    var caret : int;
+    var relativePosition : CaretRelativePosition;
+}
+
+struct GetCaretResponse
+{
+    var newCaret : int;
+    var preferFrontSide : bool;
+}
+
+struct GetCaretBoundsRequest
+{
+    var id : int;
+}
+
+struct GetCaretBoundsResponse
+{
+    var frontSideBounds : Rect[];
+    var backSideBounds : Rect[];
+}
+
+struct GetInlineObjectFromPointRequest
+{
+    var id : int;
+    var point : Point;
+}
+
+struct GetNearestCaretFromTextPosRequest
+{
+    var id : int;
+    var textPos : int;
+    var frontSide : bool;
+}
+
+struct IsValidCaretRequest
+{
+    var id : int;
+    var caret : int;
+}
+
+struct OpenCaretRequest
+{
+    var id : int;
+    var caret : int;
+    var caretColor : color;
+    var frontSide : bool;
+}
+
+message DocumentParagraph_GetCaret                      { request: GetCaretRequest; response: GetCaretResponse; }
+message DocumentParagraph_GetCaretBounds                { request: GetCaretBoundsRequest; response: GetCaretBoundsResponse; }
+message DocumentParagraph_GetInlineObjectFromPoint      { request: GetInlineObjectFromPointRequest; response: DocumentRun?; }
+message DocumentParagraph_GetNearestCaretFromTextPos    { request: GetNearestCaretFromTextPosRequest; response: int; }
+message DocumentParagraph_IsValidCaret                  { request: IsValidCaretRequest; response: bool; }
+message DocumentParagraph_OpenCaret                     { request: OpenCaretRequest; }
+message DocumentParagraph_CloseCaret                    { request: int; }
+
+struct RenderInlineObjectRequest
+{
+    var callbackId : int;
+    var location : Rect;
+}

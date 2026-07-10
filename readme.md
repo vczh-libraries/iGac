@@ -34,24 +34,32 @@ iGac/
 │   ├── Main.mm
 │   └── UI/FullControlTest/     Generated UI source files (copied by testFC_Update.sh)
 │
-├── Release/                    Git submodule: GacUI release imports, tools, tutorials
-│   ├── Import/                 Amalgamated GacUI source files (Vlpp, GacUI, Workflow, ...)
-│   ├── Tutorial/               Tutorial projects and resources
-│   └── Tools/                  Build tools and scripts
+├── Import/                     Amalgamated GacUI source files (Vlpp, GacUI, Workflow, ...)
 │
 ├── doc/                        Documentation
 │   ├── OSProvider.md           macOS OS provider: controller, services, entry point
 │   ├── OSProvider_Window.md    macOS OS provider: INativeWindow, CocoaWindow, popups
 │   ├── OSProvider_Graphics.md  macOS OS provider: CoreGraphics rendering, elements, fonts
 │   ├── OSProvider_HostedMode.md macOS hosted mode: virtual windows, render lifecycle
-│   └── lldb.md                 LLDB MCP server setup, debugging workflow
+│   └── lldb.md                 Direct LLDB debugging and launch validation
 │
 ├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
+├── import.sh                   Refresh Import/ from the sibling Release repository
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
 ├── test.sh                     Run MacTest Hello World app (--unblock for background)
 ├── testFC.sh                   Run MacFullControlTest app (--unblock for background)
-└── testFC_Update.sh            Copy BlackSkin UI sources from Release/Tutorial to MacFullControlTest
+└── testFC_Update.sh            Copy BlackSkin UI sources from ../Release/Tutorial to MacFullControlTest
 ```
+
+The upstream `Release` repository is expected at `../Release`. This repository commits only its copied `Import/` directory; tutorials and framework knowledge-base documents are read directly from the sibling checkout.
+
+## Refreshing GacUI Imports
+
+```bash
+./import.sh
+```
+
+This removes the existing `Import/` directory, copies the complete `../Release/Import/` directory into this repository, and marks the snapshot read-only. `Import/` is frozen after import: compatibility fixes belong in this repository's CMake or macOS integration code. Review and commit the vendor update together with those integration changes.
 
 ## Building
 
@@ -60,7 +68,7 @@ iGac/
 ./build.sh --rebuild    # Clean build (git clean -xdf + full rebuild)
 ```
 
-Build output goes to `build/`. The build system uses CMake with C++23.
+Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
 
 ### Static Libraries (built by MacShared/CMakeLists.txt)
 
@@ -87,7 +95,7 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./testFC_Update.sh
 ```
 
-Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/BlackSkin/` to `MacFullControlTest/UI/`, excluding reflection files. Also copies `BlackSkin.bin` resource.
+Copies generated UI source files from `../Release/Tutorial/GacUI_ControlTemplate/BlackSkin/` to `MacFullControlTest/UI/`, excluding reflection files. Also copies `BlackSkin.bin` resource.
 
 ## Documentation
 
@@ -95,7 +103,7 @@ Copies generated UI source files from `Release/Tutorial/GacUI_ControlTemplate/Bl
 - [doc/OSProvider_Window.md](doc/OSProvider_Window.md) — INativeWindow implementation (CocoaWindow): window lifecycle, Show/Hide, popups, child windows, custom frame, key differences from Windows.
 - [doc/OSProvider_Graphics.md](doc/OSProvider_Graphics.md) — CoreGraphics rendering backend: render targets, element renderers, text layout, font management.
 - [doc/OSProvider_HostedMode.md](doc/OSProvider_HostedMode.md) — Hosted mode: single-window rendering, hosted controller, virtual windows, render target lifecycle.
-- [doc/lldb.md](doc/lldb.md) — LLDB MCP server setup, debugging workflow, graceful app termination.
+- [doc/lldb.md](doc/lldb.md) — Direct LLDB command-line debugging and launch-validation workflow.
 
 ## TODO
 

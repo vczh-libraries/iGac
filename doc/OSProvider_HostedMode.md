@@ -10,7 +10,7 @@ For graphics rendering and elements, see [OSProvider_Graphics.md](OSProvider_Gra
 
 In standard mode, each GacUI window maps to a separate `NSWindow` (via `CocoaWindow`). In hosted mode, only **one** `NSWindow` exists. All other GacUI windows are "virtual" — they are `GuiHostedWindow` instances managed by `GuiHostedController`, which virtualizes `INativeWindowService`, `INativeScreenService`, and other services, and routes input, focus, and rendering to the correct virtual window.
 
-All hosted mode infrastructure — `GuiHostedController`, `GuiHostedGraphicsResourceManager`, `GuiHostedWindow`, `GuiHostedWindowData`, `hosted_window_manager::WindowManager`, `IGuiHostedWindowProxy` and its three implementations (`GuiMainHostedWindowProxy`, `GuiNonMainHostedWindowProxy`, `GuiPlaceholderHostedWindowProxy`) — is platform-independent and lives in `Release/Import/GacUI.cpp` and `GacUI.h`. The macOS port only needs to provide the entry point and ensure the render target supports the hosted rendering lifecycle.
+All hosted mode infrastructure — `GuiHostedController`, `GuiHostedGraphicsResourceManager`, `GuiHostedWindow`, `GuiHostedWindowData`, `hosted_window_manager::WindowManager`, `IGuiHostedWindowProxy` and its three implementations (`GuiMainHostedWindowProxy`, `GuiNonMainHostedWindowProxy`, `GuiPlaceholderHostedWindowProxy`) — is platform-independent and lives in `Import/GacUI.cpp` and `GacUI.h`. The macOS port only needs to provide the entry point and ensure the render target supports the hosted rendering lifecycle.
 
 ### Why Hosted Mode?
 
@@ -138,7 +138,7 @@ StopHostedRendering()            → StopRenderingOnNativeWindow() [once]
 | `INativeWindowListener` | Listens on the native window to intercept input, focus, and lifecycle events |
 | `INativeControllerListener` | Listens for native window destruction |
 | `WindowManager<GuiHostedWindow*>` | Manages z-order, visibility, activation, hit testing for virtual windows |
-| `IGuiHostedApplication` | Provides access to the native host window |
+| `IGuiHostedApplication` | Provides access to the native host window and underlying native controller |
 
 ### Virtual Window Management
 
@@ -232,5 +232,5 @@ In `GuiMain()`, the application checks `GetHostedApplication()` to detect hosted
 | `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm` | `CoreGraphicsMain()` with hosted support, `CoreGraphicsRenderTarget` with `StartRenderingOnNativeWindow`/`StopRenderingOnNativeWindow` |
 | `MacFullControlTest/Main.mm` | `--hosted` CLI argument parsing |
 | `testFC.sh` | Forwards `--hosted` to the test app |
-| `Release/Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
-| `Release/Import/GacUI.cpp` | All hosted mode platform-independent implementations |
+| `Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
+| `Import/GacUI.cpp` | All hosted mode platform-independent implementations |

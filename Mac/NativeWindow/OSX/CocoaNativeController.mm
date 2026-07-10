@@ -349,6 +349,13 @@ namespace vl {
                 {
                     return &dialogService;
                 }
+
+                INativeAutomationService* AutomationService() override
+                {
+                    // GuiInitializeUtilities substitutes
+                    // INativeAutomationService::UnavailableService().
+                    return nullptr;
+                }
                 
                 INativeWindowService* WindowService() override
                 {

@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.20)
 project(MacShared)
 
-include_directories("../Release/Import")
+include_directories("../Import")
 include_directories("../Mac")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wno-missing-declarations")
@@ -11,16 +11,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 add_compile_definitions(VCZH_DEBUG_NO_REFLECTION)
 
 set(GACUI_COMMON_FILES
-	"../Release/Import/Vlpp.cpp"
-	"../Release/Import/Vlpp.Linux.cpp"
-	"../Release/Import/VlppOS.cpp"
-	"../Release/Import/VlppOS.Linux.cpp"
-	"../Release/Import/VlppRegex.cpp"
-	"../Release/Import/VlppReflection.cpp"
-	"../Release/Import/VlppGlrParser.cpp"
-	"../Release/Import/VlppWorkflowLibrary.cpp"
-	"../Release/Import/GacUI.cpp"
-	"../Release/Import/Skins/DarkSkin/DarkSkin.cpp"
+	"../Import/Vlpp.cpp"
+	"../Import/Vlpp.Linux.cpp"
+	"../Import/VlppOS.cpp"
+	"../Import/VlppOS.Linux.cpp"
+	"../Import/VlppRegex.cpp"
+	"../Import/VlppReflection.cpp"
+	"../Import/VlppGlrParser.cpp"
+	"../Import/VlppWorkflowLibrary.cpp"
+	"../Import/GacUI.cpp"
+	"../Import/Skins/DarkSkin/DarkSkin.cpp"
 )
 
 set(GACOSX_FILES

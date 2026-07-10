@@ -4,8 +4,8 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Source directories
-SOURCE_DIR="$SCRIPT_DIR/Release/Tutorial/GacUI_ControlTemplate/BlackSkin/UI/FullControlTest/Source"
-UIRES_DIR="$SCRIPT_DIR/Release/Tutorial/GacUI_ControlTemplate/UIRes"
+SOURCE_DIR="$SCRIPT_DIR/../Release/Tutorial/GacUI_ControlTemplate/BlackSkin/UI/FullControlTest/Source"
+UIRES_DIR="$SCRIPT_DIR/../Release/Tutorial/GacUI_ControlTemplate/UIRes"
 
 # Destination directories
 DEST_SOURCE_DIR="$SCRIPT_DIR/MacFullControlTest/UI/FullControlTest/Source"

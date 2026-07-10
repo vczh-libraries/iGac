@@ -8,7 +8,7 @@ For hosted mode (single-window rendering, virtual windows), see [OSProvider_Host
 
 ## Overview
 
-GacUI defines a set of platform abstraction interfaces in `Release/Import/GacUI.h`. The macOS port implements these under `Mac/`:
+GacUI defines a set of platform abstraction interfaces in `Import/GacUI.h`. The macOS port implements these under `Mac/`:
 
 - `Mac/NativeWindow/OSX/` — Cocoa windowing system (controller, window, input, view)
 - `Mac/NativeWindow/OSX/ServicesImpl/` — Platform services (screen, clipboard, dialog, image, input, resource)
@@ -78,14 +78,17 @@ Each service is returned by the corresponding `INativeController` method:
 | `ClipboardService()` | `CocoaClipboardService` | `ServicesImpl/CocoaClipboardService.mm` |
 | `ImageService()` | `CocoaImageService` | `ServicesImpl/CocoaImageService.mm` |
 | `DialogService()` | `CocoaDialogService` | `ServicesImpl/CocoaDialogService.mm` |
+| `AutomationService()` | Unavailable fallback | (GacUI built-in substitution) |
+
+The native controller returns `nullptr` from `AutomationService()`, matching providers that do not implement application automation. During framework initialization, `GuiInitializeUtilities()` substitutes `INativeAutomationService::UnavailableService()`, so application-level callers still receive the standard unavailable-service object.
 
 ### Window Management
 
 `CocoaController` also implements `INativeWindowService`:
 
 - `CreateNativeWindow(WindowMode)` — creates a `CocoaWindow`, fires the `NativeWindowCreated` callback (which lets the graphics resource manager install its render target), and adds it to the window list.
-- `DestroyNativeWindow(window)` — fires the `NativeWindowDestroying` callback, removes from the list. If the destroyed window is the main window, calls `[NSApp stop:nil]` to exit the run loop.
-- `Run(window)` — sets the main window, calls `Show()` on it, then enters `[NSApp run]`.
+- `DestroyNativeWindow(window)` — fires the `NativeWindowDestroying` callback and removes the window from the list. If it is the main window, clears `mainWindow` and posts an application-defined event so a blocked `RunOneCycle()` wakes and the run loop exits.
+- `Run(window)` — sets the main window, calls `Show()` on it, then repeatedly calls `RunOneCycle()` until the main window is destroyed.
 - `GetWindow(NativePoint)` — finds the window at a screen coordinate by iterating all windows and checking bounds.
 
 ### Application Delegate

@@ -23,7 +23,7 @@ Everything else is platform-independent — `GuiHostedController`, `GuiHostedGra
 
 ### What's Already Platform-Independent (Reusable)
 
-All of these live in `Release/Import/GacUI.cpp` and `GacUI.h` — they are **not** platform-specific:
+All of these live in `Import/GacUI.cpp` and `GacUI.h` — they are **not** platform-specific:
 - `GuiHostedController` — complete window virtualization, input routing, focus management, hover tracking
 - `GuiHostedGraphicsResourceManager` — render target redirection (all virtual windows → one native render target)
 - `GuiHostedWindow` — virtual `INativeWindow` implementation
