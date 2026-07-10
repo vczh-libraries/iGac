@@ -1,3 +1,5 @@
+> **Maintenance prerequisite:** Clone the [Release repository](https://github.com/vczh-libraries/Release) beside this repository as `../Release` before working on iGac. Import refreshes, generated test updates, and framework reference material all use that sibling checkout.
+
 # iGac — macOS Port of GacUI
 
 macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraphics/Quartz2D.
