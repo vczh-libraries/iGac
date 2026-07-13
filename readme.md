@@ -1,5 +1,3 @@
-> **Maintenance prerequisite:** Clone the [Release repository](https://github.com/vczh-libraries/Release) beside this repository as `../Release` before working on iGac. Import refreshes, generated test updates, and framework reference material all use that sibling checkout.
-
 # iGac — macOS Port of GacUI
 
 macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraphics/Quartz2D.
@@ -9,6 +7,67 @@ macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraph
 ## License
 
 **Read the [LICENSE](https://github.com/vczh-libraries/iGac/blob/master/LICENSE.md) first.**
+
+## Maintenance Prerequisite
+
+Clone the [Release repository](https://github.com/vczh-libraries/Release) beside this repository as `../Release` before working on iGac. Import refreshes, generated test updates, and framework reference material all use that sibling checkout.
+
+### Install Homebrew and Development Tools
+
+Install Apple's Command Line Tools if they are not already installed:
+
+```bash
+xcode-select --install
+```
+
+Install Homebrew with the command from the [official Homebrew installation page](https://brew.sh/):
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Follow the installer's **Next steps** to add Homebrew to your shell environment, then install the required formulae:
+
+```bash
+brew update
+brew install llvm coreutils cmake git node
+```
+
+The commands used by this project come from these Homebrew formulae:
+
+| Command or tool | Homebrew formula |
+| --- | --- |
+| `clang++` | `llvm` |
+| `lldb` | `llvm` |
+| GNU Coreutils | `coreutils` |
+| `cmake` | `cmake` |
+| `git` | `git` |
+| `node` | `node` |
+| `npm` | `node` (npm is included) |
+
+Homebrew's `llvm` formula is keg-only. Add it to the zsh login path to use its `clang++` and `lldb` instead of the versions supplied by macOS:
+
+```bash
+echo 'export PATH="$(brew --prefix llvm)/bin:$PATH"' >> ~/.zprofile
+exec zsh -l
+```
+
+Coreutils commands that conflict with macOS commands are installed with a `g` prefix. To use the GNU commands under their normal names, add the formula's `gnubin` directory to the path:
+
+```bash
+echo 'export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"' >> ~/.zprofile
+exec zsh -l
+```
+
+To update Homebrew and these tools later:
+
+```bash
+brew update
+brew outdated
+brew upgrade llvm coreutils cmake git node
+```
+
+See Homebrew's [package update instructions](https://docs.brew.sh/FAQ#how-do-i-update-my-local-packages) for upgrading all installed packages instead.
 
 ## Project Structure
 
