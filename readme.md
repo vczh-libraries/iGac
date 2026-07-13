@@ -47,6 +47,7 @@ iGac/
 │
 ├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
 ├── import.sh                   Refresh Import/ from the sibling Release repository
+├── syncOrg.sh                  Clone and synchronize sibling organization repositories
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
 ├── test.sh                     Run MacTest Hello World app (--unblock for background)
 ├── testFC.sh                   Run MacFullControlTest app (--unblock for background)
@@ -54,6 +55,14 @@ iGac/
 ```
 
 The upstream `Release` repository is expected at `../Release`. This repository commits only its copied `Import/` directory; tutorials and framework knowledge-base documents are read directly from the sibling checkout.
+
+## Synchronizing Organization Repositories
+
+```bash
+./syncOrg.sh
+```
+
+This synchronizes the sibling `Vlpp`, `VlppOS`, `VlppRegex`, `VlppReflection`, `VlppParser2`, `Workflow`, `GacUI`, `Release`, and `Tools` repositories. Missing repositories are cloned from the `vczh-libraries` GitHub organization. Existing repositories are updated only when they are on `master` with no uncommitted tracked files, untracked files, or unpushed commits. A repository that fails any check is reported in red and skipped while the script continues with the remaining repositories.
 
 ## Refreshing GacUI Imports
 
