@@ -2,7 +2,7 @@
 
 Use Xcode's command-line LLDB directly. No MCP server is required.
 
-Run LLDB from the repository root in a PTY-backed terminal. Keep the PTY session open, send commands one round at a time, and wait for LLDB output before sending the next command. When debugging, launch the application executable directly instead of invoking `test.sh` or `testFC.sh`.
+Run LLDB from the repository root in a PTY-backed terminal. Keep the PTY session open, send commands one round at a time, and wait for LLDB output before sending the next command. When debugging, launch the application executable directly instead of invoking `test.sh`.
 
 ## Verify LLDB and Build
 

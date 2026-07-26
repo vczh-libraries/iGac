@@ -3848,6 +3848,17 @@ INativeAutomationService
 		class INativeAutomationService : public virtual Interface
 		{
 		public:
+			/// <summary>Availability of <see cref="RunIOCommand"/>.</summary>
+			enum class IOCommandAvailability
+			{
+				/// <summary>IO commands are not available.</summary>
+				Disabled,
+				/// <summary>All IO commands are available.</summary>
+				Enabled,
+				/// <summary>Only the exact command "!Exit" is available. Other commands must return "!Application stopped responding.".</summary>
+				ExitOnly,
+			};
+
 			static INativeAutomationService*		UnavailableService();
 
 			/// <summary>
@@ -3890,11 +3901,11 @@ INativeAutomationService
 			virtual WString							DumpDomTree() = 0;
 
 			/// <summary>
-			/// Test if <see cref="RunIOCommands"/> is available.
+			/// Test how <see cref="RunIOCommand"/> is available.
 			/// This feature only works on GacUI applications, or when remote protocol is in use, the renderer side.
 			/// </summary>
-			/// <returns>Returns true if this function is available. Otherwise it should returns an empty string.</returns>
-			virtual bool							CanRunIOCommands() = 0;
+			/// <returns>Returns Disabled if this function is unavailable. Returns ExitOnly when only "!Exit" is accepted and other commands return "!Application stopped responding.".</returns>
+			virtual IOCommandAvailability			CanRunIOCommands() = 0;
 
 			/// <summary>
 			/// Run an IO command.
@@ -19884,6 +19895,7 @@ GuiDocumentCommonInterface
 				compositions::GuiBoundsComposition*			documentComposition = nullptr;
 
 				compositions::GuiGraphicsComposition*		documentMouseArea = nullptr;
+				INativeCursor*								documentCursor = nullptr;
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseMoveHandler;
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseDownHandler;
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseUpHandler;
@@ -22007,10 +22019,21 @@ GuiRemoteGraphicsParagraph
 	class GuiRemoteGraphicsResourceManager;
 	class GuiRemoteGraphicsRenderTarget;
 
+	class GuiRemoteCaretCache : public Object
+	{
+	public:
+		collections::Array<vint>									nativeToRemote;
+		collections::Array<vint>									remoteToNative;
+
+		GuiRemoteCaretCache(const WString& text, remoteprotocol::CharacterEncoding encoding);
+	};
+
 	class GuiRemoteGraphicsParagraph : public Object, public IGuiGraphicsParagraph
 	{
 	protected:
 		WString															text;
+		collections::Dictionary<remoteprotocol::CharacterEncoding, Ptr<GuiRemoteCaretCache>>
+																		caretCaches;
 		GuiRemoteController*											remote = nullptr;
 		GuiRemoteGraphicsResourceManager*								resourceManager = nullptr;
 		GuiRemoteGraphicsRenderTarget*									renderTarget = nullptr;
@@ -22042,6 +22065,7 @@ GuiRemoteGraphicsParagraph
 		vint											GetParagraphId() const;
 
 	protected:
+		GuiRemoteCaretCache*							GetCaretCache();
 		vint											NativeTextPosToRemoteTextPos(vint textPos);
 		vint											RemoteTextPosToNativeTextPos(vint textPos);
 		bool											TryBuildCaretRange(vint start, vint length, CaretRange& range);
@@ -22485,6 +22509,7 @@ namespace vl::presentation::elements_remoteprotocol
 	public:
 		Gui3DSplitterElementRenderer();
 
+		void							Render(Rect bounds) override;
 		void							SendUpdateElementMessages(bool fullContent, collections::List<remoteprotocol::OrdinaryElementDescVariant>& updatedElements) override;
 	};
 
@@ -22966,7 +22991,6 @@ GuiRemoteProtocolRendererChannel
 		, protected virtual IGuiRemoteProtocolEvents
 	{
 	protected:
-		IJsonChannelClient*								client = nullptr;
 		IJsonChannel*									channel = nullptr;
 		IGuiRemoteProtocol*								protocol = nullptr;
 		bool											receiving = false;
@@ -23011,7 +23035,7 @@ GuiRemoteProtocolRendererChannel
 
 	public:
 
-		GuiRemoteProtocolRendererChannel(IJsonChannelClient* _client, IJsonChannel* _channel, IGuiRemoteProtocol* _protocol);
+		GuiRemoteProtocolRendererChannel(IJsonChannel* _channel, IGuiRemoteProtocol* _protocol);
 		~GuiRemoteProtocolRendererChannel();
 
 		vl::Event<void(const ChannelPackageInfo&)>		BeforeWrite;
@@ -23031,7 +23055,7 @@ Developer: Zihan Chen(vczh)
 GacUI::Remote Window
 
 Interfaces:
-  GuiRemoteProtocolJsonChannelRenderer_Async
+  GuiRemoteProtocolAsyncJsonChannel
 
 ***********************************************************************/
 
@@ -23043,10 +23067,10 @@ namespace vl::presentation::remoteprotocol::channeling
 {
 
 /***********************************************************************
-GuiRemoteProtocolJsonChannelRenderer_Async
+GuiRemoteProtocolAsyncJsonChannel
 ***********************************************************************/
 
-	class GuiRemoteProtocolJsonChannelRenderer_Async
+	class GuiRemoteProtocolAsyncJsonChannel
 		: public Object
 		, public virtual IJsonChannel
 		, protected virtual IJsonChannelReader
@@ -23056,7 +23080,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		struct QueuedPackage
 		{
 			Nullable<vint>									receiverClientId;
-			Ptr<collections::List<vint>>						blockedReceivers;
+			Ptr<collections::List<vint>>					blockedReceivers;
 			JsonPackage										package;
 		};
 
@@ -23073,7 +23097,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		};
 
 		IJsonChannel*										channel = nullptr;
-		IJsonChannelReader*								reader = nullptr;
+		IJsonChannelReader*									reader = nullptr;
 		IGuiRemoteEventProcessor*							remoteEventProcessor = nullptr;
 
 		SpinLock											lockPendingPackages;
@@ -23101,11 +23125,11 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		void												OnRead(vint senderClientId, const JsonPackage& package) override;
 
 	public:
-		GuiRemoteProtocolJsonChannelRenderer_Async(IJsonChannel* _channel, IGuiRemoteEventProcessor* _remoteEventProcessor = nullptr);
-		~GuiRemoteProtocolJsonChannelRenderer_Async();
+		GuiRemoteProtocolAsyncJsonChannel(IJsonChannel* _channel, IGuiRemoteEventProcessor* _remoteEventProcessor = nullptr);
+		~GuiRemoteProtocolAsyncJsonChannel();
 
 		const WString&										GetChannelName() override;
-		IJsonChannelReader*								GetReader() override;
+		IJsonChannelReader*									GetReader() override;
 		void												Initialize(IJsonChannelReader* _reader) override;
 		void												SendToClient(vint receiverClientId, const JsonPackage& package) override;
 		void												BroadcastFromClient(const JsonPackage& package) override;
@@ -23167,11 +23191,11 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 		};
 
 		IJsonChannel*										channel = nullptr;
-		IJsonChannelReader*								reader = nullptr;
+		IJsonChannelReader*									reader = nullptr;
 
 		// Covers invokeInMainThread, queuedMessages and uiTaskQueued.
 		SpinLock											lockMessages;
-		IGuiRemoteProtocolAsyncRendererInvoker*			invokeInMainThread = nullptr;
+		IGuiRemoteProtocolAsyncRendererInvoker*				invokeInMainThread = nullptr;
 		collections::List<ReceivedPackage>					queuedMessages;
 		vint												messageVersion = 0;
 		bool												channelInitialized = false;
@@ -23187,7 +23211,7 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 		~GuiRemoteProtocolAsyncJsonChannelRenderer();
 
 		const WString&										GetChannelName() override;
-		IJsonChannelReader*								GetReader() override;
+		IJsonChannelReader*									GetReader() override;
 		void												Initialize(IJsonChannelReader* _reader) override;
 		void												SendToClient(vint receiverClientId, const JsonPackage& package) override;
 		void												BroadcastFromClient(const JsonPackage& package) override;
@@ -23195,6 +23219,7 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 		void												BatchWrite(bool& disconnected) override;
 
 		void												SetInvokeInMainThread(IGuiRemoteProtocolAsyncRendererInvoker* _invokeInMainThread);
+		void												Detach();
 	};
 }
 
@@ -23616,12 +23641,18 @@ namespace vl::presentation::remote_renderer
 		INativeWindow*							window = nullptr;
 		INativeScreen*							screen = nullptr;
 		IGuiRemoteProtocolEvents*				events = nullptr;
-		bool									disconnectingFromCore = false;
+		atomic_vint							disconnectingFromCore = false;
+		bool									stoppedByFatalError = false;
+		Nullable<WString>						fatalError;
+		WString									titleBeforeFatalError;
 
 		bool									updatingBounds = false;
 		remoteprotocol::WindowSizingConfig		windowSizingConfig;
 		NativeSize								suggestedMinSize;
 
+		bool									CanSendEvents();
+		void									ClearPendingCoreEvents();
+		void									DisconnectFromCore();
 		remoteprotocol::ScreenConfig			GetScreenConfig(INativeScreen* screen);
 		remoteprotocol::WindowSizingConfig		GetWindowSizingConfig();
 		void									UpdateConfigsIfNecessary();
@@ -23692,8 +23723,12 @@ namespace vl::presentation::remote_renderer
 		bool									supressRefresh = false;		// true to supress repainting in INativeControllerListener::GlobalTimer event
 		bool									supressPaint = false;		// true to not handling INativeWindowListener::Paint event
 		bool									needRefresh = false;
+		Ptr<elements::GuiSolidBackgroundElement>	fatalMaskElement;
+		Ptr<elements::GuiSolidLabelElement>		fatalTextElement;
 
 		void									UpdateRenderTarget(elements::IGuiGraphicsRenderTarget* rt);
+		void									EnsureFatalOverlayElements(elements::IGuiGraphicsRenderTarget* rt);
+		void									RenderFatalOverlay(elements::IGuiGraphicsRenderTarget* rt);
 		void									RenderDom(Ptr<remoteprotocol::RenderingDom> dom, elements::IGuiGraphicsRenderTarget* rt);
 		void									HitTestInternal(Ptr<remoteprotocol::RenderingDom> dom, Point location, Nullable<INativeWindowListener::HitTestResult>& hitTestResult, Nullable<INativeCursor::SystemCursorType>& cursorType);
 		void									HitTest(Ptr<remoteprotocol::RenderingDom> dom, Point location, INativeWindowListener::HitTestResult& hitTestResult, INativeCursor*& cursor);
@@ -23747,7 +23782,10 @@ namespace vl::presentation::remote_renderer
 
 		void									RegisterMainWindow(INativeWindow* _window);
 		void									UnregisterMainWindow();
+		bool									IsDisconnectedFromCore();
 		void									ForceExitByFatelError();
+		void									RequestCoreForceExitByFatalError();
+		void									RetainByFatalError(const WString& errorMessage);
 
 		WString									GetExecutablePath() override;
 		void									Initialize(IGuiRemoteProtocolEvents* _events) override;
@@ -28216,6 +28254,7 @@ namespace vl
 		*     Type: remoteprotocol::RenderingType;
 		*     Data: remoteprotocol::UnitTest_ElementDescVariant;
 		*   }];
+		*   fatalError?: string;
 		* }
 		* --------------------------------------------------------------------------------
 		*/
@@ -28328,14 +28367,23 @@ namespace vl
 				return !stopped && CanDumpDomTree() ? DumpDomTreeInternal() : WString::Empty;
 			}
 
-			bool CanRunIOCommands() override
+			IOCommandAvailability CanRunIOCommands() override
 			{
-				return false;
+				return IOCommandAvailability::Disabled;
 			}
 
 			WString RunIOCommand(Nullable<WString> windowId, const WString& ioCommand) override
 			{
-				return !stopped && CanRunIOCommands() ? RunIOCommandInternal(windowId, ioCommand) : WString::Empty;
+				auto availability = stopped ? IOCommandAvailability::Disabled : CanRunIOCommands();
+				switch (availability)
+				{
+				case IOCommandAvailability::Enabled:
+					return RunIOCommandInternal(windowId, ioCommand);
+				case IOCommandAvailability::ExitOnly:
+					return ioCommand == L"!Exit" ? RunIOCommandInternal(windowId, ioCommand) : WString::Unmanaged(L"!Application stopped responding.");
+				default:
+					return WString::Empty;
+				}
 			}
 		};
 
@@ -28343,6 +28391,10 @@ namespace vl
 		{
 		private:
 			remote_renderer::GuiRemoteRendererSingle*	renderer = nullptr;
+			SpinLock									lockFatalError; // covers fatalError
+			Nullable<WString>							fatalError;
+
+			Nullable<WString>							CopyFatalError();
 			
 		protected:
 			Nullable<WString> GetNativeWindowId(INativeWindow* window) override
@@ -28355,15 +28407,7 @@ namespace vl
 				return GetCurrentController()->WindowService()->GetMainWindow();
 			}
 
-			WString DumpDomTreeInternal() override
-			{
-				auto dumpRoot = DumpRemoteProtocolRenderingDom(
-					GetCurrentController()->WindowService()->GetMainWindow()->GetTitle(),
-					renderer->windowSizingConfig,
-					renderer->renderingDom,
-					renderer->renderingElements);
-				return DumpJsonToString(dumpRoot);
-			}
+			WString DumpDomTreeInternal() override;
 
 		public:
 			AutomationServiceRenderer(remote_renderer::GuiRemoteRendererSingle* _renderer)
@@ -28375,6 +28419,9 @@ namespace vl
 			{
 				return true;
 			}
+
+			void SetFatalError(Nullable<WString> value);
+			IOCommandAvailability CanRunIOCommands() override;
 		};
 	}
 }
@@ -28444,7 +28491,8 @@ namespace vl
 			RemoteProtocolAutomationService();
 			~RemoteProtocolAutomationService();
 
-			bool								CanRunIOCommands() override;
+			INativeAutomationService::IOCommandAvailability
+												CanRunIOCommands() override;
 		};
 
 		/*
@@ -28519,6 +28567,9 @@ namespace vl
 		*   //     available only when its parent composition is GuiFlowComposition
 		*   //     index is defined by flow->GetFlowItems().IndexOf(flowItem)
 		*   layout?: string;
+		*
+		*   // available when GuiGraphicsComposition::GetAssociatedCursor is not null
+		*   cursor?: string;
 		* 
 		*   // available when GuiGraphicsComposition::GetOwnedElement is not null and is or inherits from:
 		*   //   GuiSolidBorderElement			: "Border:color,shape

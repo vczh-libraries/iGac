@@ -10,9 +10,6 @@ if [[ "$1" == "--rebuild" ]]; then
     git clean -xdf
 fi
 
-# Copy required source files for MacFullControlTest
-# ./testFC_Update.sh
-
 # Create build folder and build
 mkdir -p build
 cd build

@@ -13,6 +13,7 @@ REPOSITORIES=(
     VlppParser2
     Workflow
     GacUI
+    GacJS
     Release
     Tools
 )

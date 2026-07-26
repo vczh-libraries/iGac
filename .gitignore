@@ -12,6 +12,7 @@ libGacUI.a
 _OUTPUT_/
 _DELETE_/
 _INTERMIDIATE_/
+.syncProj.*/
 
 # Xcode/OSX
 DerivedData

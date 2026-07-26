@@ -1,12 +1,10 @@
-#include "osx_shared.h"
 #include "gac_include.h"
-#include "UI/FullControlTest/Source/Demo.h"
+#include "FullControlTest.h"
 #include "../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h"
 
 #include <cstring>
 
 using namespace vl;
-using namespace vl::stream;
 using namespace vl::presentation;
 
 int main(int argc, const char * argv[])
@@ -26,11 +24,6 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    {
-        auto resourceFolder = osx::GetResourceFolder();
-        FileStream fileStream(resourceFolder + L"BlackSkin.bin", FileStream::ReadOnly);
-        GetResourceManager()->LoadResourceOrPending(fileStream);
-    }
     {
         demo::MainWindow window;
         if (!GetHostedApplication())

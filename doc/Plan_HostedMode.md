@@ -142,22 +142,15 @@ int main(int argc, const char * argv[])
 }
 ```
 
-Update `testFC.sh` to forward `--hosted` to the app:
+Update `test.sh` to select the Full Control Test application and forward `--hosted`:
 
 ```bash
-if [[ "$1" == "--hosted" ]]; then
-    "$APP" --hosted
-elif [[ "$1" == "--unblock" ]]; then
-    "$APP" &
-    echo $!
-else
-    "$APP"
-fi
+./test.sh --app:fct --hosted
 ```
 
 ### Step 6: Testing
 
-Run `./testFC.sh --hosted` to launch the full control test in hosted mode. Verify:
+Run `./test.sh --app:fct --hosted` to launch the full control test in hosted mode. Verify:
 - The application renders inside a single `NSWindow`.
 - Popups, menus, combo boxes, and tooltips all appear correctly within that window.
 - Modal dialogs block their owner but not the whole app.
@@ -194,7 +187,7 @@ Per frame (hosted mode):
 
 1. **Step 1** (render target refactor) — must be done first; it's a prerequisite for hosted rendering.
 2. **Steps 2–4** (entry point, CoreGraphicsMain update, header declaration) — can be done together.
-3. **Step 5** (CLI argument + testFC.sh) — wire up testing.
+3. **Step 5** (CLI argument + test.sh) — wire up testing.
 4. **Step 6** (testing) — after all code changes.
 
 ## Files to Create or Modify
@@ -205,6 +198,6 @@ Per frame (hosted mode):
 | `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm` | Add `SetupOSXHostedCoreGraphicsRenderer()` (Step 2) |
 | `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` | Declare `SetupOSXHostedCoreGraphicsRenderer()` (Step 4) |
 | `MacFullControlTest/Main.mm` | Parse `--hosted` CLI arg, call hosted entry point (Step 5) |
-| `testFC.sh` | Forward `--hosted` argument to the app (Step 5) |
+| `test.sh` | Select the test app and forward `--hosted` to Full Control Test (Step 5) |
 | `doc/OSProvider.md` | Add hosted mode section |
 | `readme.md` | Update running section, update TODO (remove hosted mode) |

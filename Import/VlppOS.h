@@ -622,6 +622,10 @@ Kernel Mode Objects
 		bool										Unsignal();
 #ifdef VCZH_GCC
 		bool										Wait();
+		/// <summary>Wait for this event to signal for a period of time.</summary>
+		/// <returns>Returns true if the event is signaled. Returns false if this operation failed, including time out.</returns>
+		/// <param name="ms">Time in milliseconds.</param>
+		bool										WaitForTime(vint ms);
 #endif
 	};
 
@@ -788,13 +792,12 @@ Kernel Mode Objects in Process
 		/// <returns>Returns true if this operation succeeded.</returns>
 		/// <param name="cs">The critical section.</param>
 		bool										SleepWith(CriticalSection& cs);
-#ifdef VCZH_MSVC
 		/// <summary>Bind a conditional variable with a owned critical section and release it for a period of time. When the function returns, the condition variable is activated or it is time out, and the current thread owned the critical section again.</summary>
 		/// <returns>Returns true if this operation succeeded.</returns>
 		/// <param name="cs">The critical section.</param>
 		/// <param name="ms">Time in milliseconds.</param>
-		/// <remarks>This function is only available in Windows.</remarks>
 		bool										SleepWithForTime(CriticalSection& cs, vint ms);
+#ifdef VCZH_MSVC
 		/// <summary>Bind a conditional variable with a owned reader lock and release it. When the function returns, the condition variable is activated, and the current thread owned the reader lock again.</summary>
 		/// <returns>Returns true if this operation succeeded.</returns>
 		/// <param name="lock">The reader lock.</param>
@@ -1752,6 +1755,605 @@ INetworkProtocolServer
 
 
 /***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+  IAsyncSocket(Server|Client)
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET
+#define VCZH_INTERPROCESS_ASYNCSOCKET
+
+#include <concepts>
+#include <type_traits>
+#include <utility>
+
+namespace vl::inter_process::async_tcp_socket
+{
+	/// <summary>A retained buffer for one asynchronous write.</summary>
+	class AsyncSocketBuffer : public Object
+	{
+	public:
+		collections::Array<vuint8_t>			data;
+	};
+
+	class IAsyncSocketConnection;
+
+	/// <summary>Callbacks for an asynchronous byte-stream connection.</summary>
+	class IAsyncSocketCallback : public virtual Interface
+	{
+	public:
+		/// <summary>Called with one positive borrowed read block.</summary>
+		virtual void							OnRead(const vuint8_t* buffer, vint size) = 0;
+		/// <summary>Called after the complete retained write buffer has been sent.</summary>
+		virtual void							OnWriteCompleted(Ptr<AsyncSocketBuffer> buffer);
+		/// <summary>Called when an asynchronous operation fails.</summary>
+		virtual void							OnError(const WString& error, bool fatal);
+		/// <summary>Called for the client connection after it is established.</summary>
+		virtual void							OnConnected();
+		/// <summary>Called exactly once when the connection stops.</summary>
+		virtual void							OnDisconnected();
+		/// <summary>Called synchronously when this callback is installed.</summary>
+		virtual void							OnInstalled(IAsyncSocketConnection* connection) = 0;
+	};
+
+	/// <summary>An ordered, full-duplex asynchronous byte stream.</summary>
+	class IAsyncSocketConnection : public virtual Interface
+	{
+	public:
+		virtual void							InstallCallback(IAsyncSocketCallback* callback) = 0;
+		virtual void							BeginReadingLoopUnsafe() = 0;
+		virtual void							WriteAsync(Ptr<AsyncSocketBuffer> buffer) = 0;
+		virtual void							Stop() = 0;
+	};
+
+	/// <summary>An asynchronous TCP client for the local machine.</summary>
+	class IAsyncSocketClient : public virtual Interface
+	{
+	public:
+		/// <summary>Returns the immutable loopback port selected during construction.</summary>
+		virtual vint							GetPort() = 0;
+		/// <summary>Creates a fresh independent client with the same transport configuration and endpoint.</summary>
+		/// <remarks>The returned client must be distinct, report the same port, and have <see cref="ClientStatus::Ready"/> status. This operation remains available while the source client is active or stopped.</remarks>
+		virtual Ptr<IAsyncSocketClient>			CreateSameEndpointClient() = 0;
+		virtual IAsyncSocketConnection*			GetConnection() = 0;
+		virtual void							WaitForServer() = 0;
+		virtual ClientStatus					GetStatus() = 0;
+	};
+
+	enum class AsyncSocketServerStartFailure
+	{
+		AddressInUse,
+		Other,
+	};
+
+	class AsyncSocketServerStartException : public Exception
+	{
+	private:
+		AsyncSocketServerStartFailure		failure;
+
+	public:
+		AsyncSocketServerStartException(AsyncSocketServerStartFailure _failure, const WString& message);
+
+		AsyncSocketServerStartFailure		GetFailure()const;
+	};
+
+	/// <summary>Callbacks for accepting asynchronous TCP connections.</summary>
+	class IAsyncSocketServerCallback : public virtual Interface
+	{
+	public:
+		virtual WaitForClientResult			OnClientConnected(IAsyncSocketConnection* connection) = 0;
+		/// <summary>Called exactly once when a started listener stops unexpectedly.</summary>
+		virtual void							OnServerStopped();
+	};
+
+	/// <summary>An asynchronous TCP server for the local machine.</summary>
+	class IAsyncSocketServer : public virtual Interface
+	{
+	public:
+		/// <summary>Returns the immutable loopback port selected during construction.</summary>
+		virtual vint							GetPort() = 0;
+		virtual void							Start(IAsyncSocketServerCallback* callback) = 0;
+		virtual void							Stop() = 0;
+		virtual bool							IsStopped() = 0;
+	};
+
+	// This policy is intentionally platform-neutral. Each failed attempt creates
+	// a fresh native socket and is followed by an asynchronous millisecond delay.
+	constexpr vint AsyncSocketClientRetryCount = 50;
+	constexpr vint AsyncSocketClientRetryDelay = 100;
+
+	extern Ptr<IAsyncSocketServer>			CreateDefaultAsyncSocketServer(vint port);
+	extern Ptr<IAsyncSocketClient>			CreateDefaultAsyncSocketClient(vint port);
+
+/***********************************************************************
+NetworkProtocolConnection
+***********************************************************************/
+
+	class NetworkProtocolCallbackDomain : public Object
+	{
+	public:
+		struct CallbackFrame;
+
+	private:
+		static thread_local CallbackFrame*	currentCallbackFrame;
+		CriticalSection					lockState;
+		ConditionVariable				cvState;
+		vint							activeCallbacks = 0;
+
+	public:
+		struct CallbackFrame
+		{
+			Ptr<NetworkProtocolCallbackDomain>	domain;
+			CallbackFrame*					previous = nullptr;
+
+			CallbackFrame(Ptr<NetworkProtocolCallbackDomain> _domain);
+			~CallbackFrame();
+		};
+
+		vint							CurrentCallbackDepth();
+		void							WaitForCallbacks(vint callbackDepth);
+	};
+
+	class NetworkProtocolConnectionLifecycle : public Object
+	{
+	public:
+		IAsyncSocketConnection*				socketConnection = nullptr;
+		Ptr<NetworkProtocolCallbackDomain>	callbackDomain;
+		Ptr<Object>						retainedAdapter;
+
+		CriticalSection					lockState;
+		ConditionVariable				cvState;
+		INetworkProtocolCallback*			callback = nullptr;
+		bool							callbackInstalling = false;
+		vint							activeCallbacks = 0;
+		vint							activeSocketCallbacks = 0;
+		vint							activeSocketCalls = 0;
+		bool							stopStarted = false;
+		bool							stopFinished = false;
+		bool							terminal = false;
+		bool							disconnectedNotified = false;
+		bool							disconnectDelivering = false;
+		bool							disconnectFinished = false;
+		collections::List<Ptr<AsyncSocketBuffer>>
+										queuedWrites;
+		bool							writePending = false;
+		bool							drainWrites = false;
+
+		CriticalSection					lockParser;
+		vuint8_t						lengthBytes[sizeof(vint32_t)] = {};
+		vint							lengthBytesReceived = 0;
+		vint32_t						expectedCharacters = -1;
+		collections::Array<wchar_t>		characterBuffer;
+		vint							characterBytesReceived = 0;
+		bool							parserFailed = false;
+
+		void							TakeRetainedAdapterIfDrained(Ptr<Object>& releasing);
+	};
+
+	/// <summary>Adapts an asynchronous byte stream to framed network-protocol strings.</summary>
+	class NetworkProtocolConnection
+		: public Object
+		, public virtual INetworkProtocolConnection
+		, public virtual IAsyncSocketCallback
+	{
+	private:
+		using Lifecycle = NetworkProtocolConnectionLifecycle;
+		static constexpr vint				WriteDrainTimeout = 1000;
+
+		struct CallbackFrame;
+		struct SocketCallbackFrame;
+		static thread_local CallbackFrame*	currentCallbackFrame;
+		static thread_local SocketCallbackFrame*
+										currentSocketCallbackFrame;
+
+		struct CallbackFrame
+		{
+			Ptr<Lifecycle>					state;
+			CallbackFrame*					previous = nullptr;
+			NetworkProtocolCallbackDomain::CallbackFrame
+										domainFrame;
+
+			CallbackFrame(Ptr<Lifecycle> _state);
+			~CallbackFrame();
+		};
+
+		struct SocketCallbackFrame
+		{
+			Ptr<Lifecycle>					state;
+			SocketCallbackFrame*				previous = nullptr;
+
+			SocketCallbackFrame(Ptr<Lifecycle> _state);
+			~SocketCallbackFrame();
+		};
+
+		Ptr<Lifecycle>					lifecycle;
+
+		static vint						CurrentCallbackDepth(Ptr<Lifecycle> state);
+		static vint						CurrentSocketCallbackDepth(Ptr<Lifecycle> state);
+		static void						FinishSocketCall(Ptr<Lifecycle> state);
+
+		template<typename TCallback>
+		static void						InvokeProtocolCallback(Ptr<Lifecycle> state, bool allowTerminal, TCallback&& invoke);
+
+		static void						SubmitWrite(Ptr<Lifecycle> state, IAsyncSocketConnection* connection, Ptr<AsyncSocketBuffer> buffer);
+		static void						NotifyProtocolDisconnected(Ptr<Lifecycle> state);
+		static void						DetachSocketCallback(Ptr<Lifecycle> state, IAsyncSocketConnection* connection);
+		static void						StopConnection(Ptr<Lifecycle> state, Ptr<Object> retainedAdapter = nullptr);
+		static void						ReportFatalError(Ptr<Lifecycle> state, const WString& error);
+
+		template<typename TAsyncSocketServer>
+		friend class NetworkProtocolServer;
+
+		template<typename TAsyncSocketClient>
+		friend class NetworkProtocolClient;
+
+		void							StopWithRetainedAdapter(Ptr<NetworkProtocolConnection> retainedAdapter);
+
+	public:
+		explicit NetworkProtocolConnection(IAsyncSocketConnection* connection, Ptr<NetworkProtocolCallbackDomain> callbackDomain = nullptr);
+		~NetworkProtocolConnection();
+
+		void							InstallCallback(INetworkProtocolCallback* value) override;
+		void							BeginReadingLoopUnsafe() override;
+		void							SendString(const WString& str) override;
+		void							Stop() override;
+		void							OnRead(const vuint8_t* buffer, vint size) override;
+		void							OnWriteCompleted(Ptr<AsyncSocketBuffer> buffer) override;
+		void							OnError(const WString& error, bool fatal) override;
+		void							OnConnected() override;
+		void							OnDisconnected() override;
+		void							OnInstalled(IAsyncSocketConnection* connection) override;
+	};
+
+/***********************************************************************
+NetworkProtocolServer
+***********************************************************************/
+
+	template<typename TAsyncSocketServer>
+	class NetworkProtocolServer
+		: public Object
+		, public virtual INetworkProtocolServer
+	{
+		static_assert(std::derived_from<TAsyncSocketServer, IAsyncSocketServer>);
+		static_assert(!std::is_final_v<TAsyncSocketServer>);
+
+	private:
+		class Lifecycle : public Object
+		{
+		public:
+			NetworkProtocolServer*				owner = nullptr;
+			Ptr<NetworkProtocolCallbackDomain>	callbackDomain = Ptr(new NetworkProtocolCallbackDomain);
+			CriticalSection					lockState;
+			ConditionVariable				cvState;
+			collections::List<Ptr<NetworkProtocolConnection>>
+										connections;
+			bool							stopStarted = false;
+			bool							stopFinished = false;
+			bool							nativeStopCalling = false;
+
+			Lifecycle(NetworkProtocolServer* _owner)
+				: owner(_owner)
+			{
+			}
+		};
+
+		class SocketServerBridge
+			: public TAsyncSocketServer
+			, public virtual IAsyncSocketServerCallback
+		{
+		private:
+			Ptr<Lifecycle>					lifecycle;
+			CriticalSection					lockSelf;
+			Ptr<SocketServerBridge>			selfReference;
+
+		public:
+			template<typename... TArgs>
+			SocketServerBridge(Ptr<Lifecycle> _lifecycle, TArgs&&... args)
+				: TAsyncSocketServer(std::forward<TArgs>(args)...)
+				, lifecycle(_lifecycle)
+			{
+			}
+
+			void InitializeSelf(Ptr<SocketServerBridge> self)
+			{
+				CS_LOCK(lockSelf)
+				{
+					selfReference = self;
+				}
+			}
+
+			void ReleaseSelfReference()
+			{
+				CS_LOCK(lockSelf)
+				{
+					selfReference = nullptr;
+				}
+			}
+
+			WaitForClientResult OnClientConnected(IAsyncSocketConnection* connection) override
+			{
+				Ptr<SocketServerBridge> self;
+				CS_LOCK(lockSelf)
+				{
+					self = selfReference;
+				}
+				auto state = lifecycle;
+				NetworkProtocolServer* owner = nullptr;
+				CS_LOCK(state->lockState)
+				{
+					owner = state->owner;
+				}
+				return owner ? owner->OnSocketClientConnected(connection) : WaitForClientResult::Reject;
+			}
+		};
+
+		Ptr<Lifecycle>					lifecycle;
+		Ptr<SocketServerBridge>			asyncSocketServer;
+
+		static void StopConnections(Ptr<Lifecycle> state, bool retainAdapters = false)
+		{
+			collections::List<Ptr<NetworkProtocolConnection>> stoppingConnections;
+			CS_LOCK(state->lockState)
+			{
+				for (auto connection : state->connections)
+				{
+					stoppingConnections.Add(connection);
+				}
+			}
+			for (auto connection : stoppingConnections)
+			{
+				if (retainAdapters)
+				{
+					connection->StopWithRetainedAdapter(connection);
+				}
+				else
+				{
+					connection->Stop();
+				}
+			}
+		}
+
+		static void QueueDeferredStop(Ptr<Lifecycle> state, Ptr<SocketServerBridge> nativeServer)
+		{
+			ThreadPoolLite::QueueLambda([state, nativeServer]()
+			{
+				state->lockState.Enter();
+				while (!state->stopFinished || state->nativeStopCalling)
+				{
+					state->cvState.SleepWith(state->lockState);
+				}
+				state->nativeStopCalling = true;
+				state->lockState.Leave();
+
+				try
+				{
+					nativeServer->Stop();
+					StopConnections(state);
+					state->callbackDomain->WaitForCallbacks(0);
+				}
+				catch (...)
+				{
+				}
+
+				CS_LOCK(state->lockState)
+				{
+					state->nativeStopCalling = false;
+					state->cvState.WakeAllPendings();
+				}
+				nativeServer->ReleaseSelfReference();
+			});
+		}
+
+		WaitForClientResult OnSocketClientConnected(IAsyncSocketConnection* connection)
+		{
+			auto state = lifecycle;
+			NetworkProtocolCallbackDomain::CallbackFrame callbackFrame(state->callbackDomain);
+			bool acceptCallback = false;
+			CS_LOCK(state->lockState)
+			{
+				acceptCallback = !state->stopStarted;
+			}
+			if (!acceptCallback)
+			{
+				return WaitForClientResult::Reject;
+			}
+
+			auto protocolConnection = Ptr(new NetworkProtocolConnection(connection, state->callbackDomain));
+			CS_LOCK(state->lockState)
+			{
+				state->connections.Add(protocolConnection);
+				acceptCallback = !state->stopStarted;
+			}
+			return acceptCallback ? OnClientConnected(protocolConnection.Obj()) : WaitForClientResult::Reject;
+		}
+
+	public:
+		template<typename... TArgs>
+		NetworkProtocolServer(TArgs&&... args)
+			: lifecycle(Ptr(new Lifecycle(this)))
+			, asyncSocketServer(new SocketServerBridge(lifecycle, std::forward<TArgs>(args)...))
+		{
+			asyncSocketServer->InitializeSelf(asyncSocketServer);
+		}
+
+		~NetworkProtocolServer()
+		{
+			Stop();
+			auto state = lifecycle;
+			StopConnections(state, true);
+			CS_LOCK(state->lockState)
+			{
+				state->owner = nullptr;
+				state->connections.Clear();
+			}
+		}
+
+		virtual WaitForClientResult OnClientConnected(INetworkProtocolConnection*) override
+		{
+			return WaitForClientResult::Accept;
+		}
+
+		void Start() override
+		{
+			asyncSocketServer->Start(asyncSocketServer.Obj());
+		}
+
+		void Stop() override
+		{
+			auto state = lifecycle;
+			auto nativeServer = asyncSocketServer;
+			auto callbackDepth = state->callbackDomain->CurrentCallbackDepth();
+			bool firstStop = false;
+			bool nestedFollower = false;
+			bool deferFinalization = false;
+			state->lockState.Enter();
+			if (!state->stopStarted)
+			{
+				state->stopStarted = true;
+				state->nativeStopCalling = true;
+				firstStop = true;
+			}
+			else if (callbackDepth > 0)
+			{
+				nestedFollower = true;
+			}
+			else
+			{
+				while (!state->stopFinished || state->nativeStopCalling)
+				{
+					state->cvState.SleepWith(state->lockState);
+				}
+				state->nativeStopCalling = true;
+			}
+			state->lockState.Leave();
+			if (nestedFollower)
+			{
+				StopConnections(state);
+				return;
+			}
+
+			try
+			{
+				nativeServer->Stop();
+				StopConnections(state);
+				state->callbackDomain->WaitForCallbacks(firstStop ? callbackDepth : 0);
+				deferFinalization = firstStop && callbackDepth > 0;
+				if (!deferFinalization)
+				{
+					nativeServer->ReleaseSelfReference();
+				}
+			}
+			catch (...)
+			{
+				if (!firstStop || callbackDepth == 0)
+				{
+					nativeServer->ReleaseSelfReference();
+				}
+				CS_LOCK(state->lockState)
+				{
+					state->nativeStopCalling = false;
+					if (firstStop)
+					{
+						state->stopFinished = true;
+					}
+					state->cvState.WakeAllPendings();
+				}
+				throw;
+			}
+
+			CS_LOCK(state->lockState)
+			{
+				state->nativeStopCalling = false;
+				if (firstStop)
+				{
+					state->stopFinished = true;
+				}
+				state->cvState.WakeAllPendings();
+			}
+			if (deferFinalization)
+			{
+				QueueDeferredStop(state, nativeServer);
+			}
+		}
+
+		bool IsStopped() override
+		{
+			return asyncSocketServer->IsStopped();
+		}
+	};
+
+/***********************************************************************
+NetworkProtocolClient
+***********************************************************************/
+
+	template<typename TAsyncSocketClient>
+	class NetworkProtocolClient
+		: public Object
+		, public virtual INetworkProtocolClient
+	{
+		static_assert(std::derived_from<TAsyncSocketClient, IAsyncSocketClient>);
+
+	private:
+		Ptr<TAsyncSocketClient>				asyncSocketClient;
+		Ptr<NetworkProtocolConnection>		connection;
+
+		static void QueueDeferredRelease(Ptr<TAsyncSocketClient> nativeClient)
+		{
+			ThreadPoolLite::QueueLambda([nativeClient]()
+			{
+				nativeClient->GetConnection()->Stop();
+			});
+		}
+
+	public:
+		template<typename... TArgs>
+		NetworkProtocolClient(TArgs&&... args)
+			: asyncSocketClient(new TAsyncSocketClient(std::forward<TArgs>(args)...))
+			, connection(new NetworkProtocolConnection(asyncSocketClient->GetConnection()))
+		{
+		}
+
+		~NetworkProtocolClient()
+		{
+			auto state = connection->lifecycle;
+			auto deferFinalization =
+				NetworkProtocolConnection::CurrentCallbackDepth(state) > 0 ||
+				NetworkProtocolConnection::CurrentSocketCallbackDepth(state) > 0;
+			auto nativeClient = asyncSocketClient;
+			connection->StopWithRetainedAdapter(connection);
+			if (deferFinalization)
+			{
+				QueueDeferredRelease(nativeClient);
+			}
+		}
+
+		INetworkProtocolConnection* GetConnection() override
+		{
+			return connection.Obj();
+		}
+
+		void WaitForServer() override
+		{
+			asyncSocketClient->WaitForServer();
+		}
+
+		ClientStatus GetStatus() override
+		{
+			return asyncSocketClient->GetStatus();
+		}
+	};
+}
+
+#endif
+
+
+/***********************************************************************
 .\INTERPROCESS\CHANNELIMPLS\CHANNELIMPL.H
 ***********************************************************************/
 /***********************************************************************
@@ -2649,7 +3251,6 @@ Interfaces:
 #ifndef VCZH_INTERPROCESS_CHANNELIMPLS_CHANNELSERVERIMPL
 #define VCZH_INTERPROCESS_CHANNELIMPLS_CHANNELSERVERIMPL
 
-#include <utility>
 
 namespace vl::inter_process
 {
@@ -5768,6 +6369,1129 @@ Serialization (macros)
 				}\
 			};\
 
+		}
+	}
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\HTTPREQUEST.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+  IHttpRequest(Connection|Callback)
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUEST
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUEST
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	constexpr vint HttpIncompleteMessageTimeout = 30 * 1000;
+	constexpr vint HttpRequestLineSizeLimit = 8 * 1024;
+	constexpr vint HttpHeaderBlockSizeLimit = 64 * 1024;
+	constexpr vint HttpBodySizeLimit = 16 * 1024 * 1024;
+	constexpr vint HttpChunkSizeLineLimit = 4 * 1024;
+	constexpr vint HttpTrailerBlockSizeLimit = 64 * 1024;
+
+	struct HttpVersion
+	{
+		vint							major = 1;
+		vint							minor = 1;
+	};
+
+	struct HttpField
+	{
+		WString							name;
+		collections::Array<vuint8_t>		value;
+	};
+
+	enum class HttpFramingKind
+	{
+		None,
+		ContentLength,
+		Chunked,
+	};
+
+	enum class HttpFramingAnalysisResult
+	{
+		Succeeded,
+		Invalid,
+		UnsupportedTransferCoding,
+	};
+
+	struct HttpFraming
+	{
+		HttpFramingKind					kind = HttpFramingKind::None;
+		vuint64_t						contentLength = 0;
+		vint							contentLengthFieldCount = 0;
+		vint							contentLengthValueCount = 0;
+		bool							contentLengthValuesPlainDecimal = true;
+		bool							connectionClose = false;
+	};
+
+	struct HttpBodyChunk
+	{
+		collections::Array<vuint8_t>		data;
+	};
+
+	struct HttpBody
+	{
+		collections::List<HttpBodyChunk>	chunks;
+		collections::List<HttpField>		trailers;
+	};
+
+	extern HttpFramingAnalysisResult	AnalyzeHttpFraming(const collections::List<HttpField>& fields, HttpFraming& framing);
+	extern const HttpField*				FindHttpField(const collections::List<HttpField>& fields, const WString& normalizedName);
+	extern vint							CountHttpFields(const collections::List<HttpField>& fields, const WString& normalizedName);
+	extern HttpField						CreateAsciiHttpField(const WString& name, const WString& value);
+	extern bool							DecodeAsciiHttpFieldValue(const collections::Array<vuint8_t>& value, WString& text);
+	extern bool							HttpFieldValueEqualsAscii(const collections::Array<vuint8_t>& value, const WString& expected);
+	extern bool							TryGetHttpBodySize(const HttpBody& body, vint& size);
+	extern bool							FlattenHttpBody(const HttpBody& body, collections::Array<vuint8_t>& bytes);
+	extern void							SetHttpBodyBytes(HttpBody& body, collections::Array<vuint8_t>&& bytes);
+	extern bool							EncodeStrictUtf8(const WString& text, collections::Array<vuint8_t>& bytes);
+	extern bool							DecodeStrictUtf8(const vuint8_t* bytes, vint count, WString& text);
+
+	enum class HttpRequestLineValidationResult
+	{
+		Succeeded,
+		InvalidMethod,
+		InvalidRequestTarget,
+		TooLong,
+	};
+
+	extern HttpRequestLineValidationResult	ValidateHttpRequestLine(const WString& method, const WString& requestTarget);
+
+	class HttpRequest : public Object
+	{
+	public:
+		HttpVersion						version;
+		WString							method;
+		WString							requestTarget;
+		collections::List<HttpField>		headers;
+		HttpBody						body;
+	};
+
+	class HttpResponse : public Object
+	{
+	public:
+		HttpVersion						version;
+		vint							statusCode = 200;
+		WString							reason;
+		collections::List<HttpField>		headers;
+		HttpBody						body;
+	};
+
+	enum class HttpResponseFailure
+	{
+		NotFound = 404,
+	};
+
+	enum class HttpRequestBodyParsingResult
+	{
+		Succeeded,
+		Incomplete,
+		Invalid,
+	};
+
+	enum class HttpRequestFailure
+	{
+		BadRequest = 400,
+		RequestTimeout = 408,
+		PayloadTooLarge = 413,
+		UriTooLong = 414,
+		ExpectationFailed = 417,
+		RequestHeaderFieldsTooLarge = 431,
+		NotImplemented = 501,
+		HttpVersionNotSupported = 505,
+	};
+
+	extern HttpRequestBodyParsingResult		ParseHttpRequestBodyToChunks(
+		const vuint8_t*						buffer,
+		vint							availableBytes,
+		HttpBody&						output,
+		vint&							consumedBytes
+		);
+
+	class IHttpRequestConnection;
+
+	class IHttpRequestCallback : public virtual Interface
+	{
+	public:
+		virtual void						OnReadRequest(Ptr<HttpRequest> request);
+		virtual void						OnReadRequestFailure(HttpRequestFailure failure);
+		virtual void						OnReadResponse(Ptr<HttpResponse> response);
+		virtual void						OnReadResponseFailure(HttpResponseFailure failure);
+		virtual void						OnWriteCompleted();
+		virtual void						OnError(const WString& error, bool fatal);
+		virtual void						OnConnected();
+		virtual void						OnDisconnected();
+		virtual void						OnInstalled(IHttpRequestConnection* connection) = 0;
+	};
+
+	class IHttpRequestConnection : public virtual Interface
+	{
+	public:
+		virtual void						InstallCallback(IHttpRequestCallback* callback) = 0;
+		virtual void						BeginReadingLoopUnsafe() = 0;
+		virtual void						SendRequest(Ptr<HttpRequest> request, vint responseTimeout = HttpIncompleteMessageTimeout) = 0;
+		virtual void						SendResponse(Ptr<HttpResponse> response) = 0;
+		virtual void						Stop() = 0;
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPREQUEST.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Async Socket HTTP/1.1 Connection
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTIMPL
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTIMPL
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	enum class HttpRequestConnectionDirection
+	{
+		Server,
+		Client,
+	};
+
+	class IHttpRequestTimeoutController : public virtual Interface
+	{
+	public:
+		virtual void						Arm(vint milliseconds, const Func<void()>& callback) = 0;
+		virtual void						Refresh() = 0;
+		virtual void						CancelAndWait() = 0;
+	};
+
+	extern Ptr<IHttpRequestTimeoutController>	CreateHttpRequestTimeoutController();
+
+	class HttpRequestCallbackDomain : public Object
+	{
+	public:
+		struct CallbackFrame;
+
+	private:
+		static thread_local CallbackFrame*	currentCallbackFrame;
+		CriticalSection						lockState;
+		ConditionVariable					cvState;
+		vint							activeCallbacks = 0;
+
+	public:
+		struct CallbackFrame
+		{
+			Ptr<HttpRequestCallbackDomain>		domain;
+			CallbackFrame*					previous = nullptr;
+
+			CallbackFrame(Ptr<HttpRequestCallbackDomain> _domain);
+			~CallbackFrame();
+		};
+
+		vint							CurrentCallbackDepth();
+		void							WaitForCallbacks(vint callbackDepth);
+	};
+
+	class HttpRequestConnectionLifecycle;
+
+	class HttpRequestConnection final
+		: public Object
+		, public virtual IHttpRequestConnection
+		, public virtual IAsyncSocketCallback
+	{
+	private:
+		using Lifecycle = HttpRequestConnectionLifecycle;
+		struct CallbackFrame;
+		struct SocketCallbackFrame;
+		struct TimeoutCallbackFrame;
+		static thread_local CallbackFrame*	currentCallbackFrame;
+		static thread_local SocketCallbackFrame*
+										currentSocketCallbackFrame;
+		static thread_local TimeoutCallbackFrame*
+										currentTimeoutCallbackFrame;
+
+		Ptr<Lifecycle>						lifecycle;
+
+		static vint						CurrentCallbackDepth(Ptr<Lifecycle> state);
+		static vint						CurrentSocketCallbackDepth(Ptr<Lifecycle> state);
+		static vint						CurrentTimeoutCallbackDepth(Ptr<Lifecycle> state);
+		static void						FinishSocketCall(Ptr<Lifecycle> state);
+
+		template<typename TCallback>
+		static void						InvokeHttpCallback(Ptr<Lifecycle> state, bool allowTerminal, TCallback&& invoke);
+
+		static void						SubmitWrite(Ptr<Lifecycle> state, IAsyncSocketConnection* connection, Ptr<AsyncSocketBuffer> buffer);
+		static void						InstallTimeout(Ptr<Lifecycle> state, vint milliseconds, const WString& error);
+		static void						RefreshTimeout(Ptr<Lifecycle> state);
+		static void						ReportRequestFailure(Ptr<Lifecycle> state, HttpRequestFailure failure, bool timeoutOnly = false, bool reserved = false);
+		static void						ReportResponseFailure(Ptr<Lifecycle> state, HttpResponseFailure failure);
+		static void						DeliverResponse(Ptr<Lifecycle> state, Ptr<HttpResponse> response, bool closeAfterDelivery);
+		static void						ProcessBufferedInput(Ptr<Lifecycle> state);
+		static void						NotifyDisconnected(Ptr<Lifecycle> state);
+		static void						StopConnection(Ptr<Lifecycle> state, Ptr<Object> retainedAdapter = nullptr);
+		static void						ReportFatalError(Ptr<Lifecycle> state, const WString& error);
+
+	public:
+		HttpRequestConnection(
+			IAsyncSocketConnection* connection,
+			HttpRequestConnectionDirection direction,
+			Ptr<HttpRequestCallbackDomain> callbackDomain = nullptr,
+			Ptr<IHttpRequestTimeoutController> timeoutController = nullptr,
+			bool responseNotFoundIsFatal = false
+			);
+		~HttpRequestConnection();
+
+		void							RetainUntilStopped(Ptr<HttpRequestConnection> retainedAdapter, const Func<void()>& drainedCallback);
+		void							StopWithRetainedAdapter(Ptr<HttpRequestConnection> retainedAdapter);
+		bool							IsInsideCallback();
+
+		void							InstallCallback(IHttpRequestCallback* callback) override;
+		void							BeginReadingLoopUnsafe() override;
+		void							SendRequest(Ptr<HttpRequest> request, vint responseTimeout = HttpIncompleteMessageTimeout) override;
+		void							SendResponse(Ptr<HttpResponse> response) override;
+		void							Stop() override;
+
+		void							OnRead(const vuint8_t* buffer, vint size) override;
+		void							OnWriteCompleted(Ptr<AsyncSocketBuffer> buffer) override;
+		void							OnError(const WString& error, bool fatal) override;
+		void							OnConnected() override;
+		void							OnDisconnected() override;
+		void							OnInstalled(IAsyncSocketConnection* connection) override;
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPREQUESTCLIENT.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	HttpRequestClient
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTCLIENT
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTCLIENT
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	/// <summary>Adapts an asynchronous TCP client to one HTTP/1.1 request connection.</summary>
+	class HttpRequestClient : public Object
+	{
+	private:
+		class Impl;
+		Ptr<Impl>							impl;
+
+	public:
+		/// <remarks>Requiring an asynchronous socket client is intentional. The caller selects and owns the transport composition, and this request adapter never creates or replaces the supplied client. Keep this dependency explicit; do not add internal client creation.</remarks>
+		explicit HttpRequestClient(Ptr<IAsyncSocketClient> client);
+		virtual ~HttpRequestClient();
+
+		virtual IHttpRequestConnection*		GetConnection();
+		virtual void							WaitForServer();
+		virtual ClientStatus					GetStatus();
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPREQUESTSERVER.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	HttpRequestServer
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTSERVER
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPREQUESTSERVER
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	/// <summary>Adapts an asynchronous TCP server to HTTP/1.1 request connections.</summary>
+	class HttpRequestServer : public Object
+	{
+	private:
+		class Impl;
+		Ptr<Impl>							impl;
+
+	protected:
+		virtual void							OnServerStopped();
+		HttpRequestServer(
+			Ptr<IAsyncSocketServer> server,
+			const Func<Ptr<IHttpRequestTimeoutController>()>& timeoutControllerFactory
+			);
+
+	public:
+		/// <remarks>Requiring an asynchronous socket server is intentional. The caller selects and owns the transport composition, and this request adapter never creates or replaces the supplied server. Keep this dependency explicit; do not add internal server creation.</remarks>
+		explicit HttpRequestServer(Ptr<IAsyncSocketServer> server);
+		/// <remarks>A derived destructor must call <see cref="Stop"/> before destroying any state accessed by <see cref="OnClientConnected"/>.</remarks>
+		virtual ~HttpRequestServer();
+
+		virtual WaitForClientResult			OnClientConnected(IHttpRequestConnection* connection);
+		void							Start();
+		void							Stop();
+		bool							IsStopped();
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPSERVERAPI.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	SocketHttp(ServerApi|RequestContext)
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPSERVERAPI
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPSERVERAPI
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	class SocketHttpServerApi;
+	class SocketHttpServerApiDispatcher;
+
+	class SocketHttpRequestContext : public Object
+	{
+		friend class SocketHttpServerApiDispatcher;
+
+		class Impl;
+		Ptr<Impl>							impl;
+
+		SocketHttpRequestContext(Ptr<Impl> _impl);
+
+	public:
+		~SocketHttpRequestContext();
+
+		SocketHttpRequestContext(const SocketHttpRequestContext&) = delete;
+		SocketHttpRequestContext(SocketHttpRequestContext&&) = delete;
+		SocketHttpRequestContext& operator=(const SocketHttpRequestContext&) = delete;
+		SocketHttpRequestContext& operator=(SocketHttpRequestContext&&) = delete;
+
+		Ptr<HttpRequest>					GetRequest();
+		WString								GetRelativePath();
+		WString								GetQuery();
+		bool								TryGetBodyUtf8(WString& body);
+
+		bool								Respond(
+			Ptr<HttpResponse> response,
+			Func<void(bool)> completion = {}
+			);
+		bool								RespondStatus(
+			vint statusCode,
+			const WString& reason,
+			Func<void(bool)> completion = {}
+			);
+		bool								RespondBytes(
+			vint statusCode,
+			const WString& reason,
+			const WString& contentType,
+			const collections::Array<vuint8_t>& body,
+			Func<void(bool)> completion = {}
+			);
+		bool								RespondUtf8(
+			vint statusCode,
+			const WString& reason,
+			const WString& contentType,
+			const WString& body,
+			Func<void(bool)> completion = {}
+			);
+		bool								Cancel();
+	};
+
+	class SocketHttpServerApi : public Object
+	{
+		friend class SocketHttpServerApiDispatcher;
+
+		class Impl;
+		Ptr<Impl>							impl;
+
+	protected:
+		virtual void						OnHttpRequestReceived(
+			Ptr<SocketHttpRequestContext> context
+			) = 0;
+		virtual void						OnHttpServerStopping();
+
+	public:
+		/// <remarks>Requiring an asynchronous socket server is intentional. The caller selects and owns the transport composition, the port comes from the supplied server, and multiple APIs share one listener only by receiving the same server. Keep this dependency explicit; do not add internal server creation.</remarks>
+		SocketHttpServerApi(
+			Ptr<IAsyncSocketServer> server,
+			const WString& urlPrefix,
+			bool respondToOptions = true
+			);
+		virtual ~SocketHttpServerApi();
+
+		SocketHttpServerApi(const SocketHttpServerApi&) = delete;
+		SocketHttpServerApi(SocketHttpServerApi&&) = delete;
+		SocketHttpServerApi& operator=(const SocketHttpServerApi&) = delete;
+		SocketHttpServerApi& operator=(SocketHttpServerApi&&) = delete;
+
+		void								Start();
+		void								Stop();
+		bool								IsStopped();
+		WString								GetUrlPrefix();
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPSERVER.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	SocketHttpServer
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPSERVER
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPSERVER
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	class SocketHttpServer
+		: public SocketHttpServerApi
+		, public virtual INetworkProtocolServer
+	{
+		class Impl;
+		Ptr<Impl>							impl;
+
+	protected:
+		void								OnHttpRequestReceived(Ptr<SocketHttpRequestContext> context) override;
+		void								OnHttpServerStopping() override;
+
+	public:
+		/// <remarks>Requiring an asynchronous socket server is intentional. This protocol adapter takes its port from the server, forwards the caller-selected transport to <see cref="SocketHttpServerApi"/>, and never creates another server. Keep this dependency explicit; do not add an overload that selects a platform server internally.</remarks>
+		SocketHttpServer(Ptr<IAsyncSocketServer> server, const WString& urlPrefix);
+		~SocketHttpServer();
+
+		SocketHttpServer(const SocketHttpServer&) = delete;
+		SocketHttpServer(SocketHttpServer&&) = delete;
+		SocketHttpServer& operator=(const SocketHttpServer&) = delete;
+		SocketHttpServer& operator=(SocketHttpServer&&) = delete;
+
+		virtual WaitForClientResult			OnClientConnected(INetworkProtocolConnection* connection) override;
+		void								Start() override;
+		void								Stop() override;
+		bool								IsStopped() override;
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\NETWORKPROTOCOLHTTP.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	HttpRequest
+	HttpResponse
+	HttpError
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_NETWORKPROTOCOLHTTP
+#define VCZH_INTERPROCESS_NETWORKPROTOCOLHTTP
+
+
+namespace vl::inter_process
+{
+	/*
+	* GET: /Connect
+	* Creates a new logical connection and returns its request and response URLs.
+	* Repeated calls create separate logical connections.
+	*/
+	constexpr const wchar_t* HttpServerUrl_Connect = L"/VlppInterProcess/Connect";
+
+	/*
+	* POST: /Request/GUID
+	* Client should always maintain a living request on the server.
+	*
+	* Returns only when a request is issued.
+	* It will be pending or timeout if no request is issued.
+	* If a request is issued but no living request available, it waits.
+	*/
+	constexpr const wchar_t* HttpServerUrl_Request = L"/VlppInterProcess/Request";
+
+	/*
+	* POST: /Response/GUID
+	* To send responses or events to the server.
+	* May return one queued server message in the same HTTP response.
+	*/
+	constexpr const wchar_t* HttpServerUrl_Response = L"/VlppInterProcess/Response";
+
+	constexpr const wchar_t* HttpNetworkProtocolContentType = L"application/json; charset=utf8";
+
+	extern WString HttpUrlEncodeQuery(const WString& query);
+	extern WString HttpUrlDecodeQuery(const WString& query);
+	extern WString CreateHttpNetworkProtocolConnectBody(const WString& requestPath, const WString& responsePath);
+	extern bool ParseHttpNetworkProtocolConnectBody(const WString& body, WString& requestPath, WString& responsePath);
+	extern bool ValidateHttpNetworkProtocolBaseUrl(const WString& baseUrl);
+	extern bool ValidateHttpNetworkProtocolEndpointPath(const WString& path);
+	extern bool IsValidHttpNetworkProtocolMessage(const WString& message);
+}
+
+namespace vl::inter_process::windows_http
+{
+	/// <summary>An http request.</summary>
+	class HttpRequest
+	{
+		typedef collections::Array<char>					BodyBuffer;
+		typedef collections::List<WString>					StringList;
+		typedef collections::Dictionary<WString, WString>	HeaderMap;
+	public:
+		/// <summary>Query of the request, like "/index.html".</summary>
+		WString												query;
+		/// <summary>Set to true if the request uses SSL, or https.</summary>
+		bool												secure = false;
+		/// <summary>User name to authorize. Set to empty if authorization is not needed.</summary>
+		WString												username;
+		/// <summary>Password to authorize. Set to empty if authorization is not needed.</summary>
+		WString												password;
+		/// <summary>HTTP method, like "GET", "POST", "PUT", "DELETE", etc.</summary>
+		WString												method;
+		/// <summary>Cookie. Set to empty if cookie is not needed.</summary>
+		WString												cookie;
+		/// <summary>Request body. This is a byte array.</summary>
+		BodyBuffer											body;
+		/// <summary>Content type, like "text/xml".</summary>
+		WString												contentType;
+		/// <summary>Accept type list, elements like "text/xml".</summary>
+		StringList											acceptTypes;
+		/// <summary>A dictionary to contain extra headers.</summary>
+		HeaderMap											extraHeaders;
+		/// <summary>Set to true to let this request finish when <see cref="HttpClientApi.Stop"/> is called.</summary>
+		bool												keepAliveOnStop = false;
+		/// <summary>Timeout for resolving the host name. 0 or -1 means infinite.</summary>
+		vint												resolveTimeout = 0;
+		/// <summary>Timeout for connecting to the server. 0 or -1 means infinite.</summary>
+		vint												connectTimeout = 60000;
+		/// <summary>Timeout for sending the request. 0 or -1 means infinite.</summary>
+		vint												sendTimeout = 30000;
+		/// <summary>Timeout for receiving the response. 0 or -1 means infinite.</summary>
+		vint												receiveTimeout = 30000;
+
+		HttpRequest() = default;
+		void												SetBodyUtf8(const WString& bodyString);
+	};
+
+	/// <summary>A type representing an http response.</summary>
+	class HttpResponse
+	{
+		typedef collections::Array<char>					BodyBuffer;
+	public:
+		/// <summary>Status code, like 200.</summary>
+		vint												statusCode = 0;
+		/// <summary>Response body. This is a byte array.</summary>
+		BodyBuffer											body;
+		/// <summary>Returned cookie from the server.</summary>
+		WString												cookie;
+		/// <summary>Returned content type from the server.</summary>
+		WString												contentType;
+
+		HttpResponse() = default;
+		bool												TryGetBodyUtf8(WString& bodyString) const;
+		WString												GetBodyUtf8() const;
+	};
+
+	/// <summary>A transport error reported by the underlying HTTP implementation.</summary>
+	class HttpError
+	{
+	public:
+		vuint32_t											errorCode = 0;
+		WString												operation;
+		WString												message;
+	};
+}
+
+namespace vl::inter_process
+{
+	extern windows_http::HttpRequest CreateHttpNetworkProtocolConnectRequest(const WString& target);
+	extern windows_http::HttpRequest CreateHttpNetworkProtocolReceiveRequest(const WString& target);
+	extern windows_http::HttpRequest CreateHttpNetworkProtocolSendRequest(const WString& target, const collections::Array<char>& body);
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPCLIENTAPI.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	SocketHttpClientApi
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPCLIENTAPI
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPCLIENTAPI
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	enum class SocketHttpClientErrorCode : vuint32_t
+	{
+		InvalidRequest = 1,
+		Stopped = 2,
+		Transport = 3,
+		UnsupportedCoding = 4,
+		ResponseNotFound = 5,
+	};
+
+	class SocketHttpClientApi : public Object
+	{
+		class Impl;
+		Ptr<Impl>							impl;
+
+	public:
+		/// <remarks>Requiring an asynchronous socket client is intentional. The caller selects and owns the transport composition, the client supplies its locked-in port, and this API never creates or replaces it. Keep this dependency explicit; do not add internal client creation.</remarks>
+		SocketHttpClientApi(
+			Ptr<IAsyncSocketClient> client,
+			const WString& server
+			);
+		~SocketHttpClientApi();
+
+		SocketHttpClientApi(const SocketHttpClientApi&) = delete;
+		SocketHttpClientApi(SocketHttpClientApi&&) = delete;
+		SocketHttpClientApi& operator=(const SocketHttpClientApi&) = delete;
+		SocketHttpClientApi& operator=(SocketHttpClientApi&&) = delete;
+
+		void								WaitForServer();
+		ClientStatus						GetStatus();
+		/// <summary>Send an HTTP request on the injected socket connection.</summary>
+		/// <remarks>The injected socket owns name-resolution, connection, and send-phase timing. Only <see cref="windows_http::HttpRequest.receiveTimeout"/> controls the response deadline for this exchange.</remarks>
+		void								HttpQuery(
+			const windows_http::HttpRequest& request,
+			Func<void(Variant<
+				windows_http::HttpResponse,
+				windows_http::HttpError
+				>)> callback
+			);
+		void								Stop();
+
+		static WString						UrlEncodeQuery(const WString& query);
+		static WString						UrlDecodeQuery(const WString& query);
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\INTERPROCESS\ASYNCSOCKET\ASYNCSOCKET_HTTPCLIENT.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Interfaces:
+	SocketHttpClient
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_HTTPCLIENT
+#define VCZH_INTERPROCESS_ASYNCSOCKET_HTTPCLIENT
+
+
+namespace vl::inter_process::async_tcp_socket
+{
+	class SocketHttpClient
+		: public Object
+		, public virtual INetworkProtocolClient
+		, public virtual INetworkProtocolConnection
+	{
+		class Impl;
+		Ptr<Impl>						impl;
+
+	public:
+		/// <remarks>Requiring an asynchronous socket client is intentional. The supplied client is used directly for the first physical lane and creates fresh same-endpoint clients for the second lane and transport recovery. Keep this dependency explicit; do not add a factory parameter or select a platform socket internally.</remarks>
+		SocketHttpClient(
+			Ptr<IAsyncSocketClient> client,
+			const WString& server,
+			const WString& urlPrefix
+			);
+		~SocketHttpClient();
+
+		SocketHttpClient(const SocketHttpClient&) = delete;
+		SocketHttpClient(SocketHttpClient&&) = delete;
+		SocketHttpClient& operator=(const SocketHttpClient&) = delete;
+		SocketHttpClient& operator=(SocketHttpClient&&) = delete;
+
+		INetworkProtocolConnection*		GetConnection() override;
+		void							WaitForServer() override;
+		ClientStatus					GetStatus() override;
+		void							InstallCallback(INetworkProtocolCallback* callback) override;
+		void							BeginReadingLoopUnsafe() override;
+		void							SendString(const WString& str) override;
+		void							Stop() override;
+	};
+}
+
+#endif
+
+
+
+/***********************************************************************
+.\TUI\TUI.H
+***********************************************************************/
+/***********************************************************************
+Author: Zihan Chen (vczh)
+Licensed under https://github.com/vczh-libraries/License
+***********************************************************************/
+
+#ifndef VCZH_TUI
+#define VCZH_TUI
+
+
+namespace vl
+{
+	namespace console
+	{
+		enum class TuiColorMode
+		{
+			Auto,
+			TrueColor,
+			Color256,
+			Color16,
+		};
+
+		struct TuiStartOptions
+		{
+			TuiColorMode					colorMode = TuiColorMode::Auto;
+		};
+
+		struct TuiColor
+		{
+			vuint8_t						r = 0;
+			vuint8_t						g = 0;
+			vuint8_t						b = 0;
+
+			auto operator<=>(const TuiColor&) const = default;
+		};
+
+		enum class TuiMergeableGlyph : vuint8_t
+		{
+			None = 0,
+			ThinLine = 1,
+			ThickLine = 2,
+			DoubleLine = 3,
+		};
+
+		struct TuiMergeablePixel
+		{
+			TuiMergeableGlyph				up = TuiMergeableGlyph::None;
+			TuiMergeableGlyph				down = TuiMergeableGlyph::None;
+			TuiMergeableGlyph				left = TuiMergeableGlyph::None;
+			TuiMergeableGlyph				right = TuiMergeableGlyph::None;
+		};
+
+		enum class TuiUnmergeableGlyph : vuint8_t
+		{
+			RoundCorner,
+		};
+
+		enum class TuiUnmergeableDirection : vuint8_t
+		{
+			LeftTop,
+			RightTop,
+			LeftBottom,
+			RightBottom,
+		};
+
+		struct TuiUnmergeablePixel
+		{
+			TuiUnmergeableGlyph				glyph = TuiUnmergeableGlyph::RoundCorner;
+			TuiUnmergeableDirection			direction = TuiUnmergeableDirection::LeftTop;
+		};
+
+		enum class TuiPixelGlyph : vuint8_t
+		{
+			Char,
+			Mergeable,
+			Unmergeable,
+			WideCharContinuation,
+		};
+
+		struct TuiPixel
+		{
+			TuiPixelGlyph					glyph = TuiPixelGlyph::Char;
+			union
+			{
+				char32_t					c = 0;
+				TuiMergeablePixel			mergeable;
+				TuiUnmergeablePixel			unmergeable;
+			};
+			TuiColor						foregroundColor = { 255, 255, 255 };
+			TuiColor						backgroundColor = { 0, 0, 0 };
+
+			char32_t						GetChar32() const;
+			wchar_t							GetWChar() const;
+		};
+
+		struct TuiMouseInfo
+		{
+			vint							x = 0;
+			vint							y = 0;
+			vint							wheel = 0;
+			bool							ctrl = false;
+			bool							shift = false;
+			bool							alt = false;
+			bool							left = false;
+			bool							middle = false;
+			bool							right = false;
+		};
+
+		enum class TuiMouseButton
+		{
+			Left,
+			Middle,
+			Right,
+		};
+
+		struct TuiKeyInfo
+		{
+			vint							code = 0;
+			bool							ctrl = false;
+			bool							shift = false;
+			bool							alt = false;
+			bool							capslock = false;
+			bool							autoRepeatKeyDown = false;
+		};
+
+		struct TuiCharInfo
+		{
+			wchar_t							code = 0;
+			bool							ctrl = false;
+			bool							shift = false;
+			bool							alt = false;
+			bool							capslock = false;
+		};
+
+		class ITuiCallback : public Interface
+		{
+		public:
+			virtual void					Starting();
+			virtual void					Stopping();
+			virtual void					BufferSizeChanged();
+			virtual void					MouseMove(const TuiMouseInfo& info);
+			virtual void					MouseDown(TuiMouseButton button, const TuiMouseInfo& info);
+			virtual void					MouseUp(TuiMouseButton button, const TuiMouseInfo& info);
+			virtual void					MouseDoubleClick(TuiMouseButton button, const TuiMouseInfo& info);
+			virtual void					MouseVerticalWheel(const TuiMouseInfo& info);
+			virtual void					MouseHorizontalWheel(const TuiMouseInfo& info);
+			virtual void					KeyDown(const TuiKeyInfo& info);
+			virtual void					KeyUp(const TuiKeyInfo& info);
+			virtual void					Char(const TuiCharInfo& info);
+			virtual void					Timer();
+		};
+
+		struct TuiPrintOptions
+		{
+			TuiColor						foregroundColor = { 255, 255, 255 };
+			TuiColor						backgroundColor = { 0, 0, 0 };
+		};
+
+		struct TuiLineOptions
+		{
+			TuiMergeableGlyph				glyph = TuiMergeableGlyph::ThinLine;
+			TuiColor						foregroundColor = { 255, 255, 255 };
+			Nullable<TuiColor>				backgroundColor;
+		};
+
+		enum class TuiRectCorner
+		{
+			Sharp,
+			Round,
+		};
+
+		struct TuiRectOptions
+		{
+			TuiMergeableGlyph				glyph = TuiMergeableGlyph::ThinLine;
+			TuiColor						foregroundColor = { 255, 255, 255 };
+			Nullable<TuiColor>				backgroundColor;
+			TuiRectCorner					corner = TuiRectCorner::Sharp;
+		};
+
+		namespace unittest
+		{
+			class ITuiBackend;
+			class ScopedTuiBackend;
+		}
+
+		class TUI abstract
+		{
+			friend class unittest::ScopedTuiBackend;
+
+		private:
+			class Impl;
+			class ListenerStorage;
+
+			static Impl*					impl;
+			static ListenerStorage*			listenerStorage;
+			static Ptr<unittest::ITuiBackend>* injectedBackend;
+			static Impl&					GetImpl();
+
+		public:
+			static bool						TryGetConsoleSize(vint& width, vint& height);
+			static void						Start(const TuiStartOptions& options);
+			static bool						RunOneCycle();
+			static void						Stop();
+			static bool						IsInUse();
+			static bool						IsStopRequested();
+			static TuiColorMode				GetColorMode();
+
+			static bool						InstallListener(ITuiCallback* listener);
+			static bool						UninstallListener(ITuiCallback* listener);
+			static void						StartTimer(vint milliseconds);
+			static void						StopTimer();
+
+			static TuiPixel*				GetBuffer();
+			static vint						GetBufferWidth();
+			static vint						GetBufferHeight();
+			static vint						MeasureChar(char32_t code);
+			static void						RenderBuffer();
+
+			static void						PrintChar(const TuiPrintOptions& options, char32_t code, vint x, vint y);
+			static void						DrawLineV(const TuiLineOptions& options, vint x, vint y1, vint y2);
+			static void						DrawLineH(const TuiLineOptions& options, vint x1, vint x2, vint y);
+			static void						DrawRect(const TuiRectOptions& options, vint x1, vint y1, vint x2, vint y2);
+			static void						Clear(TuiColor backgroundColor, vint x1, vint y1, vint x2, vint y2);
+
+			static void						PrintChar(TuiPixel* buffer, vint width, vint height, const TuiPrintOptions& options, char32_t code, vint x, vint y);
+			static void						DrawLineV(TuiPixel* buffer, vint width, vint height, const TuiLineOptions& options, vint x, vint y1, vint y2);
+			static void						DrawLineH(TuiPixel* buffer, vint width, vint height, const TuiLineOptions& options, vint x1, vint x2, vint y);
+			static void						DrawRect(TuiPixel* buffer, vint width, vint height, const TuiRectOptions& options, vint x1, vint y1, vint x2, vint y2);
+			static void						Clear(TuiPixel* buffer, vint width, vint height, TuiColor backgroundColor, vint x1, vint y1, vint x2, vint y2);
+		};
+
+		namespace unittest
+		{
+			enum class TuiBackendEventType
+			{
+				None,
+				Resize,
+				MouseMove,
+				MouseDown,
+				MouseUp,
+				MouseDoubleClick,
+				MouseVerticalWheel,
+				MouseHorizontalWheel,
+				KeyDown,
+				KeyUp,
+				Char,
+			};
+
+			struct TuiBackendEvent
+			{
+				TuiBackendEventType			type = TuiBackendEventType::None;
+				vint						width = 0;
+				vint						height = 0;
+				TuiMouseButton				mouseButton = TuiMouseButton::Left;
+				TuiMouseInfo				mouseInfo;
+				TuiKeyInfo					keyInfo;
+				TuiCharInfo					charInfo;
+			};
+
+			class ITuiBackend : public Interface
+			{
+			public:
+				virtual TuiColorMode			Start(const TuiStartOptions& options) = 0;
+				virtual void				Stop() = 0;
+				virtual bool				TryGetConsoleSize(vint& width, vint& height) = 0;
+				virtual vuint64_t			GetMonotonicTime() = 0;
+				virtual bool				ReadEvent(vint milliseconds, TuiBackendEvent& event) = 0;
+				virtual void				Render(const TuiPixel* buffer, vint width, vint height, TuiColorMode colorMode) = 0;
+			};
+
+			class ScopedTuiBackend
+			{
+			private:
+				Ptr<ITuiBackend>*			previous = nullptr;
+				Ptr<ITuiBackend>				current;
+
+			public:
+				NOT_COPYABLE(ScopedTuiBackend);
+				ScopedTuiBackend(Ptr<ITuiBackend> backend);
+				~ScopedTuiBackend() noexcept(false);
+			};
+		}
+	}
+}
+
+#endif
+
+
+/***********************************************************************
+.\TUI\TUI.INTERNAL.H
+***********************************************************************/
+/***********************************************************************
+Author: Zihan Chen (vczh)
+Licensed under https://github.com/vczh-libraries/License
+***********************************************************************/
+
+#ifndef VCZH_TUI_INTERNAL
+#define VCZH_TUI_INTERNAL
+
+
+namespace vl
+{
+	namespace console
+	{
+		namespace tui_internal
+		{
+			extern bool IsScalar(char32_t code);
+			extern vint QuantizeColor(TuiColor color, TuiColorMode colorMode, const TuiColor* customColor16 = nullptr);
+			extern TuiColor GetCanonicalColor(vint index);
+			extern Ptr<unittest::ITuiBackend> CreateTuiBackend();
 		}
 	}
 }

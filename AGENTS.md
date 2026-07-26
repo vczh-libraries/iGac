@@ -18,7 +18,7 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 **Critical reference — GacUI Knowledge Base:**
 
-7. **[../Release/.github/KnowledgeBase/Index.md](../Release/.github/KnowledgeBase/Index.md)** — The master index in the sibling `Release` repository for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
+7. **[../GacUI/.github/KnowledgeBase/Index.md](../GacUI/.github/KnowledgeBase/Index.md)** — The master index in the sibling `GacUI` repository for all GacUI framework knowledge: preferred data types, API guidance for every library (Vlpp, VlppOS, VlppRegex, VlppReflection, GacUI, Workflow), and design explanations covering platform initialization, window management, element rendering, layout, focus, and more. **You MUST consult the relevant Knowledge Base articles before implementing or modifying any feature that touches GacUI framework interfaces.** Key design docs include:
    - `KB_GacUI_Design_PlatformInitialization.md` — Entry points, hosted/raw/standard modes, renderer setup, service registration.
    - `KB_GacUI_Design_MainWindowModalWindow.md` — Modal windows, hosted mode considerations, event loop architecture.
    - `KB_GacUI_Design_ImplementingIGuiGraphicsElement.md` — Element lifecycle, renderer registration, render target abstraction.
@@ -26,13 +26,14 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 
 ## Key Facts
 
-- This is the **macOS port** of GacUI. The GacUI framework source code is committed under `Import/` and refreshed from the sibling `../Release/Import/` checkout by `./import.sh`.
-- **`Import/` is frozen after `./import.sh` completes. Never modify anything under `Import/` to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. To change the imported framework itself, update the sibling `../Release` repository and run `./import.sh` again.
+- This is the **macOS port** of GacUI. The framework snapshot under `Import/` is assembled from the sibling `../GacUI/Import/` and `../GacUI/Release/` directories by `./import.sh`.
+- **`Import/` is frozen after `./import.sh` completes. Never modify anything under `Import/` to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. Framework changes belong in their upstream repository and are re-imported through `GacUI`.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
-- Test with `./testFC.sh` (full control test), `./testFC.sh --hosted` (hosted mode), or `./test.sh` (hello world).
-- Run `./testFC_Update.sh` to refresh the generated Full Control Test UI sources and `BlackSkin.bin` from `../Release/Tutorial/GacUI_ControlTemplate/`; reflection source files are intentionally excluded.
-- The code compiles with `VCZH_DEBUG_NO_REFLECTION`.
+- Test with `./test.sh --app:simple`, `./test.sh --app:fct`, or `./test.sh --app:fct --hosted`.
+- Run `./syncProj.sh` to incrementally build upstream code generators, copy Full Control Test and Remote Protocol Test resources from `../GacUI`, and regenerate their x64 C++ sources under `Apps/`.
+- Generated embedded-resource `.cpp` files remove the need to load test resource binaries from disk.
+- Every test target compiles with `VCZH_DEBUG_NO_REFLECTION`; generated reflection source files under `Apps/*/Source` are not added to the targets.
 
 ## When You Make Changes
 
@@ -60,7 +61,7 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 
 ## Testing Rules
 
-- After launching a test app (via `./testFC.sh`, `./test.sh`, or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
+- After launching a test app (via `./test.sh` or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
 - When LLDB or a test app is no longer needed, just kill the processes directly — do not rely on `lldb_terminate` or graceful shutdown, as those may hang or be unavailable.
 - Use `--unblock` to launch in background and get the PID for later cleanup.
 - Use the following to find and kill test/debugger processes:
@@ -75,6 +76,7 @@ pkill -f 'Test_FullControlTest|Test_HellWorld|lldb'
 
 ## Files You Should Never Modify
 
-- Anything under `Import/` — these files are copied from `../Release/Import/` by `import.sh` and should be changed upstream, then re-imported.
-- Anything under `../Release/` — this is the sibling upstream checkout and is outside this repository's change scope.
+- Anything under `Import/` — these files are assembled from `../GacUI/Import/` and `../GacUI/Release/` by `import.sh` and should be changed upstream, then re-imported.
+- Anything under `Apps/*/Resources/` or `Apps/*/Source/` — these are synchronized/generated by `syncProj.sh`.
+- Anything under sibling upstream source repositories unless the task explicitly includes that repository.
 - `build/` — generated build artifacts.

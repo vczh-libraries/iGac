@@ -18367,6 +18367,11 @@ GuiDocumentCommonInterface
 			{
 				if (documentMouseArea)
 				{
+					if (documentMouseArea->GetAssociatedCursor() == documentCursor)
+					{
+						documentMouseArea->SetAssociatedCursor(nullptr);
+					}
+
 					documentMouseArea->GetEventReceiver()->mouseMove.Detach(onMouseMoveHandler);
 					documentMouseArea->GetEventReceiver()->leftButtonDown.Detach(onMouseDownHandler);
 					documentMouseArea->GetEventReceiver()->leftButtonUp.Detach(onMouseUpHandler);
@@ -18380,6 +18385,11 @@ GuiDocumentCommonInterface
 				documentMouseArea = _mouseArea;
 				if (documentMouseArea)
 				{
+					if (documentCursor)
+					{
+						documentMouseArea->SetAssociatedCursor(documentCursor);
+					}
+
 					onMouseMoveHandler = documentMouseArea->GetEventReceiver()->mouseMove.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseMove);
 					onMouseDownHandler = documentMouseArea->GetEventReceiver()->leftButtonDown.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseDown);
 					onMouseUpHandler = documentMouseArea->GetEventReceiver()->leftButtonUp.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseUp);
@@ -18595,6 +18605,7 @@ GuiDocumentCommonInterface
 
 			void GuiDocumentCommonInterface::UpdateCursor(INativeCursor* cursor)
 			{
+				documentCursor = cursor;
 				if (documentMouseArea)
 				{
 					documentMouseArea->SetAssociatedCursor(cursor);
@@ -18743,6 +18754,10 @@ GuiDocumentCommonInterface
 			void GuiDocumentCommonInterface::OnMouseLeave(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments)
 			{
 				SetActiveHyperlink(nullptr);
+				if (editMode == GuiDocumentEditMode::ViewOnly)
+				{
+					UpdateCursor(nullptr);
+				}
 			}
 
 			//================ callback
@@ -32008,7 +32023,7 @@ INativeAutomationService
 				CHECK_FAIL(L"Not Implemented!");
 			}
 
-			bool CanRunIOCommands() override
+			INativeAutomationService::IOCommandAvailability CanRunIOCommands() override
 			{
 				CHECK_FAIL(L"Not Implemented!");
 			}
@@ -36135,7 +36150,19 @@ GuiRemoteGraphicsRenderTarget
 					fontHeights.Add(key, fontHeight.height);
 				}
 			}
+		}
 
+		if (measuring.createdImages)
+		{
+			for (auto&& imageMetadata : *measuring.createdImages.Obj())
+			{
+				auto image = remote->imageService.GetImage(imageMetadata.id);
+				image->UpdateFromImageMetadata(imageMetadata);
+			}
+		}
+
+		if (measuring.fontHeights || measuring.createdImages)
+		{
 			// TODO: (enumerable) foreach:indexed(alterable(reversed))
 			for (vint i = renderersAskingForCache.Count() - 1; i >= 0; i--)
 			{
@@ -36150,15 +36177,6 @@ GuiRemoteGraphicsRenderTarget
 				{
 					renderersAskingForCache.RemoveAt(i);
 				}
-			}
-		}
-
-		if (measuring.createdImages)
-		{
-			for (auto&& imageMetadata : *measuring.createdImages.Obj())
-			{
-				auto image = remote->imageService.GetImage(imageMetadata.id);
-				image->UpdateFromImageMetadata(imageMetadata);
 			}
 		}
 
@@ -36779,6 +36797,31 @@ Gui3DSplitterElementRenderer
 	{
 	}
 
+	void Gui3DSplitterElementRenderer::Render(Rect bounds)
+	{
+		switch (element->GetDirection())
+		{
+		case Gui3DSplitterElement::Horizontal:
+			if (bounds.Height() < 2)
+			{
+				auto y = bounds.y1 + bounds.Height() / 2 - 1;
+				bounds.y1 = y;
+				bounds.y2 = y + 2;
+			}
+			break;
+		case Gui3DSplitterElement::Vertical:
+			if (bounds.Width() < 2)
+			{
+				auto x = bounds.x1 + bounds.Width() / 2 - 1;
+				bounds.x1 = x;
+				bounds.x2 = x + 2;
+			}
+			break;
+		}
+
+		GuiRemoteProtocolElementRenderer<Gui3DSplitterElement, Gui3DSplitterElementRenderer, remoteprotocol::RendererType::SinkSplitter>::Render(bounds);
+	}
+
 	void Gui3DSplitterElementRenderer::SendUpdateElementMessages(bool fullContent, collections::List<remoteprotocol::OrdinaryElementDescVariant>& updatedElements)
 	{
 		ElementDesc_SinkSplitter arguments;
@@ -37131,6 +37174,80 @@ namespace vl::presentation::elements
 	using namespace collections;
 
 /***********************************************************************
+GuiRemoteCaretCache
+***********************************************************************/
+
+	GuiRemoteCaretCache::GuiRemoteCaretCache(const WString& text, remoteprotocol::CharacterEncoding encoding)
+	{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::elements::GuiRemoteCaretCache::GuiRemoteCaretCache(const WString&, remoteprotocol::CharacterEncoding)#"
+		CHECK_ERROR(
+			encoding == remoteprotocol::CharacterEncoding::UTF8 ||
+			encoding == remoteprotocol::CharacterEncoding::UTF16 ||
+			encoding == remoteprotocol::CharacterEncoding::UTF32,
+			ERROR_MESSAGE_PREFIX L"Unknown character encoding.");
+
+		List<vint> nativeMapping;
+		List<vint> remoteMapping;
+		vint nativePos = 0;
+		vint remotePos = 0;
+		while (nativePos < text.Length())
+		{
+			char32_t scalar = 0;
+			auto nativeLength = vl::encoding::UtfConversion<wchar_t>::To32(
+				text.Buffer() + nativePos,
+				text.Length() - nativePos,
+				scalar);
+
+			vint remoteLength = 1;
+			if (nativeLength == -1)
+			{
+				nativeLength = 1;
+			}
+			else
+			{
+				switch (encoding)
+				{
+				case remoteprotocol::CharacterEncoding::UTF8:
+					{
+						char8_t buffer[vl::encoding::UtfConversion<char8_t>::BufferLength];
+						remoteLength = vl::encoding::UtfConversion<char8_t>::From32(scalar, buffer);
+					}
+					break;
+				case remoteprotocol::CharacterEncoding::UTF16:
+					{
+						char16_t buffer[vl::encoding::UtfConversion<char16_t>::BufferLength];
+						remoteLength = vl::encoding::UtfConversion<char16_t>::From32(scalar, buffer);
+					}
+					break;
+				case remoteprotocol::CharacterEncoding::UTF32:
+					remoteLength = 1;
+					break;
+				}
+				if (remoteLength == -1)
+				{
+					remoteLength = 1;
+				}
+			}
+
+			for (vint i = 0; i < nativeLength; i++)
+			{
+				nativeMapping.Add(remotePos);
+			}
+			for (vint i = 0; i < remoteLength; i++)
+			{
+				remoteMapping.Add(nativePos);
+			}
+			nativePos += nativeLength;
+			remotePos += remoteLength;
+		}
+		nativeMapping.Add(remotePos);
+		remoteMapping.Add(nativePos);
+		CopyFrom(nativeToRemote, nativeMapping);
+		CopyFrom(remoteToNative, remoteMapping);
+#undef ERROR_MESSAGE_PREFIX
+	}
+
+/***********************************************************************
 GuiRemoteGraphicsParagraph
 ***********************************************************************/
 
@@ -37202,6 +37319,12 @@ GuiRemoteGraphicsParagraph
 		desc.maxWidth = maxWidth;
 		desc.id = id;
 		DiffRuns(committedRuns, stagedRuns, desc);
+		for (vint i = 0; i < desc.runsDiff->Count(); i++)
+		{
+			auto&& run = (*desc.runsDiff.Obj())[i];
+			run.caretBegin = NativeTextPosToRemoteTextPos(run.caretBegin);
+			run.caretEnd = NativeTextPosToRemoteTextPos(run.caretEnd);
+		}
 
 		auto& messages = renderTarget->GetRemoteMessages();
 		vint requestId = messages.RequestRendererUpdateElement_DocumentParagraph(desc);
@@ -37251,8 +37374,8 @@ GuiRemoteGraphicsParagraph
 		{
 			return false;
 		}
-		range.caretBegin = NativeTextPosToRemoteTextPos(start);
-		range.caretEnd = NativeTextPosToRemoteTextPos(start + length);
+		range.caretBegin = start;
+		range.caretEnd = start + length;
 		return true;
 	}
 
@@ -37274,14 +37397,39 @@ GuiRemoteGraphicsParagraph
 		cachedInlineObjectBounds.Set(callbackId, bounds);
 	}
 
+	GuiRemoteCaretCache* GuiRemoteGraphicsParagraph::GetCaretCache()
+	{
+		auto encoding = remote->GetGlobalConfig().documentCaretFromEncoding;
+#if defined VCZH_WCHAR_UTF16
+		constexpr auto nativeEncoding = remoteprotocol::CharacterEncoding::UTF16;
+#elif defined VCZH_WCHAR_UTF32
+		constexpr auto nativeEncoding = remoteprotocol::CharacterEncoding::UTF32;
+#endif
+		if (encoding == nativeEncoding)
+		{
+			return nullptr;
+		}
+
+		auto index = caretCaches.Keys().IndexOf(encoding);
+		if (index == -1)
+		{
+			auto cache = Ptr(new GuiRemoteCaretCache(text, encoding));
+			caretCaches.Add(encoding, cache);
+			return cache.Obj();
+		}
+		return caretCaches.Values()[index].Obj();
+	}
+
 	vint GuiRemoteGraphicsParagraph::NativeTextPosToRemoteTextPos(vint textPos)
 	{
-		return textPos;
+		auto cache = GetCaretCache();
+		return cache ? cache->nativeToRemote[textPos] : textPos;
 	}
 
 	vint GuiRemoteGraphicsParagraph::RemoteTextPosToNativeTextPos(vint textPos)
 	{
-		return textPos;
+		auto cache = GetCaretCache();
+		return cache ? cache->remoteToNative[textPos] : textPos;
 	}
 
 	IGuiGraphicsLayoutProvider* GuiRemoteGraphicsParagraph::GetProvider()
@@ -37592,13 +37740,14 @@ GuiRemoteGraphicsParagraph
 			cachedCaretBounds = messages.RetrieveDocumentParagraph_GetCaretBounds(requestId);
 		}
 
+		auto remoteCaret = NativeTextPosToRemoteTextPos(caret);
 		if (frontSide)
 		{
-			bounds = cachedCaretBounds.frontSideBounds->Get(caret);
+			bounds = cachedCaretBounds.frontSideBounds->Get(remoteCaret);
 		}
 		else
 		{
-			bounds = cachedCaretBounds.backSideBounds->Get(caret);
+			bounds = cachedCaretBounds.backSideBounds->Get(remoteCaret);
 		}
 		return true;
 	}
@@ -37688,8 +37837,8 @@ GuiRemoteGraphicsParagraph
 		}
 
 		CaretRange range;
-		range.caretBegin = response.Value().caretBegin;
-		range.caretEnd = response.Value().caretEnd;
+		range.caretBegin = RemoteTextPosToNativeTextPos(response.Value().caretBegin);
+		range.caretEnd = RemoteTextPosToNativeTextPos(response.Value().caretEnd);
 
 		vint index = inlineObjectProperties.Keys().IndexOf(range);
 		if (index == -1)
@@ -37697,8 +37846,8 @@ GuiRemoteGraphicsParagraph
 			return {};
 		}
 
-		start = RemoteTextPosToNativeTextPos(range.caretBegin);
-		length = RemoteTextPosToNativeTextPos(range.caretEnd) - start;
+		start = range.caretBegin;
+		length = range.caretEnd - start;
 		return inlineObjectProperties.Values()[index];
 	}
 
@@ -38812,10 +38961,10 @@ namespace vl::presentation::remoteprotocol::channeling
 	using namespace vl::presentation::controls;
 
 /***********************************************************************
-GuiRemoteProtocolJsonChannelRenderer_Async
+GuiRemoteProtocolAsyncJsonChannel
 ***********************************************************************/
 
-	bool GuiRemoteProtocolJsonChannelRenderer_Async::AreCurrentPendingRequestGroupSatisfied(bool disconnected)
+	bool GuiRemoteProtocolAsyncJsonChannel::AreCurrentPendingRequestGroupSatisfied(bool disconnected)
 	{
 		if (!pendingRequest) return false;
 		if (disconnected) return true;
@@ -38829,7 +38978,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		return true;
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::ScheduleProcessRemoteEvents()
+	void GuiRemoteProtocolAsyncJsonChannel::ScheduleProcessRemoteEvents()
 	{
 		auto app = GetApplication();
 		if (!app)
@@ -38856,7 +39005,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		}
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::ProcessChannelEvents()
+	void GuiRemoteProtocolAsyncJsonChannel::ProcessChannelEvents()
 	{
 		List<ReceivedPackage> events;
 		SPIN_LOCK(lockEvents)
@@ -38907,7 +39056,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		}
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::ProcessRemoteEvents()
+	void GuiRemoteProtocolAsyncJsonChannel::ProcessRemoteEvents()
 	{
 		if (remoteEventProcessor)
 		{
@@ -38916,9 +39065,9 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		ProcessChannelEvents();
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::OnRead(vint senderClientId, const JsonPackage& package)
+	void GuiRemoteProtocolAsyncJsonChannel::OnRead(vint senderClientId, const JsonPackage& package)
 	{
-#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolJsonChannelRenderer_Async::OnRead(vint, const JsonPackage&)#"
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolAsyncJsonChannel::OnRead(vint, const JsonPackage&)#"
 		ChannelPackageInfo info;
 		Ptr<glr::json::JsonNode> jsonArguments;
 		JsonChannelUnpack(package, info, jsonArguments);
@@ -38976,33 +39125,33 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 #undef ERROR_MESSAGE_PREFIX
 	}
 
-	GuiRemoteProtocolJsonChannelRenderer_Async::GuiRemoteProtocolJsonChannelRenderer_Async(IJsonChannel* _channel, IGuiRemoteEventProcessor* _remoteEventProcessor)
+	GuiRemoteProtocolAsyncJsonChannel::GuiRemoteProtocolAsyncJsonChannel(IJsonChannel* _channel, IGuiRemoteEventProcessor* _remoteEventProcessor)
 		: channel(_channel)
 		, remoteEventProcessor(_remoteEventProcessor)
 	{
-#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolJsonChannelRenderer_Async::GuiRemoteProtocolJsonChannelRenderer_Async(IJsonChannel*, IGuiRemoteEventProcessor*)#"
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolAsyncJsonChannel::GuiRemoteProtocolAsyncJsonChannel(IJsonChannel*, IGuiRemoteEventProcessor*)#"
 		CHECK_ERROR(channel, ERROR_MESSAGE_PREFIX L"A valid channel is required.");
 		CHECK_ERROR(eventAutoResponses.CreateAutoUnsignal(false), ERROR_MESSAGE_PREFIX L"Failed to initialize eventAutoResponses.");
 #undef ERROR_MESSAGE_PREFIX
 	}
 
-	GuiRemoteProtocolJsonChannelRenderer_Async::~GuiRemoteProtocolJsonChannelRenderer_Async()
+	GuiRemoteProtocolAsyncJsonChannel::~GuiRemoteProtocolAsyncJsonChannel()
 	{
 	}
 
-	const WString& GuiRemoteProtocolJsonChannelRenderer_Async::GetChannelName()
+	const WString& GuiRemoteProtocolAsyncJsonChannel::GetChannelName()
 	{
 		return channel->GetChannelName();
 	}
 
-	IJsonChannelReader* GuiRemoteProtocolJsonChannelRenderer_Async::GetReader()
+	IJsonChannelReader* GuiRemoteProtocolAsyncJsonChannel::GetReader()
 	{
 		return reader;
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::Initialize(IJsonChannelReader* _reader)
+	void GuiRemoteProtocolAsyncJsonChannel::Initialize(IJsonChannelReader* _reader)
 	{
-#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolJsonChannelRenderer_Async::Initialize(IJsonChannelReader*)#"
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolAsyncJsonChannel::Initialize(IJsonChannelReader*)#"
 		CHECK_ERROR(_reader, ERROR_MESSAGE_PREFIX L"A valid reader is required.");
 		CHECK_ERROR(!reader, ERROR_MESSAGE_PREFIX L"The async channel cannot be initialized more than once.");
 		reader = _reader;
@@ -39010,7 +39159,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 #undef ERROR_MESSAGE_PREFIX
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::SendToClient(vint receiverClientId, const JsonPackage& package)
+	void GuiRemoteProtocolAsyncJsonChannel::SendToClient(vint receiverClientId, const JsonPackage& package)
 	{
 		QueuedPackage queuedPackage;
 		queuedPackage.receiverClientId = receiverClientId;
@@ -39022,13 +39171,13 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		}
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::BroadcastFromClient(const JsonPackage& package)
+	void GuiRemoteProtocolAsyncJsonChannel::BroadcastFromClient(const JsonPackage& package)
 	{
 		List<vint> blockedReceivers;
 		BroadcastFromClient(package, blockedReceivers);
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::BroadcastFromClient(const JsonPackage& package, const List<vint>& blockedReceivers)
+	void GuiRemoteProtocolAsyncJsonChannel::BroadcastFromClient(const JsonPackage& package, const List<vint>& blockedReceivers)
 	{
 		QueuedPackage queuedPackage;
 		queuedPackage.package = package;
@@ -39041,9 +39190,9 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 		}
 	}
 
-	void GuiRemoteProtocolJsonChannelRenderer_Async::BatchWrite(bool& disconnected)
+	void GuiRemoteProtocolAsyncJsonChannel::BatchWrite(bool& disconnected)
 	{
-#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolJsonChannelRenderer_Async::BatchWrite(bool&)#"
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolAsyncJsonChannel::BatchWrite(bool&)#"
 		disconnected = false;
 
 		List<QueuedPackage> packages;
@@ -39144,7 +39293,7 @@ GuiRemoteProtocolJsonChannelRenderer_Async
 #undef ERROR_MESSAGE_PREFIX
 	}
 
-	IGuiRemoteEventProcessor* GuiRemoteProtocolJsonChannelRenderer_Async::GetRemoteEventProcessor()
+	IGuiRemoteEventProcessor* GuiRemoteProtocolAsyncJsonChannel::GetRemoteEventProcessor()
 	{
 		return this;
 	}
@@ -39270,6 +39419,8 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 
 	void GuiRemoteProtocolAsyncJsonChannelRenderer::Initialize(IJsonChannelReader* _reader)
 	{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::channeling::GuiRemoteProtocolAsyncJsonChannelRenderer::Initialize(IJsonChannelReader*)#"
+		CHECK_ERROR(_reader, ERROR_MESSAGE_PREFIX L"The reader must not be null. Call Detach() to clear the reader.");
 		bool initializeChannel = false;
 		SPIN_LOCK(lockMessages)
 		{
@@ -39279,17 +39430,12 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 				channelInitialized = true;
 				initializeChannel = true;
 			}
-			if (!reader)
-			{
-				messageVersion++;
-				queuedMessages.Clear();
-				uiTaskQueued = false;
-			}
 		}
 		if (initializeChannel)
 		{
 			channel->Initialize(this);
 		}
+#undef ERROR_MESSAGE_PREFIX
 	}
 
 	void GuiRemoteProtocolAsyncJsonChannelRenderer::SendToClient(vint receiverClientId, const JsonPackage& package)
@@ -39319,6 +39465,17 @@ GuiRemoteProtocolAsyncJsonChannelRenderer
 			invokeInMainThread = _invokeInMainThread;
 		}
 		ScheduleProcessRemoteMessages();
+	}
+
+	void GuiRemoteProtocolAsyncJsonChannelRenderer::Detach()
+	{
+		SPIN_LOCK(lockMessages)
+		{
+			reader = nullptr;
+			messageVersion++;
+			queuedMessages.Clear();
+			uiTaskQueued = false;
+		}
 	}
 }
 
@@ -39898,9 +40055,8 @@ GuiRemoteProtocolRendererChannel
 #undef ERROR_MESSAGE_PREFIX
 	}
 
-	GuiRemoteProtocolRendererChannel::GuiRemoteProtocolRendererChannel(IJsonChannelClient* _client, IJsonChannel* _channel, IGuiRemoteProtocol* _protocol)
-		: client(_client)
-		, channel(_channel)
+	GuiRemoteProtocolRendererChannel::GuiRemoteProtocolRendererChannel(IJsonChannel* _channel, IGuiRemoteProtocol* _protocol)
+		: channel(_channel)
 		, protocol(_protocol)
 	{
 #define MESSAGE_NOREQ_NORES(NAME, REQUEST, RESPONSE)					writeHandlers.Add(WString::Unmanaged(L ## #NAME), &GuiRemoteProtocolRendererChannel::Write_ ## NAME);
@@ -43879,6 +44035,39 @@ namespace vl::presentation::remote_renderer
 	using namespace elements;
 	using namespace remoteprotocol;
 
+	bool GuiRemoteRendererSingle::CanSendEvents()
+	{
+		return events && !disconnectingFromCore;
+	}
+
+	void GuiRemoteRendererSingle::ClearPendingCoreEvents()
+	{
+		pendingMouseMove.Reset();
+		pendingHWheel.Reset();
+		pendingVWheel.Reset();
+		pendingKeyAutoDown.Reset();
+		pendingWindowBoundsUpdate.Reset();
+	}
+
+	void GuiRemoteRendererSingle::DisconnectFromCore()
+	{
+		disconnectingFromCore = true;
+		if (window)
+		{
+			window->ReleaseCapture();
+		}
+		UnregisterGlobalShortcutKeys();
+		ClearPendingCoreEvents();
+	}
+
+	void GuiRemoteRendererSingle::RequestCoreForceExitByFatalError()
+	{
+		if (CanSendEvents())
+		{
+			events->OnControllerForceExit();
+		}
+	}
+
 	remoteprotocol::ScreenConfig GuiRemoteRendererSingle::GetScreenConfig(INativeScreen* screen)
 	{
 		ScreenConfig response;
@@ -43901,6 +44090,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::UpdateConfigsIfNecessary()
 	{
+		if (!CanSendEvents()) return;
 		if (screen)
 		{
 			auto currentScreen = GetCurrentController()->ScreenService()->GetScreen(window);
@@ -43942,6 +44132,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::Opened()
 	{
+		if (!CanSendEvents()) return;
 		vl::presentation::remoteprotocol::ControllerGlobalConfig globalConfig;
 #if defined VCZH_WCHAR_UTF16
 		globalConfig.documentCaretFromEncoding = vl::presentation::remoteprotocol::CharacterEncoding::UTF16;
@@ -43962,6 +44153,8 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::AfterClosing()
 	{
+		fatalMaskElement = nullptr;
+		fatalTextElement = nullptr;
 		renderingDom = nullptr;
 		focusedParagraphElements.Clear();
 		availableElements.Clear();
@@ -43975,6 +44168,7 @@ namespace vl::presentation::remote_renderer
 	void GuiRemoteRendererSingle::Moving(NativeRect& bounds, bool fixSizeOnly, bool draggingBorder)
 	{
 		NativeWindowListener_Moving(window, suggestedMinSize, bounds, fixSizeOnly, draggingBorder);
+		if (disconnectingFromCore) return;
 		if (draggingBorder)
 		{
 			auto config = GetWindowSizingConfig();
@@ -44010,6 +44204,11 @@ namespace vl::presentation::remote_renderer
 			GetGuiGraphicsResourceManager()->RecreateRenderTarget(window);
 			UpdateRenderTarget(GetGuiGraphicsResourceManager()->GetRenderTarget(window));
 			UpdateConfigsIfNecessary();
+			if (stoppedByFatalError)
+			{
+				needRefresh = true;
+				ForceRender();
+			}
 		}
 	}
 
@@ -44047,12 +44246,35 @@ namespace vl::presentation::remote_renderer
 		GetCurrentController()->CallbackService()->UninstallListener(this);
 	}
 
+	bool GuiRemoteRendererSingle::IsDisconnectedFromCore()
+	{
+		return disconnectingFromCore;
+	}
+
 	void GuiRemoteRendererSingle::ForceExitByFatelError()
 	{
 		if (window)
 		{
-			disconnectingFromCore = true;
+			DisconnectFromCore();
 			window->Hide(true);
+		}
+	}
+
+	void GuiRemoteRendererSingle::RetainByFatalError(const WString& errorMessage)
+	{
+		if (stoppedByFatalError) return;
+
+		DisconnectFromCore();
+		stoppedByFatalError = true;
+		fatalError = errorMessage;
+		supressRefresh = false;
+
+		if (window)
+		{
+			titleBeforeFatalError = window->GetTitle();
+			window->SetTitle(WString::Unmanaged(L"[STOPPED] ") + titleBeforeFatalError);
+			needRefresh = true;
+			ForceRender();
 		}
 	}
 
@@ -44077,6 +44299,7 @@ namespace vl::presentation::remote_renderer
 	}
 }
 
+
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTERENDERER\GUIREMOTERENDERERSINGLE_CONTROLLER.CPP
 ***********************************************************************/
@@ -44088,6 +44311,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestControllerGetFontConfig(vint id)
 	{
+		if (!CanSendEvents()) return;
 		FontConfig response;
 		auto rs = GetCurrentController()->ResourceService();
 		response.defaultFont = rs->GetDefaultFont();
@@ -44098,6 +44322,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestControllerGetScreenConfig(vint id)
 	{
+		if (!CanSendEvents()) return;
 		auto primary = screen ? screen : GetCurrentController()->ScreenService()->GetScreen((vint)0);
 		events->RespondControllerGetScreenConfig(id, GetScreenConfig(primary));
 	}
@@ -44110,8 +44335,7 @@ namespace vl::presentation::remote_renderer
 	{
 		if (window)
 		{
-			disconnectingFromCore = true;
-			window->ReleaseCapture();
+			DisconnectFromCore();
 			window->Hide(true);
 		}
 	}
@@ -44143,6 +44367,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::GlobalShortcutKeyActivated(vint id)
 	{
+		if (!CanSendEvents()) return;
 		vint index = globalShortcuts.Keys().IndexOf(id);
 		if (index != -1)
 		{
@@ -44152,6 +44377,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestIOUpdateGlobalShortcutKey(const Ptr<collections::List<remoteprotocol::GlobalShortcutKey>>& arguments)
 	{
+		if (disconnectingFromCore) return;
 		UnregisterGlobalShortcutKeys();
 		if (arguments)
 		{
@@ -44169,22 +44395,26 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestIORequireCapture()
 	{
+		if (disconnectingFromCore) return;
 		window->RequireCapture();
 	}
 
 	void GuiRemoteRendererSingle::RequestIOReleaseCapture()
 	{
+		if (disconnectingFromCore) return;
 		window->ReleaseCapture();
 	}
 
 	void GuiRemoteRendererSingle::RequestIOIsKeyPressing(vint id, const VKEY& arguments)
 	{
+		if (!CanSendEvents()) return;
 		bool result = GetCurrentController()->InputService()->IsKeyPressing(arguments);
 		events->RespondIOIsKeyPressing(id, result);
 	}
 
 	void GuiRemoteRendererSingle::RequestIOIsKeyToggled(vint id, const VKEY& arguments)
 	{
+		if (!CanSendEvents()) return;
 		bool result = GetCurrentController()->InputService()->IsKeyToggled(arguments);
 		events->RespondIOIsKeyToggled(id, result);
 	}
@@ -44195,6 +44425,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::LeftButtonDown(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Left;
@@ -44204,6 +44435,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::LeftButtonUp(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Left;
@@ -44213,6 +44445,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::LeftButtonDoubleClick(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Left;
@@ -44222,6 +44455,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RightButtonDown(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Right;
@@ -44231,6 +44465,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RightButtonUp(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Right;
@@ -44240,6 +44475,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RightButtonDoubleClick(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Right;
@@ -44249,6 +44485,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::MiddleButtonDown(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Middle;
@@ -44258,6 +44495,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::MiddleButtonUp(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Middle;
@@ -44267,6 +44505,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::MiddleButtonDoubleClick(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove.Reset();
 		IOMouseInfoWithButton arguments;
 		arguments.button = IOMouseButton::Middle;
@@ -44276,6 +44515,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::HorizontalWheel(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		auto copy = info;
 		if (pendingHWheel) copy.wheel += pendingHWheel.Value().wheel;
 		pendingHWheel = copy;
@@ -44283,6 +44523,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::VerticalWheel(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		auto copy = info;
 		if (pendingVWheel) copy.wheel += pendingVWheel.Value().wheel;
 		pendingVWheel = copy;
@@ -44290,6 +44531,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::MouseMoving(const NativeWindowMouseInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingMouseMove = info;
 		if (renderingDom)
 		{
@@ -44302,16 +44544,19 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::MouseEntered()
 	{
+		if (!CanSendEvents()) return;
 		events->OnIOMouseEntered();
 	}
 
 	void GuiRemoteRendererSingle::MouseLeaved()
 	{
+		if (!CanSendEvents()) return;
 		events->OnIOMouseLeaved();
 	}
 
 	void GuiRemoteRendererSingle::KeyDown(const NativeWindowKeyInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		if (info.autoRepeatKeyDown)
 		{
 			pendingKeyAutoDown = info;
@@ -44324,6 +44569,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::KeyUp(const NativeWindowKeyInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		pendingKeyAutoDown.Reset();
 		if (!info.ctrl && !info.shift && info.code == VKEY::KEY_MENU)
 		{
@@ -44334,11 +44580,17 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::Char(const NativeWindowCharInfo& info)
 	{
+		if (!CanSendEvents()) return;
 		events->OnIOChar(info);
 	}
 
 	void GuiRemoteRendererSingle::SendAccumulatedMessages()
 	{
+		if (!CanSendEvents())
+		{
+			ClearPendingCoreEvents();
+			return;
+		}
 		if (pendingMouseMove)
 		{
 			events->OnIOMouseMoving(pendingMouseMove.Value());
@@ -44367,6 +44619,7 @@ namespace vl::presentation::remote_renderer
 	}
 }
 
+
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTERENDERER\GUIREMOTERENDERERSINGLE_MAINWINDOW.CPP
 ***********************************************************************/
@@ -44377,11 +44630,13 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowGetBounds(vint id)
 	{
+		if (!CanSendEvents()) return;
 		events->RespondWindowGetBounds(id, GetWindowSizingConfig());
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetBounds(const NativeRect& arguments)
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestWindowNotifySetBounds(const NativeRect&)#"
 		CHECK_ERROR(!updatingBounds, ERROR_MESSAGE_PREFIX L"This function cannot be called recursively.");
 
@@ -44407,11 +44662,13 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetTitle(const WString& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetTitle(arguments);
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetEnabled(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		if (arguments)
 		{
 			window->Enable();
@@ -44424,11 +44681,13 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetTopMost(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetTopMost(arguments);
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetShowInTaskBar(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		if (arguments)
 		{
 			window->ShowInTaskBar();
@@ -44441,6 +44700,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetClientSize(const NativeSize& arguments)
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestWindowNotifySetClientSize(const NativeSize&)#"
 		CHECK_ERROR(screen, ERROR_MESSAGE_PREFIX L"This function cannot be called before RequestWindowNotifySetBounds.");
 
@@ -44450,6 +44710,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetCustomFrameMode(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		if (window->IsCustomFrameModeEnabled() != arguments)
 		{
 			if (arguments)
@@ -44466,47 +44727,55 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetMaximizedBox(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetMaximizedBox(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetMinimizedBox(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetMinimizedBox(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetBorder(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetBorder(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetSizeBox(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetSizeBox(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetIconVisible(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetIconVisible(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetTitleBar(const bool& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetTitleBar(arguments);
 		UpdateConfigsIfNecessary();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifyActivate()
 	{
+		if (disconnectingFromCore) return;
 		window->SetActivate();
 	}
 
 	void GuiRemoteRendererSingle::RequestWindowNotifyShow(const remoteprotocol::WindowShowing& arguments)
 	{
+		if (disconnectingFromCore) return;
 		if (arguments.sizeState != window->GetSizeState())
 		{
 			if (arguments.activate)
@@ -44530,6 +44799,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifyMinSize(const NativeSize& arguments)
 	{
+		if (disconnectingFromCore) return;
 		auto clientSize = window->GetClientSize();
 		auto size = window->GetBounds().GetSize();
 		suggestedMinSize.x = arguments.x + size.x - clientSize.x;
@@ -44538,9 +44808,11 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestWindowNotifySetCaret(const NativePoint& arguments)
 	{
+		if (disconnectingFromCore) return;
 		window->SetCaretPoint(arguments);
 	}
 }
+
 
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTERENDERER\GUIREMOTERENDERERSINGLE_RENDERING.CPP
@@ -44578,6 +44850,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererCreated(const Ptr<collections::List<remoteprotocol::RendererCreation>>& arguments)
 	{
+		if (disconnectingFromCore) return;
 		supressRefresh = true;
 		if (arguments)
 		{
@@ -44651,6 +44924,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererDestroyed(const Ptr<collections::List<vint>>& arguments)
 	{
+		if (disconnectingFromCore) return;
 		supressRefresh = true;
 		if (arguments)
 		{
@@ -44670,6 +44944,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererBeginRendering(const remoteprotocol::ElementBeginRendering& arguments)
 	{
+		if (disconnectingFromCore) return;
 		supressRefresh = true;
 		if (arguments.updatedElements)
 		{
@@ -44726,6 +45001,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererEndRendering(vint id)
 	{
+		if (!CanSendEvents()) return;
 		supressRefresh = false;
 		if (needRefresh)
 		{
@@ -44748,6 +45024,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererRenderDom(const Ptr<remoteprotocol::RenderingDom>& arguments)
 	{
+		if (disconnectingFromCore) return;
 		renderingDom = arguments;
 		if (renderingDom)
 		{
@@ -44758,6 +45035,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererRenderDomDiff(const remoteprotocol::RenderingDom_DiffsInOrder& arguments)
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestRendererRenderDomDiff(const RenderingDom_DiffsInOrder&)#"
 		CHECK_ERROR(renderingDom, ERROR_MESSAGE_PREFIX L"This function must be called after RequestRendererRenderDom.");
 
@@ -44772,6 +45050,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererBeginBoundary(const remoteprotocol::ElementBoundary& arguments)
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestRendererBeginBoundary(const ElementBoundary&)#"
 		CHECK_FAIL(ERROR_MESSAGE_PREFIX L"The current implementation require dom-diff enabled in core side.");
 #undef ERROR_MESSAGE_PREFIX
@@ -44779,6 +45058,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererEndBoundary()
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestRendererEndBoundary()#"
 		CHECK_FAIL(ERROR_MESSAGE_PREFIX L"The current implementation require dom-diff enabled in core side.");
 #undef ERROR_MESSAGE_PREFIX
@@ -44786,6 +45066,7 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::RequestRendererRenderElement(const remoteprotocol::ElementRendering& arguments)
 	{
+		if (disconnectingFromCore) return;
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestRendererRenderElement(const ElementRendering&)#"
 		CHECK_FAIL(ERROR_MESSAGE_PREFIX L"The current implementation require dom-diff enabled in core side.");
 #undef ERROR_MESSAGE_PREFIX
@@ -44801,6 +45082,61 @@ namespace vl::presentation::remote_renderer
 		{
 			element->GetRenderer()->SetRenderTarget(rt);
 		}
+		if (fatalMaskElement)
+		{
+			fatalMaskElement->GetRenderer()->SetRenderTarget(rt);
+		}
+		if (fatalTextElement)
+		{
+			fatalTextElement->GetRenderer()->SetRenderTarget(rt);
+		}
+	}
+
+	void GuiRemoteRendererSingle::EnsureFatalOverlayElements(elements::IGuiGraphicsRenderTarget* rt)
+	{
+		if (!fatalMaskElement)
+		{
+			fatalMaskElement = Ptr(GuiSolidBackgroundElement::Create());
+			fatalMaskElement->SetColor(Color(255, 255, 255, 128));
+		}
+		if (!fatalTextElement)
+		{
+			fatalTextElement = Ptr(GuiSolidLabelElement::Create());
+			auto font = GetCurrentController()->ResourceService()->GetDefaultFont();
+			if (font.size < 14)
+			{
+				font.size = 14;
+			}
+			font.bold = true;
+			fatalTextElement->SetFont(font);
+			fatalTextElement->SetColor(Color(128, 0, 0));
+			fatalTextElement->SetMultiline(true);
+			fatalTextElement->SetWrapLine(true);
+			fatalTextElement->SetAlignments(Alignment::Center, Alignment::Center);
+		}
+		fatalMaskElement->GetRenderer()->SetRenderTarget(rt);
+		fatalTextElement->GetRenderer()->SetRenderTarget(rt);
+	}
+
+	void GuiRemoteRendererSingle::RenderFatalOverlay(elements::IGuiGraphicsRenderTarget* rt)
+	{
+		if (!stoppedByFatalError || !fatalError) return;
+
+		EnsureFatalOverlayElements(rt);
+		fatalTextElement->SetText(fatalError.Value());
+
+		auto bounds = Rect(Point(0, 0), window->Convert(window->GetClientSize()));
+		fatalMaskElement->GetRenderer()->Render(bounds);
+
+		auto textBounds = bounds;
+		if (textBounds.Width() > 32 && textBounds.Height() > 32)
+		{
+			textBounds.x1 += 16;
+			textBounds.y1 += 16;
+			textBounds.x2 -= 16;
+			textBounds.y2 -= 16;
+		}
+		fatalTextElement->GetRenderer()->Render(textBounds);
 	}
 
 	void GuiRemoteRendererSingle::RenderDom(Ptr<remoteprotocol::RenderingDom> dom, elements::IGuiGraphicsRenderTarget* rt)
@@ -44903,7 +45239,11 @@ namespace vl::presentation::remote_renderer
 		supressPaint = true;
 		auto rt = GetGuiGraphicsResourceManager()->GetRenderTarget(window);
 		rt->StartRendering();
-		RenderDom(renderingDom, rt);
+		if (renderingDom)
+		{
+			RenderDom(renderingDom, rt);
+		}
+		RenderFatalOverlay(rt);
 		auto result = rt->StopRendering();
 		window->RedrawContent();
 		supressPaint = false;
@@ -44926,13 +45266,20 @@ namespace vl::presentation::remote_renderer
 
 	void GuiRemoteRendererSingle::GlobalTimer()
 	{
-		DateTime now = DateTime::UtcTime();
-		if (now.osMilliseconds - lastCaretTime >= CaretInterval)
+		if (!disconnectingFromCore)
 		{
-			lastCaretTime = now.osMilliseconds;
-			OnCaretNotify();
+			DateTime now = DateTime::UtcTime();
+			if (now.osMilliseconds - lastCaretTime >= CaretInterval)
+			{
+				lastCaretTime = now.osMilliseconds;
+				OnCaretNotify();
+			}
+			SendAccumulatedMessages();
 		}
-		SendAccumulatedMessages();
+		else
+		{
+			ClearPendingCoreEvents();
+		}
 
 		// Between any element destroying, element creating, start rendering
 		// and end rendering
@@ -44941,7 +45288,7 @@ namespace vl::presentation::remote_renderer
 		if (!needRefresh) return;
 		needRefresh = false;
 		if (!window) return;
-		if (!renderingDom) return;
+		if (!renderingDom && !stoppedByFatalError) return;
 		ForceRender();
 	}
 
@@ -64411,6 +64758,48 @@ DumpRemoteProtocolRenderingDom
 		}
 
 /***********************************************************************
+AutomationServiceRenderer
+***********************************************************************/
+
+		Nullable<WString> AutomationServiceRenderer::CopyFatalError()
+		{
+			Nullable<WString> copiedFatalError;
+			SPIN_LOCK(lockFatalError)
+			{
+				copiedFatalError = fatalError;
+			}
+			return copiedFatalError;
+		}
+
+		void AutomationServiceRenderer::SetFatalError(Nullable<WString> value)
+		{
+			SPIN_LOCK(lockFatalError)
+			{
+				fatalError = value;
+			}
+		}
+
+		WString AutomationServiceRenderer::DumpDomTreeInternal()
+		{
+			auto copiedFatalError = CopyFatalError();
+			auto dumpRoot = DumpRemoteProtocolRenderingDom(
+				GetCurrentController()->WindowService()->GetMainWindow()->GetTitle(),
+				renderer->windowSizingConfig,
+				renderer->renderingDom,
+				renderer->renderingElements);
+			if (copiedFatalError)
+			{
+				ConvertCustomTypeToJsonField(dumpRoot.Cast<glr::json::JsonObject>(), L"fatalError", copiedFatalError.Value());
+			}
+			return DumpJsonToString(dumpRoot);
+		}
+
+		INativeAutomationService::IOCommandAvailability AutomationServiceRenderer::CanRunIOCommands()
+		{
+			return CopyFatalError() ? INativeAutomationService::IOCommandAvailability::ExitOnly : INativeAutomationService::IOCommandAvailability::Enabled;
+		}
+
+/***********************************************************************
 RunIOCommandOnNativeWindow
 ***********************************************************************/
 
@@ -65394,9 +65783,9 @@ RemoteProtocolAutomationService
 		{
 		}
 
-		bool RemoteProtocolAutomationService::CanRunIOCommands()
+		INativeAutomationService::IOCommandAvailability RemoteProtocolAutomationService::CanRunIOCommands()
 		{
-			return true;
+			return INativeAutomationService::IOCommandAvailability::Enabled;
 		}
 
 /***********************************************************************
@@ -65549,6 +65938,29 @@ DumpWindowClientArea
 			return WString::Empty;
 		}
 
+		WString PrintCursor(INativeCursor* cursor)
+		{
+			if (!cursor) return WString::Empty;
+			if (!cursor->IsSystemCursor()) return WString::Unmanaged(L"Custom");
+
+			switch (cursor->GetSystemCursorType())
+			{
+			case INativeCursor::SmallWaiting: return WString::Unmanaged(L"SmallWaiting");
+			case INativeCursor::LargeWaiting: return WString::Unmanaged(L"LargeWaiting");
+			case INativeCursor::Arrow: return WString::Unmanaged(L"Arrow");
+			case INativeCursor::Cross: return WString::Unmanaged(L"Cross");
+			case INativeCursor::Hand: return WString::Unmanaged(L"Hand");
+			case INativeCursor::Help: return WString::Unmanaged(L"Help");
+			case INativeCursor::IBeam: return WString::Unmanaged(L"IBeam");
+			case INativeCursor::SizeAll: return WString::Unmanaged(L"SizeAll");
+			case INativeCursor::SizeNESW: return WString::Unmanaged(L"SizeNESW");
+			case INativeCursor::SizeNS: return WString::Unmanaged(L"SizeNS");
+			case INativeCursor::SizeNWSE: return WString::Unmanaged(L"SizeNWSE");
+			case INativeCursor::SizeWE: return WString::Unmanaged(L"SizeWE");
+			default: return WString::Unmanaged(L"Unknown");
+			}
+		}
+
 		WString PrintDocument(Ptr<DocumentModel> document)
 		{
 			if (!document) return WString::Empty;
@@ -65637,6 +66049,12 @@ DumpWindowClientArea
 			if (layout != WString::Empty)
 			{
 				ConvertCustomTypeToJsonField(compositionDump, L"layout", layout);
+			}
+
+			auto cursor = PrintCursor(composition->GetAssociatedCursor());
+			if (cursor != WString::Empty)
+			{
+				ConvertCustomTypeToJsonField(compositionDump, L"cursor", cursor);
 			}
 
 			DumpElement(composition->GetOwnedElement(), compositionDump);

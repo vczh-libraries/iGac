@@ -6,7 +6,70 @@ DEVELOPER: Zihan Chen(vczh)
 #include "Vlpp.h"
 
 /***********************************************************************
-.\NETWORKPROTOCOL.WINDOWS.H
+.\ASYNCSOCKET\ASYNCSOCKET.WINDOWS.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+
+Windows implementation of IAsyncSocket(Server|Client)
+
+***********************************************************************/
+
+#ifndef VCZH_INTERPROCESS_ASYNCSOCKET_WINDOWS
+#define VCZH_INTERPROCESS_ASYNCSOCKET_WINDOWS
+
+// Winsock must precede every include that can include windows.h.
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <WinSock2.h>
+#include <MSWSock.h>
+#define _WINSOCKAPI_
+#include <Windows.h>
+
+
+namespace vl::inter_process::async_tcp_socket::windows_socket
+{
+	class AsyncSocketServer : public Object, public virtual IAsyncSocketServer
+	{
+	private:
+		class Impl;
+		Impl*								impl = nullptr;
+
+	public:
+		AsyncSocketServer(vint port);
+		~AsyncSocketServer();
+
+		vint								GetPort() override;
+		void								Start(IAsyncSocketServerCallback* callback) override;
+		void								Stop() override;
+		bool								IsStopped() override;
+	};
+
+	class AsyncSocketClient : public Object, public virtual IAsyncSocketClient
+	{
+	private:
+		class Impl;
+		Impl*								impl = nullptr;
+
+	public:
+		AsyncSocketClient(vint port);
+		~AsyncSocketClient();
+
+		vint								GetPort() override;
+		Ptr<IAsyncSocketClient>				CreateSameEndpointClient() override;
+		IAsyncSocketConnection*				GetConnection() override;
+		void								WaitForServer() override;
+		ClientStatus						GetStatus() override;
+	};
+}
+
+#endif
+
+
+/***********************************************************************
+.\WINDOWS\NETWORKPROTOCOL.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -29,40 +92,11 @@ Interfaces:
 #include <winhttp.h>
 
 
-namespace vl::inter_process
-{
-	/*
-	* GET: /Request
-	* To connect and initialize the server.
-	* Returns available URLs.
-	*
-	* It can only be called once, all subsequence calls will be rejected.
-	*/
-	constexpr const wchar_t* HttpServerUrl_Connect = L"/VlppInterProcess/Connect";
-
-	/*
-	* POST: /Request/GUID
-	* Client should always maintain a living request on the server.
-	*
-	* Returns only when a request is issued.
-	* It will be pending or timeout if no request is issued.
-	* If a request is issued but no living request available, it waits.
-	*/
-	constexpr const wchar_t* HttpServerUrl_Request = L"/VlppInterProcess/Request";
-
-	/*
-	* POST: /Response/GUID
-	* To send responses or events to the server.
-	* Returns nothing.
-	*/
-	constexpr const wchar_t* HttpServerUrl_Response = L"/VlppInterProcess/Response";
-}
-
 #endif
 
 
 /***********************************************************************
-.\HTTPCLIENTAPI.WINDOWS.H
+.\WINDOWS\HTTPCLIENTAPI.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -77,77 +111,8 @@ Interfaces:
 #define VCZH_INTERPROCESS_WINDOWS_HTTPCLIENTAPI
 
 
-namespace vl::inter_process
+namespace vl::inter_process::windows_http
 {
-
-/// <summary>An http request.</summary>
-class HttpRequest
-{
-	typedef collections::Array<char>					BodyBuffer;
-	typedef collections::List<WString>					StringList;
-	typedef collections::Dictionary<WString, WString>	HeaderMap;
-public:
-	/// <summary>Query of the request, like "/index.html".</summary>
-	WString												query;
-	/// <summary>Set to true if the request uses SSL, or https.</summary>
-	bool												secure = false;
-	/// <summary>User name to authorize. Set to empty if authorization is not needed.</summary>
-	WString												username;
-	/// <summary>Password to authorize. Set to empty if authorization is not needed.</summary>
-	WString												password;
-	/// <summary>HTTP method, like "GET", "POST", "PUT", "DELETE", etc.</summary>
-	WString												method;
-	/// <summary>Cookie. Set to empty if cookie is not needed.</summary>
-	WString												cookie;
-	/// <summary>Request body. This is a byte array.</summary>
-	BodyBuffer											body;
-	/// <summary>Content type, like "text/xml".</summary>
-	WString												contentType;
-	/// <summary>Accept type list, elements like "text/xml".</summary>
-	StringList											acceptTypes;
-	/// <summary>A dictionary to contain extra headers.</summary>
-	HeaderMap											extraHeaders;
-	/// <summary>Set to true to let this request finish when <see cref="HttpClientApi.Stop"/> is called.</summary>
-	bool												keepAliveOnStop = false;
-	/// <summary>Timeout for resolving the host name. 0 or -1 means infinite.</summary>
-	vint												resolveTimeout = 0;
-	/// <summary>Timeout for connecting to the server. 0 or -1 means infinite.</summary>
-	vint												connectTimeout = 60000;
-	/// <summary>Timeout for sending the request. 0 or -1 means infinite.</summary>
-	vint												sendTimeout = 30000;
-	/// <summary>Timeout for receiving the response. 0 or -1 means infinite.</summary>
-	vint												receiveTimeout = 30000;
-
-	HttpRequest() = default;
-	void												SetBodyUtf8(const WString& bodyString);
-};
-
-/// <summary>A type representing an http response.</summary>
-class HttpResponse
-{
-	typedef collections::Array<char>					BodyBuffer;
-public:
-	/// <summary>Status code, like 200.</summary>
-	vint												statusCode = 0;
-	/// <summary>Response body. This is a byte array.</summary>
-	BodyBuffer											body;
-	/// <summary>Returned cookie from the server.</summary>
-	WString												cookie;
-	/// <summary>Returned content type from the server.</summary>
-	WString												contentType;
-
-	HttpResponse() = default;
-	WString												GetBodyUtf8() const;
-};
-
-/// <summary>A transport error reported by the underlying Windows HTTP API.</summary>
-class HttpError
-{
-public:
-	DWORD												errorCode = 0;
-	WString												operation;
-	WString												message;
-};
 
 /// <summary>A Windows-only async HTTP client for a single host and port.</summary>
 class HttpClientApi : public Object
@@ -183,7 +148,6 @@ class HttpClientApi : public Object
 
 	static void CALLBACK								HttpStatusCallback(HINTERNET httpRequest, DWORD_PTR context, DWORD status, LPVOID statusInformation, DWORD statusInformationLength);
 	static HttpError									MakeError(const WString& operation, DWORD errorCode);
-	static vint											HexValue(wchar_t c);
 
 	bool												IsStopping();
 	void												BeginPendingCallback();
@@ -218,7 +182,7 @@ public:
 
 
 /***********************************************************************
-.\HTTPCLIENT.WINDOWS.H
+.\WINDOWS\HTTPCLIENT.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -233,7 +197,7 @@ Interfaces:
 #define VCZH_INTERPROCESS_WINDOWS_HTTPCLIENT
 
 
-namespace vl::inter_process
+namespace vl::inter_process::windows_http
 {
 
 class HttpClient : public Object, public virtual INetworkProtocolConnection, public virtual INetworkProtocolClient
@@ -263,8 +227,6 @@ HttpClient (Reading)
 ***********************************************************************/
 
 protected:
-	static constexpr const wchar_t*					JsonContentType = L"application/json; charset=utf8";
-
 	void											RaiseLocalError(WString errorMessage, bool fatal);
 	bool											IsStopping();
 public:
@@ -302,7 +264,7 @@ protected:
 		Response,
 	};
 
-	bool											SendHttpRequest(HttpRequestType requestType, const wchar_t* method, const WString& url, const WString& body, vint attempt = 1);
+	bool											SendHttpRequest(HttpRequestType requestType, const WString& url, const WString& body, vint attempt = 1);
 	void											OnHttpRequestCompleted(HttpRequestType requestType, WString body, vint attempt, Variant<HttpResponse, HttpError> result);
 	void											OnHttpRequestFailed(HttpRequestType requestType, const WString& body, vint attempt, const WString& errorMessage);
 
@@ -328,7 +290,7 @@ public:
 
 
 /***********************************************************************
-.\HTTPSERVERAPI.WINDOWS.H
+.\WINDOWS\HTTPSERVERAPI.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -343,7 +305,7 @@ Interfaces:
 #define VCZH_INTERPROCESS_WINDOWS_HTTPSERVERAPI
 
 
-namespace vl::inter_process
+namespace vl::inter_process::windows_http
 {
 
 /// <summary>A response to be sent by <see cref="HttpServerApi"/>.</summary>
@@ -423,7 +385,7 @@ public:
 
 
 /***********************************************************************
-.\HTTPSERVER.WINDOWS.H
+.\WINDOWS\HTTPSERVER.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -438,7 +400,7 @@ Interfaces:
 #define VCZH_INTERPROCESS_WINDOWS_HTTPSERVER
 
 
-namespace vl::inter_process
+namespace vl::inter_process::windows_http
 {
 
 class HttpServer;
@@ -525,7 +487,7 @@ public:
 
 
 /***********************************************************************
-.\NAMEDPIPE.WINDOWS.H
+.\WINDOWS\NAMEDPIPE.WINDOWS.H
 ***********************************************************************/
 /***********************************************************************
 Vczh Library++ 3.0
@@ -541,7 +503,7 @@ Interfaces:
 #define VCZH_INTERPROCESS_WINDOWS_NAMEDPIPE
 
 
-namespace vl::inter_process
+namespace vl::inter_process::named_pipe
 {
 
 class NamedPipeServer;

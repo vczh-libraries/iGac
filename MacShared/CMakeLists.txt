@@ -46,6 +46,13 @@ set(GACOSX_SHARED_FILES
 	"UnixFileSystemInfo.cpp"
 )
 
+find_library(NETWORK_LIBRARIES Network REQUIRED)
+
+# The packed VlppOS file guards <cstdlib> with !VCZH_APPLE even though its
+# macOS async-socket section uses std::malloc and std::free.
+set_source_files_properties("../Import/VlppOS.Linux.cpp" PROPERTIES COMPILE_OPTIONS "-include;cstdlib")
+
 add_library(GacUI STATIC ${GACUI_COMMON_FILES})
+target_link_libraries(GacUI PUBLIC ${NETWORK_LIBRARIES})
 add_library(GacOSX STATIC ${GACOSX_FILES})
 add_library(GacOSXShared STATIC ${GACOSX_SHARED_FILES})

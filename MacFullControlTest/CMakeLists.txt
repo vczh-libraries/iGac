@@ -4,6 +4,7 @@ project(MacFullControlTest)
 include_directories("../Import")
 include_directories("../Mac")
 include_directories("../MacShared")
+include_directories("../Apps/FullControlTest/Source")
 
 set(OS_LIBRARIES "pthread")
 find_library(COREFOUNDATION_LIBRARIES CoreFoundation)
@@ -30,19 +31,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
 
 set(PLIST_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in")
 
-# Resource file to bundle into the .app
-set(SHARED_RESOURCES "UI/FullControlTest/UIRes/BlackSkin.bin")
-SET_SOURCE_FILES_PROPERTIES(${SHARED_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+file(GLOB FULL_CONTROL_TEST_GENERATED_SOURCES
+	CONFIGURE_DEPENDS
+	"../Apps/FullControlTest/Source/*.cpp"
+)
+list(FILTER FULL_CONTROL_TEST_GENERATED_SOURCES EXCLUDE REGEX "Reflection\\.cpp$")
 
 set(APP_NAME "Test_FullControlTest")
 set(TESTAPP_SOURCE_FILES
 	"Main.mm"
-	"UI/FullControlTest/Source/DemoPartialClasses.cpp"
-	"UI/FullControlTest/Source/DocumentEditorBase.cpp"
-	"UI/FullControlTest/Source/MainWindow.cpp"
+	${FULL_CONTROL_TEST_GENERATED_SOURCES}
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
-add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES} ${SHARED_RESOURCES})
+add_executable(${APP_NAME} MACOSX_BUNDLE ${TESTAPP_SOURCE_FILES})
 target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties(${APP_NAME} PROPERTIES
 	MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE}

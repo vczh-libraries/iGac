@@ -1,0 +1,455 @@
+<Resource>
+  <Folder name="GacGenConfig">
+    <Folder name="Cpp">
+      <Text name="SourceFolder">../Source</Text>
+      <Text name="NormalInclude">GacUI.h</Text>
+      <Text name="Name">RemoteProtocolTest</Text>
+      <Text name="CppResource">RemoteProtocolTestResource.cpp</Text>
+    </Folder>
+  </Folder>
+  <Folder name="ToolbarImages" content="Link">ToolbarImages/Images.xml</Folder>
+  <Folder name="SideDocuments" content="Link">SideDocuments.xml</Folder>
+
+  <Instance name="ClickMeTabResource">
+    <Instance ref.Class="rptest::ClickMeTab">
+      <TabPage ref.Name="self" Text="Home">
+        <Table CellPadding="10" AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+          <att.Rows>
+            <_>composeType:MinSize</_>
+            <_>composeType:MinSize</_>
+            <_>composeType:MinSize</_>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Rows>
+          <att.Columns>
+            <_>composeType:MinSize</_>
+            <_>composeType:MinSize</_>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Columns>
+
+          <Cell Site="row:0 column:0">
+            <Button ref.Name="buttonClickMe" Alt="X" Text="Click Me!">
+              <ev.Clicked-eval><![CDATA[{
+                buttonClickMe.Text = "You have clicked!";
+              }]]></ev.Clicked-eval>
+            </Button>
+          </Cell>
+          <Cell Site="row:0 column:1">
+            <Button Alt="Y" Text="Fatel Error">
+              <ev.Clicked-eval><![CDATA[{
+                raise "This is a fatel error!";
+              }]]></ev.Clicked-eval>
+            </Button>
+          </Cell>
+          <Cell Site="row:1 column:0 columnSpan:3">
+            <Label Text="Local shortcut key: Ctrl+Q"/>
+          </Cell>
+          <Cell Site="row:2 column:0 columnSpan:3">
+            <Label Text="Global shortcut key: Ctrl+Shift+Alt+Q"/>
+          </Cell>
+          <Cell Site="row:3 column:0 columnSpan:3">
+            <Raw/>
+          </Cell>
+        </Table>
+      </TabPage>
+    </Instance>
+  </Instance>
+
+  <Script name="ViewModelResource">
+    <Workflow>
+      <![CDATA[
+        module viewmodel;
+        
+        using system::*;
+        using presentation::*;
+        
+        namespace rptest
+        {
+          class DataItem
+          {
+            prop Name : string = "" {not observe}
+            prop Title : string = "" {not observe}
+            prop Description : string = "" {not observe}
+
+            new(name:string, title:string, description:string)
+            {
+              Name = name;
+              Title = title;
+              Description = description;
+            }
+          }
+        }
+      ]]>
+    </Workflow>
+  </Script>
+
+  <Instance name="DataGridTabResource">
+    <Instance ref.Class="rptest::DataGridTab">
+      <ref.Members><![CDATA[
+        var itemSource : observe DataItem^[] = {};
+      ]]></ref.Members>
+      <TabPage ref.Name="self" Text="DataGrid">
+        <Table CellPadding="10" AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+          <att.Rows>
+            <_>composeType:MinSize</_>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Rows>
+          <att.Columns>
+            <_>composeType:MinSize</_>
+            <_>composeType:MinSize</_>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Columns>
+
+          <Cell Site="row:0 column:0">
+            <Button Alt="X" Text="Add 3 Rows">
+              <ev.Clicked-eval><![CDATA[{
+                for (i in range [1, 3])
+                {
+                  self.itemSource.Add(new DataItem^(
+                    Sys::LoremIpsumTitle(12),
+                    Sys::LoremIpsumTitle(20),
+                    Sys::LoremIpsumSentence(40)
+                  ));
+                }
+              }]]></ev.Clicked-eval>
+            </Button>
+          </Cell>
+          <Cell Site="row:0 column:1">
+            <Button Alt="Y" Text="Clear">
+              <ev.Clicked-eval><![CDATA[{
+                self.itemSource.Clear();
+              }]]></ev.Clicked-eval>
+            </Button>
+          </Cell>
+          <Cell Site="row:1 column:0 columnSpan:3">
+            <BindableDataGrid Alt="Z" env.ItemType="rptest::DataItem^" VerticalAlwaysVisible="false" HorizontalAlwaysVisible="false">
+              <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              <att.ItemSource-eval>self.itemSource</att.ItemSource-eval>
+              <att.Columns>
+                <DataColumn Text="Name" Size="120">
+                  <att.TextProperty>Name</att.TextProperty>
+                </DataColumn>
+                <DataColumn Text="Title" Size="160">
+                  <att.TextProperty>Title</att.TextProperty>
+                </DataColumn>
+                <DataColumn Text="Description" Size="300">
+                  <att.TextProperty>Description</att.TextProperty>
+                </DataColumn>
+              </att.Columns>
+            </BindableDataGrid>
+          </Cell>
+        </Table>
+      </TabPage>
+    </Instance>
+  </Instance>
+
+  <Instance name="DocumentTabResource">
+    <Instance ref.Class="rptest::DocumentTab">
+      <TabPage ref.Name="self" Text="Document">
+        <MessageDialog ref.Name="dialogStart"
+                       Title="RemotingTest_Core.exe"
+                       Text="Pretend to be starting!"
+          />
+        <DocumentViewer ref.Name="docViewer" EditMode="Selectable" Document-uri="res://SideDocuments/MainDocument" HorizontalAlwaysVisible="false" VerticalAlwaysVisible="false">
+          <att.BoundsComposition-set AlignmentToParent="left:5 top:5 right:5 bottom:5"/>
+
+          <DocumentItem Name="CommandTable">
+            <Table CellPadding="5" BorderVisible="false" MinSizeLimitation="LimitToElementAndChildren" PreferredMinSize="x:400">
+              <att.Rows>
+                <_>composeType:MinSize</_>
+                <_>composeType:MinSize</_>
+                <_>composeType:MinSize</_>
+                <_>composeType:MinSize</_>
+                <_>composeType:MinSize</_>
+              </att.Rows>
+              <att.Columns>
+                <_>composeType:MinSize</_>
+                <_>composeType:Percentage percentage:0.5</_>
+                <_>composeType:Percentage percentage:0.5</_>
+              </att.Columns>
+
+              <Cell Site="row:0 column:0">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/CellHArg" Behavior="wrapLine:false">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:0 column:1">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/CellHDesc">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:0 column:2">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/CellHReq">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+
+              <Cell Site="row:1 column:0">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell0Arg" Behavior="wrapLine:false">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:1 column:1">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell0Desc">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:1 column:2">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell0Req">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+
+              <Cell Site="row:2 column:0">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell1Arg" Behavior="wrapLine:false">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:2 column:1">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell1Desc">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:2 column:2">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell1Req">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+
+              <Cell Site="row:3 column:0">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell2Arg" Behavior="wrapLine:false">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:3 column:1">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell2Desc">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:3 column:2">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell2Req">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+
+              <Cell Site="row:4 column:0">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell3Arg" Behavior="wrapLine:false">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:4 column:1">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell3Desc">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+              <Cell Site="row:4 column:2">
+                <Bounds AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+                  <SolidBorder Color="#000000"/>
+                  <DocumentLabel EditMode="ViewOnly" Document-uri="res://SideDocuments/Cell3Req">
+                    <att.BoundsComposition-set AlignmentToParent="left:1 top:1 right:1 bottom:1"/>
+                  </DocumentLabel>
+                </Bounds>
+              </Cell>
+            </Table>
+          </DocumentItem>
+
+          <DocumentItem Name="ComboBox">
+            <ComboBox ref.Name="comboRun" SelectedIndex="0">
+              <att.BoundsComposition-set PreferredMinSize="x:160"/>
+              <att.ListControl>
+                <TextList HorizontalAlwaysVisible="false" VerticalAlwaysVisible="false">
+                  <att.Items>
+                    <TextItem Text="FullControlTest"/>
+                    <TextItem Text="RemoteProtocolTest"/>
+                  </att.Items>
+                </TextList>
+              </att.ListControl>
+            </ComboBox>
+          </DocumentItem>
+
+          <DocumentItem Name="StartButton">
+            <Button Text="RIGHT NOW">
+              <ev.Clicked-eval><![CDATA[{
+                dialogStart.ShowDialog();
+              }]]></ev.Clicked-eval>
+            </Button>
+          </DocumentItem>
+        </DocumentViewer>
+      </TabPage>
+    </Instance>
+  </Instance>
+
+  <Instance name="MainWindowResource">
+    <Instance ref.Class="rptest::RpMainWindow" xmlns:rptest="rptest::*">
+      <Window ref.Name="self" Text="Remote Protocol Test" ClientSize="x:640 y:480">
+        <MessageDialog ref.Name="dialogQueryClose"
+                       Input="DisplayOKCancel"
+                       DefaultButton="DefaultSecond"
+                       Icon="IconQuestion"
+                       Title-eval="self.Text"
+                       Text="Do you want to exit?"
+          />
+        <MessageDialog ref.Name="dialogLocalShortcut"
+                       Title-eval="self.Text"
+                       Text="You pressed Ctrl+Q!"
+          />
+        <MessageDialog ref.Name="dialogGlobalShortcut"
+                       Title-eval="self.Text"
+                       Text="You pressed Ctrl+Shift+Alt+Q!"
+          />
+        <ToolstripCommand ShortcutBuilder="Ctrl+Q">
+          <ev.Executed-eval><![CDATA[{
+            dialogLocalShortcut.ShowDialog();
+          }]]></ev.Executed-eval>
+        </ToolstripCommand>
+        <ToolstripCommand ShortcutBuilder="global:Ctrl+Shift+Alt+Q">
+          <ev.Executed-eval><![CDATA[{
+            dialogGlobalShortcut.ShowDialog();
+          }]]></ev.Executed-eval>
+        </ToolstripCommand>
+        <ev.WindowClosing-eval><![CDATA[{
+          if (dialogQueryClose.ShowDialog() == INativeDialogService::MessageBoxButtonsOutput::SelectCancel)
+          {
+            arguments.cancel = true;
+          }
+        }]]></ev.WindowClosing-eval>
+
+        <att.BoundsComposition-set PreferredMinSize="x:640 y:480"/>
+        <Table AlignmentToParent="left:0 top:0 right:0 bottom:0" MinSizeLimitation="LimitToElementAndChildren">
+          <att.Rows>
+            <_>composeType:MinSize</_>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Rows>
+          <att.Columns>
+            <_>composeType:Percentage percentage:1.0</_>
+          </att.Columns>
+
+          <Cell Site="row:0 column:0">
+            <ToolstripMenuBar>
+              <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              <MenuBarButton Text="File">
+                <att.SubMenu-set>
+                  <ToolstripGroupContainer>
+                    <GuiToolstripGroup>
+                      <MenuItemButton ref.Name="menuFileNew" Text="New">
+                        <att.SubMenu-set>
+                          <MenuItemButton Text="Plain Text"/>
+                          <MenuItemButton Text="XML"/>
+                          <MenuItemButton Text="Json"/>
+                        </att.SubMenu-set>
+                      </MenuItemButton>
+                      <MenuItemButton Text="Open ..."/>
+                    </GuiToolstripGroup>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="Save"/>
+                      <MenuItemButton Text="Save As ..."/>
+                    </GuiToolstripGroup>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="self.Hide() (InvokeInMainThread)">
+                        <ev.Clicked-eval><![CDATA[{
+                          GuiApplication::GetApplication().InvokeInMainThread(self, func():void
+                          {
+                            self.Hide();
+                          });
+                        }]]></ev.Clicked-eval>
+                      </MenuItemButton>
+                      <MenuItemButton Text="self.Hide()">
+                        <ev.Clicked-eval><![CDATA[{
+                          self.Hide();
+                        }]]></ev.Clicked-eval>
+                      </MenuItemButton>
+                    </GuiToolstripGroup>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="self.Close() (InvokeInMainThread)">
+                        <ev.Clicked-eval><![CDATA[{
+                          GuiApplication::GetApplication().InvokeInMainThread(self, func():void
+                          {
+                            self.Close();
+                          });
+                        }]]></ev.Clicked-eval>
+                      </MenuItemButton>
+                      <MenuItemButton Text="self.Close()">
+                        <ev.Clicked-eval><![CDATA[{
+                          self.Close();
+                        }]]></ev.Clicked-eval>
+                      </MenuItemButton>
+                    </GuiToolstripGroup>
+                  </ToolstripGroupContainer>
+                </att.SubMenu-set>
+              </MenuBarButton>
+              <MenuBarButton Text="Edit">
+                <att.SubMenu-set>
+                  <ToolstripGroupContainer>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="Undo" Image-uri="res://ToolbarImages/Undo"/>
+                      <MenuItemButton Text="Redo" Image-uri="res://ToolbarImages/Redo"/>
+                    </GuiToolstripGroup>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="Cut" Image-uri="res://ToolbarImages/Cut"/>
+                      <MenuItemButton Text="Copy" Image-uri="res://ToolbarImages/Copy"/>
+                      <MenuItemButton Text="Paste" Image-uri="res://ToolbarImages/Paste"/>
+                    </GuiToolstripGroup>
+                    <GuiToolstripGroup>
+                      <MenuItemButton Text="Select All"/>
+                    </GuiToolstripGroup>
+                  </ToolstripGroupContainer>
+                </att.SubMenu-set>
+              </MenuBarButton>
+            </ToolstripMenuBar>
+          </Cell>
+          <Cell Site="row:1 column:0">
+            <Tab>
+              <att.BoundsComposition-set AlignmentToParent="left:0 top:0 right:0 bottom:0"/>
+              <att.Pages>
+                <rptest:ClickMeTab Alt="A"/>
+                <rptest:DataGridTab Alt="B"/>
+                <rptest:DocumentTab Alt="C"/>
+              </att.Pages>
+            </Tab>
+          </Cell>
+        </Table>
+      </Window>
+    </Instance>
+  </Instance>
+</Resource>

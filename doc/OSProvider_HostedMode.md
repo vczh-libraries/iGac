@@ -217,9 +217,9 @@ else
     SetupOSXCoreGraphicsRenderer();
 ```
 
-**File:** `testFC.sh`
+**File:** `test.sh`
 
-`./testFC.sh --hosted` forwards the flag to the test app.
+`./test.sh --app:fct --hosted` selects Full Control Test and forwards the hosted flag to the test app. `--unblock` can be added for background launch.
 
 In `GuiMain()`, the application checks `GetHostedApplication()` to detect hosted mode. In hosted mode, `SetControlThemeName(theme::ThemeName::Window)` is skipped because the main window's theme is managed differently — the hosted controller's `GuiMainHostedWindowProxy` handles the native window appearance.
 
@@ -231,6 +231,6 @@ In `GuiMain()`, the application checks `GetHostedApplication()` to detect hosted
 | `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` | Declares both entry points |
 | `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm` | `CoreGraphicsMain()` with hosted support, `CoreGraphicsRenderTarget` with `StartRenderingOnNativeWindow`/`StopRenderingOnNativeWindow` |
 | `MacFullControlTest/Main.mm` | `--hosted` CLI argument parsing |
-| `testFC.sh` | Forwards `--hosted` to the test app |
+| `test.sh` | Selects the test application and forwards `--hosted` to Full Control Test |
 | `Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
 | `Import/GacUI.cpp` | All hosted mode platform-independent implementations |
