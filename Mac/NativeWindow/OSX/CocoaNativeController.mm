@@ -23,6 +23,11 @@
 // _NSGetProgname
 #import <crt_externs.h>
 
+namespace vl::presentation::osx
+{
+    void RefreshCocoaDefaultFont();
+}
+
 @interface CocoaApplicationDelegate: NSObject<NSApplicationDelegate>
 
 
@@ -30,6 +35,12 @@
 
 @implementation CocoaApplicationDelegate {
     NSMenu* mainMenu;
+}
+
+- (void)dealloc
+{
+    [mainMenu release];
+    [super dealloc];
 }
 
 - (NSString*)findAppName
@@ -133,6 +144,11 @@
     [self createMenu];
 }
 
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    vl::presentation::osx::RefreshCocoaDefaultFont();
+}
+
 - (void)applicationDidResignActive:(NSNotification *)notification
 {
     vl::presentation::osx::ClosePopupsOnActivation(nullptr, nullptr);
@@ -167,6 +183,7 @@ namespace vl {
                 CocoaDialogService                      dialogService;
                 
                 CocoaApplicationDelegate*               appDelegate;
+                INativeCallbackService*                 applicationEnvironmentCallbackService = nullptr;
                                 
             public:
                 CocoaController():
@@ -177,6 +194,7 @@ namespace vl {
                     
                     appDelegate = [[CocoaApplicationDelegate alloc] init];
                     [[NSApplication sharedApplication] setDelegate:appDelegate];
+                    applicationEnvironmentCallbackService = &callbackService;
                     
                     // dock icon
                     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
@@ -185,8 +203,14 @@ namespace vl {
                 }
                 
                 ~CocoaController()
-               {
+                {
                     inputService.StopTimer();
+                    if ([NSApp delegate] == appDelegate)
+                    {
+                        [NSApp setDelegate:nil];
+                    }
+                    [appDelegate release];
+                    appDelegate = nil;
                 }
 
                 const NativeWindowFrameConfig&	GetMainWindowFrameConfig() override
@@ -384,6 +408,19 @@ namespace vl {
                     asyncService.ExecuteAsyncTasks();
                 }
 
+                void SetApplicationEnvironmentCallbackService(INativeCallbackService* value)
+                {
+                    applicationEnvironmentCallbackService = value;
+                }
+
+                void RefreshDefaultFont()
+                {
+                    if (resourceService.RefreshDefaultFontFromSystem() && applicationEnvironmentCallbackService)
+                    {
+                        applicationEnvironmentCallbackService->Invoker()->InvokeEnvironmentChanged();
+                    }
+                }
+
                 List<CocoaWindow*>& GetWindows()
                 {
                     return windows;
@@ -395,6 +432,22 @@ namespace vl {
             INativeController* GetOSXNativeController()
             {
                 return cocoaController;
+            }
+
+            void RefreshCocoaDefaultFont()
+            {
+                if (cocoaController)
+                {
+                    cocoaController->RefreshDefaultFont();
+                }
+            }
+
+            void SetOSXApplicationEnvironmentCallbackService(INativeCallbackService* callbackService)
+            {
+                if (cocoaController)
+                {
+                    cocoaController->SetApplicationEnvironmentCallbackService(callbackService);
+                }
             }
             
             void StartOSXNativeController()

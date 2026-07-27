@@ -102,6 +102,14 @@ input operate on the protocol renderer.
 
 `CocoaApplicationDelegate` (the `NSApplicationDelegate`) creates the default macOS application menu (App menu + Window menu with standard items). It also handles `applicationDidResignActive:` to close all popups when the app loses focus.
 
+When the application becomes active, the delegate asks `CocoaResourceService`
+to read AppKit's current default interface font again. If the effective font
+changed, the controller invokes `EnvironmentChanged` on the callback service
+used by the current application mode. Standard applications use the native
+callback service, while hosted applications use the hosted controller's
+callback service so `GuiApplication` refreshes every window's inherited display
+font.
+
 ### Global Timer
 
 `CocoaInputService` runs a GCD timer. On each tick it calls `GlobalTimerFunc()` which:
@@ -116,8 +124,30 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 |---------|-------------|
 | **CocoaInputService** | Implements `INativeInputService`. Uses a GCD timer for periodic timer callbacks. Maps macOS key codes to VKEY codes. Tracks key state via `CGEventSource`. |
 | **CocoaScreenService** | `CocoaScreen` wraps `NSScreen`; reports bounds, client bounds, name, primary status, and logical scaling `1.0`. AppKit window/input coordinates are points; Retina backing scale is applied separately by the CoreGraphics drawing path. `CocoaScreenService` enumerates all screens. |
-| **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Provides default font ("Helvetica"), font enumeration via `NSFontManager`. |
+| **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Reads the current default interface font from `NSFont messageFontOfSize:0`, preserves an explicit process override from `SetDefaultFont`, and enumerates fonts via `NSFontManager`. |
 | **CocoaClipboardService** | Clipboard read/write via `NSPasteboard`. `CocoaClipboardWriter` collects text, document, and image data, then atomically writes all formats on `Submit()`. Text is written as `NSPasteboardTypeString`. Documents are written in three formats: a custom GacUI binary format (`com.gaclib.document`), RTF (`NSPasteboardTypeRTF`), and HTML (`NSPasteboardTypeHTML`). Images are written as TIFF (`NSPasteboardTypeTIFF`). `SetDocument()` auto-fills text and image fallbacks (like Windows). `CocoaClipboardReader` reads from the system pasteboard: text from `NSPasteboardTypeString`, documents from the custom GacUI format, and images from TIFF/PNG types via `ImageService`. Each `ReadClipboard()` call creates a fresh reader that queries the current pasteboard state. |
 | **CocoaDialogService** | Message boxes, color picker, font picker, file open/save dialogs using native macOS panels. |
 | **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` wraps `CGImageRef`. Creates images from file, memory, or stream. |
 | **CocoaAutomationService** | Exposes control-tree automation and routes IO commands to real `CocoaWindow` instances. Hosted and native-renderer variants use the same Cocoa input path with their respective automation tree implementations. |
+
+### Default Font
+
+`CocoaResourceService` queries `NSFont messageFontOfSize:0` at controller
+startup and whenever the application becomes active. The font's family, point
+size, and bold/italic traits become GacUI `FontProperties`; there is no
+hard-coded macOS font size. AppKit point sizes are logical UI units and must not
+be multiplied by the screen backing scale.
+
+The resource service publishes the refreshed value only together with
+`EnvironmentChanged`, so all inherited display fonts switch consistently.
+`SetDefaultFont()` remains a process-level override and prevents system
+refreshes from changing the effective default for the lifetime of that resource
+service. AppKit's logical system-font family (for example,
+`.AppleSystemUIFont`) is added to `EnumerateFonts()` when it is not present in
+`NSFontManager`'s public family list.
+
+A remote renderer supplies this freshly queried value when the core requests
+`ControllerGetFontConfig`. Starting or replacing
+`RemotingTest_Renderer_macOS` therefore refreshes the core's default font. The
+current remote protocol has no live default-font update event for an already
+connected renderer.

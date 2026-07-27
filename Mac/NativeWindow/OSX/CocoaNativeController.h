@@ -21,6 +21,7 @@ namespace vl {
             extern INativeController*   GetOSXNativeController();
             extern void                 StartOSXNativeController();
             extern void                 StopOSXNativeController();
+            extern void                 SetOSXApplicationEnvironmentCallbackService(INativeCallbackService* callbackService);
 
             class CocoaWindow;
             extern void                 GetAllCreatedCocoaWindows(collections::List<CocoaWindow*>& windows);

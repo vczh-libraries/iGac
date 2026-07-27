@@ -33,6 +33,9 @@ int SetupOSXCoreGraphicsRendererInternal(bool hosted, bool raw)
     {
         SetNativeController(nativeController);
     }
+    SetOSXApplicationEnvironmentCallbackService(
+        (hostedController ? static_cast<INativeController*>(hostedController) : nativeController)->CallbackService()
+        );
 
     Ptr<INativeAutomationService> automationService;
     if (hosted)
@@ -50,6 +53,7 @@ int SetupOSXCoreGraphicsRendererInternal(bool hosted, bool raw)
     GetNativeServiceSubstitution()->Unsubstitute(automationService.Obj());
     automationService = nullptr;
 
+    SetOSXApplicationEnvironmentCallbackService(nullptr);
     SetNativeController(nullptr);
     if (hostedController)
     {

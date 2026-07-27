@@ -191,6 +191,14 @@ This distinction (documented in [OSProvider.md](OSProvider.md)) is critically im
 
 **Rule in app code (`MacShared/`, `MacTest/`, `MacFullControlTest/`)**: Use `GetCurrentController()` as normal, since application code works with whichever controller is active. Use `GetHostedApplication()` to detect hosted mode or access the native host window.
 
+`SetupOSXCoreGraphicsRendererInternal()` also tells the native Cocoa controller
+which callback service represents the application environment. In standard and
+raw modes this is the native callback service. In hosted mode it is the hosted
+controller's callback service. This explicit bridge lets an AppKit default-font
+change detected on application activation reach `GuiApplication`, whose
+listeners are installed on the hosted controller, without calling
+`GetCurrentController()` from OS-provider code.
+
 ## Rendering Architecture Comparison
 
 | Aspect | Standard Mode | Hosted Mode |

@@ -12,6 +12,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include <cmath>
+
 namespace vl {
     
     namespace presentation {
@@ -186,28 +188,8 @@ namespace vl {
                         systemCursors[i]=Ptr(new CocoaCursor((INativeCursor::SystemCursorType)i));
                     }
                 }
-                {
-                    NSFont* userFont = [NSFont userFontOfSize:10];
-                    NSFontDescriptor* descriptor = [userFont fontDescriptor];
-                    
-                    defaultFont.fontFamily = NSStringToWString([descriptor.fontAttributes valueForKey:NSFontFamilyAttribute]);
-                    // osx default is 12
-                    defaultFont.size = 12;
-                    
-                    NSFontTraitMask traits = [[descriptor.fontAttributes valueForKey:NSFontTraitsAttribute] unsignedIntegerValue];
-                    
-                    defaultFont.italic = traits & NSItalicFontMask;
-                    defaultFont.bold = traits & NSBoldFontMask;
-                    
-                    // underline is handled by text attribute
-                    // not a font attribute
-                    defaultFont.underline = false;
-                    defaultFont.strikeline = false;
-                    
-                    // system default
-                    defaultFont.antialias = true;
-                    defaultFont.verticalAntialias = true;
-                }
+                systemDefaultFont = QuerySystemDefaultFont();
+                defaultFont = systemDefaultFont;
             }
             
             CocoaResourceService::~CocoaResourceService()
@@ -229,6 +211,33 @@ namespace vl {
             {
                 return GetSystemCursor(INativeCursor::Arrow);
             }
+
+            FontProperties CocoaResourceService::QuerySystemDefaultFont()
+            {
+                NSFont* systemFont = [NSFont messageFontOfSize:0];
+                NSString* fontFamily = [systemFont familyName];
+                if (!fontFamily)
+                {
+                    fontFamily = GAC_APPLE_DEFAULT_FONT_FAMILY_NAME;
+                }
+
+                FontProperties font;
+                font.fontFamily = NSStringToWString(fontFamily);
+                font.size = (vint)std::lround([systemFont pointSize]);
+
+                NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:systemFont];
+                font.italic = (traits & NSItalicFontMask) != 0;
+                font.bold = (traits & NSBoldFontMask) != 0;
+
+                // Underline and strikeline are text attributes, not font traits.
+                font.underline = false;
+                font.strikeline = false;
+
+                // Use the system defaults for CoreText rendering.
+                font.antialias = true;
+                font.verticalAntialias = true;
+                return font;
+            }
             
             FontProperties CocoaResourceService::GetDefaultFont()
             {
@@ -238,6 +247,25 @@ namespace vl {
             void CocoaResourceService::SetDefaultFont(const FontProperties& value)
             {
                 defaultFont = value;
+                defaultFontOverridden = true;
+            }
+
+            bool CocoaResourceService::RefreshDefaultFontFromSystem()
+            {
+                auto refreshedFont = QuerySystemDefaultFont();
+                if (systemDefaultFont == refreshedFont)
+                {
+                    return false;
+                }
+
+                systemDefaultFont = refreshedFont;
+                if (defaultFontOverridden)
+                {
+                    return false;
+                }
+
+                defaultFont = refreshedFont;
+                return true;
             }
 
             void CocoaResourceService::EnumerateFonts(collections::List<WString>& fonts)
@@ -247,6 +275,11 @@ namespace vl {
                 for (NSString* family in fontFamilies)
                 {
                     fonts.Add(NSStringToWString(family));
+                }
+
+                if (!fonts.Contains(systemDefaultFont.fontFamily))
+                {
+                    fonts.Add(systemDefaultFont.fontFamily);
                 }
             }
         }

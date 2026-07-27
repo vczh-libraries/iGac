@@ -46,6 +46,10 @@ namespace vl {
             protected:
                 collections::Array<Ptr<CocoaCursor>>    systemCursors;
                 FontProperties                          defaultFont;
+                FontProperties                          systemDefaultFont;
+                bool                                    defaultFontOverridden = false;
+
+                FontProperties          QuerySystemDefaultFont();
                 
             public:
                 CocoaResourceService();
@@ -57,6 +61,8 @@ namespace vl {
                 FontProperties          GetDefaultFont() override;
                 void                    SetDefaultFont(const FontProperties& value) override;
                 void					EnumerateFonts(collections::List<WString>& fonts) override;
+
+                bool                    RefreshDefaultFontFromSystem();
             };
             
         }

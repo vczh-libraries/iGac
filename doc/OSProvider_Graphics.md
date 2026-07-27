@@ -67,3 +67,16 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 `ICoreGraphicsResourceManager` provides:
 - `CreateCoreTextFont(FontProperties)` — creates and caches a `CTFont` wrapping `CoreTextFontPackage`
 - `DestroyCoreTextFont(font)` — returns to cache
+
+The default `FontProperties` comes from
+`CocoaResourceService`, which reads AppKit's current `messageFontOfSize:0` at
+controller startup and on every application activation. An explicit process
+override remains the effective default even though the current AppKit value is
+still queried. The reported font size is an AppKit point size in the same
+logical coordinate space used by GacUI. Retina backing scale is applied later
+by the CoreGraphics render target and must not be folded into the font size.
+
+When the application becomes active and the AppKit default has changed, the
+controller raises `EnvironmentChanged`. GacUI updates inherited display fonts,
+which invalidates the affected text measurements and lets the normal successive
+layout/render passes converge on the new geometry.
