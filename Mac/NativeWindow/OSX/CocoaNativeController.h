@@ -23,6 +23,7 @@ namespace vl {
             extern void                 StopOSXNativeController();
 
             class CocoaWindow;
+            extern void                 GetAllCreatedCocoaWindows(collections::List<CocoaWindow*>& windows);
             extern void                 ClosePopupsOnActivation(CocoaWindow* activatedWindow, collections::SortedList<CocoaWindow*>* exceptions);
             
         }

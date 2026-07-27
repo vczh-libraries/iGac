@@ -23,9 +23,14 @@ namespace vl {
     namespace presentation {
         
         namespace osx {
+
+            template<typename TBase>
+            class CocoaAutomationServiceBase;
             
             class CocoaWindow : public Object, public INativeWindow
             {
+                template<typename TBase>
+                friend class CocoaAutomationServiceBase;
             protected:
                 INativeController*                              cocoaController = nullptr;
                 NativePoint                                     caretPoint;

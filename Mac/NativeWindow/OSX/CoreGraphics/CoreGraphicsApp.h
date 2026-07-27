@@ -11,9 +11,10 @@
 
 namespace vl { namespace presentation { class GuiHostedController; class INativeController; } }
 
-extern void CoreGraphicsMain(vl::presentation::INativeController* nativeController, vl::presentation::GuiHostedController* hostedController = nullptr);
+extern void CoreGraphicsMain(vl::presentation::INativeController* nativeController, vl::presentation::GuiHostedController* hostedController = nullptr, bool raw = false);
 
 int SetupOSXCoreGraphicsRenderer();
 int SetupOSXHostedCoreGraphicsRenderer();
+int SetupRawOSXCoreGraphicsRenderer();
 
-#endif 
+#endif

@@ -9,6 +9,8 @@ WORKFLOW_BUILD="$WORKFLOW_DIR/.github/Ubuntu/build.sh"
 GACUI_BUILD="$GACUI_DIR/.github/Ubuntu/build.sh"
 GACGEN="$GACUI_DIR/Tools/GacGen/Bin/GacGen"
 METADATA_DIR="$GACUI_DIR/Test/Resources/Metadata"
+MINI_HTTP_AUTOMATION_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Core/Shared.cpp"
+REMOTE_RENDERER_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Rendering_Win32/GuiMain.cpp"
 TOOL_DIR=""
 
 cleanup() {
@@ -97,6 +99,8 @@ require_file "$WORKFLOW_BUILD"
 require_file "$GACUI_BUILD"
 require_file "$METADATA_DIR/Reflection32.bin"
 require_file "$METADATA_DIR/Reflection64.bin"
+require_file "$MINI_HTTP_AUTOMATION_SOURCE"
+require_file "$REMOTE_RENDERER_SOURCE"
 if ! command -v perl >/dev/null 2>&1; then
     echo "Perl is required to configure copied GacGen resource files." >&2
     exit 1
@@ -114,6 +118,10 @@ echo "Building GacUI GacGen incrementally..."
     "$GACUI_BUILD"
 )
 require_file "$GACGEN"
+
+cp "$MINI_HTTP_AUTOMATION_SOURCE" "$SCRIPT_DIR/MacShared/MiniHttpAutomationService.cpp"
+cp "$REMOTE_RENDERER_SOURCE" "$SCRIPT_DIR/RemotingTest_Renderer_macOS/GuiMain.cpp"
+echo "Synchronized MiniHTTP automation and macOS native remote renderer sources."
 
 # GacGen normally uses the core-only metadata beside its executable. Full
 # Control Test also references types from GacUI's generated dialog support, so

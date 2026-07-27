@@ -93,6 +93,7 @@ iGac/
 ├── MacFullControlTest/         Full-featured test app using BlackSkin control template
 │   ├── CMakeLists.txt
 │   └── Main.mm
+├── RemotingTest_Renderer_macOS/ Native `/MiniHttp` renderer for GacUI's RemotingTest_Core
 │
 ├── Apps/                       Upstream test resources and generated x64 C++
 │   ├── FullControlTest/
@@ -116,7 +117,7 @@ iGac/
 ├── syncOrg.sh                  Clone and synchronize sibling organization repositories
 ├── syncProj.sh                 Sync test resources and regenerate x64 C++ sources
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
-└── test.sh                     Run either test app, including hosted/background modes
+└── test.sh                     Run test apps or the native remote renderer
 ```
 
 The generated `Import/` and `Apps/` snapshots are committed so a normal iGac build does not require code generation. Run the synchronization scripts when updating upstream dependencies or test resources.
@@ -143,7 +144,14 @@ This removes the existing `Import/` directory, copies dependency amalgamations f
 ./syncProj.sh
 ```
 
-This performs incremental builds of `../Workflow/Tools/CppMerge` and `../GacUI/Tools/GacGen`, copies the `FullControlTest` and `RemoteProtocolTest` resource trees from `../GacUI/Test/Resources/App/`, and invokes `GacGen /C64` for each application. Generated reflection files are retained in `Apps/*/Source`, but test targets compile with `VCZH_DEBUG_NO_REFLECTION` and do not include them.
+This performs incremental builds of `../Workflow/Tools/CppMerge` and
+`../GacUI/Tools/GacGen`, copies the `FullControlTest` and `RemoteProtocolTest`
+resource trees from `../GacUI/Test/Resources/App/`, and invokes `GacGen /C64`
+for each application. It also copies the portable MiniHTTP automation service
+to `MacShared/MiniHttpAutomationService.cpp` and copies the cross-platform
+native renderer entry point to `RemotingTest_Renderer_macOS/GuiMain.cpp`.
+Generated reflection files are retained in `Apps/*/Source`, but test targets
+compile with `VCZH_DEBUG_NO_REFLECTION` and do not include them.
 
 Each generated application also has an embedded-resource `.cpp` file. Full Control Test links `FullControlTestResource.cpp`, whose plugin loads the resource from compiled data; no `.bin` file is bundled or located at runtime.
 
@@ -172,9 +180,14 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test.sh --app:fct                            # Run Full Control Test
 ./test.sh --app:fct --hosted                   # Run Full Control Test in hosted mode
 ./test.sh --app:fct --hosted --unblock         # Combine hosted and background modes
+./test.sh --app:renderer                       # Connect to RemotingTest_Core with /MiniHttp
+./test.sh --app:renderer --unblock             # Start the renderer and print its PID
 ```
 
-`--unblock` starts the selected executable in the background and prints its PID. `--hosted` is valid only with `--app:fct`.
+`--unblock` starts the selected executable in the background and prints its
+PID. `--hosted` is valid only with `--app:fct`. Start
+`GacUI/Test/Linux/RemotingTest_Core/Bin/RemotingTest_Core /MiniHttp /RPT`
+(or `/FCT`) before starting the renderer.
 
 ## Documentation
 

@@ -32,6 +32,7 @@ set(GACOSX_FILES
 	"../Mac/NativeWindow/OSX/CocoaIntrospection.mm"
 	"../Mac/NativeWindow/OSX/CocoaNativeController.mm"
 	"../Mac/NativeWindow/OSX/CocoaWindow.mm"
+	"../Mac/NativeWindow/CocoaAutomationService.cpp"
 	"../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaClipboardService.mm"
 	"../Mac/NativeWindow/OSX/ServicesImpl/CocoaDialogService.mm"
@@ -42,6 +43,7 @@ set(GACOSX_FILES
 )
 
 set(GACOSX_SHARED_FILES
+	"MiniHttpAutomationService.cpp"
 	"osx_shared.mm"
 	"UnixFileSystemInfo.cpp"
 )
@@ -51,6 +53,7 @@ find_library(NETWORK_LIBRARIES Network REQUIRED)
 # The packed VlppOS file guards <cstdlib> with !VCZH_APPLE even though its
 # macOS async-socket section uses std::malloc and std::free.
 set_source_files_properties("../Import/VlppOS.Linux.cpp" PROPERTIES COMPILE_OPTIONS "-include;cstdlib")
+set_source_files_properties("../Mac/NativeWindow/CocoaAutomationService.cpp" PROPERTIES COMPILE_OPTIONS "-x;objective-c++")
 
 add_library(GacUI STATIC ${GACUI_COMMON_FILES})
 target_link_libraries(GacUI PUBLIC ${NETWORK_LIBRARIES})

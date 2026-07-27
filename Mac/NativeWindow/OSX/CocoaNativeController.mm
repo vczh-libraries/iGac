@@ -409,6 +409,11 @@ namespace vl {
                 delete cocoaController;
                 cocoaController = nullptr;
             }
+
+            void GetAllCreatedCocoaWindows(List<CocoaWindow*>& windows)
+            {
+                CopyFrom(windows, cocoaController->GetWindows());
+            }
     
             void GlobalTimerFunc()
             {

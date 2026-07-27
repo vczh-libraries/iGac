@@ -145,23 +145,29 @@ namespace vl {
                 {
                     [nsWindow setContentMinSize:NSMakeSize(size.x.value, size.y.value)];
                 }
+
+                NSRect contentRect = NSMakeRect(0, 0, size.x.value, size.y.value);
+                NSRect frameRect = [nsWindow frameRectForContentRect:contentRect];
                 NativeRect bounds = GetBounds();
-                NativeRect newBounds = NativeRect(bounds.Left(), bounds.Top(), size.x + bounds.Left(), size.y + bounds.Top());
+                NativeRect newBounds = NativeRect(
+                    bounds.Left(),
+                    bounds.Top(),
+                    bounds.Left() + (vint)frameRect.size.width,
+                    bounds.Top() + (vint)frameRect.size.height
+                    );
                 SetBounds(newBounds);
             }
 
             NativeRect CocoaWindow::GetClientBoundsInScreen()
             {
-                NSRect contentFrame = [nsWindow convertRectToScreen:[nsWindow.contentView frame]];
-                
-                if(!([nsWindow screen]))
-                    contentFrame = [nsWindow frame];
-                
-                return FlipRect(nsWindow,
-                                NativeRect(contentFrame.origin.x,
-                                     contentFrame.origin.y,
-                                     contentFrame.size.width + contentFrame.origin.x,
-                                     contentFrame.size.height + contentFrame.origin.y));
+                NSRect contentFrame = [nsWindow contentRectForFrameRect:[nsWindow frame]];
+                NSScreen* screen = GetWindowScreen(nsWindow);
+                return NativeRect(
+                    contentFrame.origin.x,
+                    screen.frame.size.height - NSMaxY(contentFrame),
+                    NSMaxX(contentFrame),
+                    screen.frame.size.height - contentFrame.origin.y
+                    );
             }
 
             WString CocoaWindow::GetTitle() 

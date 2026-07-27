@@ -561,7 +561,10 @@ namespace vl {
 using namespace vl::presentation::osx;
 using namespace vl::presentation::elements_coregraphics;
 
-void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* hostedController)
+extern void GuiRawMain();
+extern void GuiApplicationMain();
+
+void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* hostedController, bool raw)
 {
     // Listeners must be installed on the native controller's callback service,
     // not the hosted controller's. In hosted mode, GuiHostedController fires
@@ -602,7 +605,14 @@ void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* 
     if (hostedController) hostedController->Initialize();
     
     {
-        GuiApplicationMain();
+        if (raw)
+        {
+            GuiRawMain();
+        }
+        else
+        {
+            GuiApplicationMain();
+        }
     }
 
     if (hostedController) hostedController->Finalize();
@@ -614,4 +624,3 @@ void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* 
     delete g_cocoaListener;
 
 }
-

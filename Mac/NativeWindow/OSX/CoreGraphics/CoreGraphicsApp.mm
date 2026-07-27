@@ -8,6 +8,7 @@
 
 #include "CoreGraphicsApp.h"
 
+#include "../../CocoaAutomationService.h"
 #include "../CocoaNativeController.h"
 
 #import <GacUI.h>
@@ -16,36 +17,60 @@ using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::osx;
 
-
-int SetupOSXCoreGraphicsRenderer()
+int SetupOSXCoreGraphicsRendererInternal(bool hosted, bool raw)
 {
     StartOSXNativeController();
     auto nativeController = GetOSXNativeController();
-    SetNativeController(nativeController);
-    
+
+    GuiHostedController* hostedController = nullptr;
+    if (hosted)
     {
-        CoreGraphicsMain(nativeController);
+        hostedController = new GuiHostedController(nativeController);
+        SetNativeController(hostedController);
+        SetHostedApplication(hostedController->GetHostedApplication());
     }
-    
+    else
+    {
+        SetNativeController(nativeController);
+    }
+
+    Ptr<INativeAutomationService> automationService;
+    if (hosted)
+    {
+        automationService = Ptr(new CocoaAutomationServiceHosted);
+    }
+    else
+    {
+        automationService = Ptr(new CocoaAutomationService);
+    }
+    GetNativeServiceSubstitution()->Substitute(automationService.Obj(), false);
+
+    CoreGraphicsMain(nativeController, hostedController, raw);
+
+    GetNativeServiceSubstitution()->Unsubstitute(automationService.Obj());
+    automationService = nullptr;
+
+    SetNativeController(nullptr);
+    if (hostedController)
+    {
+        SetHostedApplication(nullptr);
+        delete hostedController;
+    }
     StopOSXNativeController();
     return 0;
 }
 
+int SetupOSXCoreGraphicsRenderer()
+{
+    return SetupOSXCoreGraphicsRendererInternal(false, false);
+}
+
 int SetupOSXHostedCoreGraphicsRenderer()
 {
-    StartOSXNativeController();
-    auto nativeController = GetOSXNativeController();
+    return SetupOSXCoreGraphicsRendererInternal(true, false);
+}
 
-    auto hostedController = new GuiHostedController(nativeController);
-    SetNativeController(hostedController);
-    SetHostedApplication(hostedController->GetHostedApplication());
-
-    {
-        CoreGraphicsMain(nativeController, hostedController);
-    }
-
-    SetNativeController(nullptr);
-    delete hostedController;
-    StopOSXNativeController();
-    return 0;
+int SetupRawOSXCoreGraphicsRenderer()
+{
+    return SetupOSXCoreGraphicsRendererInternal(false, true);
 }

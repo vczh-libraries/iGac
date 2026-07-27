@@ -3,9 +3,13 @@
 #include "../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h"
 
 #include <cstring>
+#include <VlppOS.h>
 
 using namespace vl;
 using namespace vl::presentation;
+
+extern void StartMiniHttpAutomationService(Ptr<inter_process::async_tcp_socket::IAsyncSocketServer> socketServer, const WString& applicationName);
+extern void StopMiniHttpAutomationService();
 
 int main(int argc, const char * argv[])
 {
@@ -33,6 +37,17 @@ void GuiMain()
         }
         window.ForceCalculateSizeImmediately();
         window.MoveToScreenCenter();
-        GetApplication()->Run(&window);
+        auto socketServer = inter_process::async_tcp_socket::CreateDefaultAsyncSocketServer(8888);
+        StartMiniHttpAutomationService(socketServer, WString::Unmanaged(L"Test_FullControlTest"));
+        try
+        {
+            GetApplication()->Run(&window);
+        }
+        catch (...)
+        {
+            StopMiniHttpAutomationService();
+            throw;
+        }
+        StopMiniHttpAutomationService();
     }
 }

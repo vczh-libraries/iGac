@@ -49,12 +49,15 @@ namespace vl {
 
             double CocoaScreen::GetScalingX()
             {
-                return 2.0;
+                // AppKit window, screen and input coordinates are already in
+                // device-independent points. CoreGraphics applies the backing
+                // scale only while drawing into the Retina backing store.
+                return 1.0;
             }
 
             double CocoaScreen::GetScalingY()
             {
-                return 2.0;
+                return 1.0;
             }
 
             CocoaScreenService::CocoaScreenService()

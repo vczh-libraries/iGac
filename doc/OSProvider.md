@@ -78,9 +78,16 @@ Each service is returned by the corresponding `INativeController` method:
 | `ClipboardService()` | `CocoaClipboardService` | `ServicesImpl/CocoaClipboardService.mm` |
 | `ImageService()` | `CocoaImageService` | `ServicesImpl/CocoaImageService.mm` |
 | `DialogService()` | `CocoaDialogService` | `ServicesImpl/CocoaDialogService.mm` |
-| `AutomationService()` | Unavailable fallback | (GacUI built-in substitution) |
+| `AutomationService()` | Mode-specific `CocoaAutomationService*` substitution | `Mac/NativeWindow/CocoaAutomationService.cpp` |
 
-The native controller returns `nullptr` from `AutomationService()`, matching providers that do not implement application automation. During framework initialization, `GuiInitializeUtilities()` substitutes `INativeAutomationService::UnavailableService()`, so application-level callers still receive the standard unavailable-service object.
+The native controller itself returns `nullptr` from `AutomationService()`.
+`SetupOSXCoreGraphicsRenderer()` substitutes `CocoaAutomationService` for
+normal multi-window applications, and
+`SetupOSXHostedCoreGraphicsRenderer()` substitutes
+`CocoaAutomationServiceHosted`. Raw native-renderer setup begins with the
+standard substitution; `RemotingTest_Renderer_macOS` temporarily layers
+`CocoaAutomationServiceRenderer` over it so DOM inspection and renderer-side
+input operate on the protocol renderer.
 
 ### Window Management
 
@@ -108,8 +115,9 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 | Service | Description |
 |---------|-------------|
 | **CocoaInputService** | Implements `INativeInputService`. Uses a GCD timer for periodic timer callbacks. Maps macOS key codes to VKEY codes. Tracks key state via `CGEventSource`. |
-| **CocoaScreenService** | `CocoaScreen` wraps `NSScreen`; reports bounds, client bounds, name, primary status, DPI scaling. `CocoaScreenService` enumerates all screens. |
+| **CocoaScreenService** | `CocoaScreen` wraps `NSScreen`; reports bounds, client bounds, name, primary status, and logical scaling `1.0`. AppKit window/input coordinates are points; Retina backing scale is applied separately by the CoreGraphics drawing path. `CocoaScreenService` enumerates all screens. |
 | **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Provides default font ("Helvetica"), font enumeration via `NSFontManager`. |
 | **CocoaClipboardService** | Clipboard read/write via `NSPasteboard`. `CocoaClipboardWriter` collects text, document, and image data, then atomically writes all formats on `Submit()`. Text is written as `NSPasteboardTypeString`. Documents are written in three formats: a custom GacUI binary format (`com.gaclib.document`), RTF (`NSPasteboardTypeRTF`), and HTML (`NSPasteboardTypeHTML`). Images are written as TIFF (`NSPasteboardTypeTIFF`). `SetDocument()` auto-fills text and image fallbacks (like Windows). `CocoaClipboardReader` reads from the system pasteboard: text from `NSPasteboardTypeString`, documents from the custom GacUI format, and images from TIFF/PNG types via `ImageService`. Each `ReadClipboard()` call creates a fresh reader that queries the current pasteboard state. |
 | **CocoaDialogService** | Message boxes, color picker, font picker, file open/save dialogs using native macOS panels. |
 | **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` wraps `CGImageRef`. Creates images from file, memory, or stream. |
+| **CocoaAutomationService** | Exposes control-tree automation and routes IO commands to real `CocoaWindow` instances. Hosted and native-renderer variants use the same Cocoa input path with their respective automation tree implementations. |

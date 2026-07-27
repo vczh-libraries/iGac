@@ -12,6 +12,7 @@ usage() {
 Usage:
   ./test.sh --app:simple [--unblock]
   ./test.sh --app:fct [--hosted] [--unblock]
+  ./test.sh --app:renderer [--unblock]
 EOF
 }
 
@@ -22,6 +23,9 @@ for argument in "$@"; do
             ;;
         --app:fct)
             APP_NAME="fct"
+            ;;
+        --app:renderer)
+            APP_NAME="renderer"
             ;;
         --hosted)
             HOSTED=1
@@ -48,6 +52,13 @@ case "$APP_NAME" in
     fct)
         APP="$SCRIPT_DIR/build/MacFullControlTest/bin/Test_FullControlTest.app/Contents/MacOS/Test_FullControlTest"
         ;;
+    renderer)
+        if [[ "$HOSTED" -eq 1 ]]; then
+            echo "--hosted is only supported by --app:fct." >&2
+            exit 1
+        fi
+        APP="$SCRIPT_DIR/build/RemotingTest_Renderer_macOS/bin/RemotingTest_Renderer_macOS.app/Contents/MacOS/RemotingTest_Renderer_macOS"
+        ;;
     *)
         usage
         exit 1
@@ -62,6 +73,8 @@ fi
 if [[ "$UNBLOCK" -eq 1 ]]; then
     if [[ "$HOSTED" -eq 1 ]]; then
         "$APP" --hosted &
+    elif [[ "$APP_NAME" == "renderer" ]]; then
+        "$APP" /MiniHttp &
     else
         "$APP" &
     fi
@@ -69,6 +82,8 @@ if [[ "$UNBLOCK" -eq 1 ]]; then
 else
     if [[ "$HOSTED" -eq 1 ]]; then
         exec "$APP" --hosted
+    elif [[ "$APP_NAME" == "renderer" ]]; then
+        exec "$APP" /MiniHttp
     else
         exec "$APP"
     fi
