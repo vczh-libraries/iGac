@@ -10,7 +10,11 @@ macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraph
 
 ## Maintenance Prerequisite
 
-Run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency.
+This repo is stand alone, all dependencies are in the repo for building.
+
+To run `RemotingTest_Renderer_macOS` by `test.sh --app:renderer`, `GacUI` repo is needed to run `Test/Linux/RemotingTest_Core` as an HTTP server.
+
+For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency.
 
 ### Install Homebrew and Development Tools
 
