@@ -16,6 +16,7 @@ REPOSITORIES=(
     GacJS
     Release
     Tools
+    wGac
 )
 
 red_error() {
