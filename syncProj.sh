@@ -68,6 +68,7 @@ sync_application() {
     local gacgen_log="$TOOL_DIR/${app_name}.log"
     local error_file="$resource_file.log/x64/Errors.txt"
 
+    echo "Preparing $app_name..." >&2
     require_directory "$source_resources"
 
     rm -rf "$resource_dir" "$source_dir"
