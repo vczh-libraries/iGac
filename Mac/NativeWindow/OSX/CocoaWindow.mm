@@ -358,12 +358,35 @@ namespace vl {
                 //   4. For main: DefWindowProc → DestroyWindow → WM_DESTROY → DestroyNativeWindow
                 // The closeWindow argument is reserved and not used.
                 // Match that behavior here.
+                collections::List<CocoaWindow*> activationCandidates;
+                if ([NSApp isActive] && [nsWindow isKeyWindow])
+                {
+                    auto candidate = parentWindow;
+                    while (candidate)
+                    {
+                        activationCandidates.Add(candidate);
+                        candidate = candidate->parentWindow;
+                    }
+                }
                 if (InvokeClosing())
                 {
                     // Cancelled
                     return;
                 }
                 [nsWindow orderOut:nil];
+                if (activationCandidates.Count() > 0 && [NSApp isActive] && [NSApp keyWindow] == nil)
+                {
+                    collections::List<CocoaWindow*> windows;
+                    GetAllCreatedCocoaWindows(windows);
+                    for (auto candidate : activationCandidates)
+                    {
+                        if (windows.Contains(candidate) && candidate->IsVisible() && candidate->IsEnabled())
+                        {
+                            candidate->SetActivate();
+                            break;
+                        }
+                    }
+                }
                 opened = false;
                 InvokeClosed();
                 if (cocoaController->WindowService()->GetMainWindow() == this)
