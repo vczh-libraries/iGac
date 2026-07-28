@@ -229,7 +229,12 @@ else
 
 `./test.sh --app:fct --hosted` selects Full Control Test and forwards the hosted flag to the test app. `--unblock` can be added for background launch.
 
-In `GuiMain()`, the application checks `GetHostedApplication()` to detect hosted mode. In hosted mode, `SetControlThemeName(theme::ThemeName::Window)` is skipped because the main window's theme is managed differently — the hosted controller's `GuiMainHostedWindowProxy` handles the native window appearance.
+`GuiMain()` leaves the main window theme selected by the generated Full Control
+Test resource. That resource explicitly selects `CustomFrameWindow`, so the
+normal and hosted test apps begin with the customized frame shown by the
+Window Management checkbox. Generic windows such as the Simple test still use
+`ThemeName::Window`; the macOS DarkSkin registration resolves that generic
+theme to `SystemFrameWindow` in standard mode.
 
 ## Files Involved
 
