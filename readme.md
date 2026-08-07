@@ -108,6 +108,7 @@ iGac/
 │       └── Source/
 │
 ├── Import/                     Amalgamated GacUI source files (Vlpp, GacUI, Workflow, ...)
+├── Import-Test/                Test-only GacUI remoting helper amalgamations
 │
 ├── doc/                        Documentation
 │   ├── OSProvider.md           macOS OS provider: controller, services, entry point
@@ -140,7 +141,7 @@ This synchronizes the sibling `Vlpp`, `VlppOS`, `VlppRegex`, `VlppReflection`, `
 ./import.sh
 ```
 
-This removes the existing `Import/` directory, copies dependency amalgamations from `../GacUI/Import/`, adds the GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin release files under `Import/Skins/DarkSkin/`, and marks the snapshot read-only. `Import/` is frozen after import: compatibility fixes belong in this repository's CMake or macOS integration code. Review and commit the vendor update together with those integration changes.
+This removes and recreates `Import/` and `Import-Test/`, copies dependency amalgamations from `../GacUI/Import/`, adds the ordinary GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin release files under `Import/Skins/DarkSkin/`, and moves the required `Test.RemotingHelpers` pair plus any optional Windows pair into `Import-Test/`. Both snapshots are marked read-only. `Import/` and `Import-Test/` are frozen after import: compatibility fixes belong in this repository's CMake or macOS integration code. The helper pair is only for platform test targets and is not part of the ordinary framework snapshot. Review and commit the vendor update together with those integration changes.
 
 ## Synchronizing Test Projects
 
