@@ -1,5 +1,10 @@
 #include "osx_shared.h"
 #include "gac_include.h"
+#include "../../../Mac/NativeWindow/CocoaAutomationService.h"
+
+#include <VlppOS.h>
+
+using namespace vl::presentation::remoting;
 
 int main(int argc, const char * argv[])
 {
@@ -17,15 +22,23 @@ void GuiMain()
 	window->MoveToScreenCenter();
 
 	auto label = new GuiLabel(theme::ThemeName::Label);
-    {
-        FontProperties font;
-        font.fontFamily = L"Lucida Calligraphy";
-        font.antialias = true;
-        font.size = 32;
-        label->SetFont(font);
+	{
+		FontProperties font;
+		font.fontFamily = L"Lucida Calligraphy";
+		font.antialias = true;
+		font.size = 32;
+		label->SetFont(font);
 
-        label->SetText(L"Welcome to GacUI Library!");
-    }
+		label->SetText(L"Welcome to GacUI Library!");
+	}
 	window->AddChild(label);
-    GetApplication()->Run(window);
+
+	vl::presentation::osx::CocoaAutomationService automationService;
+	GetNativeServiceSubstitution()->Substitute(&automationService, false);
+	auto socketServer = inter_process::async_tcp_socket::CreateDefaultAsyncSocketServer(8888);
+	StartMiniHttpAutomationService(socketServer, WString::Unmanaged(L"Test_HellWorld_Cpp"));
+	GetApplication()->Run(window);
+	StopMiniHttpAutomationService();
+	automationService.Stop();
+	GetNativeServiceSubstitution()->Unsubstitute(&automationService);
 }

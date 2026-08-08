@@ -8,7 +8,6 @@
 
 #include "CoreGraphicsApp.h"
 
-#include "../../CocoaAutomationService.h"
 #include "../CocoaNativeController.h"
 
 #import <GacUI.h>
@@ -37,21 +36,7 @@ int SetupOSXCoreGraphicsRendererInternal(bool hosted, bool raw)
         (hostedController ? static_cast<INativeController*>(hostedController) : nativeController)->CallbackService()
         );
 
-    Ptr<INativeAutomationService> automationService;
-    if (hosted)
-    {
-        automationService = Ptr(new CocoaAutomationServiceHosted);
-    }
-    else
-    {
-        automationService = Ptr(new CocoaAutomationService);
-    }
-    GetNativeServiceSubstitution()->Substitute(automationService.Obj(), false);
-
     CoreGraphicsMain(nativeController, hostedController, raw);
-
-    GetNativeServiceSubstitution()->Unsubstitute(automationService.Obj());
-    automationService = nullptr;
 
     SetOSXApplicationEnvironmentCallbackService(nullptr);
     SetNativeController(nullptr);

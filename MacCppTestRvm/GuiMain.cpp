@@ -1,12 +1,14 @@
-#if defined __linux__ && __has_include(<GacUI.h>) && __has_include("../WGac/Renderers/WGacRenderer.h")
+#if defined __linux__ && __has_include(<GacUI.h>) && __has_include("../WGac/Services/WGacAutomationService.h") && __has_include("../WGac/Renderers/WGacRenderer.h")
 #include <GacUI.h>
 #include <Test.RemotingHelpers.h>
 #include <Skins/DarkSkin/DarkSkin.h>
+#include "../WGac/Services/WGacAutomationService.h"
 #include "../WGac/Renderers/WGacRenderer.h"
 #elif defined __APPLE__ && __has_include(<GacUI.h>)
 #include <GacUI.h>
 #include <Test.RemotingHelpers.h>
 #include <Skins/DarkSkin/DarkSkin.h>
+#include "../Mac/NativeWindow/CocoaAutomationService.h"
 #include "../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h"
 #else
 #include "DarkSkin.h"
@@ -57,43 +59,44 @@ void GuiMain()
 	rvmt::MainWindow window(currentGuiContext->viewModel);
 	window.ForceCalculateSizeImmediately();
 	window.MoveToScreenCenter();
+
 #if defined VCZH_MSVC
 	windows::SetWindowDefaultIcon(MAINICON);
 	windows::WindowsAutomationServiceHosted automationService;
+#elif defined VCZH_GCC && !defined VCZH_APPLE
+	wayland::WGacAutomationServiceHosted automationService;
+#elif defined VCZH_GCC && defined VCZH_APPLE
+	osx::CocoaAutomationServiceHosted automationService;
+#endif
 	GetNativeServiceSubstitution()->Substitute(&automationService, false);
-	if (currentGuiContext->miniHttpSocketServer)
+
+#if defined VCZH_MSVC
+	if (!currentGuiContext->miniHttpSocketServer)
+	{
+		windows::StartWindowsHttpAutomationService(WString::Unmanaged(L"Automation/CppTest_Rvm"), RemotingHttpPort);
+	}
+	else
+#endif
 	{
 		StartMiniHttpAutomationService(
 			currentGuiContext->miniHttpSocketServer,
 			WString::Unmanaged(L"CppTest_Rvm")
 			);
 	}
-	else
-	{
-		windows::StartWindowsHttpAutomationService(WString::Unmanaged(L"Automation/CppTest_Rvm"), RemotingHttpPort);
-	}
-#else
-	StartMiniHttpAutomationService(
-		currentGuiContext->miniHttpSocketServer,
-		WString::Unmanaged(L"CppTest_Rvm")
-		);
-#endif
 
 	GetApplication()->Run(&window);
 #if defined VCZH_MSVC
-	if (currentGuiContext->miniHttpSocketServer)
-	{
-		StopMiniHttpAutomationService();
-	}
-	else
+	if (!currentGuiContext->miniHttpSocketServer)
 	{
 		windows::StopWindowsHttpAutomationService();
 	}
+	else
+#endif
+	{
+		StopMiniHttpAutomationService();
+	}
 	automationService.Stop();
 	GetNativeServiceSubstitution()->Unsubstitute(&automationService);
-#else
-	StopMiniHttpAutomationService();
-#endif
 }
 
 template<typename TServerBase>

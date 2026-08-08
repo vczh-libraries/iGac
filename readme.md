@@ -204,6 +204,17 @@ only with `--app:renderer` and selects that renderer's automation listener; it
 does not change the `/MiniHttp` Core connection on port 8888. The default
 renderer automation port is 8889.
 
+Every test application owns a mode-specific Cocoa automation service and a
+MiniHTTP endpoint. Append `/Controls` for control-tree applications, `/Dom`
+for the native renderer, or `/IO` for input:
+
+| Test application | Automation service | Endpoint base |
+| --- | --- | --- |
+| Simple | `CocoaAutomationService` | `http://127.0.0.1:8888/Automation/Test_HellWorld_Cpp` |
+| Full Control Test | `CocoaAutomationService` or `CocoaAutomationServiceHosted` | `http://127.0.0.1:8888/Automation/Test_FullControlTest` |
+| Remote View Model Test | `CocoaAutomationServiceHosted` | `http://127.0.0.1:8888/Automation/CppTest_Rvm` |
+| Native remote renderer | `CocoaAutomationServiceRenderer` | `http://127.0.0.1:<renderer-port>/Automation/RemotingTest_Rendering_Native` |
+
 `--app:rvmt` waits for the matching Workflow RPC host. Start the client first,
 then run:
 
@@ -211,16 +222,14 @@ then run:
 ../GacUI/Test/Linux/RemotingTest_RvmHost/Bin/RemotingTest_RvmHost /MiniHttp
 ```
 
-The RVM client exposes control-tree automation at
-`http://localhost:8888/Automation/CppTest_Rvm` after the host connects.
+The RVM client exposes its control tree after the host connects.
 
 For the native renderer, start
 `GacUI/Test/Linux/RemotingTest_Core/Bin/RemotingTest_Core /MiniHttp /RPT`
 (or `/FCT`) before `./test.sh --app:renderer`. The renderer exposes its DOM and
-renderer-side IO at `/Automation/RemotingTest_Rendering_Native` on its selected
-automation port. A replacement can reuse 8889 after the old renderer stops;
-for live takeover, keep the old renderer on 8889 and start the new one with
-`--port:8890`.
+renderer-side IO on its selected automation port. A replacement can reuse 8889
+after the old renderer stops; for live takeover, keep the old renderer on 8889
+and start the new one with `--port:8890`.
 
 Follow [GacUI's native-renderer verification guide](../GacUI/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
 

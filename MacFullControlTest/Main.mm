@@ -1,5 +1,6 @@
 #include "gac_include.h"
 #include "FullControlTest.h"
+#include "../Mac/NativeWindow/CocoaAutomationService.h"
 #include "../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h"
 
 #include <cstring>
@@ -26,21 +27,29 @@ int main(int argc, const char * argv[])
 
 void GuiMain()
 {
-    {
-        demo::MainWindow window;
-        window.ForceCalculateSizeImmediately();
-        window.MoveToScreenCenter();
-        auto socketServer = inter_process::async_tcp_socket::CreateDefaultAsyncSocketServer(8888);
-        StartMiniHttpAutomationService(socketServer, WString::Unmanaged(L"Test_FullControlTest"));
-        try
-        {
-            GetApplication()->Run(&window);
-        }
-        catch (...)
-        {
-            StopMiniHttpAutomationService();
-            throw;
-        }
-        StopMiniHttpAutomationService();
-    }
+	demo::MainWindow window;
+	window.ForceCalculateSizeImmediately();
+	window.MoveToScreenCenter();
+
+	auto run = [&](INativeAutomationService& automationService)
+	{
+		GetNativeServiceSubstitution()->Substitute(&automationService, false);
+		auto socketServer = inter_process::async_tcp_socket::CreateDefaultAsyncSocketServer(8888);
+		StartMiniHttpAutomationService(socketServer, WString::Unmanaged(L"Test_FullControlTest"));
+		GetApplication()->Run(&window);
+		StopMiniHttpAutomationService();
+		automationService.Stop();
+		GetNativeServiceSubstitution()->Unsubstitute(&automationService);
+	};
+
+	if (GetHostedApplication())
+	{
+		osx::CocoaAutomationServiceHosted automationService;
+		run(automationService);
+	}
+	else
+	{
+		osx::CocoaAutomationService automationService;
+		run(automationService);
+	}
 }

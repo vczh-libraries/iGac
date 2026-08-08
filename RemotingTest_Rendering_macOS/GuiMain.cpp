@@ -91,36 +91,27 @@ void GuiMain()
 	windows::WindowsAutomationServiceRenderer rendererAutomationServiceObject(currentGuiContext->renderer);
 #elif defined VCZH_GCC && !defined VCZH_APPLE
 	wayland::WGacAutomationServiceRenderer rendererAutomationServiceObject(currentGuiContext->renderer);
-#else
+#elif defined VCZH_GCC && defined VCZH_APPLE
 	osx::CocoaAutomationServiceRenderer rendererAutomationServiceObject(currentGuiContext->renderer);
 #endif
 	GetNativeServiceSubstitution()->Substitute(&rendererAutomationServiceObject, false);
 #if defined VCZH_MSVC
-	if (currentGuiContext->miniHttpSocketServer)
-	{
-		StartMiniHttpAutomationService(
-			currentGuiContext->miniHttpSocketServer,
-			WString::Unmanaged(GacUIAutomationApplicationName)
-			);
-	}
-	else
+	if (!currentGuiContext->miniHttpSocketServer)
 	{
 		windows::StartWindowsHttpAutomationService(
 			WString::Unmanaged(L"Automation/") + WString::Unmanaged(GacUIAutomationApplicationName),
 			currentGuiContext->automationHttpPort
 			);
 	}
-#else
-	StartMiniHttpAutomationService(
-		currentGuiContext->miniHttpSocketServer,
-		WString::Unmanaged(GacUIAutomationApplicationName)
-		);
+	else
 #endif
+	{
+		StartMiniHttpAutomationService(
+			currentGuiContext->miniHttpSocketServer,
+			WString::Unmanaged(GacUIAutomationApplicationName)
+			);
+	}
 	currentGuiContext->channelClient->SetRendererAutomationService(&rendererAutomationServiceObject);
-
-#if defined VCZH_GCC && !defined VCZH_APPLE
-	currentGuiContext->channelClient->WaitForServer();
-#endif
 	currentGuiContext->asyncChannel->SetInvokeInMainThread(invoker);
 	currentGuiContext->asyncChannel->ProcessPendingMessages();
 	if (
@@ -132,17 +123,16 @@ void GuiMain()
 	}
 
 #if defined VCZH_MSVC
-	if (currentGuiContext->miniHttpSocketServer)
-	{
-		StopMiniHttpAutomationService();
-	}
-	else
+	if (!currentGuiContext->miniHttpSocketServer)
 	{
 		windows::StopWindowsHttpAutomationService();
 	}
-#else
-	StopMiniHttpAutomationService();
+	else
 #endif
+	{
+		StopMiniHttpAutomationService();
+	}
+
 	currentGuiContext->channelClient->SetRendererAutomationService(nullptr);
 	rendererAutomationServiceObject.Stop();
 	GetNativeServiceSubstitution()->Unsubstitute(&rendererAutomationServiceObject);
@@ -167,9 +157,7 @@ int StartClient(
 	GuiRemoteProtocolRendererChannel rendererChannel(&asyncRendererChannel, &remoteRenderer);
 	channelClient.SetRenderer(&remoteRenderer);
 	channelClient.SetAsyncRendererChannel(&asyncRendererChannel);
-#if defined VCZH_MSVC || (defined VCZH_GCC && defined VCZH_APPLE)
 	channelClient.WaitForServer();
-#endif
 
 	RendererGuiContext context{ &channelClient, &asyncRendererChannel, &remoteRenderer, miniHttpSocketServer, automationHttpPort };
 	CHECK_ERROR(!currentGuiContext, L"StartClient(...)#The GUI context has already been bound.");

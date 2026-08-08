@@ -81,13 +81,14 @@ Each service is returned by the corresponding `INativeController` method:
 | `AutomationService()` | Mode-specific `CocoaAutomationService*` substitution | `Mac/NativeWindow/CocoaAutomationService.cpp` |
 
 The native controller itself returns `nullptr` from `AutomationService()`.
-`SetupOSXCoreGraphicsRenderer()` substitutes `CocoaAutomationService` for
-normal multi-window applications, and
-`SetupOSXHostedCoreGraphicsRenderer()` substitutes
-`CocoaAutomationServiceHosted`. Raw native-renderer setup begins with the
-standard substitution; `RemotingTest_Rendering_macOS` temporarily layers
-`CocoaAutomationServiceRenderer` over it so DOM inspection and renderer-side
-input operate on the protocol renderer.
+The renderer setup functions do not install test automation. Each test
+application constructs and substitutes the concrete service matching its
+mode: `CocoaAutomationService` for normal multi-window applications,
+`CocoaAutomationServiceHosted` for hosted applications, and
+`CocoaAutomationServiceRenderer` for the native remote renderer. The
+application starts its MiniHTTP endpoint after substitution, then stops the
+endpoint and service before unsubstituting it. This keeps endpoint and service
+lifetime in the application that owns the test scenario.
 
 ### Window Management
 
