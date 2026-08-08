@@ -17,6 +17,7 @@ REPOSITORIES=(
     Release
     Tools
     wGac
+    iGac
 )
 
 red_error() {

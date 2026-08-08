@@ -137,7 +137,14 @@ The generated `Import/`, `Import-Test/`, and `Apps/` snapshots are committed so 
 ./syncOrg.sh
 ```
 
-This synchronizes the sibling `Vlpp`, `VlppOS`, `VlppRegex`, `VlppReflection`, `VlppParser2`, `Workflow`, `GacUI`, `GacJS`, `Release`, and `Tools` repositories. Missing repositories are cloned from the `vczh-libraries` GitHub organization. Existing repositories are updated only when they are on `master` with no uncommitted tracked files, untracked files, or unpushed commits. A repository that fails any check is reported in red and skipped while the script continues with the remaining repositories.
+This synchronizes the `Vlpp`, `VlppOS`, `VlppRegex`, `VlppReflection`,
+`VlppParser2`, `Workflow`, `GacUI`, `GacJS`, `Release`, `Tools`, `wGac`, and
+`iGac` repositories, including the repository containing the script itself.
+Missing repositories are cloned from the `vczh-libraries` GitHub organization.
+Existing repositories are updated only when they are on `master` with no
+uncommitted tracked files, untracked files, or unpushed commits. A repository
+that fails any check is reported in red and skipped while the script continues
+with the remaining repositories.
 
 ## Refreshing GacUI Imports
 
