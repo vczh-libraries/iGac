@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(MacShared)
 
 include_directories("../Import")
+include_directories("../Import-Test")
 include_directories("../Mac")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -Wno-missing-declarations")
@@ -43,7 +44,7 @@ set(GACOSX_FILES
 )
 
 set(GACOSX_SHARED_FILES
-	"MiniHttpAutomationService.cpp"
+	"../Import-Test/Test.RemotingHelpers.cpp"
 	"osx_shared.mm"
 	"UnixFileSystemInfo.cpp"
 )

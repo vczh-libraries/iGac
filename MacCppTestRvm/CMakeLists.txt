@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
-project(RemotingTest_Renderer_macOS)
+project(MacCppTestRvm)
 
 include_directories("../Import")
+include_directories("../Import-Test")
 include_directories("../Mac")
+include_directories("../MacShared")
+include_directories("../Apps/RemoteViewModelTest/Source")
 
 set(OS_LIBRARIES "pthread")
 find_library(COREFOUNDATION_LIBRARIES CoreFoundation)
@@ -25,10 +28,17 @@ set(GACUI_LIBRARIES "GacUI" "GacOSX" "GacOSXShared")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "bin/")
 
-set(APP_NAME "RemotingTest_Renderer_macOS")
+file(GLOB REMOTE_VIEW_MODEL_TEST_GENERATED_SOURCES
+	CONFIGURE_DEPENDS
+	"../Apps/RemoteViewModelTest/Source/*.cpp"
+)
+list(FILTER REMOTE_VIEW_MODEL_TEST_GENERATED_SOURCES EXCLUDE REGEX "Reflection\\.cpp$")
+
+set(APP_NAME "Test_CppTest_Rvm")
 set(APP_SOURCE_FILES
 	"GuiMain.cpp"
 	"Main.cpp"
+	${REMOTE_VIEW_MODEL_TEST_GENERATED_SOURCES}
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${APP_SOURCE_FILES})

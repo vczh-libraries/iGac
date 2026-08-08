@@ -85,7 +85,7 @@ The native controller itself returns `nullptr` from `AutomationService()`.
 normal multi-window applications, and
 `SetupOSXHostedCoreGraphicsRenderer()` substitutes
 `CocoaAutomationServiceHosted`. Raw native-renderer setup begins with the
-standard substitution; `RemotingTest_Renderer_macOS` temporarily layers
+standard substitution; `RemotingTest_Rendering_macOS` temporarily layers
 `CocoaAutomationServiceRenderer` over it so DOM inspection and renderer-side
 input operate on the protocol renderer.
 
@@ -148,6 +148,6 @@ service. AppKit's logical system-font family (for example,
 
 A remote renderer supplies this freshly queried value when the core requests
 `ControllerGetFontConfig`. Starting or replacing
-`RemotingTest_Renderer_macOS` therefore refreshes the core's default font. The
+`RemotingTest_Rendering_macOS` therefore refreshes the core's default font. The
 current remote protocol has no live default-font update event for an already
 connected renderer.

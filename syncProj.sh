@@ -9,8 +9,9 @@ WORKFLOW_BUILD="$WORKFLOW_DIR/.github/Ubuntu/build.sh"
 GACUI_BUILD="$GACUI_DIR/.github/Ubuntu/build.sh"
 GACGEN="$GACUI_DIR/Tools/GacGen/Bin/GacGen"
 METADATA_DIR="$GACUI_DIR/Test/Resources/Metadata"
-MINI_HTTP_AUTOMATION_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Core/Shared.cpp"
 REMOTE_RENDERER_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Rendering_Win32/GuiMain.cpp"
+RVM_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Rvm/GuiMain.cpp"
+RVM_INITIALIZER_DIR="$GACUI_DIR/Test/GacUISrc/Generated_RemoteViewModelTest"
 TOOL_DIR=""
 
 cleanup() {
@@ -74,6 +75,10 @@ sync_application() {
     rm -rf "$resource_dir" "$source_dir"
     mkdir -p "$resource_dir" "$source_dir"
     cp -R "$source_resources/." "$resource_dir/"
+    if [[ -d "$resource_dir/Source" ]]; then
+        cp -R "$resource_dir/Source/." "$source_dir/"
+    fi
+    rm -rf "$resource_dir/Source"
     require_file "$resource_file"
     configure_resource "$resource_file" "$generated_name"
 
@@ -100,8 +105,12 @@ require_file "$WORKFLOW_BUILD"
 require_file "$GACUI_BUILD"
 require_file "$METADATA_DIR/Reflection32.bin"
 require_file "$METADATA_DIR/Reflection64.bin"
-require_file "$MINI_HTTP_AUTOMATION_SOURCE"
 require_file "$REMOTE_RENDERER_SOURCE"
+require_file "$RVM_GUI_MAIN_SOURCE"
+require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.h"
+require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.cpp"
+require_directory "$SCRIPT_DIR/RemotingTest_Rendering_macOS"
+require_directory "$SCRIPT_DIR/MacCppTestRvm"
 if ! command -v perl >/dev/null 2>&1; then
     echo "Perl is required to configure copied GacGen resource files." >&2
     exit 1
@@ -120,10 +129,6 @@ echo "Building GacUI GacGen incrementally..."
 )
 require_file "$GACGEN"
 
-cp "$MINI_HTTP_AUTOMATION_SOURCE" "$SCRIPT_DIR/MacShared/MiniHttpAutomationService.cpp"
-cp "$REMOTE_RENDERER_SOURCE" "$SCRIPT_DIR/RemotingTest_Renderer_macOS/GuiMain.cpp"
-echo "Synchronized MiniHTTP automation and macOS native remote renderer sources."
-
 # GacGen normally uses the core-only metadata beside its executable. Full
 # Control Test also references types from GacUI's generated dialog support, so
 # run it through a temporary entry point configured to use the full metadata.
@@ -137,3 +142,10 @@ printf '%s\n%s\n%s\n' \
 
 sync_application "FullControlTest" "FullControlTest"
 sync_application "RemoteProtocolTest" "RemoteProtocolTest"
+sync_application "RemoteViewModelTest" "RemoteViewModelTest"
+
+cp "$REMOTE_RENDERER_SOURCE" "$SCRIPT_DIR/RemotingTest_Rendering_macOS/GuiMain.cpp"
+cp "$RVM_GUI_MAIN_SOURCE" "$SCRIPT_DIR/MacCppTestRvm/GuiMain.cpp"
+cp "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.h" "$SCRIPT_DIR/Apps/RemoteViewModelTest/Source/"
+cp "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.cpp" "$SCRIPT_DIR/Apps/RemoteViewModelTest/Source/"
+echo "Synchronized shared renderer and remote view-model entry points."

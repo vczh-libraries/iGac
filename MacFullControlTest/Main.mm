@@ -7,9 +7,7 @@
 
 using namespace vl;
 using namespace vl::presentation;
-
-extern void StartMiniHttpAutomationService(Ptr<inter_process::async_tcp_socket::IAsyncSocketServer> socketServer, const WString& applicationName);
-extern void StopMiniHttpAutomationService();
+using namespace vl::presentation::remoting;
 
 int main(int argc, const char * argv[])
 {
