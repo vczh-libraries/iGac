@@ -15,10 +15,11 @@ These are the issues encountered while bringing wGac to the state described by `
 
 ## Platform entry points
 
+- Rename the native-renderer project folder and target from `RemotingTest_Renderer_macOS` to `RemotingTest_Rendering_macOS`, matching `RemotingTest_Rendering_Win32` and `RemotingTest_Rendering_Wayland`; update its CMake, launcher, synchronization script, and documentation references together.
 - The shared renderer entry point must substitute the platform renderer automation service (`CocoaAutomationServiceRenderer` on macOS), not the neutral `AutomationServiceRenderer`; the neutral implementation cannot execute native IO commands.
 - Add the local RVM executable target and `test.sh --app:rvmt` path. It accepts `/MiniHttp`, uses the hosted macOS setup, and waits for `GacUI/Test/Linux/RemotingTest_RvmHost/Bin/RemotingTest_RvmHost /MiniHttp`.
 - The shared renderer uses the automation prefix `/Automation/RemotingTest_Rendering_Native`. Do not retain the old platform-specific prefix.
-- Support an automation-port override in the local renderer launcher and test script. Replacement can reuse the default 8889 after the old renderer stops, but takeover needs the old renderer on 8889 and the new renderer on another port such as 8890. This option changes only the renderer automation listener; Core still uses `/MiniHttp` on 8888.
+- Support `/port:<port>` in `RemotingTest_Rendering_macOS` and expose it through `test.sh --app:renderer --port:<port>`. Replacement can reuse the default 8889 after the old renderer stops, but takeover needs the old renderer on 8889 and the new renderer on another port such as 8890. This option changes only the renderer automation listener; Core still uses `/MiniHttp` on 8888.
 
 ## Verification lessons
 
