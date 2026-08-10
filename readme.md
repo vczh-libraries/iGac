@@ -30,45 +30,33 @@ Install Homebrew with the command from the [official Homebrew installation page]
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Follow the installer's **Next steps** to add Homebrew to your shell environment, then install the required formulae:
+Follow the installer's **Next steps** to add Homebrew to your shell environment,
+then run this command from the repository root:
 
 ```bash
 brew update
-brew install llvm coreutils cmake git node
+brew bundle
 ```
 
-The commands used by this project come from these Homebrew formulae:
+`brew bundle` installs the tools declared in [`Brewfile`](Brewfile):
 
-| Command or tool | Homebrew formula |
+| Brewfile entry | Purpose |
 | --- | --- |
-| `clang++` | `llvm` |
-| `lldb` | `llvm` |
-| GNU Coreutils | `coreutils` |
-| `cmake` | `cmake` |
-| `git` | `git` |
-| `node` | `node` |
-| `npm` | `node` (npm is included) |
+| `cmake` | Configures the native build. This project requires CMake 3.20 or newer. |
+| `coreutils` | Provides `grealpath`, used by `syncProj.sh` and the upstream helper build scripts. |
+| `node` | Installs Node.js and its bundled `npm` for JavaScript tooling. The native CMake build does not invoke them. |
+| `visual-studio-code` | Installs Visual Studio Code as an optional development editor; it is not required by the build or test scripts. |
 
-Homebrew's `llvm` formula is keg-only. Add it to the zsh login path to use its `clang++` and `lldb` instead of the versions supplied by macOS:
-
-```bash
-echo 'export PATH="$(brew --prefix llvm)/bin:$PATH"' >> ~/.zprofile
-exec zsh -l
-```
-
-Coreutils commands that conflict with macOS commands are installed with a `g` prefix. To use the GNU commands under their normal names, add the formula's `gnubin` directory to the path:
-
-```bash
-echo 'export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"' >> ~/.zprofile
-exec zsh -l
-```
+Apple's Command Line Tools provide `clang++`, `lldb`, `make`, `git`, and the
+macOS SDK and frameworks. No separate Homebrew LLVM or Git installation is
+needed. The helper scripts call Coreutils' `grealpath` name explicitly, so its
+`gnubin` directory does not need to be added to `PATH`.
 
 To update Homebrew and these tools later:
 
 ```bash
 brew update
-brew outdated
-brew upgrade llvm coreutils cmake git node
+brew bundle
 ```
 
 See Homebrew's [package update instructions](https://docs.brew.sh/FAQ#how-do-i-update-my-local-packages) for upgrading all installed packages instead.
@@ -77,6 +65,7 @@ See Homebrew's [package update instructions](https://docs.brew.sh/FAQ#how-do-i-u
 
 ```
 iGac/
+├── Brewfile                   Homebrew formulae and development-tool casks
 ├── Mac/                        macOS platform implementation
 │   ├── NativeWindow/OSX/       Cocoa windowing (controller, window, view, input)
 │   │   ├── ServicesImpl/       Service implementations (screen, clipboard, dialog, ...)
