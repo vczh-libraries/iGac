@@ -36,20 +36,16 @@ cp "$SOURCE_RELEASE_DIR"/DarkSkin*.h "$DEST_DIR/Skins/DarkSkin/"
 cp "$SOURCE_RELEASE_DIR"/DarkSkin*.cpp "$DEST_DIR/Skins/DarkSkin/"
 cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.h" "$DEST_DIR/"
 cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.cpp" "$DEST_DIR/"
+cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Linux.cpp" "$DEST_DIR/"
 
-if [[ -e "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.h" || -e "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
-    if [[ ! -f "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.h" || ! -f "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
-        echo "Incomplete optional Windows remoting helper pair in $SOURCE_RELEASE_DIR" >&2
-        exit 1
-    fi
-    cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.h" "$DEST_DIR/"
+if [[ -f "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
     cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" "$DEST_DIR/"
 fi
 
 mv "$DEST_DIR/Test.RemotingHelpers.h" "$DEST_TEST_DIR/"
 mv "$DEST_DIR/Test.RemotingHelpers.cpp" "$DEST_TEST_DIR/"
-if [[ -f "$DEST_DIR/Test.RemotingHelpers.Windows.h" ]]; then
-    mv "$DEST_DIR/Test.RemotingHelpers.Windows.h" "$DEST_TEST_DIR/"
+mv "$DEST_DIR/Test.RemotingHelpers.Linux.cpp" "$DEST_TEST_DIR/"
+if [[ -f "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
     mv "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" "$DEST_TEST_DIR/"
 fi
 

@@ -141,7 +141,7 @@ with the remaining repositories.
 ./import.sh
 ```
 
-This removes and recreates `Import/` and `Import-Test/`, copies dependency amalgamations from `../GacUI/Import/`, adds the ordinary GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin release files under `Import/Skins/DarkSkin/`, and moves the required `Test.RemotingHelpers` pair plus any optional Windows pair into `Import-Test/`. Both snapshots are marked read-only. `Import/` and `Import-Test/` are frozen after import: compatibility fixes belong in this repository's CMake or macOS integration code. The helper pair is only for platform test targets and is not part of the ordinary framework snapshot. Review and commit the vendor update together with those integration changes.
+This removes and recreates `Import/` and `Import-Test/`, copies dependency amalgamations from `../GacUI/Import/`, adds the ordinary GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin release files under `Import/Skins/DarkSkin/`, and moves the neutral `Test.RemotingHelpers` pair, the required GCC/POSIX implementation in `Test.RemotingHelpers.Linux.cpp`, and any optional Windows implementation into `Import-Test/`. Both snapshots are marked read-only. `Import/` and `Import-Test/` are frozen after import: compatibility fixes belong in this repository's CMake or macOS integration code. These helpers are only for platform test targets and are not part of the ordinary framework snapshot. Review and commit the vendor update together with those integration changes.
 
 ## Synchronizing Test Projects
 

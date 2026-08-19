@@ -1,9 +1,9 @@
-#if defined __linux__ && __has_include(<GacUI.h>) && __has_include("../WGac/Services/WGacAutomationService.h") && __has_include("../WGac/Renderers/WGacRenderer.h")
+#if defined __linux__ && __has_include(<GacUI.h>) && __has_include("../WGac/Renderers/WGacRenderer.h")
 #include <GacUI.h>
 #include <Test.RemotingHelpers.h>
 #include <Skins/DarkSkin/DarkSkin.h>
-#include "../WGac/Services/WGacAutomationService.h"
 #include "../WGac/Renderers/WGacRenderer.h"
+#include "../WGac/Services/WGacAutomationService.h"
 #elif defined __APPLE__ && __has_include(<GacUI.h>)
 #include <GacUI.h>
 #include <Test.RemotingHelpers.h>
@@ -14,6 +14,7 @@
 #include "DarkSkin.h"
 #include "../Generated_RemoteViewModelTest/RemoteViewModelTestInitialize.h"
 #include "../../RemotingHelpers/Rvmt/ViewModelHostServer.h"
+#include "../../RemotingHelpers/StdioRedirection/StdioRedirection.h"
 #include "../../../Source/Utilities/AutomationService/MiniHttpAutomationService.h"
 #include "../../../Source/Utilities/AutomationService/Windows/WindowsAutomationService.Windows.h"
 #include "resource.h"
@@ -102,13 +103,18 @@ void GuiMain()
 template<typename TServerBase>
 int StartServer(
 	RemoteViewModelChannelServer<TServerBase>& server,
-	Ptr<async_tcp_socket::IAsyncSocketServer> miniHttpSocketServer
+	Ptr<async_tcp_socket::IAsyncSocketServer> miniHttpSocketServer,
+	const Func<void()>& connectNewClient
 	)
 {
 	server.Start();
 	collections::List<WString> requiredServiceNames;
 	requiredServiceNames.Add(L"rvmt::IViewModel");
 	auto requesterClientId = server.Connect(requiredServiceNames);
+	if (connectNewClient)
+	{
+		connectNewClient();
+	}
 	RemoteViewModelTestInitialize::InitializeRpc(server.GetDispatcher(), requesterClientId);
 	auto viewModel = server.RequestService(L"rvmt::IViewModel").template Cast<rvmt::IViewModel>();
 	auto secondViewModel = server.RequestService(L"rvmt::IViewModel").template Cast<rvmt::IViewModel>();
@@ -138,7 +144,7 @@ int StartNamedPipeServer()
 		false,
 		WString::Unmanaged(RemotingNamedPipeName)
 		);
-	return StartServer(server, nullptr);
+	return StartServer(server, nullptr, {});
 }
 
 int StartHttpServer()
@@ -150,7 +156,7 @@ int StartHttpServer()
 		WString::Unmanaged(RemotingHttpBaseUrl),
 		RemotingHttpPort
 		);
-	return StartServer(server, nullptr);
+	return StartServer(server, nullptr, {});
 }
 #endif
 
@@ -164,5 +170,16 @@ int StartMiniHttpServer()
 		socketServer,
 		WString::Unmanaged(RemotingHttpBaseUrl)
 		);
-	return StartServer(server, socketServer);
+	return StartServer(server, socketServer, {});
+}
+
+int StartCliServer(const WString& hostPath)
+{
+	auto parser = Ptr(new glr::json::Parser);
+	RemoteViewModelChannelServer<StdioRedirectionServer> server(parser, false);
+	auto command = WString::Unmanaged(L"\"") + hostPath + WString::Unmanaged(L"\" /Cli");
+	return StartServer(server, nullptr, Func<void()>([&]()
+	{
+		server.ConnectNewClient(command);
+	}));
 }
