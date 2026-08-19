@@ -49,7 +49,6 @@ if [[ -f "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
     mv "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" "$DEST_TEST_DIR/"
 fi
 
-chmod -R a-w "$DEST_DIR"
-chmod -R a-w "$DEST_TEST_DIR"
+chmod -R u+w "$DEST_DIR" "$DEST_TEST_DIR"
 
 echo "Imported GacUI dependencies and release sources from $GACUI_DIR to $DEST_DIR and $DEST_TEST_DIR"
