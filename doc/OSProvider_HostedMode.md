@@ -229,6 +229,8 @@ else
 
 `./test.sh --app:fct --hosted` selects Full Control Test and forwards the hosted flag to the test app. `--unblock` can be added for background launch.
 
+The separate `test_core.sh` launcher full-builds and starts GacUI's portable Core-side remoting tests; it does not replace `test.sh` for this local hosted-mode target.
+
 `GuiMain()` leaves the main window theme selected by the generated Full Control
 Test resource. That resource explicitly selects `CustomFrameWindow`, so the
 normal and hosted test apps begin with the customized frame shown by the
@@ -245,5 +247,6 @@ theme to `SystemFrameWindow` in standard mode.
 | `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm` | `CoreGraphicsMain()` with hosted support, `CoreGraphicsRenderTarget` with `StartRenderingOnNativeWindow`/`StopRenderingOnNativeWindow` |
 | `MacFullControlTest/Main.mm` | `--hosted` CLI argument parsing |
 | `test.sh` | Selects the test application and forwards `--hosted` to Full Control Test |
+| `test_core.sh` | Full-builds and launches sibling GacUI Core-side remoting tests |
 | `Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
 | `Import/GacUI.cpp` | All hosted mode platform-independent implementations |

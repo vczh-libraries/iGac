@@ -12,7 +12,7 @@ macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraph
 
 This repo is stand alone, all dependencies are in the repo for building.
 
-To run `RemotingTest_Rendering_macOS` by `test.sh --app:renderer`, the `GacUI` repo is needed to run `Test/Linux/RemotingTest_Core` as an HTTP server.
+To run `RemotingTest_Rendering_macOS` by `test.sh --app:renderer`, the `GacUI` repo is needed. `test_core.sh` full-builds and runs the matching project under `GacUI/Test/Linux`.
 
 For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency.
 
@@ -115,7 +115,8 @@ iGac/
 ├── syncOrg.sh                  Clone and synchronize sibling organization repositories
 ├── syncProj.sh                 Sync test resources and regenerate x64 C++ sources
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
-└── test.sh                     Run test apps or the native remote renderer
+├── test.sh                     Run native test apps or the native remote renderer
+└── test_core.sh                Full-build and run a sibling GacUI Core-side test
 ```
 
 The generated `Import/`, `Import-Test/`, and `Apps/` snapshots are committed so a normal iGac build does not require code generation. Run the synchronization scripts when updating upstream dependencies or test resources.
@@ -192,6 +193,10 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test.sh --app:renderer                       # Connect to RemotingTest_Core with /MiniHttp
 ./test.sh --app:renderer --port:8890           # Start a takeover renderer on automation port 8890
 ./test.sh --app:renderer --unblock             # Start the renderer and print its PID
+./test_core.sh --app:cpptest_rvm --protocol:minihttp --unblock
+./test_core.sh --app:fct --protocol:minihttp
+./test_core.sh --app:rpt --protocol:minihttp
+./test_core.sh --app:rvmt --protocol:minihttp [--cli]
 ```
 
 `--unblock` starts the selected executable in the background and prints its
@@ -199,6 +204,15 @@ PID. `--hosted` is valid only with `--app:fct`. `--port:<1-65535>` is valid
 only with `--app:renderer` and selects that renderer's automation listener; it
 does not change the `/MiniHttp` Core connection on port 8888. The default
 renderer automation port is 8889.
+
+`test_core.sh` follows the same `--app:` and `--unblock` spelling and requires
+`--protocol:minihttp`, the only portable transport. It calls GacUI's
+`Test/Linux` build helper with `-f` before starting each used GacUI project.
+For manual `cpptest_rvm` and `rvmt` modes it starts the requester/Core first,
+waits one second, then full-builds and starts `RemotingTest_RvmHost`; an
+unblocked manual run prints both PIDs. `--cli` is supported by `--app:rvmt`,
+prebuilds the host, and lets Core auto-launch it over stdio. Portable
+`Test_CppTest_Rvm` remains manual `/MiniHttp` only.
 
 Every test application owns a mode-specific Cocoa automation service and a
 MiniHTTP endpoint. Append `/Controls` for control-tree applications, `/Dom`
@@ -222,7 +236,8 @@ The RVM client exposes its control tree after the host connects.
 
 For the native renderer, start
 `GacUI/Test/Linux/RemotingTest_Core/Bin/RemotingTest_Core /MiniHttp /RPT`
-(or `/FCT`) before `./test.sh --app:renderer`. The renderer exposes its DOM and
+(or use `./test_core.sh --app:rpt --protocol:minihttp`) before
+`./test.sh --app:renderer`. The renderer exposes its DOM and
 renderer-side IO on its selected automation port. A replacement can reuse 8889
 after the old renderer stops; for live takeover, keep the old renderer on 8889
 and start the new one with `--port:8890`.

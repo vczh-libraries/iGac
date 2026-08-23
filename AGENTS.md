@@ -30,7 +30,7 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 - **`Import/` and `Import-Test/` are frozen after `./import.sh` completes. Never modify anything under either directory to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. Framework changes belong in their upstream repository and are re-imported through `GacUI`.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
-- Test with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, or `./test.sh --app:renderer`.
+- Test native apps with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, or `./test.sh --app:renderer`; use `./test_core.sh --app:fct|rpt|rvmt --protocol:minihttp` for the sibling GacUI Core-side launcher.
 - Run `./syncProj.sh` to incrementally build upstream code generators, copy Full Control Test, Remote Protocol Test, and Remote View Model Test resources from `../GacUI`, and regenerate their x64 C++ sources under `Apps/`.
 - The native remote renderer uses automation port 8889 by default; use `--port:<port>` for a concurrent takeover renderer.
 - Generated embedded-resource `.cpp` files remove the need to load test resource binaries from disk.
@@ -62,7 +62,7 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 
 ## Testing Rules
 
-- After launching a test app (via `./test.sh` or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
+- After launching a test app (via `./test.sh`, `./test_core.sh`, or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
 - When LLDB or a test app is no longer needed, just kill the processes directly — do not rely on `lldb_terminate` or graceful shutdown, as those may hang or be unavailable.
 - Use `--unblock` to launch in background and get the PID for later cleanup.
 - Verify `--app:rvmt` with `GacUI/Test/Linux/RemotingTest_RvmHost /MiniHttp`.

@@ -148,6 +148,8 @@ Update `test.sh` to select the Full Control Test application and forward `--host
 ./test.sh --app:fct --hosted
 ```
 
+The later `test_core.sh` script is a separate launcher for full-building and running sibling GacUI Core-side remoting tests; it does not participate in this hosted-mode step.
+
 ### Step 6: Testing
 
 Run `./test.sh --app:fct --hosted` to launch the full control test in hosted mode. Verify:
@@ -199,5 +201,6 @@ Per frame (hosted mode):
 | `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` | Declare `SetupOSXHostedCoreGraphicsRenderer()` (Step 4) |
 | `MacFullControlTest/Main.mm` | Parse `--hosted` CLI arg, call hosted entry point (Step 5) |
 | `test.sh` | Select the test app and forward `--hosted` to Full Control Test (Step 5) |
+| `test_core.sh` | Full-build and launch sibling GacUI Core-side remoting tests (added after this plan) |
 | `doc/OSProvider.md` | Add hosted mode section |
 | `readme.md` | Update running section, update TODO (remove hosted mode) |
