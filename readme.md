@@ -242,7 +242,7 @@ renderer-side IO on its selected automation port. A replacement can reuse 8889
 after the old renderer stops; for live takeover, keep the old renderer on 8889
 and start the new one with `--port:8890`.
 
-Follow [GacUI's native-renderer verification guide](../GacUI/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
+Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
 
 ## Documentation
 
