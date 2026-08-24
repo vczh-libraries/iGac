@@ -45,7 +45,6 @@ set(GACOSX_FILES
 
 set(GACOSX_SHARED_FILES
 	"../Import-Test/Test.RemotingHelpers.cpp"
-	"../Import-Test/Test.RemotingHelpers.Linux.cpp"
 	"osx_shared.mm"
 	"UnixFileSystemInfo.cpp"
 )

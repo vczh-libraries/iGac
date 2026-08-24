@@ -417,7 +417,7 @@ namespace vl::presentation::remote_view_model_test
 					? WaitForClientResult::Accept
 					: WaitForClientResult::Reject;
 			}
-			if (remoting::IsRendererChannel(availableChannels) && !CanAdmitRenderer())
+			if (remoting::IsRendererChannel(availableChannels) && !Helpers::CanAdmitRenderer())
 			{
 				return WaitForClientResult::Reject;
 			}
@@ -457,6 +457,11 @@ namespace vl::presentation::remote_view_model_test
 			return Helpers::RequestService(typeName);
 		}
 
+		bool CanAdmitRenderer()
+		{
+			return Helpers::CanAdmitRenderer();
+		}
+
 		void Stop() override
 		{
 			Helpers::Stop(Func<void()>([this]()
@@ -471,100 +476,43 @@ namespace vl::presentation::remote_view_model_test
 			Helpers::OnClientDisconnected(clientId);
 		}
 	};
-}
 
-#endif
-
-
-/***********************************************************************
-.\STDIOREDIRECTION\STDIOREDIRECTION.H
-***********************************************************************/
-#ifndef VCZH_PRESENTATION_REMOTING_STDIOREDIRECTION
-#define VCZH_PRESENTATION_REMOTING_STDIOREDIRECTION
-
-
-namespace vl::presentation::remoting
-{
-	class IStdioRedirectionProcess : public virtual Interface
+	template<typename TServerBase, typename TRvmChannelServer>
+	class RemoteViewModelRendererChannelServer
+		: public remoting::RemotingChannelServer<TServerBase>
 	{
-	public:
-		virtual vint								Read(vuint8_t* buffer, vint size, WString& errorMessage) = 0;
-		virtual bool								Write(const vuint8_t* buffer, vint size, WString& errorMessage) = 0;
-		virtual void								CloseInput() = 0;
-		virtual void								CloseOutput() = 0;
-		virtual void								WaitForExit() = 0;
-	};
+		using Base = remoting::RemotingChannelServer<TServerBase>;
 
-	extern Ptr<IStdioRedirectionProcess>				CreateStdioRedirectionProcess(const WString& command);
-
-	class StdioRedirectionConnection
-		: public Object
-		, public virtual inter_process::INetworkProtocolConnection
-	{
-		class Lifecycle;
-		struct CallbackFrame;
-
-		static thread_local CallbackFrame*			currentCallbackFrame;
-		Ptr<Lifecycle>								lifecycle;
-
-		static vint								CurrentCallbackDepth(Ptr<Lifecycle> state);
-		static void								InvokeCallback(Ptr<Lifecycle> state, bool allowTerminal, const Func<void(inter_process::INetworkProtocolCallback*)>& callback);
-		static void								NotifyDisconnected(Ptr<Lifecycle> state);
-		static void								ReportLocalError(Ptr<Lifecycle> state, const WString& errorMessage);
-		static void								Disconnect(Ptr<Lifecycle> state, bool sendExit);
-		static void								ReadLoop(Ptr<Lifecycle> state);
-		static bool								ProcessLine(Ptr<Lifecycle> state, const WString& line);
-		static void								FinishReader(Ptr<Lifecycle> state);
-
-	public:
-		StdioRedirectionConnection();
-		StdioRedirectionConnection(Ptr<IStdioRedirectionProcess> process);
-		~StdioRedirectionConnection();
-
-		void									InstallCallback(inter_process::INetworkProtocolCallback* callback) override;
-		void									BeginReadingLoopUnsafe() override;
-		void									SendString(const WString& str) override;
-		void									Stop() override;
-
-		inter_process::ClientStatus					GetStatus();
-		bool									IsInCurrentCallback();
-	};
-
-	class StdioRedirectionClient
-		: public Object
-		, public virtual inter_process::INetworkProtocolClient
-	{
 	private:
-		Ptr<StdioRedirectionConnection>				connection;
+		TRvmChannelServer*						rvmChannelServer = nullptr;
+
+	protected:
+		inter_process::WaitForClientResult OnRemoteClientConnected(
+			vint clientId,
+			const remoting::JsonChannelClient::ChannelNameList& availableChannels
+			) override
+		{
+			if (remoting::IsRendererChannel(availableChannels) && (!rvmChannelServer || !rvmChannelServer->CanAdmitRenderer()))
+			{
+				return inter_process::WaitForClientResult::Reject;
+			}
+			return Base::OnRemoteClientConnected(clientId, availableChannels);
+		}
 
 	public:
-		StdioRedirectionClient();
+		template<typename... TArgs>
+		RemoteViewModelRendererChannelServer(
+			Ptr<glr::json::Parser> parser,
+			TArgs&&... args
+			)
+			: Base(parser, true, std::forward<TArgs>(args)...)
+		{
+		}
 
-		inter_process::INetworkProtocolConnection*	GetConnection() override;
-		void									WaitForServer() override;
-		inter_process::ClientStatus					GetStatus() override;
-	};
-
-	class StdioRedirectionServer
-		: public Object
-		, public virtual inter_process::INetworkProtocolServer
-	{
-		class Lifecycle;
-		Ptr<Lifecycle>								lifecycle;
-
-		static void								FinalizeStop(Ptr<Lifecycle> state);
-		static void								FinishConnect(Ptr<Lifecycle> state, Ptr<StdioRedirectionConnection> connection, bool keepConnection);
-
-	public:
-		StdioRedirectionServer();
-		~StdioRedirectionServer();
-
-		inter_process::WaitForClientResult			OnClientConnected(inter_process::INetworkProtocolConnection* connection) override;
-		void									Start() override;
-		void									Stop() override;
-		bool									IsStopped() override;
-
-		void									ConnectNewClient(const WString& command);
+		void SetRvmChannelServer(TRvmChannelServer* value)
+		{
+			rvmChannelServer = value;
+		}
 	};
 }
 

@@ -36,18 +36,9 @@ cp "$SOURCE_RELEASE_DIR"/DarkSkin*.h "$DEST_DIR/Skins/DarkSkin/"
 cp "$SOURCE_RELEASE_DIR"/DarkSkin*.cpp "$DEST_DIR/Skins/DarkSkin/"
 cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.h" "$DEST_DIR/"
 cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.cpp" "$DEST_DIR/"
-cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Linux.cpp" "$DEST_DIR/"
-
-if [[ -f "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
-    cp "$SOURCE_RELEASE_DIR/Test.RemotingHelpers.Windows.cpp" "$DEST_DIR/"
-fi
 
 mv "$DEST_DIR/Test.RemotingHelpers.h" "$DEST_TEST_DIR/"
 mv "$DEST_DIR/Test.RemotingHelpers.cpp" "$DEST_TEST_DIR/"
-mv "$DEST_DIR/Test.RemotingHelpers.Linux.cpp" "$DEST_TEST_DIR/"
-if [[ -f "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" ]]; then
-    mv "$DEST_DIR/Test.RemotingHelpers.Windows.cpp" "$DEST_TEST_DIR/"
-fi
 
 chmod -R u+w "$DEST_DIR" "$DEST_TEST_DIR"
 
