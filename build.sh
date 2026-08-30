@@ -7,7 +7,7 @@ cd "$SCRIPT_DIR"
 
 if [[ "$1" == "--rebuild" ]]; then
     # Clean everything
-    git clean -xdf
+    git clean -Xdf
 fi
 
 # Create build folder and build
