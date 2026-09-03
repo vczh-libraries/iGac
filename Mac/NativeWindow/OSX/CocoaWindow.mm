@@ -742,14 +742,15 @@ namespace vl {
             NativeWindowMouseInfo CreateMouseInfo(NSWindow* window, NSEvent* event)
             {
                 NativeWindowMouseInfo info{};
-                
-                info.left = event.type == NSEventTypeLeftMouseDown;
-                info.right = event.type == NSEventTypeRightMouseDown;
-                // assuming its middle mouse
-                info.middle = (event.type == NSEventTypeOtherMouseDown);
-                
+
+                auto pressedMouseButtons = [NSEvent pressedMouseButtons];
+                info.left = (pressedMouseButtons & (1 << 0)) != 0;
+                info.right = (pressedMouseButtons & (1 << 1)) != 0;
+                info.middle = (pressedMouseButtons & (1 << 2)) != 0;
+
                 info.ctrl = event.modifierFlags & NSEventModifierFlagControl;
                 info.shift = event.modifierFlags & NSEventModifierFlagShift;
+                info.osSuper = event.modifierFlags & NSEventModifierFlagCommand;
                 
                 const NSRect contentRect = [window.contentView frame];
                 const NSPoint p = [event locationInWindow];
@@ -765,14 +766,48 @@ namespace vl {
                 
                 return info;
             }
+
+            bool GetMouseButton(NSEvent* event, NativeMouseButton& button)
+            {
+                switch (event.type)
+                {
+                    case NSEventTypeLeftMouseDown:
+                    case NSEventTypeLeftMouseUp:
+                        button = NativeMouseButton::Left;
+                        return true;
+                    case NSEventTypeRightMouseDown:
+                    case NSEventTypeRightMouseUp:
+                        button = NativeMouseButton::Right;
+                        return true;
+                    case NSEventTypeOtherMouseDown:
+                    case NSEventTypeOtherMouseUp:
+                        switch (event.buttonNumber)
+                        {
+                            case 2:
+                                button = NativeMouseButton::Middle;
+                                return true;
+                            case 3:
+                                button = NativeMouseButton::Mouse4;
+                                return true;
+                            case 4:
+                                button = NativeMouseButton::Mouse5;
+                                return true;
+                            default:
+                                return false;
+                        }
+                    default:
+                        return false;
+                }
+            }
             
             NativeWindowKeyInfo CreateKeyInfo(NSWindow* window, NSEvent* event)
             {
                 NativeWindowKeyInfo info{};
              
-                info.ctrl = event.modifierFlags & NSEventModifierFlagCommand;
+                info.ctrl = event.modifierFlags & NSEventModifierFlagControl;
                 info.shift = event.modifierFlags & NSEventModifierFlagShift;
                 info.alt = event.modifierFlags & NSEventModifierFlagOption;
+                info.osSuper = event.modifierFlags & NSEventModifierFlagCommand;
                 info.capslock = event.modifierFlags & NSEventModifierFlagCapsLock;
                 
                 info.code = NSEventKeyCodeToGacKeyCode(event.keyCode);
@@ -785,9 +820,10 @@ namespace vl {
                 NativeWindowCharInfo info{};
 
                 NSEventModifierFlags modifierFlags = [NSEvent modifierFlags];
-                info.ctrl = modifierFlags & NSEventModifierFlagCommand;
+                info.ctrl = modifierFlags & NSEventModifierFlagControl;
                 info.shift = modifierFlags & NSEventModifierFlagShift;
                 info.alt = modifierFlags & NSEventModifierFlagOption;
+                info.osSuper = modifierFlags & NSEventModifierFlagCommand;
                 info.capslock = modifierFlags & NSEventModifierFlagCapsLock;
                 
                 for(int i=0; i<str.Length(); ++i)
@@ -1117,26 +1153,34 @@ namespace vl {
                         break;
                         
                     case NSEventTypeLeftMouseDown:
+                    case NSEventTypeRightMouseDown:
+                    case NSEventTypeOtherMouseDown:
                     {
+                        NativeMouseButton button;
+                        if (!GetMouseButton(event, button))
+                        {
+                            break;
+                        }
+
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
+                        for(vint i=0; i<listeners.Count(); ++i)
+                        {
+                            listeners[i]->MouseDown(button, info);
+                        }
+
                         if(event.clickCount == 2)
                         {
                             for(vint i=0; i<listeners.Count(); ++i)
                             {
-                                listeners[i]->LeftButtonDoubleClick(info);
+                                listeners[i]->MouseDoubleClick(button, info);
                             }
                         }
-                        else
+
+                        if(button == NativeMouseButton::Left)
                         {
-                            for(vint i=0; i<listeners.Count(); ++i)
-                            {
-                                listeners[i]->LeftButtonDown(info);
-                            }
-                            
                             mouseDownX = [NSEvent mouseLocation].x;
                             mouseDownY = [NSEvent mouseLocation].y;
-                            
+
                             if(customFrameMode)
                             {
                                 HitTestMouseDown(info.x, info.y);
@@ -1146,49 +1190,24 @@ namespace vl {
                     }
                         
                     case NSEventTypeLeftMouseUp:
+                    case NSEventTypeRightMouseUp:
+                    case NSEventTypeOtherMouseUp:
                     {
+                        NativeMouseButton button;
+                        if (!GetMouseButton(event, button))
+                        {
+                            break;
+                        }
+
                         NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
                         for(vint i=0; i<listeners.Count(); ++i)
                         {
-                            listeners[i]->LeftButtonUp(info);
+                            listeners[i]->MouseUp(button, info);
                         }
-                        
-                        if(customFrameMode)
+
+                        if(button == NativeMouseButton::Left && customFrameMode)
                         {
                             HitTestMouseUp(info.x, info.y);
-                        }
-                        break;
-                    }
-                        
-                    case NSEventTypeRightMouseDown:
-                    {
-                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
-                        if(event.clickCount == 2)
-                        {
-                            for(vint i=0; i<listeners.Count(); ++i)
-                            {
-                                listeners[i]->RightButtonDoubleClick(info);
-                            }
-                        }
-                        else
-                        {
-                            for(vint i=0; i<listeners.Count(); ++i)
-                            {
-                                listeners[i]->RightButtonDown(info);
-                            }
-                        }
-                        break;
-                    }
-                        
-                    case NSEventTypeRightMouseUp:
-                    {
-                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
-                        for(vint i=0; i<listeners.Count(); ++i)
-                        {
-                            listeners[i]->RightButtonUp(info);
                         }
                         break;
                     }
@@ -1249,38 +1268,6 @@ namespace vl {
                             listeners[i]->MouseLeaved();
                         }
                         mouseHoving = false;
-                        break;
-                    }
-                        
-                    case NSEventTypeOtherMouseDown:
-                    {
-                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
-                        if(event.clickCount == 2)
-                        {
-                            for(vint i=0; i<listeners.Count(); ++i)
-                            {
-                                listeners[i]->MiddleButtonDoubleClick(info);
-                            }
-                        }
-                        else
-                        {
-                            for(vint i=0; i<listeners.Count(); ++i)
-                            {
-                                listeners[i]->MiddleButtonDown(info);
-                            }
-                        }
-                        break;
-                    }
-                        
-                    case NSEventTypeOtherMouseUp:
-                    {
-                        NativeWindowMouseInfo info = CreateMouseInfo(nsWindow, event);
-                        
-                        for(vint i=0; i<listeners.Count(); ++i)
-                        {
-                            listeners[i]->MiddleButtonUp(info);
-                        }
                         break;
                     }
                         

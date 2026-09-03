@@ -264,7 +264,6 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 - Not Implemented:
   - `AsyncService::Semaphore::WaitForTime`
   - `CoreGraphicsResourceManager::CreateRawElement`
-  - `CocoaInputService::(R|Unr)egisterGlobalShortcutKey`
   - `CocoaWindow::GetIcon` and `SetIcon`
 
 ## Upstream Issues

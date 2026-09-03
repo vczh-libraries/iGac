@@ -282,6 +282,11 @@ namespace vl {
                     fonts.Add(systemDefaultFont.fontFamily);
                 }
             }
+
+            WString CocoaResourceService::GetOSSuperKeyName()
+            {
+                return L"Command";
+            }
         }
 
     }

@@ -400,12 +400,13 @@ namespace vl {
                 return index == -1 ? VKEY::KEY_UNKNOWN : keys.Values()[index];
             }
 
-            vint CocoaInputService::RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)
+            vint CocoaInputService::RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, bool osSuper, VKEY key)
             {
                 UInt32 carbonModifiers = 0;
-                if (ctrl) carbonModifiers |= cmdKey;
+                if (ctrl) carbonModifiers |= controlKey;
                 if (shift) carbonModifiers |= shiftKey;
                 if (alt) carbonModifiers |= optionKey;
+                if (osSuper) carbonModifiers |= cmdKey;
                 
                 unsigned short macKeyCode = GacKeyCodeToNSEventKeyCode(key);
                 if (macKeyCode == 0xFFFF) return (vint)NativeGlobalShortcutKeyResult::NotSupported;
@@ -438,12 +439,13 @@ namespace vl {
             //
             bool CocoaInputService::ConvertToPrintable(NativeWindowCharInfo& info, NSEvent* event)
             {
-                info.ctrl = event.modifierFlags & NSEventModifierFlagCommand;
+                info.ctrl = event.modifierFlags & NSEventModifierFlagControl;
                 info.shift = event.modifierFlags & NSEventModifierFlagShift;
                 info.alt = event.modifierFlags & NSEventModifierFlagOption;
+                info.osSuper = event.modifierFlags & NSEventModifierFlagCommand;
                 info.capslock = event.modifierFlags & NSEventModifierFlagCapsLock;
                 
-                if(info.ctrl || info.alt)
+                if(info.ctrl || info.alt || info.osSuper)
                     return false;
                 
                 int code = (int)NSEventKeyCodeToGacKeyCode(event.keyCode);

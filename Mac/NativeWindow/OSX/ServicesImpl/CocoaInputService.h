@@ -80,7 +80,7 @@ namespace vl {
                 WString GetKeyName(VKEY code) override;
                 VKEY    GetKey(const WString& name) override;
 
-				vint    RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, VKEY key)override;
+				vint    RegisterGlobalShortcutKey(bool ctrl, bool shift, bool alt, bool osSuper, VKEY key)override;
 				bool    UnregisterGlobalShortcutKey(vint id)override;
                 
                 ///

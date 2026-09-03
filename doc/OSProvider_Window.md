@@ -164,6 +164,11 @@ The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEna
 - Handles drag-and-drop via `NSDraggingDestination`
 - Manages cursor rects
 
+`CocoaWindow` maps AppKit button numbers 0 through 4 to GacUI `Left`,
+`Right`, `Middle`, `Mouse4`, and `Mouse5`. Every down event is delivered before
+the matching double-click event. Mouse, key, and character messages report the
+physical Control modifier as `ctrl` and Command as `osSuper`.
+
 ## Key Differences from Windows
 
 | Aspect | Windows | macOS |
