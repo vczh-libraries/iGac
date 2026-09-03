@@ -68,7 +68,7 @@ fi
 build_gacui_project() {
     (
         cd "$1"
-        ../../../.github/Ubuntu/build.sh -f
+        ../../../.github/Ubuntu/build.sh
     )
 }
 
