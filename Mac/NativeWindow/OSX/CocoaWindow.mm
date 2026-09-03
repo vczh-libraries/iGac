@@ -638,6 +638,7 @@ namespace vl {
 
             void CocoaWindow::UpdateStyleMask()
             {
+                bool restoreContentViewFocus = [nsWindow firstResponder] == nsWindow.contentView;
                 NSWindowStyleMask styleMask = 0;
                 if (customFrameMode)
                 {
@@ -658,6 +659,10 @@ namespace vl {
                         styleMask |= NSWindowStyleMaskResizable;
                 }
                 [nsWindow setStyleMask:styleMask];
+                if (restoreContentViewFocus)
+                {
+                    [nsWindow makeFirstResponder:nsWindow.contentView];
+                }
             }
             
             void CocoaWindow::InvokeMoved()

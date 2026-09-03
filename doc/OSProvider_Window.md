@@ -169,6 +169,11 @@ The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEna
 the matching double-click event. Mouse, key, and character messages report the
 physical Control modifier as `ctrl` and Command as `osSuper`.
 
+Changing an `NSWindow` style mask can replace its first responder. When the
+content view owns focus, `CocoaWindow` preserves that state across style-mask
+updates so an already-visible remote renderer continues receiving keyboard
+input without requiring another activation request.
+
 ## Key Differences from Windows
 
 | Aspect | Windows | macOS |
