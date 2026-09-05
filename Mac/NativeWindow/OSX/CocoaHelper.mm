@@ -152,10 +152,10 @@ namespace vl {
                     /* 1b */ VKEY::KEY_OEM_MINUS,
                     /* 1c */ VKEY::KEY_8,
                     /* 1d */ VKEY::KEY_0,
-                    /* 1e */ VKEY::KEY_OEM_4, // }
+                    /* 1e */ VKEY::KEY_RIGHT_BRACKET, // ] }
                     /* 1f */ VKEY::KEY_O,
                     /* 20 */ VKEY::KEY_U,
-                    /* 21 */ VKEY::KEY_OEM_6, // {
+                    /* 21 */ VKEY::KEY_LEFT_BRACKET, // [ {
                     /* 22 */ VKEY::KEY_I,
                     /* 23 */ VKEY::KEY_P,
                     /* 24 */ VKEY::KEY_RETURN,
@@ -252,7 +252,7 @@ namespace vl {
                     /* 7f */ VKEY::KEY_UNKNOWN,
                 };
                 
-                return table[keycode];
+                return keycode < 128 ? table[keycode] : VKEY::KEY_UNKNOWN;
             }
             
             unsigned short GacKeyCodeToNSEventKeyCode(VKEY key)

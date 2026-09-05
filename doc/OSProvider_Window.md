@@ -167,7 +167,11 @@ The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEna
 `CocoaWindow` maps AppKit button numbers 0 through 4 to GacUI `Left`,
 `Right`, `Middle`, `Mouse4`, and `Mouse5`. Every down event is delivered before
 the matching double-click event. Mouse, key, and character messages report the
-physical Control modifier as `ctrl` and Command as `osSuper`.
+physical Control modifier as `ctrl`, Option as `alt`, and Command as `osSuper`.
+Mouse movement, button/double-click events and both wheel axes retain Option
+independently of Command. The shared input declarations are owned by VlppOS.
+The physical left/right bracket keys, their shifted braces, ASCII conversion
+and key-name lookup use `KEY_LEFT_BRACKET` (`0xDB`) and `KEY_RIGHT_BRACKET` (`0xDD`).
 
 Changing an `NSWindow` style mask can replace its first responder. When the
 content view owns focus, `CocoaWindow` preserves that state across style-mask

@@ -245,6 +245,8 @@ namespace vl {
                     keys.Set(KeyMappings[i].keyName, KeyMappings[i].keyCode);
                     keyNames.Set(i, KeyMappings[i].keyName);
                 }
+                keys.Set(L"[", VKEY::KEY_LEFT_BRACKET);
+                keys.Set(L"]", VKEY::KEY_RIGHT_BRACKET);
                 
                 memset(asciiLowerMap, 0, sizeof(wchar_t) * 256);
                 memset(asciiUpperMap, 0, sizeof(wchar_t) * 256);
@@ -260,8 +262,8 @@ namespace vl {
                 asciiLowerMap[(int)VKEY::KEY_8] = L'8';
                 asciiLowerMap[(int)VKEY::KEY_9] = L'9';
                 asciiLowerMap[(int)VKEY::KEY_OEM_1] = L';';
-                asciiLowerMap[(int)VKEY::KEY_OEM_6] = L'[';
-                asciiLowerMap[(int)VKEY::KEY_OEM_4] = L']';
+                asciiLowerMap[(int)VKEY::KEY_LEFT_BRACKET] = L'[';
+                asciiLowerMap[(int)VKEY::KEY_RIGHT_BRACKET] = L']';
                 asciiLowerMap[(int)VKEY::KEY_OEM_7] = L'\'';
                 asciiLowerMap[(int)VKEY::KEY_OEM_COMMA] = L',';
                 asciiLowerMap[(int)VKEY::KEY_OEM_PERIOD] = L'.';
@@ -290,8 +292,8 @@ namespace vl {
                 asciiUpperMap[(int)VKEY::KEY_8] = L'*';
                 asciiUpperMap[(int)VKEY::KEY_9] = L'(';
                 asciiUpperMap[(int)VKEY::KEY_OEM_1] = L':';
-                asciiUpperMap[(int)VKEY::KEY_OEM_6] = L'{';
-                asciiUpperMap[(int)VKEY::KEY_OEM_4] = L'}';
+                asciiUpperMap[(int)VKEY::KEY_LEFT_BRACKET] = L'{';
+                asciiUpperMap[(int)VKEY::KEY_RIGHT_BRACKET] = L'}';
                 asciiUpperMap[(int)VKEY::KEY_OEM_7] = L'\"';
                 asciiUpperMap[(int)VKEY::KEY_OEM_COMMA] = L'<';
                 asciiUpperMap[(int)VKEY::KEY_OEM_PERIOD] = L'>';
@@ -384,6 +386,8 @@ namespace vl {
 
             WString CocoaInputService::GetKeyName(VKEY code)
             {
+                if (code == VKEY::KEY_LEFT_BRACKET) return L"[";
+                if (code == VKEY::KEY_RIGHT_BRACKET) return L"]";
                 if (0 <= (vint)code && (vint)code < keyNames.Count())
                 {
                     return keyNames[(vint)code];

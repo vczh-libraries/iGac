@@ -755,6 +755,7 @@ namespace vl {
 
                 info.ctrl = event.modifierFlags & NSEventModifierFlagControl;
                 info.shift = event.modifierFlags & NSEventModifierFlagShift;
+                info.alt = event.modifierFlags & NSEventModifierFlagOption;
                 info.osSuper = event.modifierFlags & NSEventModifierFlagCommand;
                 
                 const NSRect contentRect = [window.contentView frame];
