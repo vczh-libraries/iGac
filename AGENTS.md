@@ -30,8 +30,8 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 - **`Import/` and `Import-Test/` are frozen after `./import.sh` completes. Never modify anything under either directory to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. Framework changes belong in their upstream repository and are re-imported through `GacUI`.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
-- Test native apps with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, or `./test.sh --app:renderer`; use `./test_core.sh --app:fct|rpt|rvmt --protocol:minihttp` for the sibling GacUI Core-side launcher.
-- Run `./syncProj.sh` to incrementally build upstream code generators, copy Full Control Test, Remote Protocol Test, and Remote View Model Test resources from `../GacUI`, and regenerate their x64 C++ sources under `Apps/`.
+- Test native apps with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, `./test.sh --app:tui`, or `./test.sh --app:renderer`; use `./test_core.sh --app:fct|rpt|rvmt --protocol:minihttp` for the sibling GacUI Core-side launcher.
+- Run `./syncProj.sh` to incrementally build upstream code generators, copy Full Control Test, Remote Protocol Test, Remote View Model Test, and Tui Control Test resources from `../GacUI`, and regenerate their x64 C++ sources under `Apps/`.
 - The native remote renderer uses automation port 8889 by default; use `--port:<port>` for a concurrent takeover renderer.
 - Generated embedded-resource `.cpp` files remove the need to load test resource binaries from disk.
 - Every test target compiles with `VCZH_DEBUG_NO_REFLECTION`; generated reflection source files under `Apps/*/Source` are not added to the targets.
@@ -64,17 +64,17 @@ Documentation must stay in sync with the code. If you fix a bug or implement a f
 
 - After launching a test app (via `./test.sh`, `./test_core.sh`, or directly), you **MUST** ensure the process is killed or properly exited when done. Never leave test processes running.
 - When LLDB or a test app is no longer needed, just kill the processes directly — do not rely on `lldb_terminate` or graceful shutdown, as those may hang or be unavailable.
-- Use `--unblock` to launch in background and get the PID for later cleanup.
+- Use `--unblock` to launch GUI apps in background and get the PID for later cleanup. TUI requires foreground inherited stdin/stdout and rejects this flag. Follow `../GacUI/.github/Jobs/DebugTuiControlTestSop.md` and maintain `TestMatrix_Tui.md`.
 - Verify `--app:rvmt` with `GacUI/Test/Linux/RemotingTest_RvmHost /MiniHttp`.
 - When testing the native remote renderer, follow `../GacUI/.github/Jobs/DebugRemoteProtocolWithNativeRenderer.md` and verify `/RPT`, `/FCT`, renderer replacement, takeover, and clean shutdown.
 - Use the following to find and kill test/debugger processes:
 
 ```bash
 # Find all running test processes
-pgrep -fl 'Test_FullControlTest|Test_HellWorld|Test_CppTest_Rvm|RemotingTest_Rendering_macOS|RemotingTest_Core|RemotingTest_RvmHost|lldb'
+pgrep -fl 'Test_TuiControlTest|Test_FullControlTest|Test_HellWorld|Test_CppTest_Rvm|RemotingTest_Rendering_macOS|RemotingTest_Core|RemotingTest_RvmHost|lldb'
 
 # Kill all test and debugger processes
-pkill -f 'Test_FullControlTest|Test_HellWorld|Test_CppTest_Rvm|RemotingTest_Rendering_macOS|RemotingTest_Core|RemotingTest_RvmHost|lldb'
+pkill -f 'Test_TuiControlTest|Test_FullControlTest|Test_HellWorld|Test_CppTest_Rvm|RemotingTest_Rendering_macOS|RemotingTest_Core|RemotingTest_RvmHost|lldb'
 ```
 
 ## Files You Should Never Modify

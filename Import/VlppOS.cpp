@@ -15726,6 +15726,22 @@ namespace vl
 				return code <= 0x10FFFF && !(code >= 0xD800 && code <= 0xDFFF);
 			}
 
+			TuiTextStyle GetTextStyle(const TuiPixel& pixel)
+			{
+				return pixel.glyph == TuiPixelGlyph::Char && pixel.character.c != 0
+					? pixel.character.style
+					: TuiTextStyle{};
+			}
+
+			WString GetTextStyleSequence(TuiTextStyle style)
+			{
+				return WString::Unmanaged(L"\x1B[")
+					+ (style.bold ? L"1;" : L"22;")
+					+ (style.italic ? L"3;" : L"23;")
+					+ (style.underline ? L"4;" : L"24;")
+					+ (style.strikeline ? L"9m" : L"29m");
+			}
+
 			TuiPixel EmptyPixel(TuiColor background = { 0, 0, 0 })
 			{
 				TuiPixel pixel;
@@ -15750,13 +15766,13 @@ namespace vl
 					if (x > 0)
 					{
 						auto& leading = buffer[index - 1];
-						if (leading.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(leading.c) == 2)
+						if (leading.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(leading.character.c) == 2)
 						{
 							leading = EmptyPixel(leading.backgroundColor);
 						}
 					}
 				}
-				else if (pixel.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(pixel.c) == 2)
+				else if (pixel.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(pixel.character.c) == 2)
 				{
 					pixel = EmptyPixel(pixel.backgroundColor);
 					if (x + 1 < width && buffer[index + 1].glyph == TuiPixelGlyph::WideCharContinuation)
@@ -15864,12 +15880,12 @@ namespace vl
 						auto& pixel = newBuffer[index];
 						if (pixel.glyph == TuiPixelGlyph::WideCharContinuation)
 						{
-							if (x == 0 || newBuffer[index - 1].glyph != TuiPixelGlyph::Char || TUI::MeasureChar(newBuffer[index - 1].c) != 2)
+							if (x == 0 || newBuffer[index - 1].glyph != TuiPixelGlyph::Char || TUI::MeasureChar(newBuffer[index - 1].character.c) != 2)
 							{
 								pixel = EmptyPixel(pixel.backgroundColor);
 							}
 						}
-						else if (pixel.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(pixel.c) == 2)
+						else if (pixel.glyph == TuiPixelGlyph::Char && TUI::MeasureChar(pixel.character.c) == 2)
 						{
 							if (x + 1 >= width || newBuffer[index + 1].glyph != TuiPixelGlyph::WideCharContinuation)
 							{
@@ -15987,7 +16003,7 @@ TuiPixel
 			switch (glyph)
 			{
 			case TuiPixelGlyph::Char:
-				return c;
+				return character.c;
 			case TuiPixelGlyph::Mergeable:
 				return GetMergeableChar(mergeable);
 			case TuiPixelGlyph::Unmergeable:
@@ -16257,10 +16273,10 @@ TUI
 					switch (pixel.glyph)
 					{
 					case TuiPixelGlyph::Char:
-						if (pixel.c != 0)
+						if (pixel.character.c != 0)
 						{
-							CHECK_ERROR(IsScalar(pixel.c), L"vl::console::TUI::RenderBuffer()#A Char cell contains an invalid Unicode scalar.");
-							auto width = MeasureChar(pixel.c);
+							CHECK_ERROR(IsScalar(pixel.character.c), L"vl::console::TUI::RenderBuffer()#A Char cell contains an invalid Unicode scalar.");
+							auto width = MeasureChar(pixel.character.c);
 							CHECK_ERROR(width == 1 || width == 2, L"vl::console::TUI::RenderBuffer()#A Char cell contains a zero-width or non-printable scalar.");
 							if (width == 2)
 							{
@@ -16276,7 +16292,7 @@ TUI
 						CHECK_ERROR(GetUnmergeableChar(pixel.unmergeable) != 0, L"vl::console::TUI::RenderBuffer()#An Unmergeable cell contains an invalid glyph.");
 						break;
 					case TuiPixelGlyph::WideCharContinuation:
-						CHECK_ERROR(x > 0 && storage.buffer[index - 1].glyph == TuiPixelGlyph::Char && MeasureChar(storage.buffer[index - 1].c) == 2, L"vl::console::TUI::RenderBuffer()#A continuation cell has no width-two leading cell.");
+						CHECK_ERROR(x > 0 && storage.buffer[index - 1].glyph == TuiPixelGlyph::Char && MeasureChar(storage.buffer[index - 1].character.c) == 2, L"vl::console::TUI::RenderBuffer()#A continuation cell has no width-two leading cell.");
 						break;
 					default:
 						CHECK_FAIL(L"vl::console::TUI::RenderBuffer()#A cell contains an invalid glyph type.");
@@ -16320,18 +16336,21 @@ TUI
 			if (charWidth == 2 && x + 1 >= width) return;
 			RepairWide(buffer, width, height, x, y);
 			if (charWidth == 2) RepairWide(buffer, width, height, x + 1, y);
-			auto& leading = buffer[y * width + x];
-			leading.glyph = TuiPixelGlyph::Char;
-			leading.c = code;
-			leading.foregroundColor = options.foregroundColor;
-			leading.backgroundColor = options.backgroundColor;
+			buffer[y * width + x] = TuiPixel
+			{
+				.glyph = TuiPixelGlyph::Char,
+				.character = { .c = code, .style = options.style },
+				.foregroundColor = options.foregroundColor,
+				.backgroundColor = options.backgroundColor,
+			};
 			if (charWidth == 2)
 			{
-				auto& continuation = buffer[y * width + x + 1];
-				continuation.glyph = TuiPixelGlyph::WideCharContinuation;
-				continuation.c = 0;
-				continuation.foregroundColor = options.foregroundColor;
-				continuation.backgroundColor = options.backgroundColor;
+				buffer[y * width + x + 1] = TuiPixel
+				{
+					.glyph = TuiPixelGlyph::WideCharContinuation,
+					.foregroundColor = options.foregroundColor,
+					.backgroundColor = options.backgroundColor,
+				};
 			}
 		}
 
@@ -17439,8 +17458,14 @@ PosixTuiInputDecoder
 				pendingEvents.Add(event);
 				if (text)
 				{
+					// POSIX terminals use DEL for Backspace and may use LF for Enter.
+					// Char follows the native key identity, so controls do not also
+					// insert DEL or a second newline after handling KeyDown.
+					auto code = text.Value();
+					if (code == 0x7F) code = U'\b';
+					else if (code == U'\n') code = U'\r';
 					wchar_t units[encoding::UtfConversion<wchar_t>::BufferLength];
-					auto count = encoding::UtfConversion<wchar_t>::From32(text.Value(), units);
+					auto count = encoding::UtfConversion<wchar_t>::From32(code, units);
 					for (vint i = 0; i < count; i++)
 					{
 						event.type = unittest::TuiBackendEventType::Char;
@@ -17449,6 +17474,7 @@ PosixTuiInputDecoder
 						event.charInfo.shift = info.shift;
 						event.charInfo.alt = info.alt;
 						event.charInfo.osSuper = info.osSuper;
+						event.charInfo.capslock = info.capslock;
 						pendingEvents.Add(event);
 					}
 				}
@@ -17458,9 +17484,10 @@ PosixTuiInputDecoder
 			{
 				auto mouse = inputBytes[1] == '[' && inputBytes[2] == '<';
 				auto final = inputBytes[end];
+				auto keyboardStatus = inputBytes[1] == '[' && inputBytes[2] == '?' && final == 'u';
 				vint values[3] = {};
 				vint count = 0;
-				auto begin = mouse ? 3 : 2;
+				auto begin = mouse || keyboardStatus ? 3 : 2;
 				if (begin < end)
 				{
 					count = 1;
@@ -17483,6 +17510,12 @@ PosixTuiInputDecoder
 						else return;
 					}
 					if (!hasDigit) return;
+				}
+
+				if (keyboardStatus)
+				{
+					if (count == 1) kittyKeyboard = (values[0] & 1) != 0;
+					return;
 				}
 
 				if (mouse)
@@ -17549,18 +17582,52 @@ PosixTuiInputDecoder
 
 				NativeWindowKeyInfo info;
 				Nullable<char32_t> text;
+				auto unicodeKey = inputBytes[1] == '[' && final == 'u';
 				if (count > 2) return;
 				if (count == 2)
 				{
 					auto modifiers = values[1];
-					if (modifiers < 1 || modifiers > 16) return;
+					if (modifiers < 1 || modifiers > (kittyKeyboard || unicodeKey ? 256 : 16)) return;
 					modifiers--;
 					info.shift = (modifiers & 1) != 0;
-					// Terminal Alt/Meta modifiers do not identify an OS Super key.
-					info.alt = (modifiers & (2 | 8)) != 0;
+					// Legacy xterm Meta is Alt; Kitty assigns that bit to OS Super.
+					info.alt = (modifiers & (kittyKeyboard || unicodeKey ? 2 | 32 : 2 | 8)) != 0;
 					info.ctrl = (modifiers & 4) != 0;
+					info.osSuper = (kittyKeyboard || unicodeKey) && (modifiers & 8) != 0;
+					info.capslock = (kittyKeyboard || unicodeKey) && (modifiers & 64) != 0;
 				}
-				if (final == '~' && inputBytes[1] == '[')
+				if (unicodeKey)
+				{
+					if (count == 0 || values[0] > 0x10FFFF || !IsScalar((char32_t)values[0])) return;
+					auto code = (char32_t)values[0];
+					info.code = KeyFromAscii(code);
+					// CSI u describes a key, not committed text. Only control characters
+					// with existing Char semantics accompany the key event.
+					if (code == 9 || code == 13 || code == 27 || code == 127) text = code;
+					switch (code)
+					{
+					case 57358: info.code = VKEY::KEY_CAPITAL; break;
+					case 57359: info.code = VKEY::KEY_SCROLL; break;
+					case 57360: info.code = VKEY::KEY_NUMLOCK; break;
+					case 57361: info.code = VKEY::KEY_SNAPSHOT; break;
+					case 57362: info.code = VKEY::KEY_PAUSE; break;
+					case 57363: info.code = VKEY::KEY_APPS; break;
+					case 57414: info.code = VKEY::KEY_RETURN; text = U'\r'; break;
+					case 57417: info.code = VKEY::KEY_LEFT; break;
+					case 57418: info.code = VKEY::KEY_RIGHT; break;
+					case 57419: info.code = VKEY::KEY_UP; break;
+					case 57420: info.code = VKEY::KEY_DOWN; break;
+					case 57421: info.code = VKEY::KEY_PRIOR; break;
+					case 57422: info.code = VKEY::KEY_NEXT; break;
+					case 57423: info.code = VKEY::KEY_HOME; break;
+					case 57424: info.code = VKEY::KEY_END; break;
+					case 57425: info.code = VKEY::KEY_INSERT; break;
+					case 57426: info.code = VKEY::KEY_DELETE; break;
+					default:
+						if (code >= 57364 && code <= 57387) info.code = (VKEY)((vint)VKEY::KEY_F1 + code - 57364);
+					}
+				}
+				else if (final == '~' && inputBytes[1] == '[')
 				{
 					if (count == 0) return;
 					switch (values[0])

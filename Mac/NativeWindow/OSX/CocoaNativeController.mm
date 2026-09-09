@@ -188,7 +188,8 @@ namespace vl {
             public:
                 CocoaController():
                     mainWindow(0),
-                    inputService(&GlobalTimerFunc)
+                    inputService(&GlobalTimerFunc, &callbackService),
+                    clipboardService(&callbackService, &imageService)
                 {
                     [NSApplication sharedApplication];
                     

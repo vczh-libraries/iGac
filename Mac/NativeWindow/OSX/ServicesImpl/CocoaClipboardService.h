@@ -54,7 +54,13 @@ namespace vl {
             {
                 friend class CocoaClipboardReader;
                 friend class CocoaClipboardWriter;
+            protected:
+                INativeCallbackService*         callbackService;
+                INativeImageService*            imageService;
+                vint                            changeCount;
             public:
+                CocoaClipboardService(INativeCallbackService* callbacks, INativeImageService* images);
+                void                            CheckForUpdates();
                 Ptr<INativeClipboardReader>		ReadClipboard() override;
                 Ptr<INativeClipboardWriter>		WriteClipboard() override;
             };

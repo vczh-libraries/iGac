@@ -14,6 +14,7 @@ Usage:
   ./test.sh --app:simple [--unblock]
   ./test.sh --app:fct [--hosted] [--unblock]
   ./test.sh --app:rvmt [--unblock]
+  ./test.sh --app:tui
   ./test.sh --app:renderer [--port:<1-65535>] [--unblock]
 EOF
 }
@@ -25,6 +26,9 @@ for argument in "$@"; do
             ;;
         --app:fct)
             APP_NAME="fct"
+            ;;
+        --app:tui)
+            APP_NAME="tui"
             ;;
         --app:rvmt)
             APP_NAME="rvmt"
@@ -64,6 +68,13 @@ case "$APP_NAME" in
         ;;
     fct)
         APP="$SCRIPT_DIR/build/MacFullControlTest/bin/Test_FullControlTest.app/Contents/MacOS/Test_FullControlTest"
+        ;;
+    tui)
+        if [[ "$HOSTED" -eq 1 || "$UNBLOCK" -eq 1 ]]; then
+            echo "--app:tui requires foreground terminal input; --hosted and --unblock are not supported." >&2
+            exit 1
+        fi
+        APP="$SCRIPT_DIR/build/MacTuiControlTest/bin/Test_TuiControlTest"
         ;;
     rvmt)
         if [[ "$HOSTED" -eq 1 ]]; then

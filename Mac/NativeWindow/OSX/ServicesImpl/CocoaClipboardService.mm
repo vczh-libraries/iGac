@@ -8,7 +8,6 @@
 
 #include "CocoaClipboardService.h"
 #include "CocoaImageService.h"
-#include "../CocoaNativeController.h"
 #include "../CocoaHelper.h"
 
 #import <Cocoa/Cocoa.h>
@@ -146,7 +145,7 @@ CocoaClipboardWriter
                     }
                 }
 
-                GetOSXNativeController()->CallbackService()->Invoker()->InvokeClipboardUpdated();
+                service->CheckForUpdates();
                 return true;
             }
 
@@ -214,7 +213,7 @@ CocoaClipboardReader
                 }
                 if (data)
                 {
-                    return GetOSXNativeController()->ImageService()->CreateImageFromMemory(
+                    return service->imageService->CreateImageFromMemory(
                         (void*)[data bytes],
                         (vint)[data length]
                     );
@@ -225,6 +224,23 @@ CocoaClipboardReader
 /***********************************************************************
 CocoaClipboardService
 ***********************************************************************/
+
+            CocoaClipboardService::CocoaClipboardService(INativeCallbackService* callbacks, INativeImageService* images)
+                : callbackService(callbacks)
+                , imageService(images)
+                , changeCount([[NSPasteboard generalPasteboard] changeCount])
+            {
+            }
+
+            void CocoaClipboardService::CheckForUpdates()
+            {
+                auto current = [[NSPasteboard generalPasteboard] changeCount];
+                if (current != changeCount)
+                {
+                    changeCount = current;
+                    callbackService->Invoker()->InvokeClipboardUpdated();
+                }
+            }
 
             Ptr<INativeClipboardReader> CocoaClipboardService::ReadClipboard()
             {

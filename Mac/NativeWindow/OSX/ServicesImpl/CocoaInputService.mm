@@ -8,7 +8,6 @@
 
 #include "CocoaInputService.h"
 #include "../CocoaHelper.h"
-#include "../CocoaNativeController.h"
 
 #import <AppKit/AppKit.h>
 
@@ -18,25 +17,23 @@ namespace vl {
         
         namespace osx {
             
-            namespace
+            static CocoaInputService* g_inputService;
+
+            OSStatus CocoaInputService::HotKeyEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* userData)
             {
-                CocoaInputService* g_inputService;
-                
-                OSStatus HotKeyEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* userData)
-                {
-                    EventHotKeyID hotKeyID;
-                    GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID);
-                    vint id = (vint)hotKeyID.id;
-                    GetOSXNativeController()->CallbackService()->Invoker()->InvokeGlobalShortcutKeyActivated(id);
-                    return noErr;
-                }
+                EventHotKeyID hotKeyID;
+                GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(hotKeyID), NULL, &hotKeyID);
+                auto service = static_cast<CocoaInputService*>(userData);
+                service->callbackService->Invoker()->InvokeGlobalShortcutKeyActivated((vint)hotKeyID.id);
+                return noErr;
             }
-            
-            CocoaInputService::CocoaInputService(TimerFunc timer):
+
+            CocoaInputService::CocoaInputService(TimerFunc timer, INativeCallbackService* callbacks):
                 eventSource(0),
                 isTimerEnabled(false),
                 isHookingMouse(false),
                 timerFunc(timer),
+                callbackService(callbacks),
                 inputTapPort(0),
                 inputTapRunLoopSource(0)
             {
@@ -54,7 +51,7 @@ namespace vl {
                 EventTypeSpec hotKeyEvent;
                 hotKeyEvent.eventClass = kEventClassKeyboard;
                 hotKeyEvent.eventKind = kEventHotKeyPressed;
-                InstallApplicationEventHandler(&HotKeyEventHandler, 1, &hotKeyEvent, NULL, &hotKeyEventHandler);
+                InstallApplicationEventHandler(&HotKeyEventHandler, 1, &hotKeyEvent, this, &hotKeyEventHandler);
             }
             
             CocoaInputService::~CocoaInputService()

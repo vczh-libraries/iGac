@@ -6772,7 +6772,7 @@ namespace vl
 				ERROR_MESSAGE_PREFIX L"Failed to query character types."
 				);
 			if (ctype1[0] & C1_CNTRL) return 0;
-			if (ctype3[0] & (C3_NONSPACING | C3_DIACRITIC | C3_VOWELMARK)) return 0;
+			if (ctype3[0] & (C3_NONSPACING | C3_VOWELMARK)) return 0;
 			if (ctype3[0] & C3_HALFWIDTH) return 1;
 			if (length == 2 || (ctype3[0] & (C3_FULLWIDTH | C3_IDEOGRAPH | C3_HIRAGANA | C3_KATAKANA))) return 2;
 #undef ERROR_MESSAGE_PREFIX
@@ -6781,6 +6781,10 @@ namespace vl
 
 		namespace tui_internal
 		{
+			// Windows Terminal extends dwControlKeyState with right/left Win flags.
+			// See microsoft/terminal src/cascadia/TerminalCore/ControlKeyStates.hpp.
+			constexpr DWORD WindowsTerminalWinPressed = 0x0200 | 0x0400;
+
 			void WriteConsoleAll(HANDLE handle, const wchar_t* text, vint length)
 			{
 				vint written = 0;
@@ -6813,6 +6817,7 @@ namespace vl
 					info.ctrl = (record.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)) != 0;
 					info.shift = (record.dwControlKeyState & SHIFT_PRESSED) != 0;
 					info.alt = (record.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED)) != 0;
+					info.osSuper = (record.dwControlKeyState & WindowsTerminalWinPressed) != 0;
 					info.capslock = (record.dwControlKeyState & CAPSLOCK_ON) != 0;
 					info.autoRepeatKeyDown = record.bKeyDown && (repeated || i > 0);
 					pendingEvents.Add(event);
@@ -6823,6 +6828,7 @@ namespace vl
 						event.charInfo.ctrl = info.ctrl;
 						event.charInfo.shift = info.shift;
 						event.charInfo.alt = info.alt;
+						event.charInfo.osSuper = info.osSuper;
 						event.charInfo.capslock = info.capslock;
 						pendingEvents.Add(event);
 					}
@@ -6846,6 +6852,7 @@ namespace vl
 				info.ctrl = (record.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED)) != 0;
 				info.shift = (record.dwControlKeyState & SHIFT_PRESSED) != 0;
 				info.alt = (record.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED)) != 0;
+				info.osSuper = (record.dwControlKeyState & WindowsTerminalWinPressed) != 0;
 				info.left = (record.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) != 0;
 				info.middle = (record.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED) != 0;
 				info.right = (record.dwButtonState & RIGHTMOST_BUTTON_PRESSED) != 0;
@@ -7227,6 +7234,7 @@ namespace vl
 						WString output;
 						TuiColor lastForeground;
 						TuiColor lastBackground;
+						Nullable<TuiTextStyle> lastStyle;
 						bool hasLastColor = false;
 						for (vint y = 0; y < height; y++)
 						{
@@ -7235,6 +7243,12 @@ namespace vl
 							{
 								auto& pixel = buffer[y * width + x];
 								if (pixel.glyph == TuiPixelGlyph::WideCharContinuation) continue;
+								auto style = GetTextStyle(pixel);
+								if (!lastStyle || style != lastStyle.Value())
+								{
+									output += GetTextStyleSequence(style);
+									lastStyle = style;
+								}
 								if (!hasLastColor || pixel.foregroundColor != lastForeground || pixel.backgroundColor != lastBackground)
 								{
 									AppendColor(output, pixel.foregroundColor, pixel.backgroundColor, colorMode);

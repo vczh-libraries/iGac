@@ -7511,6 +7511,7 @@ GuiInstanceContext
 					att->value.value =
 						L"presentation::controls::Gui*;"
 						L"presentation::elements::Gui*Element;"
+						L"presentation::elements::*Element;"
 						L"presentation::compositions::Gui*Composition;"
 						L"presentation::compositions::Gui*;"
 						L"presentation::templates::Gui*;"
@@ -9825,6 +9826,7 @@ GuiCommonDatePickerLookLoader
 					{
 						auto info = GuiInstancePropertyInfo::Assign(TypeInfoRetriver<Color>::CreateTypeInfo());
 						info->usage = GuiInstancePropertyInfo::ConstructorArgument;
+						info->bindability = GuiInstancePropertyInfo::Bindable;
 						return info;
 					}
 					return IGuiInstanceLoader::GetPropertyType(precompileContext, propertyInfo);

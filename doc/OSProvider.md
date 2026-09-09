@@ -152,3 +152,11 @@ A remote renderer supplies this freshly queried value when the core requests
 `RemotingTest_Rendering_macOS` therefore refreshes the core's default font. The
 current remote protocol has no live default-font update event for an already
 connected renderer.
+
+## Terminal entry point
+
+`Mac/TUI/TuiCocoaController.mm` supplies `SetupTuiCocoaRenderer()` over the shared `TuiControllerBase`. The foreground executable initializes AppKit with prohibited activation, so the terminal retains focus and no Cocoa window is created. It owns TUI resource/input adapters and ordinary Cocoa image/clipboard services. The resource adapter exposes only TuiFont, size 1, while retaining style bits. The input adapter runs the 16 ms VlppOS TUI timer; each owner-thread cycle drains AppKit events without blocking and checks pasteboard changes, including while a hosted modal is open. Titles use sanitized UTF-8 OSC output because ordinary Console output is disabled during terminal takeover.
+
+CocoaInputService receives its callback service explicitly and registers its Carbon handler with the service instance as user data. CocoaClipboardService receives callback and image services explicitly; Submit and the TUI pump detect pasteboard change-count transitions through CheckForUpdates. The native Cocoa controller supplies its own services, and the terminal controller supplies its own, so clipboard and global shortcuts do not require GetOSXNativeController in TUI mode. Keyboard input itself comes from the terminal protocol, independently of Carbon global shortcut registration. Command delivery depends on terminal support; SGR mouse has no Command bit.
+
+`Test_TuiControlTest` has no automation endpoint. It uses the imported TuiSkin pair and synchronized showcase resources, with hosted popups and fake TUI dialogs supplied by GacUI. Normal Hide/Close and Stop unwind the shared controller and restore the terminal. See the upstream [TUI provider design](../../GacUI/.github/KnowledgeBase/KB_GacUI_Design_TuiPlatformProvider.md) and [terminal SOP](../../GacUI/.github/Jobs/DebugTuiControlTestSop.md).

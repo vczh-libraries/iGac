@@ -47,6 +47,7 @@ namespace vl {
                 bool                                    isHookingMouse;
                 
                 TimerFunc                               timerFunc;
+                INativeCallbackService*                 callbackService;
                 
                 CFMachPortRef                           inputTapPort;
                 CFRunLoopSourceRef                      inputTapRunLoopSource;
@@ -62,9 +63,10 @@ namespace vl {
                 
             protected:
                 void StartGCDTimer();
+                static OSStatus HotKeyEventHandler(EventHandlerCallRef nextHandler, EventRef event, void* userData);
                 
             public:
-                CocoaInputService(TimerFunc timer);
+                CocoaInputService(TimerFunc timer, INativeCallbackService* callbacks);
                 virtual ~CocoaInputService();
                 void    RestartTimer();
 

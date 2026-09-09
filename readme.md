@@ -86,6 +86,7 @@ iGac/
 ├── MacFullControlTest/         Full-featured test app using BlackSkin control template
 │   ├── CMakeLists.txt
 │   └── Main.mm
+├── MacTuiControlTest/          Foreground terminal showcase using TuiSkin
 ├── MacCppTestRvm/              Hosted Remote View Model Test client
 ├── RemotingTest_Rendering_macOS/ Native `/MiniHttp` renderer for GacUI's RemotingTest_Core
 │
@@ -96,6 +97,7 @@ iGac/
 │   ├── RemoteProtocolTest/
 │   │   ├── Resources/
 │   │   └── Source/
+│   ├── TuiControlTest/         Synchronized TUI resources and generated x64 C++
 │   └── RemoteViewModelTest/
 │       ├── Resources/
 │       └── Source/
@@ -142,7 +144,7 @@ with the remaining repositories.
 ./import.sh
 ```
 
-This removes and recreates `Import/` and `Import-Test/`, copies dependency amalgamations from `../GacUI/Import/`, adds the ordinary GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin release files under `Import/Skins/DarkSkin/`, and moves the neutral `Test.RemotingHelpers` pair into `Import-Test/`. The test-only stdio transport and its platform implementation come from the imported `VlppOS` release files. Both snapshots remain writable so Git and repeated imports can replace their contents without permission failures. Treat `Import/` and `Import-Test/` as generated snapshots: compatibility fixes belong in this repository's CMake or macOS integration code. These helpers are only for platform test targets and are not part of the ordinary framework snapshot. Review and commit the vendor update together with those integration changes.
+This removes and recreates `Import/` and `Import-Test/`, copies dependency amalgamations from `../GacUI/Import/`, adds the ordinary GacUI amalgamations from `../GacUI/Release/`, places the DarkSkin and TuiSkin release files under `Import/Skins/DarkSkin/` and `Import/Skins/TuiSkin/`, and moves the neutral `Test.RemotingHelpers` pair into `Import-Test/`. The test-only stdio transport and its platform implementation come from the imported `VlppOS` release files. Both snapshots remain writable so Git and repeated imports can replace their contents without permission failures. Treat `Import/` and `Import-Test/` as generated snapshots: compatibility fixes belong in this repository's CMake or macOS integration code. These helpers are only for platform test targets and are not part of the ordinary framework snapshot. Review and commit the vendor update together with those integration changes.
 
 ## Synchronizing Test Projects
 
@@ -152,10 +154,10 @@ This removes and recreates `Import/` and `Import-Test/`, copies dependency amalg
 
 This performs incremental builds of `../Workflow/Tools/CppMerge` and
 `../GacUI/Tools/GacGen`, copies the `FullControlTest`, `RemoteProtocolTest`, and
-`RemoteViewModelTest` resource trees from `../GacUI/Test/Resources/App/`,
+`RemoteViewModelTest`, and `TuiControlTest` resource trees from `../GacUI/Test/Resources/App/`,
 preserves resource-owned seed C++ files, and invokes `GacGen /C64` for each
 application. It also refreshes the shared native-renderer and RVM entry points
-and the RVM initializer. MiniHTTP automation is part of the imported GacUI
+the RVM initializer, and `CppTest_Tui/Main.cpp` as `MacTuiControlTest/GuiMain.cpp`. Only the terminal platform entry point remains local. MiniHTTP automation is part of the imported GacUI
 snapshot, while reusable test remoting helpers come from `Import-Test/`;
 neither is maintained as a local `MacShared/Mini*.cpp` copy. Generated
 reflection files are retained in `Apps/*/Source`, but test targets compile with
@@ -172,10 +174,11 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
 
-### Static Libraries (built by MacShared/CMakeLists.txt)
+### Static Libraries
 
 - **GacUI** — Core GacUI amalgamated sources (Vlpp, VlppOS, VlppRegex, VlppReflection, VlppGlrParser, VlppWorkflowLibrary, GacUI, DarkSkin)
 - **GacOSX** — All macOS platform code (Cocoa windowing, CoreGraphics rendering, services)
+- **GacOSXTui** — Terminal adapter in `Mac/TUI`, built by `MacTuiControlTest/CMakeLists.txt`; reuses Cocoa services and the portable TUI provider
 - **GacOSXShared** — Imported remoting test helpers plus shared macOS test utilities (osx_shared, UnixFileSystemInfo)
 
 Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remove this define from `MacShared/CMakeLists.txt` and add all reflection `.cpp` files.
@@ -188,6 +191,7 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test.sh --app:fct                            # Run Full Control Test
 ./test.sh --app:fct --hosted                   # Run Full Control Test in hosted mode
 ./test.sh --app:fct --hosted --unblock         # Combine hosted and background modes
+./test.sh --app:tui                            # Run the terminal showcase in the foreground
 ./test.sh --app:rvmt                           # Run the hosted Remote View Model Test client
 ./test.sh --app:rvmt --unblock                 # Start the RVM client and print its PID
 ./test.sh --app:renderer                       # Connect to RemotingTest_Core with /MiniHttp
@@ -198,6 +202,8 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test_core.sh --app:rpt --protocol:minihttp
 ./test_core.sh --app:rvmt --protocol:minihttp [--cli]
 ```
+
+`--app:tui` runs `build/MacTuiControlTest/bin/Test_TuiControlTest` with inherited terminal input/output. It rejects `--unblock`, `--hosted`, and `--port`. No `.app` bundle, Cocoa window, automation endpoint, Core or renderer is involved. The adapter uses TuiControllerBase, Cocoa pasteboard/image services and Carbon global shortcuts; its TUI timer pumps platform events on the application thread. See [the terminal SOP](../GacUI/.github/Jobs/DebugTuiControlTestSop.md) and [TestMatrix_Tui.md](TestMatrix_Tui.md) for supported input and verification results.
 
 `--unblock` starts the selected executable in the background and prints its
 PID. `--hosted` is valid only with `--app:fct`. `--port:<1-65535>` is valid
@@ -214,7 +220,7 @@ unblocked manual run prints both PIDs. `--cli` is supported by `--app:rvmt`,
 prebuilds the host, and lets Core auto-launch it over stdio. Portable
 `Test_CppTest_Rvm` remains manual `/MiniHttp` only.
 
-Every test application owns a mode-specific Cocoa automation service and a
+The native GUI test applications own a mode-specific Cocoa automation service and a
 MiniHTTP endpoint. Append `/Controls` for control-tree applications, `/Dom`
 for the native renderer, or `/IO` for input:
 
@@ -245,6 +251,8 @@ and start the new one with `--port:8890`.
 Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
 
 ## Documentation
+
+- [TestMatrix_Tui.md](TestMatrix_Tui.md) — macOS terminal showcase verification and host limitations.
 
 - [doc/OSProvider.md](doc/OSProvider.md) — Controller, services, entry point, and overall architecture of the macOS platform layer.
 - [doc/OSProvider_Window.md](doc/OSProvider_Window.md) — INativeWindow implementation (CocoaWindow): window lifecycle, Show/Hide, popups, child windows, custom frame, key differences from Windows.

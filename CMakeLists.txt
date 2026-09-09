@@ -8,3 +8,5 @@ add_subdirectory(MacTest)
 add_subdirectory(MacFullControlTest)
 add_subdirectory(MacCppTestRvm)
 add_subdirectory(RemotingTest_Rendering_macOS)
+
+add_subdirectory(MacTuiControlTest)

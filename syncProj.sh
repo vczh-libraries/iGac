@@ -12,6 +12,7 @@ METADATA_DIR="$GACUI_DIR/Test/Resources/Metadata"
 REMOTE_RENDERER_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Rendering_Win32/GuiMain.cpp"
 RVM_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Rvm/GuiMain.cpp"
 RVM_INITIALIZER_DIR="$GACUI_DIR/Test/GacUISrc/Generated_RemoteViewModelTest"
+TUI_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Tui/Main.cpp"
 TOOL_DIR=""
 
 cleanup() {
@@ -44,6 +45,10 @@ configure_resource() {
         s#\s*<Text name="Resource">[^<]*</Text>##;
         s#<Text name="Name">[^<]*</Text>#<Text name="Name">'"$generated_name"'</Text>\n      <Text name="CppResource">'"$generated_name"'Resource.cpp</Text>#;
     ' "$resource_file"
+
+    if [[ "$generated_name" == "TuiControlTest" ]]; then
+        perl -0pi -e 's#<Text name="NormalInclude">GacUI.h</Text>#<Text name="NormalInclude">GacUI.h;Skins/TuiSkin/TuiSkin.h</Text>#' "$resource_file"
+    fi
 
     if ! grep -q '<Text name="SourceFolder">../Source</Text>' "$resource_file"; then
         echo "Failed to configure generated source folder in $resource_file" >&2
@@ -107,10 +112,12 @@ require_file "$METADATA_DIR/Reflection32.bin"
 require_file "$METADATA_DIR/Reflection64.bin"
 require_file "$REMOTE_RENDERER_SOURCE"
 require_file "$RVM_GUI_MAIN_SOURCE"
+require_file "$TUI_GUI_MAIN_SOURCE"
 require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.h"
 require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.cpp"
 require_directory "$SCRIPT_DIR/RemotingTest_Rendering_macOS"
 require_directory "$SCRIPT_DIR/MacCppTestRvm"
+require_directory "$SCRIPT_DIR/MacTuiControlTest"
 if ! command -v perl >/dev/null 2>&1; then
     echo "Perl is required to configure copied GacGen resource files." >&2
     exit 1
@@ -143,6 +150,9 @@ printf '%s\n%s\n%s\n' \
 sync_application "FullControlTest" "FullControlTest"
 sync_application "RemoteProtocolTest" "RemoteProtocolTest"
 sync_application "RemoteViewModelTest" "RemoteViewModelTest"
+sync_application "TuiControlTest" "TuiControlTest"
+
+cp "$TUI_GUI_MAIN_SOURCE" "$SCRIPT_DIR/MacTuiControlTest/GuiMain.cpp"
 
 cp "$REMOTE_RENDERER_SOURCE" "$SCRIPT_DIR/RemotingTest_Rendering_macOS/GuiMain.cpp"
 cp "$RVM_GUI_MAIN_SOURCE" "$SCRIPT_DIR/MacCppTestRvm/GuiMain.cpp"
