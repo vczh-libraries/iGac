@@ -80,3 +80,7 @@ When the application becomes active and the AppKit default has changed, the
 controller raises `EnvironmentChanged`. GacUI updates inherited display fonts,
 which invalidates the affected text measurements and lets the normal successive
 layout/render passes converge on the new geometry.
+
+### Native text positions and AppKit ranges
+
+GacUI paragraph offsets on macOS count UTF-32 wchar_t scalars, while NSTextStorage ranges count UTF-16 units and NSLayoutManager also has separate glyph indices. CoreTextParagraph stores maps between native and UTF-16 boundaries. Font/style/color and attachment edits convert to storage ranges; glyph clusters and line fragments convert back to native positions for caret movement, selection, hit testing and background painting. Never index paragraphText with an AppKit character or glyph index. Supplementary characters may occupy two UTF-16 units, and ligatures or composed glyphs may span several native characters. Inline-object replacement preserves the original UTF-16 range length while its public range remains in native units.
