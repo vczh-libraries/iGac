@@ -268,6 +268,7 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 
 ## Known Issues
 
+- TUI local shortcuts involving Alt/Command do not work correctly in the tested legacy Terminal.app profile; use Kitty for these shortcuts. Terminal.app 2.15 with the Basic profile drops Alt from `Ctrl+Alt+Q` and sends nothing for `Ctrl+Alt+Command+Q`. Kitty can preserve these modifiers through its extended keyboard protocol. OS-registered global shortcuts still work through Carbon because they bypass terminal input. Terminal or macOS shortcut bindings can still intercept a chord; other terminals with compatible keyboard-protocol support may also work.
 - VKEY mapping is quite big, should be shorter
 - Not Implemented:
   - `AsyncService::Semaphore::WaitForTime`
