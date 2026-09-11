@@ -1,5 +1,11 @@
 # General Instructions
 
+At the end of every request, run the following scripts in order:
+- `./import.sh`
+- `./syncProj.sh`
+- `./build.sh`
+and they must all succeed.
+
 ## Before You Start
 
 **You MUST read these files before doing any work:**
