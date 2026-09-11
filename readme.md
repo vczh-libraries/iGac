@@ -156,7 +156,10 @@ This performs incremental builds of `../Workflow/Tools/CppMerge` and
 `../GacUI/Tools/GacGen`, copies the `FullControlTest`, `RemoteProtocolTest`, and
 `RemoteViewModelTest`, and `TuiControlTest` resource trees from `../GacUI/Test/Resources/App/`,
 preserves resource-owned seed C++ files, and invokes `GacGen /C64` for each
-application. It also refreshes the shared native-renderer and RVM entry points
+application. It copies the shared `FullControlTestPalette.h/.cpp` handler from
+GacUI's `Generated_FullControlTest` inventory; the local Full Control Test entry
+point attaches it so every Color Theme preset refreshes existing controls in
+both standard and hosted mode. It also refreshes the shared native-renderer and RVM entry points,
 the RVM initializer, and `CppTest_Tui/Main.cpp` as `MacTuiControlTest/GuiMain.cpp`. Only the terminal platform entry point remains local. MiniHTTP automation is part of the imported GacUI
 snapshot, while reusable test remoting helpers come from `Import-Test/`;
 neither is maintained as a local `MacShared/Mini*.cpp` copy. Generated
@@ -274,11 +277,6 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
   - `AsyncService::Semaphore::WaitForTime`
   - `CoreGraphicsResourceManager::CreateRawElement`
   - `CocoaWindow::GetIcon` and `SetIcon`
-
-## Upstream Issues
-
-- `FakeDialogService`
-  - File dialog shows empty local disk. The issue is in VlppOS, fix it and test here again.
 
 ## Planning
 

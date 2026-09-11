@@ -238,6 +238,12 @@ Window Management checkbox. Generic windows such as the Simple test still use
 `ThemeName::Window`; the macOS DarkSkin registration resolves that generic
 theme to `SystemFrameWindow` in standard mode.
 
+The entry point attaches `demo::OnPaletteSelected` to the main window's
+`PaletteSelected` event in both modes. `syncProj.sh` copies this shared handler
+from GacUI's Full Control Test inventory. It queues palette installation and
+`GuiApplication::RefreshThemes()` together after input dispatch, preserving
+existing application controls while replacing their default templates.
+
 ## Files Involved
 
 | File | Role |

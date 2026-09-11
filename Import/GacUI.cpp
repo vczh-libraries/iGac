@@ -405,6 +405,19 @@ GuiApplication
 				return windows;
 			}
 
+			void GuiApplication::RefreshThemes()
+			{
+				collections::List<Pair<GuiWindow*, Ptr<GuiDisposedFlag>>> snapshot;
+				for (auto window : windows)
+				{
+					snapshot.Add({ window, window->GetDisposedFlag() });
+				}
+				for (auto&& entry : snapshot)
+				{
+					if (!entry.value->IsDisposed()) entry.key->RefreshThemes();
+				}
+			}
+
 			GuiWindow* GuiApplication::GetWindow(NativePoint location)
 			{
 				INativeWindow* nativeWindow = GetCurrentController()->WindowService()->GetWindow(location);
@@ -771,6 +784,20 @@ GuiControl
 			{
 			}
 
+			void GuiControl::RefreshThemes()
+			{
+				if (!controlTemplate) RebuildControlTemplate();
+				List<Pair<GuiControl*, Ptr<GuiDisposedFlag>>> snapshot;
+				for (auto child : children)
+				{
+					snapshot.Add({ child, child->GetDisposedFlag() });
+				}
+				for (auto&& entry : snapshot)
+				{
+					if (!entry.value->IsDisposed()) entry.key->RefreshThemes();
+				}
+			}
+
 			void GuiControl::AfterControlTemplateInstalled(bool initialize)
 			{
 				controlTemplateObject->SetText(text);
@@ -796,10 +823,30 @@ GuiControl
 
 			void GuiControl::RebuildControlTemplate()
 			{
+				GuiControl* focusedControl = nullptr;
+				Ptr<GuiDisposedFlag> focusedDisposedFlag;
+				if (auto host = boundsComposition->GetRelatedGraphicsHost())
+				{
+					if (auto composition = host->GetFocusedComposition())
+					{
+						auto control = composition->GetRelatedControl();
+						for (auto ancestor = control; ancestor; ancestor = ancestor->GetParent())
+						{
+							if (ancestor == this)
+							{
+								focusedControl = control;
+								focusedDisposedFlag = control->GetDisposedFlag();
+								break;
+							}
+						}
+					}
+				}
 				bool initialize = controlTemplateObject == nullptr;
+				vint templateIndex = -1;
 				if (controlTemplateObject)
 				{
 					BeforeControlTemplateUninstalled();
+					templateIndex = boundsComposition->Children().IndexOf(controlTemplateObject);
 					containerComposition->GetParent()->RemoveChild(containerComposition);
 					boundsComposition->AddChild(containerComposition);
 					SafeDeleteComposition(controlTemplateObject);
@@ -820,10 +867,11 @@ GuiControl
 					controlTemplateObject->SetAlignmentToParent(Margin(0, 0, 0, 0));
 
 					containerComposition->GetParent()->RemoveChild(containerComposition);
-					boundsComposition->AddChild(controlTemplateObject);
+					boundsComposition->InsertChild(templateIndex == -1 ? boundsComposition->Children().Count() : templateIndex, controlTemplateObject);
 					controlTemplateObject->GetContainerComposition()->AddChild(containerComposition);
 					AfterControlTemplateInstalled(initialize);
 				}
+				if (focusedControl && !focusedDisposedFlag->IsDisposed()) focusedControl->SetFocused();
 			}
 
 			void GuiControl::FixingMissingControlTemplateCallback(templates::GuiControlTemplate* value)
@@ -1569,6 +1617,7 @@ GuiCustomControl
 	}
 }
 
+
 /***********************************************************************
 .\APPLICATION\CONTROLS\GUIINSTANCEROOTOBJECT.CPP
 ***********************************************************************/
@@ -1929,12 +1978,9 @@ GuiLabel
 				auto ct = TypedControlTemplateObject(true);
 				if (initialize || textColorConsisted)
 				{
-					SetTextColor(ct->GetDefaultTextColor());
+					textColor = ct->GetDefaultTextColor();
 				}
-				else
-				{
-					ct->SetTextColor(textColor);
-				}
+				ct->SetTextColor(textColor);
 			}
 
 			GuiLabel::GuiLabel(theme::ThemeName themeName)
@@ -1962,6 +2008,7 @@ GuiLabel
 		}
 	}
 }
+
 
 /***********************************************************************
 .\APPLICATION\CONTROLS\GUITHEMEMANAGER.CPP
@@ -6841,10 +6888,16 @@ GuiScrollView
 
 				if (auto scroll = ct->GetHorizontalScroll())
 				{
+					scrollPositionBeforeTemplate.x = scroll->GetPosition();
+					scrollTotalSizeBeforeTemplate.x = scroll->GetTotalSize();
+					scrollPageSizeBeforeTemplate.x = scroll->GetPageSize();
 					scroll->PositionChanged.Detach(hScrollHandler);
 				}
 				if (auto scroll = ct->GetVerticalScroll())
 				{
+					scrollPositionBeforeTemplate.y = scroll->GetPosition();
+					scrollTotalSizeBeforeTemplate.y = scroll->GetTotalSize();
+					scrollPageSizeBeforeTemplate.y = scroll->GetPageSize();
 					scroll->PositionChanged.Detach(vScrollHandler);
 				}
 				ct->GetEventReceiver()->horizontalWheel.Detach(hWheelHandler);
@@ -6864,10 +6917,22 @@ GuiScrollView
 				auto ct = TypedControlTemplateObject(true);
 				if (auto scroll = ct->GetHorizontalScroll())
 				{
+					if (!initialize)
+					{
+						scroll->SetTotalSize(scrollTotalSizeBeforeTemplate.x);
+						scroll->SetPageSize(scrollPageSizeBeforeTemplate.x);
+						scroll->SetPosition(scrollPositionBeforeTemplate.x);
+					}
 					hScrollHandler = scroll->PositionChanged.AttachMethod(this, &GuiScrollView::OnHorizontalScroll);
 				}
 				if (auto scroll = ct->GetVerticalScroll())
 				{
+					if (!initialize)
+					{
+						scroll->SetTotalSize(scrollTotalSizeBeforeTemplate.y);
+						scroll->SetPageSize(scrollPageSizeBeforeTemplate.y);
+						scroll->SetPosition(scrollPositionBeforeTemplate.y);
+					}
 					vScrollHandler = scroll->PositionChanged.AttachMethod(this, &GuiScrollView::OnVerticalScroll);
 				}
 				hWheelHandler = ct->GetEventReceiver()->horizontalWheel.AttachMethod(this, &GuiScrollView::OnHorizontalWheel);
@@ -12444,7 +12509,9 @@ GuiListControl
 			{
 				if (itemArranger)
 				{
+					auto viewPosition = GetViewPosition();
 					itemArranger->ReloadVisibleStyles();
+					SetViewPosition(viewPosition);
 					CalculateView();
 				}
 			}
@@ -12492,7 +12559,14 @@ GuiListControl
 
 			void GuiListControl::OnRenderTargetChanged(elements::IGuiGraphicsRenderTarget* renderTarget)
 			{
-				SetStyleAndArranger(itemStyleProperty, itemArranger);
+				// Detached rows cannot measure text; reload after the new render target is attached.
+				if (itemArranger && renderTarget)
+				{
+					auto viewPosition = GetViewPosition();
+					itemArranger->ReloadVisibleStyles();
+					SetViewPosition(viewPosition);
+					CalculateView();
+				}
 				GuiScrollView::OnRenderTargetChanged(renderTarget);
 			}
 
@@ -13281,6 +13355,14 @@ GuiListViewBase
 
 			void GuiListViewBase::AfterControlTemplateInstalled_(bool initialize)
 			{
+				if (auto arranger = dynamic_cast<list::ListViewColumnItemArranger*>(GetArranger()))
+				{
+					auto columnTemplate = TypedControlTemplateObject(true)->GetColumnHeaderTemplate();
+					for (auto button : arranger->GetColumnButtons())
+					{
+						button->SetControlTemplate(columnTemplate);
+					}
+				}
 			}
 
 			GuiListViewBase::GuiListViewBase(theme::ThemeName themeName, list::IItemProvider* _itemProvider)
@@ -20005,7 +20087,14 @@ GuiDocumentViewer
 				if (documentElement)
 				{
 					documentElement->SetCaretColor(ct->GetCaretColor());
-					SetDocument(GetDocument());
+					if (initialize)
+					{
+						SetDocument(GetDocument());
+					}
+					else
+					{
+						OnFontChanged();
+					}
 				}
 				ReplaceMouseArea(containerComposition->GetParent());
 			}
@@ -20130,7 +20219,14 @@ GuiDocumentLabel
 				if (documentElement)
 				{
 					documentElement->SetCaretColor(ct->GetCaretColor());
-					SetDocument(GetDocument());
+					if (initialize)
+					{
+						SetDocument(GetDocument());
+					}
+					else
+					{
+						OnFontChanged();
+					}
 				}
 			}
 
@@ -20777,7 +20873,7 @@ GuiMenuButton
 			void GuiMenuButton::BeforeControlTemplateUninstalled_()
 			{
 				auto host = GetSubMenuHost();
-				host->Clicked.Detach(hostClickedHandler);
+				host->BeforeClicked.Detach(hostClickedHandler);
 				host->GetBoundsComposition()->GetEventReceiver()->mouseEnter.Detach(hostMouseEnterHandler);
 
 				hostClickedHandler = nullptr;
@@ -21106,6 +21202,7 @@ GuiMenuButton
 		}
 	}
 }
+
 
 /***********************************************************************
 .\CONTROLS\TOOLSTRIPPACKAGE\GUIRIBBONCONTROLS.CPP
@@ -33598,6 +33695,16 @@ GuiHostedController::INativeWindowListener (IO Event Handling)
 
 		void GuiHostedController::MouseDown(NativeMouseButton button, const NativeWindowMouseInfo& info)
 		{
+			// A new window can appear under a stationary pointer. Refresh its control
+			// hover state without duplicating movement already delivered by the platform.
+			NativePoint location = { info.x,info.y };
+			auto previousLocation = hoveringLocation;
+			UpdateHoveringWindow(location);
+			auto selectedWindow = capturingWindow ? capturingWindow : hoveringWindow;
+			if (previousLocation != location || enteringWindow != selectedWindow)
+			{
+				MouseMoving(info);
+			}
 			if (button == NativeMouseButton::Left)
 			{
 				HandleMouseButtonCallback<&GuiHostedController::PreAction_LeftButtonDown, &GuiHostedController::GetSelectedWindow_MouseDown, &GuiHostedController::PostAction_Other, &INativeWindowListener::MouseDown>(button, info);
@@ -37117,11 +37224,11 @@ GuiSolidLabelElementRenderer
 	{
 		if (needFontHeight)
 		{
-			vint index = renderTarget->fontHeights.Keys().IndexOf({ lastFont.fontFamily,lastFont.size });
+			vint index = remoteRenderTarget->fontHeights.Keys().IndexOf({ lastFont.fontFamily,lastFont.size });
 			if (index != -1)
 			{
 				needFontHeight = false;
-				vint size = renderTarget->fontHeights.Values()[index];
+				vint size = remoteRenderTarget->fontHeights.Values()[index];
 				UpdateMinSize({ size,size });
 			}
 		}
@@ -55607,7 +55714,7 @@ FakeDialogServiceBase
 				{
 					vm->selectToSave = false;
 					auto owner = GetApplication()->GetWindowFromNative(window);
-					auto dialog = CreateOpenFileDialog(vm);
+					auto dialog = CreateOpenFileDialog(vm, initialFileName);
 					ShowModalDialogAndDelete(vm, owner, dialog);
 				}
 				break;
@@ -55616,7 +55723,7 @@ FakeDialogServiceBase
 				{
 					vm->selectToSave = true;
 					auto owner = GetApplication()->GetWindowFromNative(window);
-					auto dialog = CreateSaveFileDialog(vm);
+					auto dialog = CreateSaveFileDialog(vm, initialFileName);
 					ShowModalDialogAndDelete(vm, owner, dialog);
 				}
 				break;
@@ -55912,17 +56019,17 @@ FakeDialogService
 			return new gaclib_controls::FullFontDialogWindow(viewModel);
 		}
 
-		controls::GuiWindow* FakeDialogService::CreateOpenFileDialog(Ptr<IFileDialogViewModel> viewModel)
+		controls::GuiWindow* FakeDialogService::CreateOpenFileDialog(Ptr<IFileDialogViewModel> viewModel, const WString& initialFileName)
 		{
 			auto dialog = new gaclib_controls::FileDialogWindow(viewModel);
-			dialog->MakeOpenFileDialog();
+			dialog->MakeOpenFileDialog(initialFileName);
 			return dialog;
 		}
 
-		controls::GuiWindow* FakeDialogService::CreateSaveFileDialog(Ptr<IFileDialogViewModel> viewModel)
+		controls::GuiWindow* FakeDialogService::CreateSaveFileDialog(Ptr<IFileDialogViewModel> viewModel, const WString& initialFileName)
 		{
 			auto dialog = new gaclib_controls::FileDialogWindow(viewModel);
-			dialog->MakeSaveFileDialog();
+			dialog->MakeSaveFileDialog(initialFileName);
 			return dialog;
 		}
 
@@ -62297,14 +62404,16 @@ Class (::gaclib_controls::FileDialogWindowConstructor)
 Class (::gaclib_controls::FileDialogWindow)
 ***********************************************************************/
 
-	void FileDialogWindow::MakeOpenFileDialog()
+	void FileDialogWindow::MakeOpenFileDialog(const ::vl::WString& initialFileName)
 	{
 		::vl::__vwsn::This(this->buttonOK)->SetText(::vl::__vwsn::This(this->GetStrings().Obj())->FileDialogOpen());
+		::vl::__vwsn::This(this->filePickerControl)->SetInitialFileName(initialFileName);
 	}
 
-	void FileDialogWindow::MakeSaveFileDialog()
+	void FileDialogWindow::MakeSaveFileDialog(const ::vl::WString& initialFileName)
 	{
 		::vl::__vwsn::This(this->buttonOK)->SetText(::vl::__vwsn::This(this->GetStrings().Obj())->FileDialogSave());
+		::vl::__vwsn::This(this->filePickerControl)->SetInitialFileName(initialFileName);
 	}
 
 	::vl::Ptr<::gaclib_controls::IDialogStringsStrings> FileDialogWindow::GetStrings()
@@ -62720,6 +62829,11 @@ Class (::gaclib_controls::FilePickerControl)
 	::vl::collections::LazyList<::vl::Ptr<::vl::presentation::IFileDialogFile>> FilePickerControl::GetSelectedFiles()
 	{
 		return ::vl::reflection::description::GetLazyList<::vl::Ptr<::vl::presentation::IFileDialogFile>>(::vl::reflection::description::EnumerableCoroutine::Create(vl::Func(::vl_workflow_global::__vwsnf45_GuiFakeDialogServiceUI_gaclib_controls_FilePickerControl_GetSelectedFiles_(this))));
+	}
+
+	void FilePickerControl::SetInitialFileName(const ::vl::WString& value)
+	{
+		::vl::__vwsn::This(this->textBox)->SetText(value);
 	}
 
 	::vl::collections::LazyList<::vl::WString> FilePickerControl::GetSelection()
@@ -64912,12 +65026,13 @@ SharedAsyncService
 		{
 			auto now=DateTime::UtcTime();
 			Array<TaskItem> items;
+			vuint64_t firstTaskId;
 			List<Ptr<DelayItem>> executableDelayItems;
 
 			SPIN_LOCK(taskListLock)
 			{
 				CopyFrom(items, taskItems);
-				taskItems.RemoveRange(0, items.Count());
+				firstTaskId = executedTaskCount;
 				// TODO: (enumerable) foreach:indexed(alterable(reversed))
 				for(vint i=delayItems.Count()-1;i>=0;i--)
 				{
@@ -64931,8 +65046,21 @@ SharedAsyncService
 				}
 			}
 
-			for (auto item : items)
+			for (auto [item, index] : indexed(items))
 			{
+				bool execute = false;
+				SPIN_LOCK(taskListLock)
+				{
+					// Keep unstarted work available to a nested modal loop, and skip
+					// snapshot entries that the nested loop has already executed.
+					if (executedTaskCount == firstTaskId + index)
+					{
+						taskItems.RemoveAt(0);
+						executedTaskCount++;
+						execute = true;
+					}
+				}
+				if (!execute) continue;
 				item.proc();
 				if(item.semaphore)
 				{
@@ -65024,6 +65152,7 @@ SharedAsyncService
 		}
 	}
 }
+
 
 /***********************************************************************
 .\UTILITIES\SHAREDSERVICES\GUISHAREDAUTOMATIONSERVICE.CPP
@@ -65533,11 +65662,10 @@ RunIOCommandOnNativeWindow
 						listener->MouseEntered();
 					}
 				}
-				else if (state->mousePosition.Value() == position)
-				{
-					return;
-				}
 
+				// Coordinates are local to the target window. A new dialog can
+				// reuse both the previous position and a destroyed window's address.
+				// Always refresh its hit test before dispatching the button event.
 				state->mousePosition = position;
 				auto info = MakeMouseInfo(state);
 				for (auto listener : listeners)
@@ -67259,14 +67387,23 @@ TuiGraphicsRenderTarget
 
 	void TuiGraphicsRenderTarget::Fill(Rect bounds, Color color)
 	{
-		if (!CanDraw() || color.a == 0) return;
+		if (!CanDraw() || color.a == 0 || bounds.Width() <= 0 || bounds.Height() <= 0) return;
+		auto compositionClip = GetClipper();
+		TuiClipper clipper{ compositionClip.x1, compositionClip.y1, compositionClip.x2, compositionClip.y2 };
+		if (color.a == 255)
+		{
+			TUI::Clear({ color.r, color.g, color.b }, bounds.x1, bounds.y1, bounds.x2 - 1, bounds.y2 - 1, &clipper);
+			return;
+		}
 		auto area = bounds.Intersect(GetVisibleClipper());
+		auto buffer = TUI::GetBuffer();
+		auto width = TUI::GetBufferWidth();
 		for (vint y = area.y1; y < area.y2; y++)
 		{
 			for (vint x = area.x1; x < area.x2; x++)
 			{
-				auto background = TUI::GetBuffer()[y * TUI::GetBufferWidth() + x].backgroundColor;
-				TUI::Clear(TuiBlend(color, background), x, y, x, y);
+				auto background = buffer[y * width + x].backgroundColor;
+				TUI::Clear(TuiBlend(color, background), x, y, x, y, &clipper);
 			}
 		}
 	}
@@ -67275,43 +67412,32 @@ TuiGraphicsRenderTarget
 	{
 		if (!CanDraw() || color.a == 0 || bounds.Width() <= 0 || bounds.Height() <= 0) return;
 		if (bounds.Width() == 1 && bounds.Height() == 1) return;
-		auto area = bounds.Intersect(GetVisibleClipper());
-		if (area.Width() <= 0 || area.Height() <= 0) return;
-		auto width = TUI::GetBufferWidth();
-		auto height = TUI::GetBufferHeight();
-		borderBuffer.Resize(width * height);
-		for (vint i = 0; i < borderBuffer.Count(); i++) borderBuffer[i] = TUI::GetBuffer()[i];
+		auto compositionClip = GetClipper();
+		TuiClipper clipper{ compositionClip.x1, compositionClip.y1, compositionClip.x2, compositionClip.y2 };
 		auto glyph = style == TuiLineStyle::Thin ? TuiMergeableGlyph::ThinLine
 			: style == TuiLineStyle::Thick ? TuiMergeableGlyph::ThickLine : TuiMergeableGlyph::DoubleLine;
 		TuiLineOptions line{glyph, {color.r, color.g, color.b}};
+		if (color.a != 255)
+		{
+			line.foregroundColorBlending = [color](TuiColor destination) { return TuiBlend(color, destination); };
+		}
 		if (bounds.Width() == 1)
 		{
-			TUI::DrawLineV(&borderBuffer[0], width, height, line, bounds.x1, bounds.y1, bounds.y2 - 1);
+			TUI::DrawLineV(line, bounds.x1, bounds.y1, bounds.y2 - 1, &clipper);
 		}
 		else if (bounds.Height() == 1)
 		{
-			TUI::DrawLineH(&borderBuffer[0], width, height, line, bounds.x1, bounds.x2 - 1, bounds.y1);
+			TUI::DrawLineH(line, bounds.x1, bounds.x2 - 1, bounds.y1, &clipper);
 		}
 		else
 		{
 			TuiRectOptions rectangle{glyph, line.foregroundColor};
+			rectangle.foregroundColorBlending = line.foregroundColorBlending;
 			if (style == TuiLineStyle::Thin && shape.shapeType != ElementShapeType::Rectangle && bounds.Width() > 2 && bounds.Height() > 2)
 			{
 				rectangle.corner = TuiRectCorner::Round;
 			}
-			TUI::DrawRect(&borderBuffer[0], width, height, rectangle, bounds.x1, bounds.y1, bounds.x2 - 1, bounds.y2 - 1);
-		}
-		for (vint y = area.y1; y < area.y2; y++)
-		{
-			for (vint x = area.x1; x < area.x2; x++)
-			{
-				if (x != bounds.x1 && x != bounds.x2 - 1 && y != bounds.y1 && y != bounds.y2 - 1) continue;
-				auto index = y * width + x;
-				auto pixel = borderBuffer[index];
-				pixel.foregroundColor = TuiBlend(color, TUI::GetBuffer()[index].foregroundColor);
-				TUI::Clear(pixel.backgroundColor, x, y, x, y);
-				TUI::GetBuffer()[index] = pixel;
-			}
+			TUI::DrawRect(rectangle, bounds.x1, bounds.y1, bounds.x2 - 1, bounds.y2 - 1, &clipper);
 		}
 	}
 
@@ -67319,8 +67445,10 @@ TuiGraphicsRenderTarget
 	{
 		if (!CanDraw()) return;
 		auto width = TUI::MeasureChar(code);
-		auto clipper = GetVisibleClipper();
-		if (width == 0 || !clipper.Contains(location) || location.x + width > clipper.x2) return;
+		auto visibleClipper = GetVisibleClipper();
+		if (width == 0 || !visibleClipper.Contains(location)) return;
+		auto compositionClip = GetClipper();
+		TuiClipper clipper{ compositionClip.x1, compositionClip.y1, compositionClip.x2, compositionClip.y2 };
 		auto pixel = TUI::GetBuffer()[location.y * TUI::GetBufferWidth() + location.x];
 		TuiPrintOptions options;
 		options.foregroundColor = TuiBlend(foreground, pixel.foregroundColor);
@@ -67328,9 +67456,9 @@ TuiGraphicsRenderTarget
 		options.style = style;
 		if (foreground.a != 0)
 		{
-			TUI::PrintChar(options, code, location.x, location.y);
+			TUI::PrintChar(options, code, location.x, location.y, &clipper);
 		}
-		else if (background.a != 0)
+		else if (background.a != 0 && location.x + width <= visibleClipper.x2)
 		{
 			Fill(Rect(location, Size(width, 1)), background);
 		}
@@ -74426,14 +74554,16 @@ Class (::tui_controls::TuiFileDialogWindowConstructor)
 Class (::tui_controls::TuiFileDialogWindow)
 ***********************************************************************/
 
-	void TuiFileDialogWindow::MakeOpenFileDialog()
+	void TuiFileDialogWindow::MakeOpenFileDialog(const ::vl::WString& initialFileName)
 	{
 		::vl::__vwsn::This(this->buttonOK)->SetText(::vl::__vwsn::This(this->GetStrings().Obj())->FileDialogOpen());
+		::vl::__vwsn::This(this->filePickerControl)->SetInitialFileName(initialFileName);
 	}
 
-	void TuiFileDialogWindow::MakeSaveFileDialog()
+	void TuiFileDialogWindow::MakeSaveFileDialog(const ::vl::WString& initialFileName)
 	{
 		::vl::__vwsn::This(this->buttonOK)->SetText(::vl::__vwsn::This(this->GetStrings().Obj())->FileDialogSave());
+		::vl::__vwsn::This(this->filePickerControl)->SetInitialFileName(initialFileName);
 	}
 
 	::vl::Ptr<::tui_controls::ITuiDialogStringsStrings> TuiFileDialogWindow::GetStrings()
@@ -74850,6 +74980,11 @@ Class (::tui_controls::TuiFilePickerControl)
 	::vl::collections::LazyList<::vl::Ptr<::vl::presentation::IFileDialogFile>> TuiFilePickerControl::GetSelectedFiles()
 	{
 		return ::vl::reflection::description::GetLazyList<::vl::Ptr<::vl::presentation::IFileDialogFile>>(::vl::reflection::description::EnumerableCoroutine::Create(vl::Func(::vl_workflow_global::__vwsnf45_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControl_GetSelectedFiles_(this))));
+	}
+
+	void TuiFilePickerControl::SetInitialFileName(const ::vl::WString& value)
+	{
+		::vl::__vwsn::This(this->textBox)->SetText(value);
 	}
 
 	::vl::collections::LazyList<::vl::WString> TuiFilePickerControl::GetSelection()
@@ -76475,17 +76610,17 @@ FakeTuiDialogService
 			return new tui_controls::TuiFullFontDialogWindow(viewModel);
 		}
 
-		controls::GuiWindow* FakeTuiDialogService::CreateOpenFileDialog(Ptr<IFileDialogViewModel> viewModel)
+		controls::GuiWindow* FakeTuiDialogService::CreateOpenFileDialog(Ptr<IFileDialogViewModel> viewModel, const WString& initialFileName)
 		{
 			auto dialog = new tui_controls::TuiFileDialogWindow(viewModel);
-			dialog->MakeOpenFileDialog();
+			dialog->MakeOpenFileDialog(initialFileName);
 			return dialog;
 		}
 
-		controls::GuiWindow* FakeTuiDialogService::CreateSaveFileDialog(Ptr<IFileDialogViewModel> viewModel)
+		controls::GuiWindow* FakeTuiDialogService::CreateSaveFileDialog(Ptr<IFileDialogViewModel> viewModel, const WString& initialFileName)
 		{
 			auto dialog = new tui_controls::TuiFileDialogWindow(viewModel);
-			dialog->MakeSaveFileDialog();
+			dialog->MakeSaveFileDialog(initialFileName);
 			return dialog;
 		}
 

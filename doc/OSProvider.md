@@ -19,6 +19,11 @@ Shared test utilities live in `MacShared/`.
 
 ## Entry Point
 
+`MacFullControlTest/Main.mm` connects the generated window's `PaletteSelected`
+event to the shared `demo::OnPaletteSelected` handler in both native modes.
+`syncProj.sh` copies that helper from the owning GacUI test project. The handler
+queues palette installation and theme refresh while preserving existing controls.
+
 ### Standard Mode — `SetupOSXCoreGraphicsRenderer()`
 
 The standard mode entry point is `SetupOSXCoreGraphicsRenderer()` (in `CoreGraphicsApp.mm`), called from `main()`. It:
@@ -123,7 +128,7 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 
 | Service | Description |
 |---------|-------------|
-| **CocoaInputService** | Implements `INativeInputService`. Uses a GCD timer for periodic timer callbacks. Maps macOS key codes to VKEY codes, including Control as `ctrl` and Command as `osSuper`, and registers both modifiers for global shortcuts. Tracks key state via `CGEventSource`. |
+| **CocoaInputService** | Implements `INativeInputService`. Uses a GCD timer for periodic timer callbacks. Maps macOS key codes to VKEY codes, including Control as `ctrl` and Command as `osSuper`, and registers both modifiers for global shortcuts. The left/right Super VKEY names are `Command` and `Right Command`, including automation key commands. Tracks key state via `CGEventSource`. |
 | **CocoaScreenService** | `CocoaScreen` wraps `NSScreen`; reports bounds, client bounds, name, primary status, and logical scaling `1.0`. AppKit window/input coordinates are points; Retina backing scale is applied separately by the CoreGraphics drawing path. `CocoaScreenService` enumerates all screens. |
 | **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Reads the current default interface font from `NSFont messageFontOfSize:0`, preserves an explicit process override from `SetDefaultFont`, enumerates fonts via `NSFontManager`, and reports `Command` as the canonical Super-key name. |
 | **CocoaClipboardService** | Clipboard read/write via `NSPasteboard`. `CocoaClipboardWriter` collects text, document, and image data, then atomically writes all formats on `Submit()`. Text is written as `NSPasteboardTypeString`. Documents are written in three formats: a custom GacUI binary format (`com.gaclib.document`), RTF (`NSPasteboardTypeRTF`), and HTML (`NSPasteboardTypeHTML`). Images are written as TIFF (`NSPasteboardTypeTIFF`). `SetDocument()` auto-fills text and image fallbacks (like Windows). `CocoaClipboardReader` reads from the system pasteboard: text from `NSPasteboardTypeString`, documents from the custom GacUI format, and images from TIFF/PNG types via `ImageService`. Each `ReadClipboard()` call creates a fresh reader that queries the current pasteboard state. |
