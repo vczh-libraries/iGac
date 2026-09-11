@@ -2,8 +2,6 @@
 
 macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraphics/Quartz2D.
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vczh-libraries/iGac)
-
 ## License
 
 **Read the [LICENSE](https://github.com/vczh-libraries/iGac/blob/master/LICENSE.md) first.**
@@ -15,6 +13,17 @@ This repo is stand alone, all dependencies are in the repo for building.
 To run `RemotingTest_Rendering_macOS` by `test.sh --app:renderer`, the `GacUI` repo is needed. `test_core.sh` full-builds and runs the matching project under `GacUI/Test/Linux`.
 
 For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency.
+
+## Supported Platforms
+
+- Windows implementation is released in [the Release repo](https://github.com/vczh-libraries/Release)
+- Linux implementation is released in [the wGac repo](https://github.com/vczh-libraries/wGac)
+- macOS implementation is released in [the iGac repo](https://github.com/vczh-libraries/iGac)
+- HTML5 implementation is released in [the GacJS repo](https://github.com/vczh-libraries/GacJS)
+
+![](./Screenshots/FCT_Default.png)
+
+![](./Screenshots/TUI_SkyBlue%20(default).png)
 
 ### Install Homebrew and Development Tools
 
