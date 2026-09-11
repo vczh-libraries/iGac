@@ -6,6 +6,8 @@ At the end of every request, run the following scripts in order:
 - `./build.sh`
 and they must all succeed.
 
+When missing any dependencies to libraries, cmake and build scripts must be updated properly, and treat `./build.sh` as the only official verification.
+
 ## Before You Start
 
 **You MUST read these files before doing any work:**
