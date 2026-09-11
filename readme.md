@@ -104,6 +104,7 @@ iGac/
 │
 ├── Import/                     Amalgamated GacUI source files (Vlpp, GacUI, Workflow, ...)
 ├── Import-Test/                Test-only GacUI remoting helper amalgamations
+├── Screenshots/                Native FCT and terminal showcase captures for every color theme
 │
 ├── doc/                        Documentation
 │   ├── OSProvider.md           macOS OS provider: controller, services, entry point
@@ -254,6 +255,8 @@ and start the new one with `--port:8890`.
 Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
 
 ## Documentation
+
+[`Screenshots/`](Screenshots/) contains all six Full Control Test themes and all six TUI themes, captured with their native macOS window frames. Refresh them using the [screenshot update job](../GacUI/.github/Jobs/job.updateScreenshots.prompt.md).
 
 - [TestMatrix_Tui.md](TestMatrix_Tui.md) — macOS terminal showcase verification and host limitations.
 

@@ -52,6 +52,14 @@
 
 ## Terminal comparison
 
+### macOS screenshot capture, 2026-09-10
+
+The screenshot update job was completed on an unlocked desktop after a successful incremental `./build.sh`. Apple Terminal.app 2.15, Basic profile, SFMono-Regular 11, displayed the foreground `./test.sh --app:tui` showcase at 120 columns by 40 rows. A temporary PTY relay forwarded its output unchanged and injected SGR mouse bytes; AppleScript read the live visible terminal contents after each action.
+
+All six Color Theme radios were selected and verified in turn. Each [TUI screenshot](Screenshots/) shows `List` / `BindableDataGrid` with the third row's Category editor expanded and the consecutive `Black`, `Red`, `Lime`, `Blue`, and `White` options visible. All six native window captures are 877 by 609 pixels, include the macOS title bar, and were visually inspected. The six FCT captures in the same folder are 1200 by 650 pixels and preserve the requested ribbon document and Header 1 formatting.
+
+The queued `self.Close()` action, with cancellation unchecked, exited with status zero. The relay verified restoration of the outer terminal's saved attributes; the shell returned, and the owned Terminal window and all showcase/helper processes were closed. These captures establish the displayed screenshot states; the earlier locked-desktop shortcut and physical-input limitations below remain separate historical results.
+
 ### macOS locked-desktop terminal comparison, 2026-09-10
 
 | Field | Observed result |
