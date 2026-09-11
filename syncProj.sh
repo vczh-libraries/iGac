@@ -150,10 +150,10 @@ printf '%s\n%s\n%s\n' \
     "Reflection64.bin" \
     > "$TOOL_DIR/Metadata.txt"
 
+sync_application "TuiControlTest" "TuiControlTest"
 sync_application "FullControlTest" "FullControlTest"
 sync_application "RemoteProtocolTest" "RemoteProtocolTest"
 sync_application "RemoteViewModelTest" "RemoteViewModelTest"
-sync_application "TuiControlTest" "TuiControlTest"
 
 cp "$FCT_PALETTE_DIR/FullControlTestPalette.h" "$SCRIPT_DIR/Apps/FullControlTest/Source/"
 cp "$FCT_PALETTE_DIR/FullControlTestPalette.cpp" "$SCRIPT_DIR/Apps/FullControlTest/Source/"
