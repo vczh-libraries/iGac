@@ -170,7 +170,10 @@ application. It copies the shared `FullControlTestPalette.h/.cpp` handler from
 GacUI's `Generated_FullControlTest` inventory; the local Full Control Test entry
 point attaches it so every Color Theme preset refreshes existing controls in
 both standard and hosted mode. It also refreshes the shared native-renderer and RVM entry points,
-the RVM initializer, and `CppTest_Tui/Main.cpp` as `MacTuiControlTest/GuiMain.cpp`. Only the terminal platform entry point remains local. MiniHTTP automation is part of the imported GacUI
+the RVM initializer, and `CppTest_Tui/Main.cpp` as `MacTuiControlTest/GuiMain.cpp`.
+The RVM entry point's shared automation argument header is copied to the committed
+root `SharedArguments.h`, so a fresh clone can build without sibling sources or
+temporary files. Only the terminal platform entry point remains local. MiniHTTP automation is part of the imported GacUI
 snapshot, while reusable test remoting helpers come from `Import-Test/`;
 neither is maintained as a local `MacShared/Mini*.cpp` copy. Generated
 reflection files are retained in `Apps/*/Source`, but test targets compile with
