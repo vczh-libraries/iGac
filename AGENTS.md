@@ -8,6 +8,8 @@ and they must all succeed.
 
 When missing any dependencies to libraries, cmake and build scripts must be updated properly, and treat `./build.sh` as the only official verification.
 
+All build scripts and makefiles, including CMake files, must remain usable on a fresh computer with a fresh clone after installing the documented prerequisites. They must not depend on temporary folders, machine-specific paths, or artifacts left over from previous builds. Any required generated inputs must be reproducible through the documented build process.
+
 ## Before You Start
 
 **You MUST read these files before doing any work:**
