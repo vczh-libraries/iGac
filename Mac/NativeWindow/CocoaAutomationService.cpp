@@ -46,7 +46,7 @@ CocoaAutomationService
 				collections::List<CocoaWindow*> windows;
 				GetAllCreatedCocoaWindows(windows);
 				CHECK_ERROR(windows.Contains(dynamic_cast<CocoaWindow*>(window)), ERROR_MESSAGE_PREFIX L"The specified INativeWindow instance should be native.");
-				return utow(static_cast<vuint>(reinterpret_cast<intptr_t>(window)));
+				return u64tow(static_cast<vuint64_t>(reinterpret_cast<uintptr_t>(window)));
 #undef ERROR_MESSAGE_PREFIX
 			}
 
@@ -54,10 +54,24 @@ CocoaAutomationService
 			{
 				if (windowId)
 				{
-					auto cocoaWindow = reinterpret_cast<CocoaWindow*>(static_cast<intptr_t>(wtou(windowId.Value())));
+					auto id = wtou64(windowId.Value());
+					auto address = static_cast<uintptr_t>(id);
+					if (static_cast<vuint64_t>(address) != id)
+					{
+						return nullptr;
+					}
+					auto expectedWindow = reinterpret_cast<INativeWindow*>(address);
 					collections::List<CocoaWindow*> windows;
 					GetAllCreatedCocoaWindows(windows);
-					return windows.Contains(cocoaWindow) ? cocoaWindow : nullptr;
+					for (auto cocoaWindow : windows)
+					{
+						auto window = static_cast<INativeWindow*>(cocoaWindow);
+						if (window == expectedWindow)
+						{
+							return window;
+						}
+					}
+					return nullptr;
 				}
 				else
 				{

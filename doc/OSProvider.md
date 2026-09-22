@@ -95,6 +95,14 @@ application starts its MiniHTTP endpoint after substitution, then stops the
 endpoint and service before unsubstituting it. This keeps endpoint and service
 lifetime in the application that owns the test scenario.
 
+In normal multi-window mode, automation window IDs encode the `INativeWindow`
+interface pointer using unsigned 64-bit decimal conversion. Lookup compares
+that pointer against the interface pointers of live Cocoa windows, accounting
+for the base-class offset in `CocoaWindow`.
+Input targeting a popup uses its own window ID and window-local coordinates;
+input without an ID targets the main window. Hosted mode uses its shared native
+window and omits the ID.
+
 ### Window Management
 
 `CocoaController` also implements `INativeWindowService`:

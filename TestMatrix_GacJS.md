@@ -1,37 +1,47 @@
-# Test Matrix Card 2026-09-10 18:50:58 -0700
+# Test Matrix Card 2026-09-22 00:03:15 -0700
 
 ## Test Matrix
 
 | Test Item | 1st |
 | --- | --- |
-| [macOS][`/RPT`][`/MiniHttp`] | 2026-09-10 18:55:28 -0700 |
-| [macOS][`/FCT`][`/MiniHttp`] | 2026-09-10 19:04:43 -0700 |
-| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over network] | 2026-09-10 19:09:39 -0700 |
-| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over stdio `/Cli:<path>`] | 2026-09-11T02:20:12.092Z |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS browser host `?rvmhost`] | 2026-09-11T02:21:46.864Z |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over network] | 2026-09-11T02:20:15.322Z |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node SEA over stdio `/Cli:<path>`] | 2026-09-11T02:20:23.526Z |
+| [macOS][`/RPT`][`/MiniHttp`] | Normal PASS 23:46–23:52; exit probe PASS 00:03; fresh fatal included (`/tmp/rpxplat-20260921/browser-normal`, `browser-exit-probes`) |
+| [macOS][`/FCT`][`/MiniHttp`] | Normal PASS 23:53–23:59; exit probe PASS 00:03 (`/tmp/rpxplat-20260921/browser-retry-normal`, `browser-exit-probes`) |
+| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over network] | Normal PASS 23:51; fresh idle PASS 00:00; fresh blocked PASS 00:00 (`/tmp/rpxplat-20260921/browser-blocked`) |
+| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over stdio `/Cli:<path>`] | Normal PASS 23:51; fresh idle PASS 00:00; blocked retry PASS 00:01 (`/tmp/rpxplat-20260921/browser-blocked-stdio-retry`) |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS browser host `?rvmhost`] | Normal PASS 23:59; fresh idle PASS 00:00; fresh blocked PASS 00:00 (`/tmp/rpxplat-20260921/browser-blocked`) |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over network] | Normal PASS 23:52; fresh idle PASS 00:00; fresh blocked PASS 00:00 (`/tmp/rpxplat-20260921/browser-blocked`) |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node SEA over stdio `/Cli:<path>`] | Normal PASS 23:52; fresh idle PASS 00:00; blocked retry PASS 00:01 (`/tmp/rpxplat-20260921/browser-blocked-stdio-retry`) |
 
 ## Build and synchronization
 
-GacJS import/codegen/build/test and all seven live WebKit rows passed. After restoring audited snapshot noise, two consecutive codegen runs produce no additional diff; GacJS has no lasting source changes.
+GacJS import/codegen/build/test passed: 159 tests across 10 packages. GacUI Core and
+native RVM host builds also passed. The tested GacUI baseline is revision
+`83fc7100b`; the temporary WebKit harness is
+`/tmp/rpxplat-20260921/browser-matrix.mjs`.
 
 ## Issues Found and Fix
 
-Desktop observation: macOS reports `CGSSessionScreenIsLocked=true`; desktop capture is black. Physical input, native global chord activation and final displayed appearance remain unavailable. Native automation, WebKit and terminal-buffer/replay checks are recorded separately.
+RPT covered initial UI, button/grid/document actions, local shortcuts, the full
+left/middle/right mouse and modifier matrix with both wheel axes, renderer
+replacement and concurrent takeover, detached-renderer input isolation, the
+required File → `self.Close()` confirmation path, and a fresh fatal run with
+the exact error mask, one page error, and nonzero Core termination. The short
+exit probe also verified code 0 and no signal for the normal close path.
 
-WebKit RPT completed: initial UI, button marker, grid add/clear, embedded dialog, both local shortcuts, five buttons/modifiers and both wheel axes, reconnect/takeover with retained marker and repeated input, queued File-menu close with Core exit 0, and a fresh fatal run with exact error mask and one matching page error (Core SIGABRT). Native global registration is unavailable in the locked desktop/headless browser. Captures: `/tmp/rpxplat-20260910/webkit-rpt-*.png`.
+FCT covered paired list add/clear, independent search and rich-editor markers,
+0xDB/0xDD key-code payloads including explicit shifted brace chords,
+shortcut and mouse matrices before and after replacement, and Force Exit with
+Core exit code 0. Easy Layout checks covered five outer control bounds, shared
+track proportions, both directions, edited marker retention through rebuild,
+900×700 resize and restoration, choice retention, all six palettes, checkbox
+state, and inert buttons.
 
-WebKit FCT completed: paired lists add/clear, independent search/rich-editor markers and tab/renderer retention, exact brackets/braces with 0xDB/0xDD key payloads, two local shortcuts and full mouse/modifier matrix before/after replacement, then Force Exit and Core exit 0.
-
-Native network RVMT passed: RPC, second-host rejection, renderer replacement and normal exit; separate idle and delivery-acknowledgement host loss both produced the exact Core error and one matching page error. Blocked loss was injected with SIGSTOP, 397 unread response bytes observed via netstat, then SIGKILL before replacement polling; the fatal mask arrived at the five-second deadline.
-
-Native `RemotingTest_RvmHost` over stdio: initial/RPC, renderer replacement and subsequent RPC, normal close, idle host loss and blocked-delivery loss passed with exact Core error and one renderer page error. Exact Core !Exit reaped the stdio child; stopped child plus blocked Controls request established in-flight RPC before EOF.
-
-GacJS Node `cli.js` over network: initial/RPC, second-host rejection, renderer replacement and subsequent RPC, normal close, idle host loss and blocked-delivery loss passed with exact Core error and one renderer page error.
-
-GacJS Node SEA over stdio: initial/RPC, renderer replacement and subsequent RPC, normal close, idle host loss and blocked-delivery loss passed with exact Core error and one renderer page error. Exact Core !Exit reaped the stdio child; stopped child plus blocked Controls request established in-flight RPC before EOF.
-
-GacJS browser host `?rvmhost`: initial/RPC, second-host rejection, renderer replacement and subsequent RPC, normal close, idle host loss and blocked-delivery loss passed with exact Core error and one renderer page error.
-
-After the final GacUI template-stacking fix, import/codegen/build/test passed again and a fresh WebKit RPT run passed button mutation, the local shortcut, queued close and Core exit 0. The expected connection-loss console message occurs after normal Core shutdown; no pre-shutdown page error was observed. GacJS remains unchanged.
+All five RVMT topologies passed normal initial/RPC, renderer replacement,
+normal close, and second-host rejection where applicable. Each topology also
+passed fresh idle-loss and blocked-delivery loss with the exact Core error mask,
+one matching page error, nonzero Core termination, and bounded acknowledgement.
+The browser-host rejection path retained the original host while the rejected
+page displayed its error mask. WebKit cannot synthesize native Mouse4/Mouse5
+input; those buttons were covered separately with cancelable browser-boundary
+events and protocol payload/history assertions. All owned listeners, hosts,
+browsers, and dialogs were cleaned after each batch.

@@ -90,6 +90,23 @@ pgrep -fl 'Test_FullControlTest|Test_HellWorld|lldb'
 pkill -f 'Test_FullControlTest|Test_HellWorld|lldb'
 ```
 
+Killing the application does not necessarily dismiss its native message boxes.
+`CocoaDialogService::ShowMessageBox` uses `CFUserNotificationDisplayAlert`, so
+shortcut and remote-fatal prompts belong to the separate
+`UserNotificationCenter` process. Inspect its window text and buttons with
+System Events, identify the test's title/message, and dismiss only those
+prompts. Check again after each failed or interrupted run before starting the
+next one; an empty application-window list does not establish dialog cleanup.
+For a remote-fatal regression, choose `No` while the renderer is alive, inspect
+its retained `Dom.fatalError`, then send exact `!Exit`. Also cancel any
+test-triggered debugger authorization or file-access request that is no longer
+needed.
+
+Before closing a task-owned Terminal window, verify its window ID and tab TTY;
+preserve the window running Codex. Inspect sheets attached to remaining Terminal
+windows as well as top-level windows. Cancel any leftover confirmation to
+terminate running processes instead of accepting it.
+
 ## Useful Commands
 
 ```text
