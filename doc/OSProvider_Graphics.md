@@ -62,6 +62,8 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 
 `GuiGraphicsLayoutProviderCoreText.mm` provides `CoreTextLayoutProvider`, which implements `IGuiGraphicsLayoutProvider` using CoreText for rich text layout and rendering.
 
+Inline attachment cells (`GuiElementsTextCell`) must be created with `initWithGraphicsElement:properties:andCallback:` so their inline-object properties and paragraph callback are initialized. Plain `init` and `new` are unavailable.
+
 ### Font Management
 
 `ICoreGraphicsResourceManager` provides:

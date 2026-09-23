@@ -42,6 +42,8 @@ public:
 #endif
 
 - (instancetype)initWithGraphicsElement:(vl::Ptr<IGuiGraphicsElement>)element properties:(IGuiGraphicsParagraph::InlineObjectProperties)properties andCallback:(IGuiTextCellCallback*)callback NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 @end
 
