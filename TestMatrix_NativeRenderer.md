@@ -1,25 +1,45 @@
-# Test Matrix Card 2026-09-21
+# Test Matrix Card 2026-09-22T22:41:38-07:00
+
+Scope: remote FCT with the macOS native renderer over MiniHTTP only. All other runtime verifications are excluded by request; their results remain blank.
 
 ## Test Matrix
 
 | Test Item | 1st |
 | --- | --- |
-| [macOS][`test.sh --app:simple`] | 2026-09-21T22:17:02-07:00 |
-| [macOS][`test.sh --app:fct`] (standard) | 2026-09-22T00:22:11-07:00 (pass; list/editor/Easy Layout/rebuild/palette/mouse/exit; local Ctrl+Q and Ctrl+Alt+Command+Q prompts plus Carbon-global Ctrl+Shift+Alt+Command+Q prompt observed and dismissed; native AX custom-frame resize expanded 701x521→841x611, shrank to 761x551, and restored 701x521 while retaining edited marker, checked Right check, Second choice, five aligned non-overlapping outer controls, and combo width 120; evidence `/tmp/rpxplat-20260921/fct-native-resize-final.json`) |
-| [macOS][`test.sh --app:fct --hosted`] | 2026-09-21T22:30:35-07:00 (pass; list/editor/Easy Layout/rebuild/palette/mouse/exit) |
-| [macOS][Test_CppTest_Rvm][`/MiniHttp`] | 2026-09-21T22:48:41-07:00 (scoped pass; native requester + RVM host, title, text input `RvmMacMarker` reflected as `Hello, RvmMacMarker!`, queued !Exit, second host rejected status 1; fresh idle and blocked host-loss textbox calls ended requester status 1 with exact `vl::rpc_controller::RpcInjectedException`, and blocked delivery had zero prequeue then queue 379; evidence `/tmp/rpxplat-20260921/cpptest-idle-evidence.txt`, `cpptest-blocked-evidence.txt`) |
-| [macOS][`/RPT`][`/MiniHttp`] | 2026-09-21T22:43:00-07:00 (pass; test_core.sh full rebuild wrapper exit 0, Core /RPT listener, native renderer initial/replacement/takeover, click retention, DataGrid add/clear, Document modal/OK, five mouse buttons with six modifier combinations and readouts, movement/double-click/both wheel axes, clean File close; fresh renderer Fatel Error input queued, Core printed `vl::Error`, and exited 1; native renderer prompt was dismissed with No, Dom retained exact `fatalError: This is a fatel error!`, ordinary IO returned `!Application stopped responding.`, and !Exit then queued clean exit) |
-| [macOS][`/FCT`][`/MiniHttp`] | 2026-09-22T00:23:54-07:00 (pass; Core/renderer takeover, TextList add/clear, ListView/TreeView/BindableDataGrid visible, Easy Layout outer geometry, popup Second choice, Ribbon editor search/document markers retained across List↔Control, two rebuild direction toggles, all six palettes, five mouse buttons with six modifier combinations/readouts, movement/double-click/both wheel axes; renderer `Ctrl+Q` and `Ctrl+Alt+Command+Q` produced exact hosted FakeDialogService prompts before and after renderer replacement on ports 8889/8890, inspected through Core Controls and dismissed through renderer `!KeyPress:Enter`; evidence `/tmp/rpxplat-20260921/remote-fct-shortcuts-before.json`, `remote-fct-shortcuts-after.json`; native AX resize is covered by the standard FCT evidence above) |
-| [macOS][`/RVMT`][`/MiniHttp`] | 2026-09-21T22:49:56-07:00 (scoped pass; Core/RVM host/native renderer, title, text input `RVMTMacMarker` reflected as `Hello, RVMTMacMarker!`, queued renderer !Exit, second host rejected status 1; fresh idle and blocked renderer host-loss paths completed native No → exact Dom fatal → ordinary IO reject → !Exit, with blocked delivery zero prequeue then queue 379; evidence `/tmp/rpxplat-20260921/rvmt-idle-evidence.txt`, `rvmt-blocked-evidence.txt`) |
-| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] | 2026-09-21T22:51:02-07:00 (scoped pass; Core `/Cli:/.../RemotingTest_RvmHost`, native renderer, title, text input `RVMTCliMacMarker` reflected as `Hello, RVMTCliMacMarker!`, queued renderer !Exit, healthy `StdioBaseline` established through the focused textbox; fresh idle and blocked renderer host-loss paths completed native No → exact Dom fatal → ordinary IO reject → !Exit, with a fresh Controls read pending 500ms after blocked renderer input before EOF; evidence `/tmp/rpxplat-20260921/rvmt-stdio-idle-evidence.txt`, `rvmt-stdio-blocked-evidence.txt`) |
+| [macOS][`test.sh --app:simple`] |  |
+| [macOS][`test.sh --app:fct`] (standard) |  |
+| [macOS][`test.sh --app:fct --hosted`] |  |
+| [macOS][Test_CppTest_Rvm][`/MiniHttp`] |  |
+| [macOS][`/RPT`][`/MiniHttp`] |  |
+| [macOS][`/FCT`][`/MiniHttp`] | 2026-09-22T22:41:38-07:00 |
+| [macOS][`/RVMT`][`/MiniHttp`] |  |
+| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] |  |
 
 ## Build and synchronization
 
-CodePack/import/sync and the iGac all-target build passed. Core and RVM host full builds passed. GacUI passed 92/92 files and 1802/1802 cases; VlppOS passed 14/14 files and 276/276 cases. Build evidence is in /tmp/rpxplat-20260921. The native verification pass also
-requires `test_core.sh` to invoke the documented full `build.sh -f` path for
-Core/host launch verification; an incremental invocation was corrected before
-the launch rows.
+2026-09-22T22:41:38-07:00: CodePack, import and sync passed; iGac all-target build passed. Core full rebuild through `test_core.sh --app:fct --protocol:minihttp` passed. Unit tests and all other runtime targets were excluded by request. Evidence: `/tmp/rpxplat-fct-20260922`.
+
+## FCT progress
+
+| Check | Result |
+| --- | --- |
+| Initial title and tabs | Passed |
+| Both lists add 0–9 and clear | Passed; exact 0–9 twice, then absent from Controls and active DOM |
+| Search and rich editor text, tab retention, brackets/braces | Passed; MacMiniHTTP922 / NativeMiniHTTP Hello[Ab]{Cd}, exact in both trees after tab round trip |
+| Canonical shortcut labels and local dialogs | Passed on all three renderers; canonical Command labels and exact local prompts dismissed |
+| Native global shortcut | Passed on all three renderers; native macOS Ctrl+Shift+Alt+Command+Q exact dialog |
+| Five mouse buttons and modifier combinations | Passed before and after replacement; all five down/up pairs × eight combinations, matching theme font/color; Mouse4/5 repeated after takeover |
+| Movement, double-click, both wheel axes | Passed before and after replacement; eight modifier combinations, all five double-click buttons, both wheel axes/directions; 480 total mouse-event assertions |
+| Renderer replacement and takeover, retained state, repeated input | Passed; same Core PID 4421, markers retained in renderers 2/3, renderer 2 exited and port 8889 closed, repeated local shortcuts and Mouse4/Mouse5 on renderer 3 |
+| Updated Easy Layout pages | Passed; editor/choice retention, both arrangement rebuilds, all four table splitters, rebuild restores 120×40 editor and retains text |
+| Application close and process cleanup | Passed; Exit → self.Close() (InvokeInMainThread), Core and active renderer exit 0; no remaining processes or listeners on 8888/8889/8890 |
+
+## Run details
+
+Completed 2026-09-22T22:56:39-07:00. Core source revision: GacUI `e8be96806`; iGac starting revision: `96acd7c`. All application input used the active native renderer, with System Events keyboard input for the Carbon global shortcut. Core Controls and active renderer DOM were checked after each state change. No functional defects were observed.
+
+`syncProj.sh` imported the current FullControlTest Easy Layout resources and regenerated their C++ snapshot. Framework CodePack output was unchanged apart from line endings; existing line endings were preserved. Generated C++ retains its existing CRLF format; `git -c core.whitespace=cr-at-eol diff --check` passed.
+
+Evidence is retained under `/tmp/rpxplat-fct-20260922`: build/sync/Core/renderer logs, Controls/DOM snapshots, renderer command log, `mouse-before-evidence.json`, `mouse-replacement-evidence.json`, and `takeover-detach.json`. Renderer 1 was deliberately killed to test replacement; renderer 2 exited 0 after takeover; Core and renderer 3 exited 0 through the application close action.
 
 ## Issues Found and Fix
-
-The Cocoa automation window-ID path had two macOS defects: lookup decoded the valid `INativeWindow*` ID as a `CocoaWindow*` pointer and the 32-bit `wtou` parser rejected valid 64-bit IDs. The native service now compares the live `INativeWindow*` interface pointer and uses 64-bit conversion. After rebuilding, main ID `38636181128` and popup ID `38615592840` accepted explicit IO, a bogus ID was rejected, and popup-local Second choice selection succeeded and closed the popup. Evidence: `/tmp/rpxplat-20260921/fct-cocoa-windowid-fixed.json`; earlier failures are retained in the before/fix-attempt captures. Standard FCT local Ctrl+Q/Ctrl+Alt+Command+Q and Carbon-global Ctrl+Shift+Alt+Command+Q prompts were observed and dismissed. Remote FCT shortcut prompts passed before and after renderer replacement through hosted Core Controls; renderer input returned `Queued`, and renderer `!KeyPress:Enter` dismissed the inspected `OK` modal. A fresh standard FCT used the native System Events AX size setter and verified actual MainWindow bounds 701x521→841x611→761x551→701x521 with all edited Easy Layout state retained. Source revision under validation is GacUI `83fc7100b`.
