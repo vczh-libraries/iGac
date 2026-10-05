@@ -411,7 +411,7 @@ Author: Zihan Chen (vczh)
 Licensed under https://github.com/vczh-libraries/License
 ***********************************************************************/
 
-#if defined VCZH_GCC
+#if defined VCZH_GCC || defined VCZH_WASM
 #include <ctype.h>
 #include <wctype.h>
 #endif
@@ -596,23 +596,22 @@ UtfConversion<char16_t>
 		{
 			if (IsInvalid(source)) return -1;
 			vuint32_t c = static_cast<vuint32_t>(source);
-			vuint16_t(&ds)[BufferLength] = reinterpret_cast<vuint16_t(&)[BufferLength]>(dest);
 
 			if (0x000000UL <= c && c <= 0x00D7FFUL)
 			{
-				ds[0] = static_cast<vuint16_t>(c);
+				dest[0] = static_cast<char16_t>(c);
 				return 1;
 			}
 			else if (0x00E000UL <= c && c <= 0x00FFFFUL)
 			{
-				ds[0] = static_cast<vuint16_t>(c);
+				dest[0] = static_cast<char16_t>(c);
 				return 1;
 			}
 			else if (0x010000UL <= c && c <= 0x10FFFFUL)
 			{
 				c -= 0x010000UL;
-				ds[0] = static_cast<vuint16_t>((c >> 10) | 0xD800U);
-				ds[1] = static_cast<vuint16_t>((c & 0x03FFU) | 0xDC00U);
+				dest[0] = static_cast<char16_t>((c >> 10) | 0xD800U);
+				dest[1] = static_cast<char16_t>((c & 0x03FFU) | 0xDC00U);
 				return 2;
 			}
 			else
@@ -623,8 +622,8 @@ UtfConversion<char16_t>
 
 		vint UtfConversion<char16_t>::To32(const char16_t* source, vint sourceLength, char32_t& dest)
 		{
-			const vuint16_t* cs = reinterpret_cast<const vuint16_t* >(source);
-			vuint32_t& d = reinterpret_cast<vuint32_t&>(dest);
+			const char16_t* cs = source;
+			char32_t& d = dest;
 			if (sourceLength <= 0) return -1;
 
 			if ((cs[0] & 0xFC00U) == 0xD800U)
@@ -734,11 +733,24 @@ String Conversions (ObjectString)
 	template<typename TFrom, typename TTo, vint(*Convert)(const TFrom*, TTo*, vint)>
 	ObjectString<TTo> ConvertStringDirect(const ObjectString<TFrom>& source)
 	{
-		vint len = Convert(source.Buffer(), nullptr, 0);
+		auto input = source.Buffer();
+		auto convert = [&](TTo* output, vint capacity)
+		{
+			vint length = 0;
+			for (vint offset = 0; offset <= source.Length(); offset++)
+			{
+				auto count = Convert(input + offset, output ? output + length : nullptr, output ? capacity - length : 0);
+				if (count < 1) return vint(0);
+				length += count;
+				while (input[offset]) offset++;
+			}
+			return length;
+		};
+		vint len = convert(nullptr, 0);
 		if (len < 1) return {};
 		TTo* buffer = new TTo[len];
 		memset(buffer, 0, len * sizeof(TTo));
-		Convert(source.Buffer(), buffer, len);
+		convert(buffer, len);
 		return ObjectString<TTo>::TakeOver(buffer, len - 1);
 	}
 
@@ -1016,7 +1028,7 @@ Licensed under https://github.com/vczh-libraries/License
 ***********************************************************************/
 
 #if defined VCZH_MSVC
-#elif defined VCZH_GCC
+#elif defined VCZH_GCC || defined VCZH_WASM
 #define _strtoi64 strtoll
 #define _strtoui64 strtoull
 #define _wcstoi64 wcstoll
@@ -1031,7 +1043,7 @@ namespace vl
 	template class ObjectString<char16_t>;
 	template class ObjectString<char32_t>;
 
-#if defined VCZH_GCC
+#if defined VCZH_GCC || defined VCZH_WASM
 	void _itoa_s(vint32_t value, char* buffer, size_t size, vint radix)
 	{
 		snprintf(buffer, size, "%d", value);
@@ -1107,7 +1119,7 @@ namespace vl
 	{
 		while(*buffer)
 		{
-			*buffer=(char)towlower(*buffer);
+			*buffer=(wchar_t)towlower(*buffer);
 			buffer++;
 		}
 	}
@@ -1116,7 +1128,7 @@ namespace vl
 	{
 		while(*buffer)
 		{
-			*buffer=(char)towupper(*buffer);
+			*buffer=(wchar_t)towupper(*buffer);
 			buffer++;
 		}
 	}
@@ -1393,11 +1405,11 @@ Licensed under https://github.com/vczh-libraries/License
 ***********************************************************************/
 
 
-#ifdef VCZH_MSVC
+#if defined VCZH_MSVC
 #include <io.h>
 #endif
 
-#ifdef VCZH_GCC
+#if defined VCZH_GCC || defined VCZH_WASM
 #define _wcsnicmp wcsncasecmp
 #endif
 
@@ -1605,7 +1617,7 @@ UnitTest
 			template<typename TCallback>
 			void SuppressCFailure(TCallback&& callback)
 			{
-#ifdef VCZH_MSVC
+#if defined VCZH_MSVC
 				__try
 				{
 					SuppressCppFailure(std::forward<TCallback&&>(callback));
@@ -1614,7 +1626,7 @@ UnitTest
 				{
 					RecordFailure(L"Runtime exception occurred!");
 				}
-#else
+#elif defined VCZH_GCC || defined VCZH_WASM
 				SuppressCppFailure(callback);
 #endif
 			}
@@ -1679,7 +1691,7 @@ UnitTest
 
 		int UnitTest::RunAndDisposeTests(const collections::Array<WString>& options)
 		{
-#ifdef VCZH_MSVC
+#if defined VCZH_MSVC
 			_set_abort_behavior(0, _WRITE_ABORT_MSG);
 #ifdef VCZH_CHECK_MEMORY_LEAKS
 			auto debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
