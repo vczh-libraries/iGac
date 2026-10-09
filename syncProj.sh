@@ -2,12 +2,14 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKFLOW_DIR="$SCRIPT_DIR/../Workflow"
 GACUI_DIR="$SCRIPT_DIR/../GacUI"
 WORKFLOW_BUILD="$WORKFLOW_DIR/.github/Ubuntu/build.sh"
 GACUI_BUILD="$GACUI_DIR/.github/Ubuntu/build.sh"
+CPPMERGE="$WORKFLOW_DIR/Tools/CppMerge/Bin/CppMerge"
 GACGEN="$GACUI_DIR/Tools/GacGen/Bin/GacGen"
+GACBUILD="$GACUI_DIR/Tools/GacBuild/Bin/GacBuild"
 METADATA_DIR="$GACUI_DIR/Test/Resources/Metadata"
 REMOTE_RENDERER_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Rendering_Win32/GuiMain.cpp"
 RVM_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Rvm/GuiMain.cpp"
@@ -73,8 +75,7 @@ sync_application() {
     local resource_file="$resource_dir/Resource.xml"
     local generated_entry="$source_dir/${generated_name}.h"
     local generated_resource="$source_dir/${generated_name}Resource.cpp"
-    local gacgen_log="$TOOL_DIR/${app_name}.log"
-    local error_file="$resource_file.log/x64/Errors.txt"
+    local gacbuild_log="$resource_dir/GacBuild.log"
 
     echo "Preparing $app_name..." >&2
     require_directory "$source_resources"
@@ -89,23 +90,23 @@ sync_application() {
     require_file "$resource_file"
     configure_resource "$resource_file" "$generated_name"
 
-    if ! "$TOOL_DIR/GacGen" /C64 "$resource_file" >"$gacgen_log" 2>&1; then
-        cat "$gacgen_log" >&2
-        echo "GacGen failed for $app_name." >&2
-        exit 1
-    fi
-
-    if [[ -f "$error_file" ]]; then
-        cat "$error_file" >&2
-        echo "GacGen reported resource errors for $app_name." >&2
+    if ! "$GACBUILD" -mode:GacGen \
+        "-pathGacGen:$TOOL_DIR/GacGen" \
+        "-pathCppMerge:$CPPMERGE" \
+        -FileName "$resource_file" >"$gacbuild_log" 2>&1; then
+        cat "$gacbuild_log" >&2
+        echo "GacBuild failed for $app_name. See $gacbuild_log and $resource_file.log." >&2
         exit 1
     fi
 
     require_file "$generated_entry"
     require_file "$generated_resource"
-    rm -rf "$resource_file.log"
+    if [[ "$app_name" == "RemoteViewModelTest" ]]; then
+        require_file "$source_dir/RemoteViewModelTestRpc.h"
+        require_file "$source_dir/RemoteViewModelTestRpc.cpp"
+    fi
 
-    echo "Synchronized $app_name resources and generated x64 C++ sources."
+    echo "Synchronized $app_name resources and merged x32/x64 C++ sources."
 }
 
 require_file "$WORKFLOW_BUILD"
@@ -133,6 +134,7 @@ echo "Building Workflow CppMerge incrementally..."
     cd "$WORKFLOW_DIR/Tools/CppMerge"
     "$WORKFLOW_BUILD"
 )
+require_file "$CPPMERGE"
 
 echo "Building GacUI GacGen incrementally..."
 (
@@ -141,9 +143,18 @@ echo "Building GacUI GacGen incrementally..."
 )
 require_file "$GACGEN"
 
+echo "Building GacUI GacBuild incrementally..."
+(
+    cd "$GACUI_DIR/Tools/GacBuild"
+    "$GACUI_BUILD"
+)
+require_file "$GACBUILD"
+
 # GacGen normally uses the core-only metadata beside its executable. Full
 # Control Test also references types from GacUI's generated dialog support, so
 # run it through a temporary entry point configured to use the full metadata.
+# Pass this symlink to GacBuild without resolving it: its invocation path
+# determines where GacGen reads Metadata.txt.
 TOOL_DIR="$(mktemp -d "$SCRIPT_DIR/.syncProj.XXXXXX")"
 ln -s "$GACGEN" "$TOOL_DIR/GacGen"
 printf '%s\n%s\n%s\n' \
