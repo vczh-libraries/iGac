@@ -371,7 +371,7 @@ Global Functions
 		return (((((::vl::WString::Unmanaged(L"") + ::vl::__vwsn::ToString(value.month)) + ::vl::WString::Unmanaged(L"/")) + ::vl::__vwsn::ToString(value.day)) + ::vl::WString::Unmanaged(L"/")) + ::vl::__vwsn::ToString(value.year));
 	}
 
-	::vl::presentation::FontProperties TuiControlTest::ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint64_t deltaSize)
+	::vl::presentation::FontProperties TuiControlTest::ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint deltaSize)
 	{
 		return [&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = oldFont.fontFamily; __vwsn_temp__.size = (oldFont.size + deltaSize); __vwsn_temp__.antialias = true; return __vwsn_temp__; }();
 	}
@@ -610,17 +610,17 @@ Closures
 	{
 		{
 			auto __vwsn_switch_2 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_2 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_2 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->textList)->SetView(::vl::presentation::controls::TextListView::Text);
 				::vl::__vwsn::This(__vwsnthis_0->bindableTextList)->SetView(::vl::presentation::controls::TextListView::Text);
 			}
-			else if ((__vwsn_switch_2 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_2 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->textList)->SetView(::vl::presentation::controls::TextListView::Check);
 				::vl::__vwsn::This(__vwsnthis_0->bindableTextList)->SetView(::vl::presentation::controls::TextListView::Check);
 			}
-			else if ((__vwsn_switch_2 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_2 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->textList)->SetView(::vl::presentation::controls::TextListView::Radio);
 				::vl::__vwsn::This(__vwsnthis_0->bindableTextList)->SetView(::vl::presentation::controls::TextListView::Radio);
@@ -638,8 +638,8 @@ Closures
 	void __vwsnf112_TuiControlTest_tuidemo_TuiTextListTabPageConstructor___vwsn_tuidemo_TuiTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = static_cast<::vl::vint64_t>(9L);
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = static_cast<::vl::vint>(9);
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
@@ -647,12 +647,12 @@ Closures
 					auto textItem = ::vl::Ptr<::vl::presentation::controls::list::TextItem>(new ::vl::presentation::controls::list::TextItem(::vl::__vwsn::ToString((::vl::__vwsn::This(__vwsnthis_0->self)->counter + i))));
 					::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Add(::vl::__vwsn::Box(textItem));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = static_cast<::vl::vint64_t>(9L);
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = static_cast<::vl::vint>(9);
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
@@ -661,10 +661,10 @@ Closures
 					::vl::__vwsn::This(textItem.Obj())->SetName(::vl::__vwsn::ToString((::vl::__vwsn::This(__vwsnthis_0->self)->counter + i)));
 					::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->itemsToBind.Obj())->Add(::vl::__vwsn::Box(textItem));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
-		(::vl::__vwsn::This(__vwsnthis_0->self)->counter = (::vl::__vwsn::This(__vwsnthis_0->self)->counter + static_cast<::vl::vint64_t>(10L)));
+		(::vl::__vwsn::This(__vwsnthis_0->self)->counter = (::vl::__vwsn::This(__vwsnthis_0->self)->counter + static_cast<::vl::vint>(10)));
 	}
 
 	//-------------------------------------------------------------------
@@ -677,19 +677,19 @@ Closures
 	void __vwsnf113_TuiControlTest_tuidemo_TuiTextListTabPageConstructor___vwsn_tuidemo_TuiTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		{
-			auto i = static_cast<::vl::vint64_t>(0L);
+			auto i = static_cast<::vl::vint>(0);
 			while ((i < ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->GetCount()))
 			{
 				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->RemoveAt(i);
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		{
-			auto i = static_cast<::vl::vint64_t>(0L);
+			auto i = static_cast<::vl::vint>(0);
 			while ((i < ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->itemsToBind.Obj())->GetCount()))
 			{
 				::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->itemsToBind.Obj())->RemoveAt(i);
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 	}
@@ -704,19 +704,19 @@ Closures
 	void __vwsnf114_TuiControlTest_tuidemo_TuiTextListTabPageConstructor___vwsn_tuidemo_TuiTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		{
-			auto i = static_cast<::vl::vint64_t>(1L);
+			auto i = static_cast<::vl::vint>(1);
 			while ((i < ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->GetCount()))
 			{
 				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->RemoveAt(i);
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		{
-			auto i = static_cast<::vl::vint64_t>(1L);
+			auto i = static_cast<::vl::vint>(1);
 			while ((i < ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->itemsToBind.Obj())->GetCount()))
 			{
 				::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->itemsToBind.Obj())->RemoveAt(i);
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 	}
@@ -1131,7 +1131,7 @@ Closures
 	void __vwsnf138_TuiControlTest_tuidemo_TuiCategoryEditorConstructor___vwsn_tuidemo_TuiCategoryEditor_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
 	{
 		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->comboBox)->GetSelectedIndex();
-		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint64_t>(__vwsn_value_);
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint>(__vwsn_value_);
 		if ((__vwsn_old_ == __vwsn_new_))
 		{
 			return;
@@ -1375,7 +1375,7 @@ Closures
 	void __vwsnf150_TuiControlTest_tuidemo_TuiGenderEditorConstructor___vwsn_tuidemo_TuiGenderEditor_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
 	{
 		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->comboBox)->GetSelectedIndex();
-		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint64_t>(__vwsn_value_);
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint>(__vwsn_value_);
 		if ((__vwsn_old_ == __vwsn_new_))
 		{
 			return;
@@ -1545,7 +1545,7 @@ Closures
 	void __vwsnf160_TuiControlTest_tuidemo_TuiLocaleSelectorConstructor___vwsn_tuidemo_TuiLocaleSelector_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
 	{
 		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->comboLocales)->GetSelectedIndex();
-		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint64_t>(__vwsn_value_);
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint>(__vwsn_value_);
 		if ((__vwsn_old_ == __vwsn_new_))
 		{
 			return;
@@ -1563,9 +1563,9 @@ Closures
 	void __vwsnf161_TuiControlTest_tuidemo_TuiLocaleSelectorConstructor___vwsn_tuidemo_TuiLocaleSelector_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		auto index = ::vl::__vwsn::This(__vwsnthis_0->comboLocales)->GetSelectedIndex();
-		if ((index == (- static_cast<::vl::vint64_t>(1L))))
+		if ((index == (- static_cast<::vl::vint>(1))))
 		{
-			(index = static_cast<::vl::vint64_t>(0L));
+			(index = static_cast<::vl::vint>(0));
 		}
 		::vl::__vwsn::This(::vl::presentation::controls::GetApplication())->SetLocale(::vl::__vwsn::Parse<::vl::Locale>(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listLocales)->GetItems()).Obj())->Get(index)).Obj())->GetText()));
 	}
@@ -1787,31 +1787,31 @@ Closures
 	{
 		{
 			auto __vwsn_switch_3 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_3 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::List);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(3)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Tile);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(4)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Information);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(5)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Detail);
 			}
-			else if ((__vwsn_switch_3 == static_cast<::vl::vint64_t>(6L)))
+			else if ((__vwsn_switch_3 == static_cast<::vl::vint>(6)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetViewToDefault();
 			}
@@ -1827,7 +1827,7 @@ Closures
 
 	void __vwsnf175_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf176_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf176_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
 	}
 
 	//-------------------------------------------------------------------
@@ -1851,7 +1851,7 @@ Closures
 
 	void __vwsnf177_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf178_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf178_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
 	}
 
 	//-------------------------------------------------------------------
@@ -1875,9 +1875,9 @@ Closures
 
 	void __vwsnf179_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetSub1();
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetSub1(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One")));
-		::vl::__vwsn::This(__vwsnthis_0->dataGrid)->NotifyItemDataModified(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L));
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetSub1();
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetSub1(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One")));
+		::vl::__vwsn::This(__vwsnthis_0->dataGrid)->NotifyItemDataModified(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1));
 	}
 
 	//-------------------------------------------------------------------
@@ -1910,45 +1910,45 @@ Closures
 
 	void __vwsnf180_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L)));
+		auto s = ::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint>(0)));
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(3L)))
+		if ((c == static_cast<::vl::vint>(3)))
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(2L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(2));
 			}
 		}
 		else
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 			}
 		}
 		auto projection = ::vl::WString::Unmanaged(L"[");
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint64_t>(1L));
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint>(1));
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
 				{
-					if ((i > static_cast<::vl::vint64_t>(0L)))
+					if ((i > static_cast<::vl::vint>(0)))
 					{
 						(projection = (projection + ::vl::WString::Unmanaged(L",")));
 					}
-					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Get(i)))));
+					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetDataColumns()).Obj())->Get(i)))));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		::vl::__vwsn::This(__vwsnthis_0->dataProjection)->SetText(((::vl::WString::Unmanaged(L"DataColumns: ") + projection) + ::vl::WString::Unmanaged(L"]")));
@@ -1963,18 +1963,18 @@ Closures
 
 	void __vwsnf181_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->GetText();
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->GetText();
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(4L)))
+		if ((c == static_cast<::vl::vint>(4)))
 		{
 			if ((s == ::vl::WString::Unmanaged(L"Category")))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(2L))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(2))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(1L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(1));
 			}
 		}
 		else
@@ -1983,14 +1983,14 @@ Closures
 			{
 				auto column = ::vl::Ptr<::vl::presentation::controls::list::DataColumn>(new ::vl::presentation::controls::list::DataColumn());
 				::vl::__vwsn::This(column.Obj())->SetText(::vl::WString::Unmanaged(L"Category"));
-				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint>(15));
 				::vl::__vwsn::This(column.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf182_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
 				::vl::__vwsn::This(column.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf183_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__(__vwsnthis_0)));
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Insert(static_cast<::vl::vint64_t>(1L), ::vl::__vwsn::Box(column));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Insert(static_cast<::vl::vint>(1), ::vl::__vwsn::Box(column));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::DataColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->dataGrid)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
 			}
 		}
 	}
@@ -2109,27 +2109,27 @@ Closures
 	{
 		{
 			auto __vwsn_switch_4 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_4 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 			}
-			else if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_4 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 			}
-			else if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_4 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::List);
 			}
-			else if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_4 == static_cast<::vl::vint>(3)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Tile);
 			}
-			else if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_4 == static_cast<::vl::vint>(4)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Information);
 			}
-			else if ((__vwsn_switch_4 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_4 == static_cast<::vl::vint>(5)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Detail);
 			}
@@ -2158,7 +2158,7 @@ Closures
 
 	void __vwsnf190_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf191_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize__(__vwsnthis_0)));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf191_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize__(__vwsnthis_0)));
 	}
 
 	//-------------------------------------------------------------------
@@ -2182,7 +2182,7 @@ Closures
 
 	void __vwsnf192_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf193_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize__(__vwsnthis_0)));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf193_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize__(__vwsnthis_0)));
 	}
 
 	//-------------------------------------------------------------------
@@ -2206,9 +2206,9 @@ Closures
 
 	void __vwsnf194_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetSub1();
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetSub1(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One")));
-		::vl::__vwsn::This(__vwsnthis_0->listView)->NotifyItemDataModified(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L));
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetSub1();
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetSub1(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One")));
+		::vl::__vwsn::This(__vwsnthis_0->listView)->NotifyItemDataModified(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1));
 	}
 
 	//-------------------------------------------------------------------
@@ -2220,45 +2220,45 @@ Closures
 
 	void __vwsnf195_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L)));
+		auto s = ::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint>(0)));
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(3L)))
+		if ((c == static_cast<::vl::vint>(3)))
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(2L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(2));
 			}
 		}
 		else
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 			}
 		}
 		auto projection = ::vl::WString::Unmanaged(L"[");
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint64_t>(1L));
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint>(1));
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
 				{
-					if ((i > static_cast<::vl::vint64_t>(0L)))
+					if ((i > static_cast<::vl::vint>(0)))
 					{
 						(projection = (projection + ::vl::WString::Unmanaged(L",")));
 					}
-					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(i)))));
+					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(i)))));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		::vl::__vwsn::This(__vwsnthis_0->dataProjection)->SetText(((::vl::WString::Unmanaged(L"DataColumns: ") + projection) + ::vl::WString::Unmanaged(L"]")));
@@ -2273,18 +2273,18 @@ Closures
 
 	void __vwsnf196_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->GetText();
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->GetText();
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(4L)))
+		if ((c == static_cast<::vl::vint>(4)))
 		{
 			if ((s == ::vl::WString::Unmanaged(L"Category")))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(2L))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(2))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(1L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(1));
 			}
 		}
 		else
@@ -2293,13 +2293,13 @@ Closures
 			{
 				auto column = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn());
 				::vl::__vwsn::This(column.Obj())->SetText(::vl::WString::Unmanaged(L"Category"));
-				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint>(15));
 				::vl::__vwsn::This(column.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf197_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize__(__vwsnthis_0)));
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Insert(static_cast<::vl::vint64_t>(1L), ::vl::__vwsn::Box(column));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Insert(static_cast<::vl::vint>(1), ::vl::__vwsn::Box(column));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
 			}
 		}
 	}
@@ -2421,8 +2421,8 @@ Closures
 
 	void __vwsnf204_TuiControlTest_tuidemo_TuiRefreshBindableTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetSelected(true);
-		::vl::__vwsn::This(__vwsnthis_0->textList)->NotifyItemDataModified(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetSelected(true);
+		::vl::__vwsn::This(__vwsnthis_0->textList)->NotifyItemDataModified(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1));
 	}
 
 	//-------------------------------------------------------------------
@@ -2434,8 +2434,8 @@ Closures
 
 	void __vwsnf205_TuiControlTest_tuidemo_TuiRefreshBindableTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetSelected(false);
-		::vl::__vwsn::This(__vwsnthis_0->textList)->NotifyItemDataModified(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L));
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetSelected(false);
+		::vl::__vwsn::This(__vwsnthis_0->textList)->NotifyItemDataModified(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1));
 	}
 
 	//-------------------------------------------------------------------
@@ -2447,7 +2447,7 @@ Closures
 
 	void __vwsnf206_TuiControlTest_tuidemo_TuiRefreshBindableTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		if (::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetSelected())
+		if (::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->items.Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetSelected())
 		{
 			::vl::__vwsn::This(__vwsnthis_0->buttonRead)->SetText(::vl::WString::Unmanaged(L"Read (true)"));
 		}
@@ -2561,7 +2561,7 @@ Closures
 
 	void __vwsnf214_TuiControlTest_tuidemo_TuiRefreshBindableTreeViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTreeViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto data = ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->rootItem.Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint64_t>(0L)));
+		auto data = ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->rootItem.Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint>(0)));
 		::vl::__vwsn::This(data.Obj())->SetName(((::vl::__vwsn::This(data.Obj())->GetName() == ::vl::WString::Unmanaged(L"First")) ? ::vl::WString::Unmanaged(L"One") : ::vl::WString::Unmanaged(L"First")));
 		::vl::__vwsn::This(data.Obj())->SetTitle(((::vl::__vwsn::This(data.Obj())->GetTitle() == ::vl::WString::Unmanaged(L"1st")) ? ::vl::WString::Unmanaged(L"One") : ::vl::WString::Unmanaged(L"1st")));
 		::vl::__vwsn::This(__vwsnthis_0->treeView)->NotifyNodeDataModified(::vl::__vwsn::Box(data));
@@ -2576,7 +2576,7 @@ Closures
 
 	void __vwsnf215_TuiControlTest_tuidemo_TuiRefreshBindableTreeViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTreeViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto data = ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->rootItem.Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint64_t>(1L)));
+		auto data = ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiRefreshItem>>(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->rootItem.Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetChildren().Obj())->Get(static_cast<::vl::vint>(1)));
 		::vl::__vwsn::This(data.Obj())->SetName(((::vl::__vwsn::This(data.Obj())->GetName() == ::vl::WString::Unmanaged(L"Second (1)")) ? ::vl::WString::Unmanaged(L"Two (1)") : ::vl::WString::Unmanaged(L"Second (1)")));
 		::vl::__vwsn::This(data.Obj())->SetTitle(((::vl::__vwsn::This(data.Obj())->GetTitle() == ::vl::WString::Unmanaged(L"2nd (1)")) ? ::vl::WString::Unmanaged(L"Two (1)") : ::vl::WString::Unmanaged(L"2nd (1)")));
 		::vl::__vwsn::This(__vwsnthis_0->treeView)->NotifyNodeDataModified(::vl::__vwsn::Box(data));
@@ -2593,27 +2593,27 @@ Closures
 	{
 		{
 			auto __vwsn_switch_5 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_5 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 			}
-			else if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_5 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 			}
-			else if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_5 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::List);
 			}
-			else if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_5 == static_cast<::vl::vint>(3)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Tile);
 			}
-			else if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_5 == static_cast<::vl::vint>(4)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Information);
 			}
-			else if ((__vwsn_switch_5 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_5 == static_cast<::vl::vint>(5)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Detail);
 			}
@@ -2629,8 +2629,8 @@ Closures
 
 	void __vwsnf217_TuiControlTest_tuidemo_TuiRefreshListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetText();
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetText(((s == ::vl::WString::Unmanaged(L"First")) ? ::vl::WString::Unmanaged(L"MainColumn") : ::vl::WString::Unmanaged(L"First")));
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetText();
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetText(((s == ::vl::WString::Unmanaged(L"First")) ? ::vl::WString::Unmanaged(L"MainColumn") : ::vl::WString::Unmanaged(L"First")));
 	}
 
 	//-------------------------------------------------------------------
@@ -2642,8 +2642,8 @@ Closures
 
 	void __vwsnf218_TuiControlTest_tuidemo_TuiRefreshListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L)));
-		::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetSubItems()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One"))));
+		auto s = ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint>(0)));
+		::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetSubItems()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(((s == ::vl::WString::Unmanaged(L"One")) ? ::vl::WString::Unmanaged(L"SubColumn") : ::vl::WString::Unmanaged(L"One"))));
 	}
 
 	//-------------------------------------------------------------------
@@ -2655,45 +2655,45 @@ Closures
 
 	void __vwsnf219_TuiControlTest_tuidemo_TuiRefreshListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint64_t>(0L)));
+		auto s = ::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(static_cast<::vl::vint>(0)));
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(3L)))
+		if ((c == static_cast<::vl::vint>(3)))
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(2L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(2));
 			}
 		}
 		else
 		{
-			if ((s == static_cast<::vl::vint64_t>(0L)))
+			if ((s == static_cast<::vl::vint>(0)))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint64_t>(0L), ::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Set(static_cast<::vl::vint>(0), ::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 			}
 		}
 		auto projection = ::vl::WString::Unmanaged(L"[");
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint64_t>(1L));
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->GetCount() - static_cast<::vl::vint>(1));
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
 				{
-					if ((i > static_cast<::vl::vint64_t>(0L)))
+					if ((i > static_cast<::vl::vint>(0)))
 					{
 						(projection = (projection + ::vl::WString::Unmanaged(L",")));
 					}
-					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint64_t>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(i)))));
+					(projection = (projection + ::vl::__vwsn::ToString(::vl::__vwsn::Unbox<::vl::vint>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetDataColumns()).Obj())->Get(i)))));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
 		::vl::__vwsn::This(__vwsnthis_0->dataProjection)->SetText(((::vl::WString::Unmanaged(L"DataColumns: ") + projection) + ::vl::WString::Unmanaged(L"]")));
@@ -2722,18 +2722,18 @@ Closures
 
 	void __vwsnf220_TuiControlTest_tuidemo_TuiRefreshListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshListViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->GetText();
+		auto s = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->GetText();
 		auto c = ::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->GetCount();
-		if ((c == static_cast<::vl::vint64_t>(4L)))
+		if ((c == static_cast<::vl::vint>(4)))
 		{
 			if ((s == ::vl::WString::Unmanaged(L"Category")))
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(2L))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"What?"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(2))).Obj())->SetText(::vl::WString::Unmanaged(L"Wait?"));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint64_t>(1L));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->RemoveAt(static_cast<::vl::vint>(1));
 			}
 		}
 		else
@@ -2742,12 +2742,12 @@ Closures
 			{
 				auto column = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn());
 				::vl::__vwsn::This(column.Obj())->SetText(::vl::WString::Unmanaged(L"Category"));
-				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
-				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Insert(static_cast<::vl::vint64_t>(1L), ::vl::__vwsn::Box(column));
+				::vl::__vwsn::This(column.Obj())->SetSize(static_cast<::vl::vint>(15));
+				::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Insert(static_cast<::vl::vint>(1), ::vl::__vwsn::Box(column));
 			}
 			else
 			{
-				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint64_t>(1L))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
+				::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->listView)->GetColumns()).Obj())->Get(static_cast<::vl::vint>(1))).Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
 			}
 		}
 	}
@@ -2761,7 +2761,7 @@ Closures
 
 	void __vwsnf221_TuiControlTest_tuidemo_TuiRefreshTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetChecked(true);
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetChecked(true);
 	}
 
 	//-------------------------------------------------------------------
@@ -2773,7 +2773,7 @@ Closures
 
 	void __vwsnf222_TuiControlTest_tuidemo_TuiRefreshTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->SetChecked(false);
+		::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->SetChecked(false);
 	}
 
 	//-------------------------------------------------------------------
@@ -2785,7 +2785,7 @@ Closures
 
 	void __vwsnf223_TuiControlTest_tuidemo_TuiRefreshTextListTabPageConstructor___vwsn_tuidemo_TuiRefreshTextListTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		if (::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L))).Obj())->GetChecked())
+		if (::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::TextItem>>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(__vwsnthis_0->textList)->GetItems()).Obj())->Get(static_cast<::vl::vint>(0))).Obj())->GetChecked())
 		{
 			::vl::__vwsn::This(__vwsnthis_0->buttonRead)->SetText(::vl::WString::Unmanaged(L"Read (true)"));
 		}
@@ -2804,7 +2804,7 @@ Closures
 
 	void __vwsnf224_TuiControlTest_tuidemo_TuiRefreshTreeViewTabPageConstructor___vwsn_tuidemo_TuiRefreshTreeViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto node = ::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetRootNode().Obj())->GetChild(static_cast<::vl::vint64_t>(0L));
+		auto node = ::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetRootNode().Obj())->GetChild(static_cast<::vl::vint>(0));
 		auto data = ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetTreeViewData(::vl::__vwsn::Ensure(static_cast<::vl::presentation::controls::tree::INodeProvider*>(node.Obj())));
 		(::vl::__vwsn::This(data.Obj())->text = ((::vl::__vwsn::This(data.Obj())->text == ::vl::WString::Unmanaged(L"First")) ? ::vl::WString::Unmanaged(L"One") : ::vl::WString::Unmanaged(L"First")));
 		::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->UpdateTreeViewData(::vl::__vwsn::Ensure(static_cast<::vl::presentation::controls::tree::INodeProvider*>(node.Obj())));
@@ -2819,7 +2819,7 @@ Closures
 
 	void __vwsnf225_TuiControlTest_tuidemo_TuiRefreshTreeViewTabPageConstructor___vwsn_tuidemo_TuiRefreshTreeViewTabPage_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto node = ::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetRootNode().Obj())->GetChild(static_cast<::vl::vint64_t>(0L)).Obj())->GetChild(static_cast<::vl::vint64_t>(1L));
+		auto node = ::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetRootNode().Obj())->GetChild(static_cast<::vl::vint>(0)).Obj())->GetChild(static_cast<::vl::vint>(1));
 		auto data = ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->GetTreeViewData(::vl::__vwsn::Ensure(static_cast<::vl::presentation::controls::tree::INodeProvider*>(node.Obj())));
 		(::vl::__vwsn::This(data.Obj())->text = ((::vl::__vwsn::This(data.Obj())->text == ::vl::WString::Unmanaged(L"Second (1)")) ? ::vl::WString::Unmanaged(L"Two (1)") : ::vl::WString::Unmanaged(L"Second (1)")));
 		::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->treeView)->Nodes().Obj())->UpdateTreeViewData(::vl::__vwsn::Ensure(static_cast<::vl::presentation::controls::tree::INodeProvider*>(node.Obj())));
@@ -2835,8 +2835,8 @@ Closures
 	void __vwsnf226_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		{
-			auto __vwsn_for_begin_i = static_cast<::vl::vint64_t>(0L);
-			auto __vwsn_for_end_i = static_cast<::vl::vint64_t>(9L);
+			auto __vwsn_for_begin_i = static_cast<::vl::vint>(0);
+			auto __vwsn_for_end_i = static_cast<::vl::vint>(9);
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
@@ -2845,10 +2845,10 @@ Closures
 					::vl::__vwsn::This(textItem.Obj())->SetName(::vl::__vwsn::This(__vwsnthis_0->self)->NumberToText((::vl::__vwsn::This(__vwsnthis_0->self)->Getcounter() + i)));
 					::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind().Obj())->Add(::vl::__vwsn::Box(textItem));
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
-		::vl::__vwsn::This(__vwsnthis_0->self)->Setcounter((::vl::__vwsn::This(__vwsnthis_0->self)->Getcounter() + static_cast<::vl::vint64_t>(10L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->Setcounter((::vl::__vwsn::This(__vwsnthis_0->self)->Getcounter() + static_cast<::vl::vint>(10)));
 	}
 
 	//-------------------------------------------------------------------
@@ -2860,11 +2860,11 @@ Closures
 
 	void __vwsnf227_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto i = static_cast<::vl::vint64_t>(0L);
+		auto i = static_cast<::vl::vint>(0);
 		while ((i < ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind().Obj())->GetCount()))
 		{
 			::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind().Obj())->RemoveAt(i);
-			(i = (i + static_cast<::vl::vint64_t>(1L)));
+			(i = (i + static_cast<::vl::vint>(1)));
 		}
 	}
 
@@ -2877,11 +2877,11 @@ Closures
 
 	void __vwsnf228_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		auto i = static_cast<::vl::vint64_t>(1L);
+		auto i = static_cast<::vl::vint>(1);
 		while ((i < ::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind().Obj())->GetCount()))
 		{
 			::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind().Obj())->RemoveAt(i);
-			(i = (i + static_cast<::vl::vint64_t>(1L)));
+			(i = (i + static_cast<::vl::vint>(1)));
 		}
 	}
 
@@ -2927,7 +2927,7 @@ Closures
 
 	void __vwsnf230_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->self)->Setcounter(static_cast<::vl::vint64_t>(0L));
+		::vl::__vwsn::This(__vwsnthis_0->self)->Setcounter(static_cast<::vl::vint>(0));
 	}
 
 	//-------------------------------------------------------------------
@@ -3228,7 +3228,7 @@ Closures
 
 	void __vwsnf247_TuiControlTest_tuidemo_TuiTextBoxTabPageConstructor___vwsn_tuidemo_TuiTextBoxTabPage_Initialize_::operator()() const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->self)->UpdateFont(GLOBAL_NAME ChangeFontSize(::vl::__vwsn::This(__vwsnthis_0->t1)->GetDisplayFont(), static_cast<::vl::vint64_t>(5L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->UpdateFont(GLOBAL_NAME ChangeFontSize(::vl::__vwsn::This(__vwsnthis_0->t1)->GetDisplayFont(), static_cast<::vl::vint>(5)));
 	}
 
 	//-------------------------------------------------------------------
@@ -3240,7 +3240,7 @@ Closures
 
 	void __vwsnf248_TuiControlTest_tuidemo_TuiTextBoxTabPageConstructor___vwsn_tuidemo_TuiTextBoxTabPage_Initialize_::operator()() const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->self)->UpdateFont(GLOBAL_NAME ChangeFontSize(::vl::__vwsn::This(__vwsnthis_0->t1)->GetDisplayFont(), (- static_cast<::vl::vint64_t>(5L))));
+		::vl::__vwsn::This(__vwsnthis_0->self)->UpdateFont(GLOBAL_NAME ChangeFontSize(::vl::__vwsn::This(__vwsnthis_0->t1)->GetDisplayFont(), (- static_cast<::vl::vint>(5))));
 	}
 
 	//-------------------------------------------------------------------
@@ -3470,7 +3470,7 @@ Closures
 
 	void __vwsnf260_TuiControlTest_tuidemo_TuiDocumentEditorBaseConstructor___vwsn_tuidemo_TuiDocumentEditorBase_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint64_t>(0L));
+		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint>(0));
 		::vl::__vwsn::This(__vwsnthis_0->self)->SaveDocument();
 	}
 
@@ -3483,7 +3483,7 @@ Closures
 
 	void __vwsnf261_TuiControlTest_tuidemo_TuiDocumentEditorBaseConstructor___vwsn_tuidemo_TuiDocumentEditorBase_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint64_t>(1L));
+		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint>(1));
 		::vl::__vwsn::This(__vwsnthis_0->self)->SaveDocument();
 	}
 
@@ -3496,7 +3496,7 @@ Closures
 
 	void __vwsnf262_TuiControlTest_tuidemo_TuiDocumentEditorBaseConstructor___vwsn_tuidemo_TuiDocumentEditorBase_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint64_t>(2L));
+		::vl::__vwsn::This(__vwsnthis_0->dialogSaveDoc)->SetFilterIndex(static_cast<::vl::vint>(2));
 		::vl::__vwsn::This(__vwsnthis_0->self)->SaveDocument();
 	}
 
@@ -3845,11 +3845,11 @@ Closures
 		{
 			auto imageService = ::vl::__vwsn::This(::vl::presentation::GetCurrentController())->ImageService();
 			auto image = ::vl::__vwsn::This(imageService)->CreateImageFromFile(::vl::__vwsn::This(__vwsnthis_0->dialogOpen)->GetFileName());
-			auto imageData = ::vl::Ptr<::vl::presentation::GuiImageData>(new ::vl::presentation::GuiImageData(image, static_cast<::vl::vint64_t>(0L)));
+			auto imageData = ::vl::Ptr<::vl::presentation::GuiImageData>(new ::vl::presentation::GuiImageData(image, static_cast<::vl::vint>(0)));
 			auto name = (::vl::WString::Unmanaged(L"TuiImage") + ::vl::__vwsn::ToString(::vl::__vwsn::This(__vwsnthis_0->self)->nextImageId));
-			(::vl::__vwsn::This(__vwsnthis_0->self)->nextImageId = (::vl::__vwsn::This(__vwsnthis_0->self)->nextImageId + static_cast<::vl::vint64_t>(1L)));
+			(::vl::__vwsn::This(__vwsnthis_0->self)->nextImageId = (::vl::__vwsn::This(__vwsnthis_0->self)->nextImageId + static_cast<::vl::vint>(1)));
 			::vl::__vwsn::This(::vl::__vwsn::This(__vwsnthis_0->self)->images.Obj())->Add(::vl::__vwsn::Box(imageData));
-			auto size = ::vl::__vwsn::This(::vl::__vwsn::This(image.Obj())->GetFrame(static_cast<::vl::vint64_t>(0L)))->GetSize();
+			auto size = ::vl::__vwsn::This(::vl::__vwsn::This(image.Obj())->GetFrame(static_cast<::vl::vint>(0)))->GetSize();
 			auto item = ::vl::Ptr<::vl::presentation::controls::GuiDocumentItem>(new ::vl::presentation::controls::GuiDocumentItem(name));
 			auto label = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label);
 			::vl::__vwsn::This(label)->SetText(((((((::vl::WString::Unmanaged(L"[Image: ") + ::vl::__vwsn::This(__vwsnthis_0->dialogOpen)->GetFileName()) + ::vl::WString::Unmanaged(L", ")) + ::vl::__vwsn::ToString(size.x)) + ::vl::WString::Unmanaged(L" x ")) + ::vl::__vwsn::ToString(size.y)) + ::vl::WString::Unmanaged(L"]")));
@@ -4221,7 +4221,7 @@ Closures
 		auto end = ::vl::__vwsn::This(__vwsnthis_0->document)->GetCaretEnd();
 		auto style = ::vl::__vwsn::This(__vwsnthis_0->document)->SummarizeStyle(begin, end);
 		auto baselineFont = ::vl::__vwsn::This(__vwsnthis_0->document)->GetDisplayFont();
-		::vl::__vwsn::This(__vwsnthis_0->dialogFont)->SetSelectedFont([&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ((! static_cast<bool>(::vl::__vwsn::This(style.Obj())->face)) ? baselineFont.fontFamily : ::vl::__vwsn::This(style.Obj())->face.Value()); __vwsn_temp__.size = ((! static_cast<bool>(::vl::__vwsn::This(style.Obj())->size)) ? baselineFont.size : static_cast<::vl::vint64_t>(::vl::__vwsn::This(style.Obj())->size.Value().size)); return __vwsn_temp__; }());
+		::vl::__vwsn::This(__vwsnthis_0->dialogFont)->SetSelectedFont([&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ((! static_cast<bool>(::vl::__vwsn::This(style.Obj())->face)) ? baselineFont.fontFamily : ::vl::__vwsn::This(style.Obj())->face.Value()); __vwsn_temp__.size = ((! static_cast<bool>(::vl::__vwsn::This(style.Obj())->size)) ? baselineFont.size : static_cast<::vl::vint>(::vl::__vwsn::This(style.Obj())->size.Value().size)); return __vwsn_temp__; }());
 		if (::vl::__vwsn::This(__vwsnthis_0->dialogFont)->ShowDialog())
 		{
 			(style = ::vl::Ptr<::vl::presentation::DocumentStyleProperties>(new ::vl::presentation::DocumentStyleProperties()));
@@ -4552,31 +4552,31 @@ Closures
 	{
 		{
 			auto __vwsn_switch_0 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_0 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::List);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(3)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Tile);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(4)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Information);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(5)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetView(::vl::presentation::controls::ListViewView::Detail);
 			}
-			else if ((__vwsn_switch_0 == static_cast<::vl::vint64_t>(6L)))
+			else if ((__vwsn_switch_0 == static_cast<::vl::vint>(6)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->dataGrid)->SetViewToDefault();
 			}
@@ -5244,7 +5244,7 @@ Closures
 	::vl::WString __vwsnf35_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_item_) const
 	{
 		auto itemToBind = ::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(__vwsn_item_);
-		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint64_t>(0L)));
+		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint>(0)));
 	}
 
 	//-------------------------------------------------------------------
@@ -5425,7 +5425,7 @@ Closures
 	::vl::WString __vwsnf36_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_item_) const
 	{
 		auto itemToBind = ::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(__vwsn_item_);
-		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint64_t>(1L)));
+		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -5438,7 +5438,7 @@ Closures
 	::vl::WString __vwsnf37_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_item_) const
 	{
 		auto itemToBind = ::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::controls::list::ListViewItem>>(__vwsn_item_);
-		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint64_t>(2L)));
+		return ::vl::__vwsn::Unbox<::vl::WString>(::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(itemToBind.Obj())->GetSubItems()).Obj())->Get(static_cast<::vl::vint>(2)));
 	}
 
 	//-------------------------------------------------------------------
@@ -5452,32 +5452,32 @@ Closures
 	{
 		{
 			auto __vwsn_switch_1 = ::vl::__vwsn::This(__vwsnthis_0->comboView)->GetSelectedIndex();
-			if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(0L)))
+			if ((__vwsn_switch_1 == static_cast<::vl::vint>(0)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::BigIcon);
 			}
-			else if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_1 == static_cast<::vl::vint>(1)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::SmallIcon);
 			}
-			else if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_1 == static_cast<::vl::vint>(2)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::List);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::List);
 			}
-			else if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_1 == static_cast<::vl::vint>(3)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Tile);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::Tile);
 			}
-			else if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_1 == static_cast<::vl::vint>(4)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Information);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::Information);
 			}
-			else if ((__vwsn_switch_1 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_1 == static_cast<::vl::vint>(5)))
 			{
 				::vl::__vwsn::This(__vwsnthis_0->listView)->SetView(::vl::presentation::controls::ListViewView::Detail);
 				::vl::__vwsn::This(__vwsnthis_0->bindableListView)->SetView(::vl::presentation::controls::ListViewView::Detail);
@@ -5929,7 +5929,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->palettePink)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(0));
 		}
 	}
 
@@ -5944,7 +5944,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->paletteOrange)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(1));
 		}
 	}
 
@@ -5959,7 +5959,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->paletteGrass)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(2));
 		}
 	}
 
@@ -5974,7 +5974,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->paletteEmerald)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(3L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(3));
 		}
 	}
 
@@ -5989,7 +5989,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->paletteSkyblue)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(4L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(4));
 		}
 	}
 
@@ -6004,7 +6004,7 @@ Closures
 	{
 		if (::vl::__vwsn::This(__vwsnthis_0->palettePurple)->GetSelected())
 		{
-			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint64_t>(5L));
+			::vl::__vwsn::EventInvoke(::vl::__vwsn::This(__vwsnthis_0->self)->PaletteSelected)(static_cast<::vl::vint>(5));
 		}
 	}
 
@@ -6044,7 +6044,7 @@ Closures
 	void __vwsnf71_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize__::operator()() const
 	{
 		::vl::__vwsn::This(__vwsnthis_0->self)->Hide();
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -6057,7 +6057,7 @@ Closures
 	void __vwsnf72_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		::vl::__vwsn::This(__vwsnthis_0->self)->Hide();
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -6082,7 +6082,7 @@ Closures
 	void __vwsnf74_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize__::operator()() const
 	{
 		::vl::__vwsn::This(__vwsnthis_0->self)->Close();
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -6095,7 +6095,7 @@ Closures
 	void __vwsnf75_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
 		::vl::__vwsn::This(__vwsnthis_0->self)->Close();
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetinvocationCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetinvocationCount() + static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -6283,7 +6283,7 @@ Closures
 
 	void __vwsnf86_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiRequestEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetclosingCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetclosingCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetclosingCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetclosingCount() + static_cast<::vl::vint>(1)));
 		(::vl::__vwsn::This(arguments)->cancel = ::vl::__vwsn::This(__vwsnthis_0->checkCancelClose)->GetSelected());
 	}
 
@@ -6296,7 +6296,7 @@ Closures
 
 	void __vwsnf87_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize_::operator()(::vl::presentation::compositions::GuiGraphicsComposition* sender, ::vl::presentation::compositions::GuiEventArgs* arguments) const
 	{
-		::vl::__vwsn::This(__vwsnthis_0->self)->SetreadyToCloseCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetreadyToCloseCount() + static_cast<::vl::vint64_t>(1L)));
+		::vl::__vwsn::This(__vwsnthis_0->self)->SetreadyToCloseCount((::vl::__vwsn::This(__vwsnthis_0->self)->GetreadyToCloseCount() + static_cast<::vl::vint>(1)));
 	}
 
 	//-------------------------------------------------------------------
@@ -6394,7 +6394,7 @@ Closures
 	void __vwsnf93_TuiControlTest_tuidemo_TuiRepeatTabPageConstructor___vwsn_tuidemo_TuiRepeatTabPage_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
 	{
 		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_27)->GetPosition();
-		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint64_t>(__vwsn_value_);
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::vint>(__vwsn_value_);
 		if ((__vwsn_old_ == __vwsn_new_))
 		{
 			return;
@@ -6533,7 +6533,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsno15_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
+	::vl::vint __vwsno15_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
 	{
 		return ::vl::reflection::description::Sys::Compare(static_cast<::vl::vuint64_t>(::vl::__vwsn::This(__vwsno_1.Obj())->GetCategory()), static_cast<::vl::vuint64_t>(::vl::__vwsn::This(__vwsno_2.Obj())->GetCategory()));
 	}
@@ -6546,7 +6546,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsno1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
+	::vl::vint __vwsno1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
 	{
 		return ::vl::reflection::description::Sys::Compare(::vl::__vwsn::This(__vwsno_1.Obj())->GetName(), ::vl::__vwsn::This(__vwsno_2.Obj())->GetName());
 	}
@@ -6559,7 +6559,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsno20_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
+	::vl::vint __vwsno20_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
 	{
 		return ::vl::reflection::description::Sys::Compare(::vl::__vwsn::This(__vwsno_1.Obj())->GetBirthday(), ::vl::__vwsn::This(__vwsno_2.Obj())->GetBirthday());
 	}
@@ -6572,7 +6572,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsno27_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
+	::vl::vint __vwsno27_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
 	{
 		return ::vl::reflection::description::Sys::Compare(::vl::__vwsn::This(__vwsno_1.Obj())->GetWebsite(), ::vl::__vwsn::This(__vwsno_2.Obj())->GetWebsite());
 	}
@@ -6633,7 +6633,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsno8_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
+	::vl::vint __vwsno8_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_::operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const
 	{
 		return ::vl::reflection::description::Sys::Compare(static_cast<::vl::vuint64_t>(::vl::__vwsn::This(__vwsno_1.Obj())->GetGender()), static_cast<::vl::vuint64_t>(::vl::__vwsn::This(__vwsno_2.Obj())->GetGender()));
 	}
@@ -7118,8 +7118,8 @@ Closures
 	{
 		this->__vwsn_co0_mainWindow = static_cast<::vl::presentation::controls::GuiWindow*>(nullptr);
 		this->__vwsn_co1_window = static_cast<::tuidemo::TuiHyperlinkWindow*>(nullptr);
-		this->__vwsn_co_state_ = static_cast<::vl::vint64_t>(0L);
-		this->__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint64_t>(1L));
+		this->__vwsn_co_state_ = static_cast<::vl::vint>(0);
+		this->__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint>(1));
 		this->__vwsn_prop_Failure = ::vl::Ptr<::vl::reflection::description::IValueException>();
 		this->__vwsn_prop_Status = ::vl::reflection::description::CoroutineStatus::Waiting;
 	}
@@ -7152,35 +7152,35 @@ Closures
 		try
 		{
 			{
-				if ((__vwsn_co_state_before_pause_ != (- static_cast<::vl::vint64_t>(1L))))
+				if ((__vwsn_co_state_before_pause_ != (- static_cast<::vl::vint>(1))))
 				{
 					if ((! static_cast<bool>(__vwsn_co_result_)))
 					{
-						(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint64_t>(1L)));
+						(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint>(1)));
 					}
 					else if ((! static_cast<bool>(::vl::__vwsn::This(__vwsn_co_result_.Obj())->GetFailure())))
 					{
-						(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint64_t>(1L)));
+						(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint>(1)));
 					}
 					else
 					{
 						{
-							(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint64_t>(1L)));
+							(__vwsn_co_state_before_pause_ = (- static_cast<::vl::vint>(1)));
 							throw ::vl::Exception(::vl::__vwsn::This(::vl::__vwsn::This(__vwsn_co_result_.Obj())->GetFailure().Obj())->GetMessage());
 						}
 					}
 				}
 				while (true)
 				{
-					if ((__vwsn_co_state_ == static_cast<::vl::vint64_t>(0L)))
+					if ((__vwsn_co_state_ == static_cast<::vl::vint>(0)))
 					{
 						(__vwsn_co0_mainWindow = ::vl::__vwsn::RawPtrCast<::vl::presentation::controls::GuiWindow>(::vl::__vwsn::This(__vwsnthis_0->self)->GetRelatedControlHost()));
 						(__vwsn_co1_window = new ::tuidemo::TuiHyperlinkWindow());
 						::vl::__vwsn::This(__vwsn_co1_window)->MoveToScreenCenter(::vl::__vwsn::This(__vwsn_co0_mainWindow)->GetRelatedScreen());
-						(__vwsn_co_state_ = static_cast<::vl::vint64_t>(2L));
+						(__vwsn_co_state_ = static_cast<::vl::vint>(2));
 						continue;
 					}
-					if ((__vwsn_co_state_ == static_cast<::vl::vint64_t>(1L)))
+					if ((__vwsn_co_state_ == static_cast<::vl::vint>(1)))
 					{
 						if (static_cast<bool>(__vwsn_co_result_))
 						{
@@ -7200,11 +7200,11 @@ Closures
 						this->SetStatus(::vl::reflection::description::CoroutineStatus::Stopped);
 						return;
 					}
-					if ((__vwsn_co_state_ == static_cast<::vl::vint64_t>(2L)))
+					if ((__vwsn_co_state_ == static_cast<::vl::vint>(2)))
 					{
 						this->SetStatus(::vl::reflection::description::CoroutineStatus::Waiting);
 						(__vwsn_co_state_before_pause_ = __vwsn_co_state_);
-						(__vwsn_co_state_ = static_cast<::vl::vint64_t>(1L));
+						(__vwsn_co_state_ = static_cast<::vl::vint>(1));
 						{
 							::vl::reflection::description::AsyncCoroutine::AwaitAndRead(__vwsn_co_impl_, ::vl::__vwsn::This(__vwsn_co1_window)->ShowModalAsync(__vwsn_co0_mainWindow));
 						}
@@ -11456,7 +11456,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsnc1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
+	::vl::vint __vwsnc1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
 	{
 		return vl::Func(::vl_workflow_global::__vwsno1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(this, __vwsnthis_0))(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row1_), ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row2_));
 	}
@@ -12082,7 +12082,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsnc2_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
+	::vl::vint __vwsnc2_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
 	{
 		return vl::Func(::vl_workflow_global::__vwsno8_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(this, __vwsnthis_0))(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row1_), ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row2_));
 	}
@@ -12708,7 +12708,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsnc3_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
+	::vl::vint __vwsnc3_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
 	{
 		return vl::Func(::vl_workflow_global::__vwsno15_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(this, __vwsnthis_0))(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row1_), ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row2_));
 	}
@@ -12913,14 +12913,14 @@ Closures
 		auto date = ::vl::__vwsn::This(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(row).Obj())->GetBirthday();
 		if (::vl::__vwsn::This(__vwsnthis_0->checkFrom)->GetSelected())
 		{
-			if ((::vl::reflection::description::Sys::Compare(date, ::vl::__vwsn::This(__vwsnthis_0->dateFrom)->GetSelectedDate()) < static_cast<::vl::vint64_t>(0L)))
+			if ((::vl::reflection::description::Sys::Compare(date, ::vl::__vwsn::This(__vwsnthis_0->dateFrom)->GetSelectedDate()) < static_cast<::vl::vint>(0)))
 			{
 				return false;
 			}
 		}
 		if (::vl::__vwsn::This(__vwsnthis_0->checkTo)->GetSelected())
 		{
-			if ((::vl::reflection::description::Sys::Compare(date, ::vl::__vwsn::This(__vwsnthis_0->dateTo)->GetSelectedDate()) > static_cast<::vl::vint64_t>(0L)))
+			if ((::vl::reflection::description::Sys::Compare(date, ::vl::__vwsn::This(__vwsnthis_0->dateTo)->GetSelectedDate()) > static_cast<::vl::vint>(0)))
 			{
 				return false;
 			}
@@ -13305,7 +13305,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsnc4_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
+	::vl::vint __vwsnc4_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
 	{
 		return vl::Func(::vl_workflow_global::__vwsno20_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(this, __vwsnthis_0))(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row1_), ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row2_));
 	}
@@ -13447,7 +13447,7 @@ Closures
 
 	void __vwsnc52_TuiControlTest_tuidemo_TuiCategoryEditorConstructor___vwsn_tuidemo_TuiCategoryEditor_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
 	{
-		auto __vwsn_bind_activator_result_ = [&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bold = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetFocused(); __vwsn_temp__.underline = ::vl::__vwsn::This(__vwsn_bind_cache_1)->GetFocused(); return __vwsn_temp__; }();
+		auto __vwsn_bind_activator_result_ = [&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint>(1); __vwsn_temp__.bold = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetFocused(); __vwsn_temp__.underline = ::vl::__vwsn::This(__vwsn_bind_cache_1)->GetFocused(); return __vwsn_temp__; }();
 		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
 	}
 
@@ -13947,7 +13947,7 @@ Closures
 	{
 	}
 
-	::vl::vint64_t __vwsnc5_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
+	::vl::vint __vwsnc5_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter::Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_)
 	{
 		return vl::Func(::vl_workflow_global::__vwsno27_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(this, __vwsnthis_0))(::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row1_), ::vl::__vwsn::Unbox<::vl::Ptr<::tuidemo::TuiMyDataItem>>(__vwsn_row2_));
 	}
@@ -14089,7 +14089,7 @@ Closures
 
 	void __vwsnc62_TuiControlTest_tuidemo_TuiGenderEditorConstructor___vwsn_tuidemo_TuiGenderEditor_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
 	{
-		auto __vwsn_bind_activator_result_ = [&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bold = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetFocused(); __vwsn_temp__.underline = ::vl::__vwsn::This(__vwsn_bind_cache_1)->GetFocused(); return __vwsn_temp__; }();
+		auto __vwsn_bind_activator_result_ = [&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint>(1); __vwsn_temp__.bold = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetFocused(); __vwsn_temp__.underline = ::vl::__vwsn::This(__vwsn_bind_cache_1)->GetFocused(); return __vwsn_temp__; }();
 		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
 	}
 
@@ -14591,7 +14591,7 @@ Closures
 
 	void __vwsnc6_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
 	{
-		auto __vwsn_bind_activator_result_ = ((::vl::__vwsn::This(__vwsn_bind_cache_0)->GetSelectedIndex() == static_cast<::vl::vint64_t>(6L)) ? ::vl::WString::Unmanaged(L"Effective view: DataGrid") : ::vl::WString::Unmanaged(L"Effective view: Detail"));
+		auto __vwsn_bind_activator_result_ = ((::vl::__vwsn::This(__vwsn_bind_cache_0)->GetSelectedIndex() == static_cast<::vl::vint>(6)) ? ::vl::WString::Unmanaged(L"Effective view: DataGrid") : ::vl::WString::Unmanaged(L"Effective view: Detail"));
 		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
 	}
 
@@ -14652,7 +14652,7 @@ Closures
 
 	void __vwsnc70_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
 	{
-		auto __vwsn_bind_activator_result_ = ((::vl::__vwsn::This(__vwsn_bind_cache_0)->GetSelectedIndex() == static_cast<::vl::vint64_t>(6L)) ? ::vl::WString::Unmanaged(L"Effective view: DataGrid") : ::vl::WString::Unmanaged(L"Effective view: Detail"));
+		auto __vwsn_bind_activator_result_ = ((::vl::__vwsn::This(__vwsn_bind_cache_0)->GetSelectedIndex() == static_cast<::vl::vint>(6)) ? ::vl::WString::Unmanaged(L"Effective view: DataGrid") : ::vl::WString::Unmanaged(L"Effective view: Detail"));
 		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
 	}
 
@@ -14724,7 +14724,7 @@ Closures
 		this->__vwsn_bind_activator_();
 	}
 
-	void __vwsnc71_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0(::vl::vint64_t __vwsn_bind_callback_argument_0, ::vl::vint64_t __vwsn_bind_callback_argument_1, ::vl::vint64_t __vwsn_bind_callback_argument_2)
+	void __vwsnc71_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0(::vl::vint __vwsn_bind_callback_argument_0, ::vl::vint __vwsn_bind_callback_argument_1, ::vl::vint __vwsn_bind_callback_argument_2)
 	{
 		this->__vwsn_bind_activator_();
 	}
@@ -14737,7 +14737,7 @@ Closures
 			(__vwsn_bind_cache_0 = [&](){ try{ return __vwsnthis_0->self; } catch(...){ return static_cast<::tuidemo::TuiEnglishNumbersController*>(nullptr); } }());
 			(__vwsn_bind_cache_1 = [&](){ try{ return ::vl::__vwsn::This(__vwsnthis_0->self)->GetItemsToBind(); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IValueObservableList>(); } }());
 			(__vwsn_bind_handler_0_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_0)->counterChanged, ::vl::Func<void()>(this, &__vwsnc71_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
-			(__vwsn_bind_handler_1_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_1.Obj())->ItemChanged, ::vl::Func<void(::vl::vint64_t, ::vl::vint64_t, ::vl::vint64_t)>(this, &__vwsnc71_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
+			(__vwsn_bind_handler_1_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_1.Obj())->ItemChanged, ::vl::Func<void(::vl::vint, ::vl::vint, ::vl::vint)>(this, &__vwsnc71_TuiControlTest_tuidemo_TuiEnglishNumbersControllerConstructor___vwsn_tuidemo_TuiEnglishNumbersController_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
 			return true;
 		}
 		return false;
@@ -15474,7 +15474,7 @@ Closures
 
 	void __vwsnc83_TuiControlTest_tuidemo_TuiTextBoxTabPageConstructor___vwsn_tuidemo_TuiTextBoxTabPage_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
 	{
-		auto __vwsn_bind_activator_result_ = (::vl::__vwsn::This(__vwsn_bind_cache_0)->GetDisplayFont().size > static_cast<::vl::vint64_t>(5L));
+		auto __vwsn_bind_activator_result_ = (::vl::__vwsn::This(__vwsn_bind_cache_0)->GetDisplayFont().size > static_cast<::vl::vint>(5));
 		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
 	}
 
@@ -16640,17 +16640,17 @@ Class (::tuidemo::TuiCategoryDisplayerConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = ::vl::Ptr<::vl::presentation::elements::GuiSolidBackgroundElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidBackgroundElement>()));
 		{
@@ -16661,14 +16661,14 @@ Class (::tuidemo::TuiCategoryDisplayerConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_4 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_5 = ::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition()));
@@ -16774,7 +16774,7 @@ Class (::tuidemo::TuiCategoryEditorConstructor)
 		}
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(14L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(14); return __vwsn_temp__; }());
 		}
 		{
 			(this->comboBox = new ::vl::presentation::controls::GuiComboBoxListControl(::vl::presentation::theme::ThemeName::ComboBox, static_cast<::vl::presentation::controls::GuiSelectableListControl*>(this->__vwsn_precompile_0)));
@@ -16785,7 +16785,7 @@ Class (::tuidemo::TuiCategoryEditorConstructor)
 		}
 		(this->__vwsn_precompile_2 = ::vl::__vwsn::This(this->comboBox)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboBox)->GetBoundsComposition()));
@@ -16854,7 +16854,7 @@ Class (::tuidemo::TuiCategoryItemTemplateConstructor)
 		(this->__vwsn_precompile_0 = new ::tuidemo::TuiCategoryDisplayer());
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition()));
@@ -16879,7 +16879,7 @@ Class (::tuidemo::TuiCategoryItemTemplateConstructor)
 
 	TuiCategoryItemTemplateConstructor::TuiCategoryItemTemplateConstructor()
 		: self(static_cast<::tuidemo::TuiCategoryItemTemplate*>(nullptr))
-		, SelectedCategory(static_cast<::tuidemo::TuiMyCategory>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint64_t>(0L))))
+		, SelectedCategory(static_cast<::tuidemo::TuiMyCategory>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint>(0))))
 		, __vwsn_precompile_0(static_cast<::tuidemo::TuiCategoryDisplayer*>(nullptr))
 		, __vwsn_precompile_1(static_cast<::vl::presentation::compositions::GuiBoundsComposition*>(nullptr))
 	{
@@ -16895,7 +16895,7 @@ Class (::tuidemo::TuiCategoryItemTemplate)
 	}
 
 	TuiCategoryItemTemplate::TuiCategoryItemTemplate(::tuidemo::TuiMyCategory __vwsn_ctor_parameter_SelectedCategory)
-		: __vwsn_parameter_SelectedCategory(static_cast<::tuidemo::TuiMyCategory>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint64_t>(0L))))
+		: __vwsn_parameter_SelectedCategory(static_cast<::tuidemo::TuiMyCategory>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint>(0))))
 	{
 		(this->__vwsn_parameter_SelectedCategory = __vwsn_ctor_parameter_SelectedCategory);
 		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tuidemo::TuiCategoryItemTemplate"));
@@ -16919,7 +16919,7 @@ Class (::tuidemo::TuiCategoryVisualizerConstructor)
 		(this->__vwsn_precompile_0 = new ::tuidemo::TuiCategoryDisplayer());
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition()));
@@ -16977,14 +16977,14 @@ Class (::tuidemo::TuiCellFocusTemplateConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(1); __vwsn_temp__.y = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = (- static_cast<::vl::vint64_t>(1L)); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = (- static_cast<::vl::vint>(1)); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1.Obj())->SetFont([&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bold = true; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1.Obj())->SetFont([&](){ ::vl::presentation::FontProperties __vwsn_temp__; __vwsn_temp__.fontFamily = ::vl::WString::Unmanaged(L"TuiFont"); __vwsn_temp__.size = static_cast<::vl::vint>(1); __vwsn_temp__.bold = true; return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1.Obj())->SetText(::vl::WString::Unmanaged(L">"));
@@ -17001,7 +17001,7 @@ Class (::tuidemo::TuiCellFocusTemplateConstructor)
 			::vl::__vwsn::This(this->container)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->container)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->container)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->container));
@@ -17058,33 +17058,33 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Horizontal);
@@ -17160,14 +17160,14 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(6L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(6));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_12 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -17210,7 +17210,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_18 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dataGrid = new ::vl::presentation::controls::GuiBindableDataGrid(::vl::presentation::theme::ThemeName::ListView));
@@ -17218,7 +17218,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->dataGrid)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			::vl::__vwsn::This(this->dataGrid)->SetVerticalAlwaysVisible(false);
@@ -17231,7 +17231,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_26 = ::vl::__vwsn::This(this->dataGrid)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_19 = ::vl::Ptr<::vl::presentation::controls::list::DataColumn>(new ::vl::presentation::controls::list::DataColumn()));
 		{
@@ -17244,7 +17244,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf3_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetSize(static_cast<::vl::vint64_t>(18L));
+			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetSize(static_cast<::vl::vint>(18));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf4_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
@@ -17270,7 +17270,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf10_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetSize(static_cast<::vl::vint64_t>(12L));
+			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetSize(static_cast<::vl::vint>(12));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf11_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
@@ -17296,7 +17296,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf17_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint64_t>(12L));
+			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint>(12));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf18_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
@@ -17319,7 +17319,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"dateFilter"), ::vl::__vwsn::Box(this->dateFilter));
 		(this->__vwsn_precompile_24 = ::vl::__vwsn::This(this->dateFilter)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->__vwsn_precompile_23)->GetToolstripItems()).Obj())->Add(::vl::__vwsn::Box(this->dateFilter));
@@ -17337,7 +17337,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf22_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf23_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
@@ -17363,7 +17363,7 @@ Class (::tuidemo::TuiDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf29_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint64_t>(32L));
+			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint>(32));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf30_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_(this)));
@@ -17476,7 +17476,7 @@ Class (::tuidemo::TuiDateEditorConstructor)
 		}
 		(this->__vwsn_precompile_0 = ::vl::__vwsn::This(this->comboBox)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboBox)->GetBoundsComposition()));
@@ -17529,24 +17529,24 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		(this->self = __vwsn_this_);
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->checkFrom = new ::vl::presentation::controls::GuiSelectableButton(::vl::presentation::theme::ThemeName::CheckBox));
@@ -17563,7 +17563,7 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dateFrom = new ::vl::presentation::controls::GuiDateComboBox(::vl::presentation::theme::ThemeName::DateComboBox));
@@ -17574,7 +17574,7 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->dateFrom)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dateFrom)->GetBoundsComposition()));
@@ -17584,7 +17584,7 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->checkTo = new ::vl::presentation::controls::GuiSelectableButton(::vl::presentation::theme::ThemeName::CheckBox));
@@ -17601,7 +17601,7 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		}
 		(this->__vwsn_precompile_5 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dateTo = new ::vl::presentation::controls::GuiDateComboBox(::vl::presentation::theme::ThemeName::DateComboBox));
@@ -17612,7 +17612,7 @@ Class (::tuidemo::TuiDateFilterConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->dateTo)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dateTo)->GetBoundsComposition()));
@@ -17722,27 +17722,27 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(1));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(4L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(4));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dp1 = new ::vl::presentation::controls::GuiDatePicker(::vl::presentation::theme::ThemeName::DatePicker));
@@ -17753,7 +17753,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_2 = ::vl::__vwsn::This(this->dp1)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dp1)->GetBoundsComposition()));
@@ -17763,7 +17763,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dp2 = new ::vl::presentation::controls::GuiDatePicker(::vl::presentation::theme::ThemeName::DatePicker));
@@ -17774,7 +17774,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_4 = ::vl::__vwsn::This(this->dp2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dp2)->GetBoundsComposition()));
@@ -17784,7 +17784,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_5 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dc1 = new ::vl::presentation::controls::GuiDateComboBox(::vl::presentation::theme::ThemeName::DateComboBox));
@@ -17795,7 +17795,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->dc1)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dc1)->GetBoundsComposition()));
@@ -17805,7 +17805,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dc2 = new ::vl::presentation::controls::GuiDateComboBox(::vl::presentation::theme::ThemeName::DateComboBox));
@@ -17816,7 +17816,7 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = ::vl::__vwsn::This(this->dc2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_7)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->dc2)->GetBoundsComposition()));
@@ -17826,17 +17826,17 @@ Class (::tuidemo::TuiDatePickerTabPageConstructor)
 		}
 		(this->__vwsn_precompile_9 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
 		}
 		(this->__vwsn_precompile_10 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -18004,24 +18004,24 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		(this->self = __vwsn_this_);
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiDocumentLabel(::vl::presentation::theme::ThemeName::DocumentTextBox));
@@ -18034,7 +18034,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetText(::vl::WString::Unmanaged(L"Archer"));
@@ -18047,7 +18047,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_5 = new ::vl::presentation::controls::GuiDocumentViewer(::vl::presentation::theme::ThemeName::DocumentViewer));
@@ -18060,7 +18060,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition()));
@@ -18070,7 +18070,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_8 = new ::vl::presentation::controls::GuiScrollContainer(::vl::presentation::theme::ThemeName::ScrollView));
@@ -18086,7 +18086,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_8)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			(this->__vwsn_precompile_9 = new ::vl::presentation::controls::GuiDocumentLabel(::vl::presentation::theme::ThemeName::DocumentLabel));
@@ -18099,7 +18099,7 @@ Class (::tuidemo::TuiDocumentBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_10 = ::vl::__vwsn::This(this->__vwsn_precompile_9)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_9));
@@ -18286,25 +18286,25 @@ Class (::tuidemo::TuiDocumentEditorBaseConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->menuContainer = new ::vl::presentation::compositions::GuiCellComposition());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"menuContainer"), ::vl::__vwsn::Box(this->menuContainer));
 		{
-			::vl::__vwsn::This(this->menuContainer)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->menuContainer)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->menuContainer));
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->document = new ::vl::presentation::controls::GuiDocumentViewer(::vl::presentation::theme::ThemeName::DocumentViewer));
@@ -18318,7 +18318,7 @@ Class (::tuidemo::TuiDocumentEditorBaseConstructor)
 		}
 		(this->__vwsn_precompile_2 = ::vl::__vwsn::This(this->document)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->document)->GetBoundsComposition()));
@@ -19046,16 +19046,16 @@ Class (::tuidemo::TuiDocumentEditorBase)
 		{
 			{
 				auto __vwsn_switch_9 = ::vl::__vwsn::This(this->dialogSaveDoc)->GetFilterIndex();
-				if ((__vwsn_switch_9 == static_cast<::vl::vint64_t>(0L)))
+				if ((__vwsn_switch_9 == static_cast<::vl::vint>(0)))
 				{
 					::vl::__vwsn::This(this->self)->SaveAsPrivateFormat(::vl::__vwsn::This(this->dialogSaveDoc)->GetFileName());
 					::vl::__vwsn::This(this->document)->NotifyModificationSaved();
 				}
-				else if ((__vwsn_switch_9 == static_cast<::vl::vint64_t>(1L)))
+				else if ((__vwsn_switch_9 == static_cast<::vl::vint>(1)))
 				{
 					::vl::__vwsn::This(this->self)->SaveAsRTF(::vl::__vwsn::This(this->dialogSaveDoc)->GetFileName());
 				}
-				else if ((__vwsn_switch_9 == static_cast<::vl::vint64_t>(2L)))
+				else if ((__vwsn_switch_9 == static_cast<::vl::vint>(2)))
 				{
 					::vl::__vwsn::This(this->self)->SaveAsHTML(::vl::__vwsn::This(this->dialogSaveDoc)->GetFileName());
 				}
@@ -19099,7 +19099,7 @@ Class (::tuidemo::TuiDocumentEditorBase)
 
 	TuiDocumentEditorBase::TuiDocumentEditorBase()
 		: ::vl::presentation::controls::GuiCustomControl(::vl::presentation::theme::ThemeName::CustomControl)
-		, nextImageId(static_cast<::vl::vint64_t>(0L))
+		, nextImageId(static_cast<::vl::vint>(0))
 		, images(::vl::reflection::description::IValueList::Create())
 		, __vwsn_prop_EditModeCommand(static_cast<::vl::presentation::controls::GuiToolstripCommand*>(nullptr))
 		, __vwsn_prop_HasEditableSelection(false)
@@ -19135,7 +19135,7 @@ Class (::tuidemo::TuiDocumentEditorToolstripConstructor)
 		}
 		(this->__vwsn_precompile_48 = ::vl::__vwsn::This(this->__vwsn_precompile_1)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiToolstripButton(::vl::presentation::theme::ThemeName::MenuBarButton));
@@ -19703,7 +19703,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_84 = ::vl::__vwsn::This(this->docViewer)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_84)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_84)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_0 = ::vl::Ptr<::vl::presentation::controls::GuiDocumentItem>(new ::vl::presentation::controls::GuiDocumentItem(::vl::WString::Unmanaged(L"CommandTable"))));
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiTableComposition());
@@ -19711,35 +19711,35 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(66L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(66); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint>(5), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_4 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19753,7 +19753,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition()));
@@ -19766,14 +19766,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_9 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19787,7 +19787,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_10)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_10)->GetBoundsComposition()));
@@ -19800,14 +19800,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_13 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_14 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19821,7 +19821,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_16 = ::vl::__vwsn::This(this->__vwsn_precompile_15)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_13)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_15)->GetBoundsComposition()));
@@ -19834,14 +19834,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_17 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_18 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_19 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19855,7 +19855,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_21 = ::vl::__vwsn::This(this->__vwsn_precompile_20)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_18)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_20)->GetBoundsComposition()));
@@ -19868,14 +19868,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_22 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_23 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_24 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19889,7 +19889,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_26 = ::vl::__vwsn::This(this->__vwsn_precompile_25)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_25)->GetBoundsComposition()));
@@ -19902,14 +19902,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_27 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_28 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_29 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19923,7 +19923,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_31 = ::vl::__vwsn::This(this->__vwsn_precompile_30)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_28)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_30)->GetBoundsComposition()));
@@ -19936,14 +19936,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_32 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_33 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_34 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19957,7 +19957,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_36 = ::vl::__vwsn::This(this->__vwsn_precompile_35)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_33)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_35)->GetBoundsComposition()));
@@ -19970,14 +19970,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_37 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_38 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_39 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -19991,7 +19991,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_41 = ::vl::__vwsn::This(this->__vwsn_precompile_40)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_38)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_40)->GetBoundsComposition()));
@@ -20004,14 +20004,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_42 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_43 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_44 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20025,7 +20025,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_46 = ::vl::__vwsn::This(this->__vwsn_precompile_45)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_43)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_45)->GetBoundsComposition()));
@@ -20038,14 +20038,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_47 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_48 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_49 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20059,7 +20059,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_51 = ::vl::__vwsn::This(this->__vwsn_precompile_50)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_51)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_51)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_48)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_50)->GetBoundsComposition()));
@@ -20072,14 +20072,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_52 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_52)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_52)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_53 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_53)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_53)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_53)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_54 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20093,7 +20093,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_56 = ::vl::__vwsn::This(this->__vwsn_precompile_55)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_56)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_56)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_53)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_55)->GetBoundsComposition()));
@@ -20106,14 +20106,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_57 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_57)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_57)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_58 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_58)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_58)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_58)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_59 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20127,7 +20127,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_61 = ::vl::__vwsn::This(this->__vwsn_precompile_60)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_58)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_60)->GetBoundsComposition()));
@@ -20140,14 +20140,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_62 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_62)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_62)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_63 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_64 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20161,7 +20161,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_66 = ::vl::__vwsn::This(this->__vwsn_precompile_65)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_66)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_66)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_63)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_65)->GetBoundsComposition()));
@@ -20174,14 +20174,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_67 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_67)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_67)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_68 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_69 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20195,7 +20195,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_71 = ::vl::__vwsn::This(this->__vwsn_precompile_70)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_71)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_71)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_68)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_70)->GetBoundsComposition()));
@@ -20208,14 +20208,14 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_72 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_72)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_72)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_73 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_73)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_73)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_73)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_74 = ::vl::Ptr<::vl::presentation::elements::TuiBorderElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::TuiBorderElement>()));
 		{
@@ -20229,7 +20229,7 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_76 = ::vl::__vwsn::This(this->__vwsn_precompile_75)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_76)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_76)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_73)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_75)->GetBoundsComposition()));
@@ -20277,11 +20277,11 @@ Class (::tuidemo::TuiEmbeddedControlsSubTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboRun"), ::vl::__vwsn::Box(this->comboRun));
 		}
 		{
-			::vl::__vwsn::This(this->comboRun)->SetSelectedIndex(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->comboRun)->SetSelectedIndex(static_cast<::vl::vint>(0));
 		}
 		(this->__vwsn_precompile_81 = ::vl::__vwsn::This(this->comboRun)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_81)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(22L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_81)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(22); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(::vl::__vwsn::This(this->__vwsn_precompile_77.Obj())->GetContainer())->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboRun)->GetBoundsComposition()));
@@ -20527,17 +20527,17 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_19 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = (- static_cast<::vl::vint64_t>(1L)); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = (- static_cast<::vl::vint>(1)); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -20551,7 +20551,7 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_4 = ::vl::__vwsn::This(this->__vwsn_precompile_3)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetText(::vl::WString::Unmanaged(L"Add 10 items"));
@@ -20571,7 +20571,7 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_7 = ::vl::__vwsn::This(this->__vwsn_precompile_6)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetText(::vl::WString::Unmanaged(L"Remove odd items"));
@@ -20591,7 +20591,7 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_10 = ::vl::__vwsn::This(this->__vwsn_precompile_9)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetText(::vl::WString::Unmanaged(L"Remove even items"));
@@ -20611,7 +20611,7 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_13 = ::vl::__vwsn::This(this->__vwsn_precompile_12)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetText(::vl::WString::Unmanaged(L"Clear"));
@@ -20631,7 +20631,7 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 		}
 		(this->__vwsn_precompile_16 = ::vl::__vwsn::This(this->__vwsn_precompile_15)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetText(::vl::WString::Unmanaged(L"Reset Counter"));
@@ -20719,11 +20719,11 @@ Class (::tuidemo::TuiEnglishNumbersControllerConstructor)
 Class (::tuidemo::TuiEnglishNumbersController)
 ***********************************************************************/
 
-	::vl::vint64_t TuiEnglishNumbersController::Getcounter()
+	::vl::vint TuiEnglishNumbersController::Getcounter()
 	{
 		return this->__vwsn_prop_counter;
 	}
-	void TuiEnglishNumbersController::Setcounter(::vl::vint64_t __vwsn_value_)
+	void TuiEnglishNumbersController::Setcounter(::vl::vint __vwsn_value_)
 	{
 		if ((this->__vwsn_prop_counter != __vwsn_value_))
 		{
@@ -20741,43 +20741,43 @@ Class (::tuidemo::TuiEnglishNumbersController)
 		(this->__vwsn_prop_ItemsToBind = __vwsn_value_);
 	}
 
-	::vl::WString TuiEnglishNumbersController::ToText_1to9(::vl::vint64_t i)
+	::vl::WString TuiEnglishNumbersController::ToText_1to9(::vl::vint i)
 	{
 		{
 			auto __vwsn_switch_6 = i;
-			if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(1L)))
+			if ((__vwsn_switch_6 == static_cast<::vl::vint>(1)))
 			{
 				return ::vl::WString::Unmanaged(L"one");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(2)))
 			{
 				return ::vl::WString::Unmanaged(L"two");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(3)))
 			{
 				return ::vl::WString::Unmanaged(L"three");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(4)))
 			{
 				return ::vl::WString::Unmanaged(L"four");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(5)))
 			{
 				return ::vl::WString::Unmanaged(L"five");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(6L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(6)))
 			{
 				return ::vl::WString::Unmanaged(L"six");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(7L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(7)))
 			{
 				return ::vl::WString::Unmanaged(L"seven");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(8L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(8)))
 			{
 				return ::vl::WString::Unmanaged(L"eight");
 			}
-			else if ((__vwsn_switch_6 == static_cast<::vl::vint64_t>(9L)))
+			else if ((__vwsn_switch_6 == static_cast<::vl::vint>(9)))
 			{
 				return ::vl::WString::Unmanaged(L"nine");
 			}
@@ -20785,43 +20785,43 @@ Class (::tuidemo::TuiEnglishNumbersController)
 		throw ::vl::Exception(::vl::WString::Unmanaged(L"ToText_1to9: Number out of range."));
 	}
 
-	::vl::WString TuiEnglishNumbersController::ToText_11to19(::vl::vint64_t i)
+	::vl::WString TuiEnglishNumbersController::ToText_11to19(::vl::vint i)
 	{
 		{
 			auto __vwsn_switch_7 = i;
-			if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(1L)))
+			if ((__vwsn_switch_7 == static_cast<::vl::vint>(1)))
 			{
 				return ::vl::WString::Unmanaged(L"eleven");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(2)))
 			{
 				return ::vl::WString::Unmanaged(L"twelve");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(3)))
 			{
 				return ::vl::WString::Unmanaged(L"thirteen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(4)))
 			{
 				return ::vl::WString::Unmanaged(L"fourteen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(5)))
 			{
 				return ::vl::WString::Unmanaged(L"fifteen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(6L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(6)))
 			{
 				return ::vl::WString::Unmanaged(L"sixteen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(7L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(7)))
 			{
 				return ::vl::WString::Unmanaged(L"seventeen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(8L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(8)))
 			{
 				return ::vl::WString::Unmanaged(L"eighteen");
 			}
-			else if ((__vwsn_switch_7 == static_cast<::vl::vint64_t>(9L)))
+			else if ((__vwsn_switch_7 == static_cast<::vl::vint>(9)))
 			{
 				return ::vl::WString::Unmanaged(L"nineteen");
 			}
@@ -20829,70 +20829,70 @@ Class (::tuidemo::TuiEnglishNumbersController)
 		throw ::vl::Exception(::vl::WString::Unmanaged(L"ToText_11to19: Number out of range."));
 	}
 
-	::vl::WString TuiEnglishNumbersController::NumberToText_1To99(::vl::vint64_t i)
+	::vl::WString TuiEnglishNumbersController::NumberToText_1To99(::vl::vint i)
 	{
 		{
-			auto __vwsn_switch_8 = (i / static_cast<::vl::vint64_t>(10L));
-			if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(0L)))
+			auto __vwsn_switch_8 = (i / static_cast<::vl::vint>(10));
+			if ((__vwsn_switch_8 == static_cast<::vl::vint>(0)))
 			{
-				return this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)));
+				return this->ToText_1to9((i % static_cast<::vl::vint>(10)));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(1L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(1)))
 			{
-				return ((i == static_cast<::vl::vint64_t>(10L)) ? ::vl::WString::Unmanaged(L"ten") : this->ToText_11to19((i % static_cast<::vl::vint64_t>(10L))));
+				return ((i == static_cast<::vl::vint>(10)) ? ::vl::WString::Unmanaged(L"ten") : this->ToText_11to19((i % static_cast<::vl::vint>(10))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(2L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(2)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"twenty") : (::vl::WString::Unmanaged(L"twenty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"twenty") : (::vl::WString::Unmanaged(L"twenty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(3L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(3)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"thirty") : (::vl::WString::Unmanaged(L"thirty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"thirty") : (::vl::WString::Unmanaged(L"thirty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(4L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(4)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"fourty") : (::vl::WString::Unmanaged(L"fourty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"fourty") : (::vl::WString::Unmanaged(L"fourty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(5L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(5)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"fifty") : (::vl::WString::Unmanaged(L"fifty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"fifty") : (::vl::WString::Unmanaged(L"fifty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(6L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(6)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"sixty") : (::vl::WString::Unmanaged(L"sixty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"sixty") : (::vl::WString::Unmanaged(L"sixty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(7L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(7)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"seventy") : (::vl::WString::Unmanaged(L"seventy-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"seventy") : (::vl::WString::Unmanaged(L"seventy-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(8L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(8)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"eighty") : (::vl::WString::Unmanaged(L"eighty-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"eighty") : (::vl::WString::Unmanaged(L"eighty-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
-			else if ((__vwsn_switch_8 == static_cast<::vl::vint64_t>(9L)))
+			else if ((__vwsn_switch_8 == static_cast<::vl::vint>(9)))
 			{
-				return (((i % static_cast<::vl::vint64_t>(10L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"ninety") : (::vl::WString::Unmanaged(L"ninety-") + this->ToText_1to9((i % static_cast<::vl::vint64_t>(10L)))));
+				return (((i % static_cast<::vl::vint>(10)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"ninety") : (::vl::WString::Unmanaged(L"ninety-") + this->ToText_1to9((i % static_cast<::vl::vint>(10)))));
 			}
 		}
 		throw ::vl::Exception(::vl::WString::Unmanaged(L"NumberToText_1To99: Number out of range."));
 	}
 
-	::vl::WString TuiEnglishNumbersController::NumberToText_0to999(::vl::vint64_t i)
+	::vl::WString TuiEnglishNumbersController::NumberToText_0to999(::vl::vint i)
 	{
-		if ((i < static_cast<::vl::vint64_t>(100L)))
+		if ((i < static_cast<::vl::vint>(100)))
 		{
 			return this->NumberToText_1To99(i);
 		}
-		return ((this->ToText_1to9((i / static_cast<::vl::vint64_t>(100L))) + ::vl::WString::Unmanaged(L" hundred")) + (((i % static_cast<::vl::vint64_t>(100L)) == static_cast<::vl::vint64_t>(0L)) ? ::vl::WString::Unmanaged(L"") : (::vl::WString::Unmanaged(L" and ") + this->NumberToText_1To99((i % static_cast<::vl::vint64_t>(100L))))));
+		return ((this->ToText_1to9((i / static_cast<::vl::vint>(100))) + ::vl::WString::Unmanaged(L" hundred")) + (((i % static_cast<::vl::vint>(100)) == static_cast<::vl::vint>(0)) ? ::vl::WString::Unmanaged(L"") : (::vl::WString::Unmanaged(L" and ") + this->NumberToText_1To99((i % static_cast<::vl::vint>(100))))));
 	}
 
-	::vl::WString TuiEnglishNumbersController::NumberToText(::vl::vint64_t i)
+	::vl::WString TuiEnglishNumbersController::NumberToText(::vl::vint i)
 	{
-		if ((i == static_cast<::vl::vint64_t>(0L)))
+		if ((i == static_cast<::vl::vint>(0)))
 		{
 			return ::vl::WString::Unmanaged(L"zero");
 		}
-		if ((i < static_cast<::vl::vint64_t>(1000L)))
+		if ((i < static_cast<::vl::vint>(1000)))
 		{
 			return this->NumberToText_0to999(i);
 		}
@@ -20901,7 +20901,7 @@ Class (::tuidemo::TuiEnglishNumbersController)
 
 	TuiEnglishNumbersController::TuiEnglishNumbersController()
 		: ::vl::presentation::controls::GuiCustomControl(::vl::presentation::theme::ThemeName::CustomControl)
-		, __vwsn_prop_counter(static_cast<::vl::vint64_t>(0L))
+		, __vwsn_prop_counter(static_cast<::vl::vint>(0))
 		, __vwsn_prop_ItemsToBind(::vl::reflection::description::IValueObservableList::Create())
 	{
 		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tuidemo::TuiEnglishNumbersController"));
@@ -20927,31 +20927,31 @@ Class (::tuidemo::TuiEnglishNumbersControllerTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->content = new ::vl::presentation::compositions::GuiCellComposition());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"content"), ::vl::__vwsn::Box(this->content));
 		{
-			::vl::__vwsn::This(this->content)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->content)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->content));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->controller = new ::tuidemo::TuiEnglishNumbersController());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"controller"), ::vl::__vwsn::Box(this->controller));
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->controller)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->controller)->SetText(::vl::WString::Unmanaged(L"Operations"));
@@ -21034,7 +21034,7 @@ Class (::tuidemo::TuiGenderDisplayerConstructor)
 		}
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_0));
@@ -21132,7 +21132,7 @@ Class (::tuidemo::TuiGenderEditorConstructor)
 		}
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->comboBox)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboBox)->GetBoundsComposition()));
@@ -21200,7 +21200,7 @@ Class (::tuidemo::TuiGenderItemTemplateConstructor)
 		(this->__vwsn_precompile_0 = new ::tuidemo::TuiGenderDisplayer());
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition()));
@@ -21225,7 +21225,7 @@ Class (::tuidemo::TuiGenderItemTemplateConstructor)
 
 	TuiGenderItemTemplateConstructor::TuiGenderItemTemplateConstructor()
 		: self(static_cast<::tuidemo::TuiGenderItemTemplate*>(nullptr))
-		, SelectedGender(static_cast<::tuidemo::TuiMyGender>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint64_t>(0L))))
+		, SelectedGender(static_cast<::tuidemo::TuiMyGender>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint>(0))))
 		, __vwsn_precompile_0(static_cast<::tuidemo::TuiGenderDisplayer*>(nullptr))
 		, __vwsn_precompile_1(static_cast<::vl::presentation::compositions::GuiBoundsComposition*>(nullptr))
 	{
@@ -21241,7 +21241,7 @@ Class (::tuidemo::TuiGenderItemTemplate)
 	}
 
 	TuiGenderItemTemplate::TuiGenderItemTemplate(::tuidemo::TuiMyGender __vwsn_ctor_parameter_SelectedGender)
-		: __vwsn_parameter_SelectedGender(static_cast<::tuidemo::TuiMyGender>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint64_t>(0L))))
+		: __vwsn_parameter_SelectedGender(static_cast<::tuidemo::TuiMyGender>(static_cast<::vl::vuint64_t>(static_cast<::vl::vint>(0))))
 	{
 		(this->__vwsn_parameter_SelectedGender = __vwsn_ctor_parameter_SelectedGender);
 		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tuidemo::TuiGenderItemTemplate"));
@@ -21265,7 +21265,7 @@ Class (::tuidemo::TuiGenderVisualizerConstructor)
 		(this->__vwsn_precompile_0 = new ::tuidemo::TuiGenderDisplayer());
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition()));
@@ -21323,10 +21323,10 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 		}
 		(this->__vwsn_precompile_13 = ::vl::__vwsn::This(this->self)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(54L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(7L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(54); __vwsn_temp__.y = static_cast<::vl::vint>(7); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(54L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(7L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(54); __vwsn_temp__.y = static_cast<::vl::vint>(7); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->SetSizeBox(false);
@@ -21345,45 +21345,45 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(1));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(4L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(4));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(0.5); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_4 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -21405,7 +21405,7 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 		}
 		(this->__vwsn_precompile_5 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(3L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(3));
 		}
 		{
 			(this->textUrl = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -21413,7 +21413,7 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->textUrl)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->textUrl)->GetBoundsComposition()));
@@ -21423,14 +21423,14 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_8 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
 		}
 		(this->__vwsn_precompile_9 = ::vl::__vwsn::This(this->__vwsn_precompile_8)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(8L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(8); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetText(::vl::WString::Unmanaged(L"OK"));
@@ -21443,14 +21443,14 @@ Class (::tuidemo::TuiHyperlinkWindowConstructor)
 		}
 		(this->__vwsn_precompile_10 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_11 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
 		}
 		(this->__vwsn_precompile_12 = ::vl::__vwsn::This(this->__vwsn_precompile_11)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(8L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(8); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetText(::vl::WString::Unmanaged(L"Cancel"));
@@ -21538,34 +21538,34 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Horizontal);
@@ -21633,14 +21633,14 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(5L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(5));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -21686,7 +21686,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_17 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->listView = new ::vl::presentation::controls::GuiListView(::vl::presentation::theme::ThemeName::ListView));
@@ -21694,15 +21694,15 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 		}
 		{
 			::vl::__vwsn::This(this->listView)->SetVerticalAlwaysVisible(false);
@@ -21715,11 +21715,11 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_22 = ::vl::__vwsn::This(this->listView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_18 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18.Obj())->SetSize(static_cast<::vl::vint64_t>(12L));
+			::vl::__vwsn::This(this->__vwsn_precompile_18.Obj())->SetSize(static_cast<::vl::vint>(12));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_18.Obj())->SetText(::vl::WString::Unmanaged(L"Id"));
@@ -21730,7 +21730,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_19 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetSize(static_cast<::vl::vint>(10));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_19.Obj())->SetText(::vl::WString::Unmanaged(L"Category"));
@@ -21741,7 +21741,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_20 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetSize(static_cast<::vl::vint64_t>(8L));
+			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetSize(static_cast<::vl::vint>(8));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20.Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
@@ -21752,7 +21752,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_21 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint64_t>(34L));
+			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint>(34));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetText(::vl::WString::Unmanaged(L"File"));
@@ -21769,7 +21769,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_23 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->bindableListView = new ::vl::presentation::controls::GuiBindableListView(::vl::presentation::theme::ThemeName::ListView));
@@ -21777,15 +21777,15 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->bindableListView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->bindableListView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->bindableListView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 		}
 		{
 			::vl::__vwsn::This(this->bindableListView)->SetVerticalAlwaysVisible(false);
@@ -21798,11 +21798,11 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_28 = ::vl::__vwsn::This(this->bindableListView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_24 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint64_t>(12L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint>(12));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf34_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_(this)));
@@ -21816,7 +21816,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_25 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint>(10));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf35_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_(this)));
@@ -21830,7 +21830,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_26 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint64_t>(8L));
+			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint>(8));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf36_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_(this)));
@@ -21844,7 +21844,7 @@ Class (::tuidemo::TuiListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_27 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetSize(static_cast<::vl::vint64_t>(34L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetSize(static_cast<::vl::vint>(34));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf37_TuiControlTest_tuidemo_TuiListViewTabPageConstructor___vwsn_tuidemo_TuiListViewTabPage_Initialize_(this)));
@@ -21978,10 +21978,10 @@ Class (::tuidemo::TuiLocaleSelectorConstructor)
 		}
 		(this->__vwsn_precompile_2 = ::vl::__vwsn::This(this->comboLocales)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(10L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(10); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->comboLocales));
@@ -22011,11 +22011,11 @@ Class (::tuidemo::TuiLocaleSelectorConstructor)
 Class (::tuidemo::TuiLocaleSelector)
 ***********************************************************************/
 
-	::vl::vint64_t TuiLocaleSelector::GetLocaleIndex(::vl::Locale locale)
+	::vl::vint TuiLocaleSelector::GetLocaleIndex(::vl::Locale locale)
 	{
 		{
-			auto __vwsn_for_begin_i = (static_cast<::vl::vint64_t>(0L) + static_cast<::vl::vint64_t>(1L));
-			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listLocales)->GetItems()).Obj())->GetCount() - static_cast<::vl::vint64_t>(1L));
+			auto __vwsn_for_begin_i = (static_cast<::vl::vint>(0) + static_cast<::vl::vint>(1));
+			auto __vwsn_for_end_i = (::vl::__vwsn::This(::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listLocales)->GetItems()).Obj())->GetCount() - static_cast<::vl::vint>(1));
 			auto i = __vwsn_for_begin_i;
 			while ((i <= __vwsn_for_end_i))
 			{
@@ -22025,10 +22025,10 @@ Class (::tuidemo::TuiLocaleSelector)
 						return i;
 					}
 				}
-				(i = (i + static_cast<::vl::vint64_t>(1L)));
+				(i = (i + static_cast<::vl::vint>(1)));
 			}
 		}
-		return static_cast<::vl::vint64_t>(0L);
+		return static_cast<::vl::vint>(0);
 	}
 
 	TuiLocaleSelector::TuiLocaleSelector()
@@ -22068,25 +22068,25 @@ Class (::tuidemo::TuiLocalizedColorDialogTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(2L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(12L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(2); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(12); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = ::vl::Ptr<::vl::presentation::elements::GuiSolidBackgroundElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidBackgroundElement>()));
 		{
@@ -22097,7 +22097,7 @@ Class (::tuidemo::TuiLocalizedColorDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_4 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -22110,7 +22110,7 @@ Class (::tuidemo::TuiLocalizedColorDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_5 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_6 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -22200,25 +22200,25 @@ Class (::tuidemo::TuiLocalizedDialogsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
 		{
@@ -22235,12 +22235,12 @@ Class (::tuidemo::TuiLocalizedDialogsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_4 = new ::tuidemo::TuiLocaleSelector());
 		(this->__vwsn_precompile_5 = ::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition()));
@@ -22250,7 +22250,7 @@ Class (::tuidemo::TuiLocalizedDialogsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(3L));
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(3));
 		}
 		{
 			(this->__vwsn_precompile_7 = new ::vl::presentation::controls::GuiTab(::vl::presentation::theme::ThemeName::Tab));
@@ -22289,7 +22289,7 @@ Class (::tuidemo::TuiLocalizedDialogsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = ::vl::__vwsn::This(this->__vwsn_precompile_7)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_7)->GetBoundsComposition()));
@@ -22380,17 +22380,17 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_68 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -22401,59 +22401,59 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowsAndColumns(static_cast<::vl::vint64_t>(7L), static_cast<::vl::vint64_t>(4L));
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(5L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(6L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(30L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowsAndColumns(static_cast<::vl::vint>(7), static_cast<::vl::vint>(4));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(5), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(6), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(30); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_5 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_6 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_7 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_8 = ::vl::__vwsn::This(this->__vwsn_precompile_7)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetText(::vl::WString::Unmanaged(L"Title:"));
@@ -22472,35 +22472,35 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_9 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_10 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_11 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_12 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_13 = ::vl::__vwsn::This(this->__vwsn_precompile_12)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetText(::vl::WString::Unmanaged(L"Directory:"));
@@ -22519,35 +22519,35 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_15 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_16 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_17 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_18 = ::vl::__vwsn::This(this->__vwsn_precompile_17)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetText(::vl::WString::Unmanaged(L"FileName:"));
@@ -22566,35 +22566,35 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_19 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_20 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_21 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_22 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_23 = ::vl::__vwsn::This(this->__vwsn_precompile_22)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetText(::vl::WString::Unmanaged(L"Filter:"));
@@ -22613,35 +22613,35 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_24 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_25 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_26 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_27 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_28 = ::vl::__vwsn::This(this->__vwsn_precompile_27)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetText(::vl::WString::Unmanaged(L"FilterIndex:"));
@@ -22660,35 +22660,35 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_29 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint>(5), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_30 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_31 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_32 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_33 = ::vl::__vwsn::This(this->__vwsn_precompile_32)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetText(::vl::WString::Unmanaged(L"DefaultExtension:"));
@@ -22707,7 +22707,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_34 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtTitle = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22715,7 +22715,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_35 = ::vl::__vwsn::This(this->txtTitle)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtTitle)->SetText(::vl::WString::Unmanaged(L"The Title"));
@@ -22728,7 +22728,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_36 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtDirectory = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22736,7 +22736,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_37 = ::vl::__vwsn::This(this->txtDirectory)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtDirectory)->SetText(::vl::WString::Unmanaged(L"C:\\"));
@@ -22749,7 +22749,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_38 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtFileName = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22757,7 +22757,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_39 = ::vl::__vwsn::This(this->txtFileName)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtFileName)->SetText(::vl::WString::Unmanaged(L"C:\\File.txt"));
@@ -22770,7 +22770,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_40 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtFilter = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22778,7 +22778,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_41 = ::vl::__vwsn::This(this->txtFilter)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtFilter)->SetText(::vl::WString::Unmanaged(L"Text Files (*.txt)|*.txt|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"));
@@ -22791,7 +22791,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_42 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtFilterIndex = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22799,7 +22799,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_43 = ::vl::__vwsn::This(this->txtFilterIndex)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtFilterIndex)->SetText(::vl::WString::Unmanaged(L"0"));
@@ -22812,7 +22812,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_44 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetSite(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetSite(static_cast<::vl::vint>(5), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtDefaultExtension = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -22820,7 +22820,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_45 = ::vl::__vwsn::This(this->txtDefaultExtension)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtDefaultExtension)->SetText(::vl::WString::Unmanaged(L"txt"));
@@ -22833,14 +22833,14 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_46 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(7L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(2), static_cast<::vl::vint>(7), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_47 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_47)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -23009,10 +23009,10 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_60 = ::vl::__vwsn::This(this->lstFiles)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_60)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint64_t>(4L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_60)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint>(4); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_60)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_60)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_59)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->lstFiles)->GetBoundsComposition()));
@@ -23022,7 +23022,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_61 = new ::vl::presentation::compositions::GuiStackItemComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_61));
@@ -23033,10 +23033,10 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_63)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Horizontal);
@@ -23194,7 +23194,7 @@ Class (::tuidemo::TuiLocalizedFileDialogTabPage)
 		::vl::__vwsn::This(dialog)->SetDirectory(::vl::__vwsn::This(this->txtDirectory)->GetText());
 		::vl::__vwsn::This(dialog)->SetFileName(::vl::__vwsn::This(this->txtFileName)->GetText());
 		::vl::__vwsn::This(dialog)->SetFilter(::vl::__vwsn::This(this->txtFilter)->GetText());
-		::vl::__vwsn::This(dialog)->SetFilterIndex([&](){ try{ return ::vl::__vwsn::Parse<::vl::vint64_t>(::vl::__vwsn::This(this->txtFilterIndex)->GetText()); } catch(...){ return static_cast<::vl::vint64_t>(0L); } }());
+		::vl::__vwsn::This(dialog)->SetFilterIndex([&](){ try{ return ::vl::__vwsn::Parse<::vl::vint>(::vl::__vwsn::This(this->txtFilterIndex)->GetText()); } catch(...){ return static_cast<::vl::vint>(0); } }());
 		::vl::__vwsn::This(dialog)->SetDefaultExtension(::vl::__vwsn::This(this->txtDefaultExtension)->GetText());
 		auto options = ::vl::presentation::INativeDialogService::FileDialogOptions::None;
 		if (::vl::__vwsn::This(this->chkFileDialogAllowMultipleSelection)->GetSelected())
@@ -23273,26 +23273,26 @@ Class (::tuidemo::TuiLocalizedFontDialogTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(4), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->label = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"label"), ::vl::__vwsn::Box(this->label));
@@ -23307,7 +23307,7 @@ Class (::tuidemo::TuiLocalizedFontDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->checkEffect = new ::vl::presentation::controls::GuiSelectableButton(::vl::presentation::theme::ThemeName::CheckBox));
@@ -23327,7 +23327,7 @@ Class (::tuidemo::TuiLocalizedFontDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_4 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -23416,66 +23416,66 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_48 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint64_t>(8L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(5L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(6L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(7L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(30L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint>(8), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(5), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(6), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(7), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(30); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_5 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetText(::vl::WString::Unmanaged(L"Title:"));
@@ -23494,35 +23494,35 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_9 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_10 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_10)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetText(::vl::WString::Unmanaged(L"Text:"));
@@ -23541,35 +23541,35 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_13 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_15 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_16 = ::vl::__vwsn::This(this->__vwsn_precompile_15)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetText(::vl::WString::Unmanaged(L"Input:"));
@@ -23588,35 +23588,35 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_17 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_18 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_19 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_20 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_21 = ::vl::__vwsn::This(this->__vwsn_precompile_20)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetText(::vl::WString::Unmanaged(L"DefaultButton:"));
@@ -23635,35 +23635,35 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_22 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_23 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_24 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_25 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_26 = ::vl::__vwsn::This(this->__vwsn_precompile_25)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetText(::vl::WString::Unmanaged(L"Icon:"));
@@ -23682,35 +23682,35 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_27 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetSite(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetSite(static_cast<::vl::vint>(5), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_28 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_29 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_30 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
 		}
 		(this->__vwsn_precompile_31 = ::vl::__vwsn::This(this->__vwsn_precompile_30)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetText(::vl::WString::Unmanaged(L"Output:"));
@@ -23729,7 +23729,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_32 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtTitle = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -23737,7 +23737,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_33 = ::vl::__vwsn::This(this->txtTitle)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtTitle)->SetText(::vl::WString::Unmanaged(L"The Title"));
@@ -23750,7 +23750,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_34 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->txtText = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -23758,7 +23758,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_35 = ::vl::__vwsn::This(this->txtText)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->txtText)->SetText(::vl::WString::Unmanaged(L"This is a message!"));
@@ -23771,7 +23771,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_36 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_37 = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -23788,7 +23788,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_38 = ::vl::__vwsn::This(this->comboInput)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_36)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboInput)->GetBoundsComposition()));
@@ -23798,7 +23798,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_39 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_40 = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -23815,7 +23815,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_41 = ::vl::__vwsn::This(this->comboDefaultButton)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_39)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboDefaultButton)->GetBoundsComposition()));
@@ -23825,7 +23825,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_42 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetSite(static_cast<::vl::vint>(4), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_43 = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -23842,7 +23842,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_44 = ::vl::__vwsn::This(this->comboIcon)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_42)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboIcon)->GetBoundsComposition()));
@@ -23852,7 +23852,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_45 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetSite(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetSite(static_cast<::vl::vint>(5), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->lblOutput = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -23866,7 +23866,7 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPageConstructor)
 		}
 		(this->__vwsn_precompile_46 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetSite(static_cast<::vl::vint64_t>(7L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_46)->SetSite(static_cast<::vl::vint>(7), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_47 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -23995,9 +23995,9 @@ Class (::tuidemo::TuiLocalizedMessageDialogTabPage)
 
 	void TuiLocalizedMessageDialogTabPage::__vwsn_instance_ctor_()
 	{
-		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboInput)->SetSelectedIndex(static_cast<::vl::vint64_t>(0L));
-		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboDefaultButton)->SetSelectedIndex(static_cast<::vl::vint64_t>(0L));
-		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboIcon)->SetSelectedIndex(static_cast<::vl::vint64_t>(0L));
+		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboInput)->SetSelectedIndex(static_cast<::vl::vint>(0));
+		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboDefaultButton)->SetSelectedIndex(static_cast<::vl::vint>(0));
+		::vl::__vwsn::This(::vl::__vwsn::This(this->self)->comboIcon)->SetSelectedIndex(static_cast<::vl::vint>(0));
 	}
 
 	TuiLocalizedMessageDialogTabPage::~TuiLocalizedMessageDialogTabPage()
@@ -24014,25 +24014,25 @@ Class (::tuidemo::TuiLocalizedStringsTabPageConstructor)
 		(this->self = __vwsn_this_);
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
 		{
@@ -24046,12 +24046,12 @@ Class (::tuidemo::TuiLocalizedStringsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_4 = new ::tuidemo::TuiLocaleSelector());
 		(this->__vwsn_precompile_5 = ::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition()));
@@ -24061,7 +24061,7 @@ Class (::tuidemo::TuiLocalizedStringsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(3L));
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(3));
 		}
 		{
 			(this->__vwsn_precompile_7 = new ::vl::presentation::controls::GuiTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -24134,7 +24134,7 @@ Class (::tuidemo::TuiLocalizedStringsTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = ::vl::__vwsn::This(this->__vwsn_precompile_7)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_7)->GetBoundsComposition()));
@@ -24276,7 +24276,7 @@ Class (::tuidemo::TuiLocalizedStringsTabPage)
 	TuiLocalizedStringsTabPage::TuiLocalizedStringsTabPage()
 		: ::vl::presentation::controls::GuiTabPage(::vl::presentation::theme::ThemeName::CustomControl)
 		, dateTime(::vl::reflection::description::Sys::GetLocalTime())
-		, number(static_cast<::vl::vint64_t>(2147483647L))
+		, number(static_cast<::vl::vint>(2147483647))
 		, currency(static_cast<double>(1342177.28))
 		, __vwsn_prop_Strings(::tuidemo::TuiStringResource::Get(::vl::__vwsn::Parse<::vl::Locale>(::vl::WString::Unmanaged(L"en-US"))))
 	{
@@ -24300,13 +24300,13 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		(this->self = __vwsn_this_);
 		(this->__vwsn_precompile_88 = ::vl::__vwsn::This(this->self)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_88)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(80L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(25L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_88)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(80); __vwsn_temp__.y = static_cast<::vl::vint>(25); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_88)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::NoLimit);
 		}
 		{
-			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(120L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(40L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(120); __vwsn_temp__.y = static_cast<::vl::vint>(40); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->SetControlThemeName(::vl::presentation::theme::ThemeName::SystemFrameWindow);
@@ -24411,7 +24411,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_4 = ::vl::__vwsn::This(this->__vwsn_precompile_3)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_3));
@@ -24490,7 +24490,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_10)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_9)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_10));
@@ -24529,7 +24529,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_21 = ::vl::__vwsn::This(this->__vwsn_precompile_20)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_19)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_20));
@@ -24560,7 +24560,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"editorToolstrip"), ::vl::__vwsn::Box(this->editorToolstrip));
 		(this->__vwsn_precompile_28 = ::vl::__vwsn::This(this->editorToolstrip)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_27)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->editorToolstrip));
@@ -24587,7 +24587,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_26 = ::vl::__vwsn::This(this->__vwsn_precompile_25)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_25));
@@ -24634,7 +24634,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_33 = ::vl::__vwsn::This(this->__vwsn_precompile_32)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_31)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_32));
@@ -24659,33 +24659,33 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_38 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetRowsAndColumns(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetRowsAndColumns(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_39 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_40 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_40)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -24727,10 +24727,10 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_48 = ::vl::__vwsn::This(this->labelMouseButton)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.y = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_48)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->labelMouseButton)->SetText(::vl::WString::Unmanaged(L"Click here with any mouse button."));
@@ -24874,14 +24874,14 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_59 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_59)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_59)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_60 = new ::vl::presentation::controls::GuiControl(::vl::presentation::theme::ThemeName::GroupBox));
 		}
 		(this->__vwsn_precompile_68 = ::vl::__vwsn::This(this->__vwsn_precompile_60)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = (- static_cast<::vl::vint64_t>(1L)); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_68)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = (- static_cast<::vl::vint>(1)); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_60)->SetText(::vl::WString::Unmanaged(L"Color Theme"));
@@ -24891,10 +24891,10 @@ Class (::tuidemo::TuiMainWindowConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_61)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -25016,10 +25016,10 @@ Class (::tuidemo::TuiMainWindowConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_70)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -25151,7 +25151,7 @@ Class (::tuidemo::TuiMainWindowConstructor)
 		}
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_0));
@@ -25518,11 +25518,11 @@ Class (::tuidemo::TuiMainWindowConstructor)
 Class (::tuidemo::TuiMainWindow)
 ***********************************************************************/
 
-	::vl::vint64_t TuiMainWindow::GetinvocationCount()
+	::vl::vint TuiMainWindow::GetinvocationCount()
 	{
 		return this->__vwsn_prop_invocationCount;
 	}
-	void TuiMainWindow::SetinvocationCount(::vl::vint64_t __vwsn_value_)
+	void TuiMainWindow::SetinvocationCount(::vl::vint __vwsn_value_)
 	{
 		if ((this->__vwsn_prop_invocationCount != __vwsn_value_))
 		{
@@ -25531,11 +25531,11 @@ Class (::tuidemo::TuiMainWindow)
 		}
 	}
 
-	::vl::vint64_t TuiMainWindow::GetclosingCount()
+	::vl::vint TuiMainWindow::GetclosingCount()
 	{
 		return this->__vwsn_prop_closingCount;
 	}
-	void TuiMainWindow::SetclosingCount(::vl::vint64_t __vwsn_value_)
+	void TuiMainWindow::SetclosingCount(::vl::vint __vwsn_value_)
 	{
 		if ((this->__vwsn_prop_closingCount != __vwsn_value_))
 		{
@@ -25544,11 +25544,11 @@ Class (::tuidemo::TuiMainWindow)
 		}
 	}
 
-	::vl::vint64_t TuiMainWindow::GetreadyToCloseCount()
+	::vl::vint TuiMainWindow::GetreadyToCloseCount()
 	{
 		return this->__vwsn_prop_readyToCloseCount;
 	}
-	void TuiMainWindow::SetreadyToCloseCount(::vl::vint64_t __vwsn_value_)
+	void TuiMainWindow::SetreadyToCloseCount(::vl::vint __vwsn_value_)
 	{
 		if ((this->__vwsn_prop_readyToCloseCount != __vwsn_value_))
 		{
@@ -25596,9 +25596,9 @@ Class (::tuidemo::TuiMainWindow)
 	TuiMainWindow::TuiMainWindow()
 		: ::vl::presentation::controls::GuiWindow(::vl::presentation::theme::ThemeName::Window)
 		, openedSubWindows(::vl::reflection::description::IValueList::Create())
-		, __vwsn_prop_invocationCount(static_cast<::vl::vint64_t>(0L))
-		, __vwsn_prop_closingCount(static_cast<::vl::vint64_t>(0L))
-		, __vwsn_prop_readyToCloseCount(static_cast<::vl::vint64_t>(0L))
+		, __vwsn_prop_invocationCount(static_cast<::vl::vint>(0))
+		, __vwsn_prop_closingCount(static_cast<::vl::vint>(0))
+		, __vwsn_prop_readyToCloseCount(static_cast<::vl::vint>(0))
 	{
 		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tuidemo::TuiMainWindow"));
 		auto __vwsn_resolver_ = ::vl::Ptr<::vl::presentation::GuiResourcePathResolver>(new ::vl::presentation::GuiResourcePathResolver(__vwsn_resource_, ::vl::__vwsn::This(__vwsn_resource_.Obj())->GetWorkingDirectory()));
@@ -25730,37 +25730,37 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -25833,14 +25833,14 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(6L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(6));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_12 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -25921,7 +25921,7 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_23 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->dataGrid = new ::vl::presentation::controls::GuiBindableDataGrid(::vl::presentation::theme::ThemeName::ListView));
@@ -25929,26 +25929,26 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->dataGrid)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->dataGrid)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->dataGrid)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 		}
 		(this->__vwsn_precompile_28 = ::vl::__vwsn::This(this->dataGrid)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_24 = ::vl::Ptr<::vl::presentation::controls::list::DataColumn>(new ::vl::presentation::controls::list::DataColumn()));
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf162_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf163_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
@@ -25965,7 +25965,7 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf164_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf165_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
@@ -25982,7 +25982,7 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf166_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf167_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
@@ -26005,7 +26005,7 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetValueProperty(vl::Func(::vl_workflow_global::__vwsnf172_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetSize(static_cast<::vl::vint64_t>(32L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetSize(static_cast<::vl::vint>(32));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_27.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf173_TuiControlTest_tuidemo_TuiRefreshBindableDataGridTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableDataGridTabPage_Initialize_(this)));
@@ -26025,14 +26025,14 @@ Class (::tuidemo::TuiRefreshBindableDataGridTabPageConstructor)
 		}
 		(this->__vwsn_precompile_29 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_30 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -26197,37 +26197,37 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -26292,14 +26292,14 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(5L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(5));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -26380,7 +26380,7 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_22 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->listView = new ::vl::presentation::controls::GuiBindableListView(::vl::presentation::theme::ThemeName::ListView));
@@ -26388,23 +26388,23 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 		}
 		(this->__vwsn_precompile_27 = ::vl::__vwsn::This(this->listView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_23 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf185_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_(this)));
@@ -26418,7 +26418,7 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_24 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf186_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_(this)));
@@ -26432,7 +26432,7 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_25 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_25.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf187_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_(this)));
@@ -26446,7 +26446,7 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_26 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint64_t>(32L));
+			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetSize(static_cast<::vl::vint>(32));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26.Obj())->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf188_TuiControlTest_tuidemo_TuiRefreshBindableListViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableListViewTabPage_Initialize_(this)));
@@ -26466,14 +26466,14 @@ Class (::tuidemo::TuiRefreshBindableListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_28 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_29 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -26635,37 +26635,37 @@ Class (::tuidemo::TuiRefreshBindableTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -26741,7 +26741,7 @@ Class (::tuidemo::TuiRefreshBindableTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->textList = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -26761,7 +26761,7 @@ Class (::tuidemo::TuiRefreshBindableTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_13 = ::vl::__vwsn::This(this->textList)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_12)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->textList)->GetBoundsComposition()));
@@ -26771,14 +26771,14 @@ Class (::tuidemo::TuiRefreshBindableTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_15 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -26871,37 +26871,37 @@ Class (::tuidemo::TuiRefreshBindableTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -26963,7 +26963,7 @@ Class (::tuidemo::TuiRefreshBindableTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_11 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->treeView = new ::vl::presentation::controls::GuiBindableTreeView(::vl::presentation::theme::ThemeName::TreeView, vl::Func(::vl_workflow_global::__vwsnf207_TuiControlTest_tuidemo_TuiRefreshBindableTreeViewTabPageConstructor___vwsn_tuidemo_TuiRefreshBindableTreeViewTabPage_Initialize_(this))));
@@ -26977,7 +26977,7 @@ Class (::tuidemo::TuiRefreshBindableTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = ::vl::__vwsn::This(this->treeView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_11)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->treeView)->GetBoundsComposition()));
@@ -26987,14 +26987,14 @@ Class (::tuidemo::TuiRefreshBindableTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_13 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -27224,37 +27224,37 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -27319,14 +27319,14 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(5L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(5));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -27394,7 +27394,7 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_20 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->listView = new ::vl::presentation::controls::GuiListView(::vl::presentation::theme::ThemeName::ListView));
@@ -27402,15 +27402,15 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(0L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(0)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(1L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(1)));
 		}
 		{
 			auto __vwsn_collection_ = ::vl::__vwsn::UnboxCollection<::vl::reflection::description::IValueList>(::vl::__vwsn::This(this->listView)->GetDataColumns());
-			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint64_t>(2L)));
+			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(static_cast<::vl::vint>(2)));
 		}
 		(this->__vwsn_precompile_26 = ::vl::Ptr<::vl::presentation::controls::list::ListViewItem>(new ::vl::presentation::controls::list::ListViewItem()));
 		{
@@ -27494,11 +27494,11 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_25 = ::vl::__vwsn::This(this->listView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_21 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_21.Obj())->SetText(::vl::WString::Unmanaged(L"Id"));
@@ -27509,7 +27509,7 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_22 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_22.Obj())->SetText(::vl::WString::Unmanaged(L"Category"));
@@ -27520,7 +27520,7 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_23 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetSize(static_cast<::vl::vint64_t>(15L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetSize(static_cast<::vl::vint>(15));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23.Obj())->SetText(::vl::WString::Unmanaged(L"Size"));
@@ -27531,7 +27531,7 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_24 = ::vl::Ptr<::vl::presentation::controls::list::ListViewColumn>(new ::vl::presentation::controls::list::ListViewColumn()));
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint64_t>(32L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetSize(static_cast<::vl::vint>(32));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24.Obj())->SetText(::vl::WString::Unmanaged(L"File"));
@@ -27548,14 +27548,14 @@ Class (::tuidemo::TuiRefreshListViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_30 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_31 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -27706,37 +27706,37 @@ Class (::tuidemo::TuiRefreshTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -27786,7 +27786,7 @@ Class (::tuidemo::TuiRefreshTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->textList = new ::vl::presentation::controls::GuiTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -27848,7 +27848,7 @@ Class (::tuidemo::TuiRefreshTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_9 = ::vl::__vwsn::This(this->textList)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->textList)->GetBoundsComposition()));
@@ -27858,14 +27858,14 @@ Class (::tuidemo::TuiRefreshTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_16 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_17 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -27948,37 +27948,37 @@ Class (::tuidemo::TuiRefreshTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_3 = new ::vl::presentation::compositions::GuiFlowItemComposition());
 		{
@@ -28014,7 +28014,7 @@ Class (::tuidemo::TuiRefreshTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->treeView = new ::vl::presentation::controls::GuiTreeView(::vl::presentation::theme::ThemeName::TreeView));
@@ -28022,7 +28022,7 @@ Class (::tuidemo::TuiRefreshTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_18 = ::vl::__vwsn::This(this->treeView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_8 = ::vl::Ptr<::vl::presentation::controls::tree::MemoryNodeProvider>(new ::vl::presentation::controls::tree::MemoryNodeProvider(::vl::Ptr<::vl::reflection::DescriptableObject>(::vl::Ptr<::vl::presentation::controls::tree::TreeViewItem>(new ::vl::presentation::controls::tree::TreeViewItem(::vl::Ptr<::vl::presentation::GuiImageData>(), ::vl::WString::Unmanaged(L"First")))))));
 		(this->__vwsn_precompile_9 = ::vl::Ptr<::vl::presentation::controls::tree::MemoryNodeProvider>(new ::vl::presentation::controls::tree::MemoryNodeProvider(::vl::Ptr<::vl::reflection::DescriptableObject>(::vl::Ptr<::vl::presentation::controls::tree::TreeViewItem>(new ::vl::presentation::controls::tree::TreeViewItem(::vl::Ptr<::vl::presentation::GuiImageData>(), ::vl::WString::Unmanaged(L"First (1)")))))));
@@ -28072,14 +28072,14 @@ Class (::tuidemo::TuiRefreshTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_19 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_19)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_20 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -28179,7 +28179,7 @@ Class (::tuidemo::TuiRepeatItemTemplateConstructor)
 		}
 		(this->__vwsn_precompile_2 = ::vl::__vwsn::This(this->__vwsn_precompile_1)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_1)->GetBoundsComposition()));
@@ -28235,27 +28235,27 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(1));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(4), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Absolute; __vwsn_temp__.absolute = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiTab(::vl::presentation::theme::ThemeName::Tab));
@@ -28274,11 +28274,11 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = ::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_6 = new ::vl::presentation::compositions::GuiRepeatStackComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetItemTemplate(vl::Func(::vl_workflow_global::__vwsnf88_TuiControlTest_tuidemo_TuiRepeatTabPageConstructor___vwsn_tuidemo_TuiRepeatTabPage_Initialize_(this)));
@@ -28287,10 +28287,10 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -28325,17 +28325,17 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_9)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_10 = new ::vl::presentation::compositions::GuiRepeatFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetItemTemplate(vl::Func(::vl_workflow_global::__vwsnf89_TuiControlTest_tuidemo_TuiRepeatTabPageConstructor___vwsn_tuidemo_TuiRepeatTabPage_Initialize_(this)));
@@ -28344,7 +28344,7 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(::vl::__vwsn::This(this->__vwsn_precompile_9)->GetContainerComposition())->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_10));
@@ -28376,24 +28376,24 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_16 = ::vl::__vwsn::This(this->__vwsn_precompile_13)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiSharedSizeRootComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_15 = new ::vl::presentation::compositions::GuiRepeatFlowComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetExtraMargin([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetColumnPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetColumnPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetRowPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetItemTemplate(vl::Func(::vl_workflow_global::__vwsnf90_TuiControlTest_tuidemo_TuiRepeatTabPageConstructor___vwsn_tuidemo_TuiRepeatTabPage_Initialize_(this)));
@@ -28402,7 +28402,7 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_15));
@@ -28431,7 +28431,7 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			(this->__vwsn_precompile_19 = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -28450,7 +28450,7 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_20 = ::vl::__vwsn::This(this->__vwsn_precompile_19)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_18)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_19)->GetBoundsComposition()));
@@ -28470,7 +28470,7 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition()));
@@ -28480,23 +28480,23 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_21 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_22 = new ::vl::presentation::controls::GuiScroll(::vl::presentation::theme::ThemeName::HScroll));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetPageSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetPageSize(static_cast<::vl::vint>(10));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetTotalSize(static_cast<::vl::vint64_t>(100L));
+			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetTotalSize(static_cast<::vl::vint>(100));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_22)->SetAlt(::vl::WString::Unmanaged(L"H"));
 		}
 		(this->__vwsn_precompile_23 = ::vl::__vwsn::This(this->__vwsn_precompile_22)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_21)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_22)->GetBoundsComposition()));
@@ -28506,22 +28506,22 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_24 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->hTracker = new ::vl::presentation::controls::GuiScroll(::vl::presentation::theme::ThemeName::HTracker));
-			::vl::__vwsn::This(this->hTracker)->SetPageSize(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->hTracker)->SetPageSize(static_cast<::vl::vint>(0));
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"hTracker"), ::vl::__vwsn::Box(this->hTracker));
 		}
 		{
-			::vl::__vwsn::This(this->hTracker)->SetTotalSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->hTracker)->SetTotalSize(static_cast<::vl::vint>(10));
 		}
 		{
 			::vl::__vwsn::This(this->hTracker)->SetAlt(::vl::WString::Unmanaged(L"H"));
 		}
 		(this->__vwsn_precompile_25 = ::vl::__vwsn::This(this->hTracker)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_25)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_24)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->hTracker)->GetBoundsComposition()));
@@ -28531,18 +28531,18 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_26 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_27 = new ::vl::presentation::controls::GuiScroll(::vl::presentation::theme::ThemeName::ProgressBar));
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetPageSize(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetPageSize(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetTotalSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetTotalSize(static_cast<::vl::vint>(10));
 		}
 		(this->__vwsn_precompile_28 = ::vl::__vwsn::This(this->__vwsn_precompile_27)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_27)->GetBoundsComposition()));
@@ -28552,23 +28552,23 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_29 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_30 = new ::vl::presentation::controls::GuiScroll(::vl::presentation::theme::ThemeName::VScroll));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetPageSize(static_cast<::vl::vint64_t>(10L));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetPageSize(static_cast<::vl::vint>(10));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetTotalSize(static_cast<::vl::vint64_t>(50L));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetTotalSize(static_cast<::vl::vint>(50));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_31 = ::vl::__vwsn::This(this->__vwsn_precompile_30)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_29)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_30)->GetBoundsComposition()));
@@ -28578,21 +28578,21 @@ Class (::tuidemo::TuiRepeatTabPageConstructor)
 		}
 		(this->__vwsn_precompile_32 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_33 = new ::vl::presentation::controls::GuiScroll(::vl::presentation::theme::ThemeName::VTracker));
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetPageSize(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetPageSize(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetTotalSize(static_cast<::vl::vint64_t>(5L));
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetTotalSize(static_cast<::vl::vint>(5));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_34 = ::vl::__vwsn::This(this->__vwsn_precompile_33)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_32)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_33)->GetBoundsComposition()));
@@ -28697,27 +28697,27 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(5), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(5), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
@@ -28730,17 +28730,17 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 		(this->responsive = new ::vl::presentation::compositions::GuiResponsiveGroupComposition());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"responsive"), ::vl::__vwsn::Box(this->responsive));
 		{
-			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -28931,7 +28931,7 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 		}
 		(this->__vwsn_precompile_33 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_34 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -28947,7 +28947,7 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 		}
 		(this->__vwsn_precompile_35 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_36 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -28963,7 +28963,7 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 		}
 		(this->__vwsn_precompile_37 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_38 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -28976,7 +28976,7 @@ Class (::tuidemo::TuiResponsiveGroupControlConstructor)
 		}
 		(this->__vwsn_precompile_39 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_40 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -29090,27 +29090,27 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(5), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(5), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
@@ -29123,17 +29123,17 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 		(this->responsive = new ::vl::presentation::compositions::GuiResponsiveStackComposition());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"responsive"), ::vl::__vwsn::Box(this->responsive));
 		{
-			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -29324,7 +29324,7 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 		}
 		(this->__vwsn_precompile_33 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_34 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -29340,7 +29340,7 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 		}
 		(this->__vwsn_precompile_35 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_36 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -29356,7 +29356,7 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 		}
 		(this->__vwsn_precompile_37 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_37)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_38 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -29369,7 +29369,7 @@ Class (::tuidemo::TuiResponsiveStackControlConstructor)
 		}
 		(this->__vwsn_precompile_39 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_40 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -29495,36 +29495,36 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		}
 		(this->__vwsn_precompile_17 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint64_t>(4L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowsAndColumns(static_cast<::vl::vint>(4), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_3 = new ::vl::presentation::controls::GuiControl(::vl::presentation::theme::ThemeName::GroupBox));
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->__vwsn_precompile_3)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetText(::vl::WString::Unmanaged(L"GuiResponsiveViewComposition"));
@@ -29532,7 +29532,7 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		(this->__vwsn_precompile_4 = new ::tuidemo::TuiResponsiveViewControl());
 		(this->__vwsn_precompile_5 = ::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_4));
@@ -29545,14 +29545,14 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		}
 		(this->__vwsn_precompile_7 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_7)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_8 = new ::vl::presentation::controls::GuiControl(::vl::presentation::theme::ThemeName::GroupBox));
 		}
 		(this->__vwsn_precompile_11 = ::vl::__vwsn::This(this->__vwsn_precompile_8)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetText(::vl::WString::Unmanaged(L"GuiResponsiveStackComposition"));
@@ -29560,7 +29560,7 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		(this->__vwsn_precompile_9 = new ::tuidemo::TuiResponsiveStackControl());
 		(this->__vwsn_precompile_10 = ::vl::__vwsn::This(this->__vwsn_precompile_9)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_10)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_9));
@@ -29573,14 +29573,14 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_13 = new ::vl::presentation::controls::GuiControl(::vl::presentation::theme::ThemeName::GroupBox));
 		}
 		(this->__vwsn_precompile_16 = ::vl::__vwsn::This(this->__vwsn_precompile_13)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_16)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetText(::vl::WString::Unmanaged(L"GuiResponsiveGroupComposition"));
@@ -29588,7 +29588,7 @@ Class (::tuidemo::TuiResponsiveTabPageConstructor)
 		(this->__vwsn_precompile_14 = new ::tuidemo::TuiResponsiveGroupControl());
 		(this->__vwsn_precompile_15 = ::vl::__vwsn::This(this->__vwsn_precompile_14)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_13)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_14));
@@ -29660,27 +29660,27 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetBorderVisible(false);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(4L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(5), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(4), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(5L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(5), static_cast<::vl::vint>(1));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiBoundsComposition());
 		{
@@ -29698,10 +29698,10 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -29719,7 +29719,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiStackItemComposition());
 		(this->__vwsn_precompile_9 = new ::vl::presentation::compositions::GuiResponsiveSharedComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_9)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_8)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_9));
@@ -29740,10 +29740,10 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -29761,7 +29761,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		(this->__vwsn_precompile_14 = new ::vl::presentation::compositions::GuiStackItemComposition());
 		(this->__vwsn_precompile_15 = new ::vl::presentation::compositions::GuiResponsiveSharedComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_15));
@@ -29782,10 +29782,10 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -29803,7 +29803,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		(this->__vwsn_precompile_20 = new ::vl::presentation::compositions::GuiStackItemComposition());
 		(this->__vwsn_precompile_21 = new ::vl::presentation::compositions::GuiResponsiveSharedComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_21));
@@ -29824,10 +29824,10 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -29845,7 +29845,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		(this->__vwsn_precompile_26 = new ::vl::presentation::compositions::GuiStackItemComposition());
 		(this->__vwsn_precompile_27 = new ::vl::presentation::compositions::GuiResponsiveSharedComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->__vwsn_precompile_27));
@@ -29875,7 +29875,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 			::vl::__vwsn::This(__vwsn_collection_.Obj())->Add(::vl::__vwsn::Box(this->documentBox));
 		}
 		{
-			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(1L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->responsive)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(1); __vwsn_temp__.top = static_cast<::vl::vint>(1); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(1); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(this->responsive));
@@ -29888,7 +29888,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		}
 		(this->__vwsn_precompile_28 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_28)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_29 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -29904,7 +29904,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		}
 		(this->__vwsn_precompile_30 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_31 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -29920,7 +29920,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		}
 		(this->__vwsn_precompile_32 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_33 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -29933,7 +29933,7 @@ Class (::tuidemo::TuiResponsiveViewControlConstructor)
 		}
 		(this->__vwsn_precompile_34 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint64_t>(3L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_34)->SetSite(static_cast<::vl::vint>(3), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_35 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -30082,14 +30082,14 @@ Class (::tuidemo::TuiSharedSizeItemTemplateConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetGroup(::vl::WString::Unmanaged(L"EnglishNumber"));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition()));
@@ -30156,7 +30156,7 @@ Class (::tuidemo::TuiSharedSizeTextItemTemplateConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetGroup(::vl::WString::Unmanaged(L"EnglishNumber"));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = (- static_cast<::vl::vint64_t>(1L)); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(1L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = (- static_cast<::vl::vint>(1)); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(1); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
 		{
@@ -30258,7 +30258,7 @@ Class (::tuidemo::TuiSubWindowConstructor)
 	{
 		(this->self = __vwsn_this_);
 		{
-			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(48L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(22L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(48); __vwsn_temp__.y = static_cast<::vl::vint>(22); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->SetControlThemeName(::vl::presentation::theme::ThemeName::CustomFrameWindow);
@@ -30268,10 +30268,10 @@ Class (::tuidemo::TuiSubWindowConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetPadding(static_cast<::vl::vint>(0));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -30455,7 +30455,7 @@ Class (::tuidemo::TuiSubWindowConstructor)
 			::vl::__vwsn::EventAttach(::vl::__vwsn::This(this->__vwsn_precompile_9)->Clicked, __vwsn_event_handler_);
 		}
 		{
-			::vl::__vwsn::This(this->self)->SetText(::vl::reflection::description::Sys::LoremIpsumTitle(static_cast<::vl::vint64_t>(20L)));
+			::vl::__vwsn::This(this->self)->SetText(::vl::reflection::description::Sys::LoremIpsumTitle(static_cast<::vl::vint>(20)));
 		}
 		{
 			auto __vwsn_created_subscription_ = ::vl::Ptr<::vl::reflection::description::IValueSubscription>(new ::vl_workflow_global::__vwsnc33_TuiControlTest_tuidemo_TuiSubWindowConstructor___vwsn_tuidemo_TuiSubWindow_Initialize__vl_reflection_description_IValueSubscription(this));
@@ -30538,7 +30538,7 @@ Class (::tuidemo::TuiTestWindowConstructor)
 	{
 		(this->self = __vwsn_this_);
 		{
-			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(100L); __vwsn_temp__.y = static_cast<::vl::vint64_t>(30L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->self)->SetClientSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(100); __vwsn_temp__.y = static_cast<::vl::vint>(30); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->SetText(::vl::WString::Unmanaged(L"TuiMainWindow"));
@@ -30583,7 +30583,7 @@ Class (::tuidemo::TuiTestWindowConstructor)
 		}
 		(this->__vwsn_precompile_1 = ::vl::__vwsn::This(this->__vwsn_precompile_0)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->self)->AddChild(static_cast<::vl::presentation::controls::GuiControl*>(this->__vwsn_precompile_0));
@@ -30631,23 +30631,23 @@ Class (::tuidemo::TuiTextBoxSubTabPageConstructor)
 		(this->self = __vwsn_this_);
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(1));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiSinglelineTextBox(::vl::presentation::theme::ThemeName::SinglelineTextBox));
@@ -30657,7 +30657,7 @@ Class (::tuidemo::TuiTextBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetText(::vl::WString::Unmanaged(L"Archer"));
@@ -30670,7 +30670,7 @@ Class (::tuidemo::TuiTextBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_5 = new ::vl::presentation::controls::GuiMultilineTextBox(::vl::presentation::theme::ThemeName::MultilineTextBox));
@@ -30686,7 +30686,7 @@ Class (::tuidemo::TuiTextBoxSubTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = ::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_4)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_5)->GetBoundsComposition()));
@@ -30768,26 +30768,26 @@ Class (::tuidemo::TuiTextBoxTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(4L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(3L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(4));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(3), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(4L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(4));
 		}
 		{
 			(this->__vwsn_precompile_2 = new ::vl::presentation::controls::GuiTab(::vl::presentation::theme::ThemeName::Tab));
@@ -30848,7 +30848,7 @@ Class (::tuidemo::TuiTextBoxTabPageConstructor)
 		}
 		(this->__vwsn_precompile_3 = ::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_3)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_1)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_2)->GetBoundsComposition()));
@@ -30858,7 +30858,7 @@ Class (::tuidemo::TuiTextBoxTabPageConstructor)
 		}
 		(this->__vwsn_precompile_4 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_5 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -30877,7 +30877,7 @@ Class (::tuidemo::TuiTextBoxTabPageConstructor)
 		}
 		(this->__vwsn_precompile_6 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_6)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_7 = new ::vl::presentation::controls::GuiButton(::vl::presentation::theme::ThemeName::Button));
@@ -30896,7 +30896,7 @@ Class (::tuidemo::TuiTextBoxTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
 		}
 		{
 			(this->__vwsn_precompile_9 = new ::vl::presentation::controls::GuiLabel(::vl::presentation::theme::ThemeName::Label));
@@ -30997,7 +30997,7 @@ Class (::tuidemo::TuiTextEditorConstructor)
 		}
 		(this->__vwsn_precompile_0 = ::vl::__vwsn::This(this->textBox)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->textBox)->SetControlTemplate(vl::Func(::vl_workflow_global::__vwsnf128_TuiControlTest_tuidemo_TuiTextEditorConstructor___vwsn_tuidemo_TuiTextEditor_Initialize_(this)));
@@ -31061,35 +31061,35 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(3L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(2L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(3));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(2), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(3L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(3));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Horizontal);
@@ -31133,14 +31133,14 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 			::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"comboView"), ::vl::__vwsn::Box(this->comboView));
 		}
 		{
-			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->comboView)->SetSelectedIndex(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->comboView)->SetAlt(::vl::WString::Unmanaged(L"V"));
 		}
 		(this->__vwsn_precompile_8 = ::vl::__vwsn::This(this->comboView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint64_t>(16L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetPreferredMinSize([&](){ ::vl::presentation::Size __vwsn_temp__; __vwsn_temp__.x = static_cast<::vl::vint>(16); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->comboView)->GetBoundsComposition()));
@@ -31169,7 +31169,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_11 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_11)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->textList = new ::vl::presentation::controls::GuiTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -31186,7 +31186,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_12 = ::vl::__vwsn::This(this->textList)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_12)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_11)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->textList)->GetBoundsComposition()));
@@ -31196,14 +31196,14 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_13 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_13)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->__vwsn_precompile_14 = new ::vl::presentation::controls::GuiControl(::vl::presentation::theme::ThemeName::GroupBox));
 		}
 		(this->__vwsn_precompile_43 = ::vl::__vwsn::This(this->__vwsn_precompile_14)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_43)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_14)->SetText(::vl::WString::Unmanaged(L"Operations"));
@@ -31213,10 +31213,10 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_15)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Vertical);
@@ -31230,7 +31230,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_18 = ::vl::__vwsn::This(this->__vwsn_precompile_17)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_18)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_17)->SetText(::vl::WString::Unmanaged(L"Add 10 items"));
@@ -31250,7 +31250,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_21 = ::vl::__vwsn::This(this->__vwsn_precompile_20)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_21)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_20)->SetText(::vl::WString::Unmanaged(L"Remove odd items"));
@@ -31270,7 +31270,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_24 = ::vl::__vwsn::This(this->__vwsn_precompile_23)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_24)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetText(::vl::WString::Unmanaged(L"Remove even items"));
@@ -31290,7 +31290,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_27 = ::vl::__vwsn::This(this->__vwsn_precompile_26)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_27)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_26)->SetText(::vl::WString::Unmanaged(L"Clear"));
@@ -31310,7 +31310,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_30 = ::vl::__vwsn::This(this->__vwsn_precompile_29)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_30)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_29)->SetText(::vl::WString::Unmanaged(L"Rotate Item Source -->"));
@@ -31327,7 +31327,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_33 = ::vl::__vwsn::This(this->__vwsn_precompile_32)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetText(::vl::WString::Unmanaged(L"Dummy"));
@@ -31344,7 +31344,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_36 = ::vl::__vwsn::This(this->__vwsn_precompile_35)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_36)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_35)->SetText(::vl::WString::Unmanaged(L"Dummy"));
@@ -31361,7 +31361,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_39 = ::vl::__vwsn::This(this->__vwsn_precompile_38)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_39)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_38)->SetText(::vl::WString::Unmanaged(L"Dummy"));
@@ -31378,7 +31378,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_42 = ::vl::__vwsn::This(this->__vwsn_precompile_41)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_42)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_41)->SetText(::vl::WString::Unmanaged(L"Dummy"));
@@ -31400,7 +31400,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_44 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_44)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(2), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->bindableTextList = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
@@ -31423,7 +31423,7 @@ Class (::tuidemo::TuiTextListTabPageConstructor)
 		}
 		(this->__vwsn_precompile_45 = ::vl::__vwsn::This(this->bindableTextList)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_45)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_44)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->bindableTextList)->GetBoundsComposition()));
@@ -31530,7 +31530,7 @@ Class (::tuidemo::TuiTextListTabPage)
 
 	TuiTextListTabPage::TuiTextListTabPage()
 		: ::vl::presentation::controls::GuiTabPage(::vl::presentation::theme::ThemeName::CustomControl)
-		, counter(static_cast<::vl::vint64_t>(0L))
+		, counter(static_cast<::vl::vint>(0))
 		, itemsToBind(::vl::reflection::description::IValueObservableList::Create())
 	{
 		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tuidemo::TuiTextListTabPage"));
@@ -31648,34 +31648,34 @@ Class (::tuidemo::TuiTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_0 = new ::vl::presentation::compositions::GuiTableComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint64_t>(0L));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetCellPadding(static_cast<::vl::vint>(0));
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint64_t>(2L), static_cast<::vl::vint64_t>(2L));
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(0L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
-			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint64_t>(1L), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowsAndColumns(static_cast<::vl::vint>(2), static_cast<::vl::vint>(2));
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::MinSize; return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetRowOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(0), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_0)->SetColumnOption(static_cast<::vl::vint>(1), [&](){ ::vl::presentation::compositions::GuiCellOption __vwsn_temp__; __vwsn_temp__.composeType = ::vl::presentation::compositions::GuiCellOption::ComposeType::Percentage; __vwsn_temp__.percentage = static_cast<double>(1.0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_1 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(2L));
+			::vl::__vwsn::This(this->__vwsn_precompile_1)->SetSite(static_cast<::vl::vint>(0), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(2));
 		}
 		(this->__vwsn_precompile_2 = new ::vl::presentation::compositions::GuiStackComposition());
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetPadding(static_cast<::vl::vint>(1));
 		}
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_2)->SetDirection(::vl::presentation::compositions::GuiStackComposition::Direction::Horizontal);
@@ -31718,7 +31718,7 @@ Class (::tuidemo::TuiTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_8 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(0L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_8)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(0), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->treeView = new ::vl::presentation::controls::GuiTreeView(::vl::presentation::theme::ThemeName::TreeView));
@@ -31735,7 +31735,7 @@ Class (::tuidemo::TuiTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_31 = ::vl::__vwsn::This(this->treeView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_31)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		(this->__vwsn_precompile_9 = ::vl::Ptr<::vl::presentation::controls::tree::MemoryNodeProvider>(new ::vl::presentation::controls::tree::MemoryNodeProvider(::vl::Ptr<::vl::reflection::DescriptableObject>(::vl::Ptr<::vl::presentation::controls::tree::TreeViewItem>(new ::vl::presentation::controls::tree::TreeViewItem(::vl::Ptr<::vl::presentation::GuiImageData>(), ::vl::WString::Unmanaged(L"Blue+")))))));
 		(this->__vwsn_precompile_10 = ::vl::Ptr<::vl::presentation::controls::tree::MemoryNodeProvider>(new ::vl::presentation::controls::tree::MemoryNodeProvider(::vl::Ptr<::vl::reflection::DescriptableObject>(::vl::Ptr<::vl::presentation::controls::tree::TreeViewItem>(new ::vl::presentation::controls::tree::TreeViewItem(::vl::Ptr<::vl::presentation::GuiImageData>(), ::vl::WString::Unmanaged(L"<--")))))));
@@ -31833,7 +31833,7 @@ Class (::tuidemo::TuiTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_32 = new ::vl::presentation::compositions::GuiCellComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L), static_cast<::vl::vint64_t>(1L));
+			::vl::__vwsn::This(this->__vwsn_precompile_32)->SetSite(static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1), static_cast<::vl::vint>(1));
 		}
 		{
 			(this->bindableTreeView = new ::vl::presentation::controls::GuiBindableTreeView(::vl::presentation::theme::ThemeName::TreeView));
@@ -31856,7 +31856,7 @@ Class (::tuidemo::TuiTreeViewTabPageConstructor)
 		}
 		(this->__vwsn_precompile_33 = ::vl::__vwsn::This(this->bindableTreeView)->GetBoundsComposition());
 		{
-			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.top = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.right = static_cast<::vl::vint64_t>(0L); __vwsn_temp__.bottom = static_cast<::vl::vint64_t>(0L); return __vwsn_temp__; }());
+			::vl::__vwsn::This(this->__vwsn_precompile_33)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_32)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->bindableTreeView)->GetBoundsComposition()));

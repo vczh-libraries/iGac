@@ -1555,7 +1555,7 @@ namespace tuidemo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiDocumentEditorBase>;
 #endif
 	public:
-		::vl::vint64_t nextImageId;
+		::vl::vint nextImageId;
 		::vl::Ptr<::vl::reflection::description::IValueList> images;
 	protected:
 		::vl::presentation::controls::GuiToolstripCommand* __vwsn_prop_EditModeCommand;
@@ -1836,20 +1836,20 @@ namespace tuidemo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiEnglishNumbersController>;
 #endif
 	private:
-		::vl::vint64_t __vwsn_prop_counter;
-		::vl::vint64_t Getcounter();
-		void Setcounter(::vl::vint64_t __vwsn_value_);
+		::vl::vint __vwsn_prop_counter;
+		::vl::vint Getcounter();
+		void Setcounter(::vl::vint __vwsn_value_);
 		::vl::Event<void()> counterChanged;
 	public:
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> __vwsn_prop_ItemsToBind;
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> GetItemsToBind();
 		void SetItemsToBind(::vl::Ptr<::vl::reflection::description::IValueObservableList> __vwsn_value_);
 	private:
-		::vl::WString ToText_1to9(::vl::vint64_t i);
-		::vl::WString ToText_11to19(::vl::vint64_t i);
-		::vl::WString NumberToText_1To99(::vl::vint64_t i);
-		::vl::WString NumberToText_0to999(::vl::vint64_t i);
-		::vl::WString NumberToText(::vl::vint64_t i);
+		::vl::WString ToText_1to9(::vl::vint i);
+		::vl::WString ToText_11to19(::vl::vint i);
+		::vl::WString NumberToText_1To99(::vl::vint i);
+		::vl::WString NumberToText_0to999(::vl::vint i);
+		::vl::WString NumberToText(::vl::vint i);
 	public:
 		TuiEnglishNumbersController();
 		~TuiEnglishNumbersController();
@@ -2195,7 +2195,7 @@ namespace tuidemo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiLocaleSelector>;
 #endif
 	public:
-		::vl::vint64_t GetLocaleIndex(::vl::Locale locale);
+		::vl::vint GetLocaleIndex(::vl::Locale locale);
 		TuiLocaleSelector();
 		~TuiLocaleSelector();
 	};
@@ -2636,7 +2636,7 @@ namespace tuidemo
 #endif
 	public:
 		::vl::DateTime dateTime;
-		::vl::vint64_t number;
+		::vl::vint number;
 		double currency;
 		::vl::Ptr<::tuidemo::ITuiStringResourceStrings> __vwsn_prop_Strings;
 		::vl::Ptr<::tuidemo::ITuiStringResourceStrings> GetStrings();
@@ -2907,19 +2907,19 @@ namespace tuidemo
 #endif
 	public:
 		::vl::Ptr<::vl::reflection::description::IValueList> openedSubWindows;
-		::vl::vint64_t __vwsn_prop_invocationCount;
-		::vl::vint64_t GetinvocationCount();
-		void SetinvocationCount(::vl::vint64_t __vwsn_value_);
+		::vl::vint __vwsn_prop_invocationCount;
+		::vl::vint GetinvocationCount();
+		void SetinvocationCount(::vl::vint __vwsn_value_);
 		::vl::Event<void()> invocationCountChanged;
-		::vl::vint64_t __vwsn_prop_closingCount;
-		::vl::vint64_t GetclosingCount();
-		void SetclosingCount(::vl::vint64_t __vwsn_value_);
+		::vl::vint __vwsn_prop_closingCount;
+		::vl::vint GetclosingCount();
+		void SetclosingCount(::vl::vint __vwsn_value_);
 		::vl::Event<void()> closingCountChanged;
-		::vl::vint64_t __vwsn_prop_readyToCloseCount;
-		::vl::vint64_t GetreadyToCloseCount();
-		void SetreadyToCloseCount(::vl::vint64_t __vwsn_value_);
+		::vl::vint __vwsn_prop_readyToCloseCount;
+		::vl::vint GetreadyToCloseCount();
+		void SetreadyToCloseCount(::vl::vint __vwsn_value_);
 		::vl::Event<void()> readyToCloseCountChanged;
-		::vl::Event<void(::vl::vint64_t)> PaletteSelected;
+		::vl::Event<void(::vl::vint)> PaletteSelected;
 		void ShowMouseModifiers(bool alt, bool osSuper);
 		::vl::WString MouseButtonName(::vl::presentation::NativeMouseButton button);
 		TuiMainWindow();
@@ -4359,7 +4359,7 @@ namespace tuidemo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiTextListTabPage>;
 #endif
 	public:
-		::vl::vint64_t counter;
+		::vl::vint counter;
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> itemsToBind;
 		TuiTextListTabPage();
 		~TuiTextListTabPage();
@@ -4473,7 +4473,7 @@ namespace vl_workflow_global
 		::vl::presentation::Color ToColor(::tuidemo::TuiMyCategory value);
 		::vl::WString ToString(::tuidemo::TuiMyGender value);
 		::vl::WString ToString(::vl::DateTime value);
-		::vl::presentation::FontProperties ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint64_t deltaSize);
+		::vl::presentation::FontProperties ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint deltaSize);
 
 		static TuiControlTest& Instance();
 	};
@@ -7729,7 +7729,7 @@ Closures
 
 		__vwsno15_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_
@@ -7739,7 +7739,7 @@ Closures
 
 		__vwsno1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno20_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_
@@ -7749,7 +7749,7 @@ Closures
 
 		__vwsno20_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno27_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_
@@ -7759,7 +7759,7 @@ Closures
 
 		__vwsno27_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno330_TuiControlTest_tuidemo_TuiLocalizedFileDialogTabPageConstructor___vwsn_tuidemo_TuiLocalizedFileDialogTabPage_Initialize_
@@ -7805,7 +7805,7 @@ Closures
 
 		__vwsno8_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_1, ::vl::Ptr<::tuidemo::TuiMyDataItem> __vwsno_2) const;
 	};
 
 	class __vwsnc100_TuiControlTest_tuidemo_TuiDocumentEditorBaseConstructor___vwsn_tuidemo_TuiDocumentEditorBase_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -7959,8 +7959,8 @@ Closures
 
 		::vl::presentation::controls::GuiWindow* __vwsn_co0_mainWindow = nullptr;
 		::tuidemo::TuiHyperlinkWindow* __vwsn_co1_window = nullptr;
-		::vl::vint64_t __vwsn_co_state_ = 0;
-		::vl::vint64_t __vwsn_co_state_before_pause_ = 0;
+		::vl::vint __vwsn_co_state_ = 0;
+		::vl::vint __vwsn_co_state_before_pause_ = 0;
 		::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_prop_Failure;
 		::vl::Ptr<::vl::reflection::description::IValueException> GetFailure() override;
 		void SetFailure(::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_value_);
@@ -9206,7 +9206,7 @@ Closures
 		__vwsnc1_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc20_TuiControlTest_tuidemo_TuiMainWindowConstructor___vwsn_tuidemo_TuiMainWindow_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9397,7 +9397,7 @@ Closures
 		__vwsnc2_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc30_TuiControlTest_tuidemo_TuiSubWindowConstructor___vwsn_tuidemo_TuiSubWindow_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9588,7 +9588,7 @@ Closures
 		__vwsnc3_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc40_TuiControlTest_tuidemo_TuiDateEditorConstructor___vwsn_tuidemo_TuiDateEditor_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9772,7 +9772,7 @@ Closures
 		__vwsnc4_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc50_TuiControlTest_tuidemo_TuiCategoryDisplayerConstructor___vwsn_tuidemo_TuiCategoryDisplayer_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9966,7 +9966,7 @@ Closures
 		__vwsnc5_TuiControlTest_tuidemo_TuiDataGridTabPageConstructor___vwsn_tuidemo_TuiDataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::tuidemo::TuiDataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc60_TuiControlTest_tuidemo_TuiGenderDisplayerConstructor___vwsn_tuidemo_TuiGenderDisplayer_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -10203,7 +10203,7 @@ Closures
 		bool __vwsn_bind_closed_ = false;
 		void __vwsn_bind_activator_();
 		void __vwsn_bind_callback_0_0();
-		void __vwsn_bind_callback_1_0(::vl::vint64_t __vwsn_bind_callback_argument_0, ::vl::vint64_t __vwsn_bind_callback_argument_1, ::vl::vint64_t __vwsn_bind_callback_argument_2);
+		void __vwsn_bind_callback_1_0(::vl::vint __vwsn_bind_callback_argument_0, ::vl::vint __vwsn_bind_callback_argument_1, ::vl::vint __vwsn_bind_callback_argument_2);
 		bool Open() override;
 		bool Update() override;
 		bool Close() override;

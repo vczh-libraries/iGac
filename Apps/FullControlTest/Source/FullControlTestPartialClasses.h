@@ -795,13 +795,13 @@ namespace demo
 #endif
 	private:
 		static ::vl::Ptr<::vl::presentation::controls::IGuiAnimation> BallAnimation(::vl::presentation::compositions::GuiBoundsComposition* container, ::vl::presentation::compositions::GuiBoundsComposition* ball);
-		static ::vl::Ptr<::vl::presentation::controls::IGuiAnimation> BallAnimationWithDelay(::vl::presentation::compositions::GuiBoundsComposition* container, ::vl::presentation::compositions::GuiBoundsComposition* ball, ::vl::vint64_t delay);
+		static ::vl::Ptr<::vl::presentation::controls::IGuiAnimation> BallAnimationWithDelay(::vl::presentation::compositions::GuiBoundsComposition* container, ::vl::presentation::compositions::GuiBoundsComposition* ball, ::vl::vint delay);
 		static ::vl::Ptr<::vl::presentation::controls::IGuiAnimation> WaitingAnimation(::vl::presentation::compositions::GuiBoundsComposition* container);
 		::vl::Ptr<::demo::ColorAnimation> gradientColorDef;
 		::vl::Ptr<::vl::presentation::controls::IGuiAnimation> lastGradientAnimation;
 	public:
 		void PerformGradientAnimation(::vl::Ptr<::demo::ColorDef> target);
-		::vl::vint64_t counter;
+		::vl::vint counter;
 		AnimationTabPage();
 		~AnimationTabPage();
 	};
@@ -1012,10 +1012,10 @@ namespace demo
 		void SetShadow(::vl::presentation::Color __vwsn_value_);
 		::vl::Event<void()> ShadowChanged;
 	private:
-		::vl::vint64_t __vwsn_prop_Thickness;
+		::vl::vint __vwsn_prop_Thickness;
 	public:
-		::vl::vint64_t GetThickness();
-		void SetThickness(::vl::vint64_t __vwsn_value_);
+		::vl::vint GetThickness();
+		void SetThickness(::vl::vint __vwsn_value_);
 		::vl::Event<void()> ThicknessChanged;
 		static ::vl::Ptr<::demo::ColorDef> Dark();
 		static ::vl::Ptr<::demo::ColorDef> Light();
@@ -2155,17 +2155,17 @@ namespace demo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<EnglishNumbersController>;
 #endif
 	private:
-		::vl::vint64_t counter;
+		::vl::vint counter;
 	public:
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> __vwsn_prop_ItemsToBind;
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> GetItemsToBind();
 		void SetItemsToBind(::vl::Ptr<::vl::reflection::description::IValueObservableList> __vwsn_value_);
 	private:
-		::vl::WString ToText_1to9(::vl::vint64_t i);
-		::vl::WString ToText_11to19(::vl::vint64_t i);
-		::vl::WString NumberToText_1To99(::vl::vint64_t i);
-		::vl::WString NumberToText_0to999(::vl::vint64_t i);
-		::vl::WString NumberToText(::vl::vint64_t i);
+		::vl::WString ToText_1to9(::vl::vint i);
+		::vl::WString ToText_11to19(::vl::vint i);
+		::vl::WString NumberToText_1To99(::vl::vint i);
+		::vl::WString NumberToText_0to999(::vl::vint i);
+		::vl::WString NumberToText(::vl::vint i);
 	public:
 		EnglishNumbersController();
 		~EnglishNumbersController();
@@ -2503,7 +2503,7 @@ namespace demo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<LocaleSelector>;
 #endif
 	public:
-		::vl::vint64_t GetLocaleIndex(::vl::Locale locale);
+		::vl::vint GetLocaleIndex(::vl::Locale locale);
 		LocaleSelector();
 		~LocaleSelector();
 	};
@@ -2889,7 +2889,7 @@ namespace demo
 #endif
 	public:
 		::vl::DateTime dateTime;
-		::vl::vint64_t number;
+		::vl::vint number;
 		double currency;
 		::vl::Ptr<::demo::IStringResourceStrings> __vwsn_prop_Strings;
 		::vl::Ptr<::demo::IStringResourceStrings> GetStrings();
@@ -4547,7 +4547,7 @@ namespace demo
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TextListTabPage>;
 #endif
 	public:
-		::vl::vint64_t counter;
+		::vl::vint counter;
 		::vl::Ptr<::vl::reflection::description::IValueObservableList> itemsToBind;
 		TextListTabPage();
 		~TextListTabPage();
@@ -4661,7 +4661,7 @@ namespace vl_workflow_global
 		::vl::WString ToString(::vl::DateTime value);
 		double F(double x);
 		double G(double x);
-		::vl::presentation::FontProperties ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint64_t deltaSize);
+		::vl::presentation::FontProperties ChangeFontSize(::vl::presentation::FontProperties oldFont, ::vl::vint deltaSize);
 
 		static FullControlTest& Instance();
 	};
@@ -4927,9 +4927,9 @@ Closures
 	{
 		::vl::presentation::compositions::GuiBoundsComposition* ball;
 		::vl::presentation::compositions::GuiBoundsComposition* container;
-		::vl::vint64_t delay;
+		::vl::vint delay;
 
-		__vwsnf127_FullControlTest_demo_AnimationTabPage_BallAnimationWithDelay_(::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_ball, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_container, ::vl::vint64_t __vwsnctor_delay);
+		__vwsnf127_FullControlTest_demo_AnimationTabPage_BallAnimationWithDelay_(::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_ball, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_container, ::vl::vint __vwsnctor_delay);
 
 		::vl::Ptr<::vl::reflection::description::ICoroutine> operator()(::vl::presentation::controls::IGuiAnimationCoroutine::IImpl* __vwsn_co_impl_) const;
 	};
@@ -8056,7 +8056,7 @@ Closures
 
 		__vwsno10_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::demo::DataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno129_FullControlTest_demo_ColorAnimation_
@@ -8073,7 +8073,7 @@ Closures
 
 		__vwsno17_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::demo::DataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno21_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_
@@ -8083,7 +8083,7 @@ Closures
 
 		__vwsno21_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::demo::DataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno257_FullControlTest_demo_LocalizedFileDialogTabPageConstructor___vwsn_demo_LocalizedFileDialogTabPage_Initialize_
@@ -8129,7 +8129,7 @@ Closures
 
 		__vwsno28_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::demo::DataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
 	};
 
 	struct __vwsno3_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_
@@ -8139,7 +8139,7 @@ Closures
 
 		__vwsno3_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize_Compare_(::vl::presentation::controls::list::IDataSorter* __vwsnctorthis_0, ::demo::DataGridTabPageConstructor* __vwsnctorthis_1);
 
-		::vl::vint64_t operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
+		::vl::vint operator()(::vl::Ptr<::demo::MyDataItem> __vwsno_1, ::vl::Ptr<::demo::MyDataItem> __vwsno_2) const;
 	};
 
 	class __vwsnc100_FullControlTest_demo_DocumentEditorBaseConstructor___vwsn_demo_DocumentEditorBase_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9466,7 +9466,7 @@ Closures
 		__vwsnc1_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::demo::DataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc20_FullControlTest_demo_MainWindowConstructor___vwsn_demo_MainWindow_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9657,7 +9657,7 @@ Closures
 		__vwsnc2_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::demo::DataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc30_FullControlTest_demo_SubWindowConstructor___vwsn_demo_SubWindow_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9854,7 +9854,7 @@ Closures
 		__vwsnc3_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::demo::DataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc40_FullControlTest_demo_AnimationTabPageConstructor___vwsn_demo_AnimationTabPage_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -9905,12 +9905,12 @@ Closures
 		::vl::presentation::controls::IGuiAnimationCoroutine::IImpl* __vwsn_co_impl_;
 		::vl::presentation::compositions::GuiBoundsComposition* ball;
 		::vl::presentation::compositions::GuiBoundsComposition* container;
-		::vl::vint64_t delay;
+		::vl::vint delay;
 
-		__vwsnc42_FullControlTest_demo_AnimationTabPage_BallAnimationWithDelay___vl_reflection_description_ICoroutine(::vl::presentation::controls::IGuiAnimationCoroutine::IImpl* __vwsnctor___vwsn_co_impl_, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_ball, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_container, ::vl::vint64_t __vwsnctor_delay);
+		__vwsnc42_FullControlTest_demo_AnimationTabPage_BallAnimationWithDelay___vl_reflection_description_ICoroutine(::vl::presentation::controls::IGuiAnimationCoroutine::IImpl* __vwsnctor___vwsn_co_impl_, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_ball, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_container, ::vl::vint __vwsnctor_delay);
 
-		::vl::vint64_t __vwsn_co_state_ = 0;
-		::vl::vint64_t __vwsn_co_state_before_pause_ = 0;
+		::vl::vint __vwsn_co_state_ = 0;
+		::vl::vint __vwsn_co_state_before_pause_ = 0;
 		::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_prop_Failure;
 		::vl::Ptr<::vl::reflection::description::IValueException> GetFailure() override;
 		void SetFailure(::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_value_);
@@ -9928,12 +9928,12 @@ Closures
 
 		__vwsnc43_FullControlTest_demo_AnimationTabPage_WaitingAnimation___vl_reflection_description_ICoroutine(::vl::presentation::controls::IGuiAnimationCoroutine::IImpl* __vwsnctor___vwsn_co_impl_, ::vl::presentation::compositions::GuiBoundsComposition* __vwsnctor_container);
 
-		::vl::vint64_t __vwsn_co0_for_begin_i = 0;
-		::vl::vint64_t __vwsn_co1_for_end_i = 0;
-		::vl::vint64_t __vwsn_co2_i = 0;
+		::vl::vint __vwsn_co0_for_begin_i = 0;
+		::vl::vint __vwsn_co1_for_end_i = 0;
+		::vl::vint __vwsn_co2_i = 0;
 		::vl::Ptr<::vl::reflection::description::IValueList> __vwsn_co3_balls;
-		::vl::vint64_t __vwsn_co_state_ = 0;
-		::vl::vint64_t __vwsn_co_state_before_pause_ = 0;
+		::vl::vint __vwsn_co_state_ = 0;
+		::vl::vint __vwsn_co_state_before_pause_ = 0;
 		::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_prop_Failure;
 		::vl::Ptr<::vl::reflection::description::IValueException> GetFailure() override;
 		void SetFailure(::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_value_);
@@ -10052,7 +10052,7 @@ Closures
 		__vwsnc4_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::demo::DataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc50_FullControlTest_demo_TextEditorConstructor___vwsn_demo_TextEditor_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -10243,7 +10243,7 @@ Closures
 		__vwsnc5_FullControlTest_demo_DataGridTabPageConstructor___vwsn_demo_DataGridTabPage_Initialize__vl_presentation_controls_list_IDataSorter(::demo::DataGridTabPageConstructor* __vwsnctorthis_0);
 
 		void SetCallback(::vl::presentation::controls::list::IDataProcessorCallback* value) override;
-		::vl::vint64_t Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
+		::vl::vint Compare(const ::vl::reflection::description::Value& __vwsn_row1_, const ::vl::reflection::description::Value& __vwsn_row2_) override;
 	};
 
 	class __vwsnc60_FullControlTest_demo_GenderEditorConstructor___vwsn_demo_GenderEditor_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
@@ -10649,8 +10649,8 @@ Closures
 
 		::vl::presentation::controls::GuiWindow* __vwsn_co0_mainWindow = nullptr;
 		::demo::HyperlinkWindow* __vwsn_co1_window = nullptr;
-		::vl::vint64_t __vwsn_co_state_ = 0;
-		::vl::vint64_t __vwsn_co_state_before_pause_ = 0;
+		::vl::vint __vwsn_co_state_ = 0;
+		::vl::vint __vwsn_co_state_before_pause_ = 0;
 		::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_prop_Failure;
 		::vl::Ptr<::vl::reflection::description::IValueException> GetFailure() override;
 		void SetFailure(::vl::Ptr<::vl::reflection::description::IValueException> __vwsn_value_);

@@ -91,7 +91,7 @@ namespace demo
 #endif
 	public:
 		::vl::Ptr<::vl::reflection::description::IValueList> openedSubWindows;
-		::vl::Event<void(::vl::vint64_t)> PaletteSelected;
+		::vl::Event<void(::vl::vint)> PaletteSelected;
 		void ShowMouseModifiers(bool alt, bool osSuper);
 		::vl::WString MouseButtonName(::vl::presentation::NativeMouseButton button);
 		MainWindow();
