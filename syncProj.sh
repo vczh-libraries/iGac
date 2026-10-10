@@ -3,8 +3,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-WORKFLOW_DIR="$SCRIPT_DIR/../Workflow"
-GACUI_DIR="$SCRIPT_DIR/../GacUI"
+WORKFLOW_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/../Workflow" && pwd)"
+GACUI_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/../GacUI" && pwd)"
 WORKFLOW_BUILD="$WORKFLOW_DIR/.github/Ubuntu/build.sh"
 GACUI_BUILD="$GACUI_DIR/.github/Ubuntu/build.sh"
 CPPMERGE="$WORKFLOW_DIR/Tools/CppMerge/Bin/CppMerge"
