@@ -7,24 +7,13 @@ WORKFLOW_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/../Workflow" && pwd)"
 GACUI_DIR="$(CDPATH= cd -- "$SCRIPT_DIR/../GacUI" && pwd)"
 WORKFLOW_BUILD="$WORKFLOW_DIR/.github/Ubuntu/build.sh"
 GACUI_BUILD="$GACUI_DIR/.github/Ubuntu/build.sh"
-CPPMERGE="$WORKFLOW_DIR/Tools/CppMerge/Bin/CppMerge"
-GACGEN="$GACUI_DIR/Tools/GacGen/Bin/GacGen"
-GACBUILD="$GACUI_DIR/Tools/GacBuild/Bin/GacBuild"
-METADATA_DIR="$GACUI_DIR/Test/Resources/Metadata"
+GACBUILD="$SCRIPT_DIR/GacBuild.sh"
 REMOTE_RENDERER_SOURCE="$GACUI_DIR/Test/GacUISrc/RemotingTest_Rendering_Win32/GuiMain.cpp"
 RVM_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Rvm/GuiMain.cpp"
 SHARED_ARGUMENTS_SOURCE="$GACUI_DIR/Test/GacUISrc/SharedArguments.h"
 RVM_INITIALIZER_DIR="$GACUI_DIR/Test/GacUISrc/Generated_RemoteViewModelTest"
 FCT_PALETTE_DIR="$GACUI_DIR/Test/GacUISrc/Generated_FullControlTest"
 TUI_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Tui/Main.cpp"
-TOOL_DIR=""
-
-cleanup() {
-    if [[ -n "$TOOL_DIR" && "$TOOL_DIR" == "$SCRIPT_DIR"/.syncProj.* ]]; then
-        rm -rf "$TOOL_DIR"
-    fi
-}
-trap cleanup EXIT
 
 require_file() {
     if [[ ! -f "$1" ]]; then
@@ -91,8 +80,6 @@ sync_application() {
     configure_resource "$resource_file" "$generated_name"
 
     if ! "$GACBUILD" -mode:GacGen \
-        "-pathGacGen:$TOOL_DIR/GacGen" \
-        "-pathCppMerge:$CPPMERGE" \
         -FileName "$resource_file" >"$gacbuild_log" 2>&1; then
         cat "$gacbuild_log" >&2
         echo "GacBuild failed for $app_name. See $gacbuild_log and $resource_file.log." >&2
@@ -111,8 +98,7 @@ sync_application() {
 
 require_file "$WORKFLOW_BUILD"
 require_file "$GACUI_BUILD"
-require_file "$METADATA_DIR/Reflection32.bin"
-require_file "$METADATA_DIR/Reflection64.bin"
+require_file "$GACBUILD"
 require_file "$REMOTE_RENDERER_SOURCE"
 require_file "$RVM_GUI_MAIN_SOURCE"
 require_file "$SHARED_ARGUMENTS_SOURCE"
@@ -134,34 +120,18 @@ echo "Building Workflow CppMerge incrementally..."
     cd "$WORKFLOW_DIR/Tools/CppMerge"
     "$WORKFLOW_BUILD"
 )
-require_file "$CPPMERGE"
 
 echo "Building GacUI GacGen incrementally..."
 (
     cd "$GACUI_DIR/Tools/GacGen"
     "$GACUI_BUILD"
 )
-require_file "$GACGEN"
 
 echo "Building GacUI GacBuild incrementally..."
 (
     cd "$GACUI_DIR/Tools/GacBuild"
     "$GACUI_BUILD"
 )
-require_file "$GACBUILD"
-
-# GacGen normally uses the core-only metadata beside its executable. Full
-# Control Test also references types from GacUI's generated dialog support, so
-# run it through a temporary entry point configured to use the full metadata.
-# Pass this symlink to GacBuild without resolving it: its invocation path
-# determines where GacGen reads Metadata.txt.
-TOOL_DIR="$(mktemp -d "$SCRIPT_DIR/.syncProj.XXXXXX")"
-ln -s "$GACGEN" "$TOOL_DIR/GacGen"
-printf '%s\n%s\n%s\n' \
-    "../../GacUI/Test/Resources/Metadata" \
-    "Reflection32.bin" \
-    "Reflection64.bin" \
-    > "$TOOL_DIR/Metadata.txt"
 
 sync_application "TuiControlTest" "TuiControlTest"
 sync_application "FullControlTest" "FullControlTest"

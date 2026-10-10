@@ -124,6 +124,7 @@ iGac/
 │
 ├── CMakeLists.txt              Root CMake config (project GacOSX, C++23)
 ├── import.sh                   Refresh Import/ from the sibling GacUI repository
+├── GacBuild.sh                 Run upstream generators with full metadata
 ├── syncOrg.sh                  Clone and synchronize sibling organization repositories
 ├── syncProj.sh                 Sync test resources and merge x32/x64 C++ sources
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
@@ -166,17 +167,32 @@ This incrementally builds `<Workflow repo>/Tools/CppMerge`, `<GacUI repo>/Tools/
 and `<GacUI repo>/Tools/GacBuild` through their existing native build helpers. It copies
 the `FullControlTest`, `RemoteProtocolTest`, `RemoteViewModelTest` and `TuiControlTest`
 resource trees and their seed C++ files from `<GacUI repo>/Test/Resources/App/`, then
-invokes GacBuild in GacGen mode for each resource. GacGen stages `/P32` and `/P64`;
-GacBuild validates both outputs and uses CppMerge to merge matching files into
+invokes `<iGac repo>/GacBuild.sh -mode:GacGen` for each resource. GacGen stages
+`/P32` and `/P64`; GacBuild validates both outputs and uses CppMerge to merge matching files into
 `<iGac repo>/Apps/*/Source/`, preserving upstream seed `USER_CONTENT`, embedded
 resources and `RemoteViewModelTestRpc.h/.cpp`.
 
-The script supplies explicit absolute paths to GacGen and CppMerge. It passes a
+`GacBuild.sh` locates all three executables in the sibling GacUI and Workflow
+repositories and supplies explicit absolute paths to GacGen and CppMerge. It passes a
 temporary GacGen symlink without resolving it, so the adjacent `Metadata.txt`
 selects full `Reflection32.bin` and `Reflection64.bin` from
 `<GacUI repo>/Test/Resources/Metadata/`. Full metadata includes generated dialog
-types absent from the development tool's usual core-only metadata. Maintenance
-uses the sibling Workflow and GacUI repositories; it does not require a Release checkout.
+types absent from the development tool's usual core-only metadata. The wrapper
+removes its temporary entry point on success or failure and returns the native
+tool's exit status. Maintenance uses the sibling Workflow and GacUI repositories;
+it does not require a Release checkout.
+
+After `syncProj.sh` builds the tools, the wrapper can also be used directly:
+
+```bash
+./GacBuild.sh -FileName path/to/GacUI.xml -Dump
+./GacBuild.sh -mode:GacGen -FileName Apps/TuiControlTest/Resources/Resource.xml
+```
+
+The default GacBuild mode takes a driver XML for incremental resource discovery;
+`-Dump` only reports the plan. Put `-mode:GacGen` first to rebuild one resource,
+optionally with `-MappingFileName <mapping>`. XML and mapping paths remain relative
+to the caller's working directory, even when invoking the wrapper from elsewhere.
 
 Inspect `<iGac repo>/Apps/*/Resources/GacBuild.log` and
 `<iGac repo>/Apps/*/Resources/Resource.xml.log/{x32,x64}/` for orchestration and compiler
