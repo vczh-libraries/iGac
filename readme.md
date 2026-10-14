@@ -182,6 +182,8 @@ removes its temporary entry point on success or failure and returns the native
 tool's exit status. Maintenance uses the sibling Workflow and GacUI repositories;
 it does not require a Release checkout.
 
+Synchronization adds the imported skin headers to each showcase's generated C++ includes: TuiSkin for TuiControlTest and DarkSkin for FullControlTest. FullControlTest's vertical tab rail uses DarkSkin templates and palette values directly.
+
 After `syncProj.sh` builds the tools, the wrapper can also be used directly:
 
 ```bash

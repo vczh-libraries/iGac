@@ -41,6 +41,8 @@ configure_resource() {
 
     if [[ "$generated_name" == "TuiControlTest" ]]; then
         perl -0pi -e 's#<Text name="NormalInclude">GacUI.h</Text>#<Text name="NormalInclude">GacUI.h;Skins/TuiSkin/TuiSkin.h</Text>#' "$resource_file"
+    elif [[ "$generated_name" == "FullControlTest" ]]; then
+        perl -0pi -e 's#<Text name="NormalInclude">GacUI.h</Text>#<Text name="NormalInclude">GacUI.h;Skins/DarkSkin/DarkSkin.h</Text>#' "$resource_file"
     fi
 
     if ! grep -q '<Text name="SourceFolder">../Source</Text>' "$resource_file"; then
