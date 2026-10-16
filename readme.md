@@ -12,7 +12,7 @@ This repo is stand alone, all dependencies are in the repo for building.
 
 To run `RemotingTest_Rendering_macOS` by `test.sh --app:renderer`, the `GacUI` repo is needed. `test_core.sh` full-builds and runs the matching project under `GacUI/Test/Linux`.
 
-For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency.
+For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency. The importer normalizes each snapshot file to its existing line-ending convention so CodePack and Git checkout conversions do not cause unrelated changes.
 
 ## Supported Platforms
 
@@ -60,6 +60,8 @@ Apple's Command Line Tools provide `clang++`, `lldb`, `make`, `git`, and the
 macOS SDK and frameworks. No separate Homebrew LLVM or Git installation is
 needed. The helper scripts call Coreutils' `grealpath` name explicitly, so its
 `gnubin` directory does not need to be added to `PATH`.
+Synchronization also requires `perl` for imported-source line endings; install it
+with `brew install perl` if it is unavailable.
 
 To update Homebrew and these tools later:
 
@@ -85,12 +87,14 @@ iGac/
 ├── MacShared/                  Shared static libraries and test utilities
 │   ├── CMakeLists.txt          Builds GacUI, GacOSX, GacOSXShared static libraries
 │   ├── gac_include.h           Convenience header: includes GacUI, registers DarkSkin theme
+│   ├── FullControlTestRawElement* Cocoa clock and remote collection attachments for test apps
 │   ├── osx_shared.h/mm         OS X helpers (string conversion, file utils, resource folder)
 │   └── UnixFileSystemInfo.*    Cross-platform file system utilities
 │
 ├── MacTest/                    Simple test app (Hello World)
 │   ├── CMakeLists.txt
-│   └── HelloWorlds/Cpp/Main.cpp
+│   ├── HelloWorlds/Cpp/Main.cpp
+│   └── RawElement.cpp          Focused Cocoa raw-element and remote-lifecycle tests
 │
 ├── MacFullControlTest/         Full-featured test app using BlackSkin control template
 │   ├── CMakeLists.txt
@@ -216,6 +220,15 @@ neither is maintained as a local `<iGac repo>/MacShared/Mini*.cpp` copy. Generat
 reflection files are retained in `<iGac repo>/Apps/*/Source/`, but test targets compile with
 `VCZH_DEBUG_NO_REFLECTION` and do not include them.
 
+The clock helpers remain macOS-owned under `<iGac repo>/MacShared`; synchronization
+does not copy the Windows clock helpers. The local FCT and native remote renderer
+compile the Cocoa helpers directly, while `GacOSX` supplies the reusable
+`GuiCocoaElement` from `<iGac repo>/Mac/GraphicsElement/CoreGraphics`.
+The shared renderer entry point's macOS attachment hook is maintained upstream
+and survives synchronization. `<Raw/>` now creates this element in ordinary,
+hosted and native remote modes. See [the drawing contract](doc/OSProvider_Graphics.md#raw-cocoa-drawing)
+for callback lifetime, clipping and received clock data.
+
 Each generated application also has an embedded-resource `.cpp` file. Full Control Test links `FullControlTestResource.cpp`, whose plugin loads the resource from compiled data; no `.bin` file is bundled or located at runtime.
 
 ## Building
@@ -226,6 +239,21 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 ```
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
+
+The official build also produces the focused raw-element tests. Run them in both
+setups after `./build.sh`:
+
+```bash
+./build/MacTest/bin/Test_RawElement /C
+./build/MacTest/bin/Test_RawElement /C --hosted
+```
+
+For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
+`--hosted`, and repeat through `test_core.sh --app:fct --protocol:minihttp` plus
+`test.sh --app:renderer`. Verify ticking without input, resizing, tab return,
+palette refresh and renderer replacement/takeover. The clock paints received
+data; it has no renderer-local timer. Results belong in
+`<iGac repo>/TestMatrix_NativeRenderer.md`.
 
 ### Static Libraries
 

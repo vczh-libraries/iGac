@@ -43,6 +43,13 @@ target_link_libraries(${APP_NAME} ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 set_target_properties( ${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PLIST_TEMPLATE} 
 MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 
+add_executable(Test_RawElement
+	"RawElement.cpp"
+	"../MacShared/FullControlTestRawElement.cpp"
+	"../MacShared/FullControlTestRawElementRemote.cpp"
+)
+target_link_libraries(Test_RawElement ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+
 #[[
 #
 set(SHARED_RESOURCES "Controls/AddressBook/AddressBook.bin"

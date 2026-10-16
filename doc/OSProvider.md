@@ -23,6 +23,11 @@ Shared test utilities live in `MacShared/`.
 event to the shared `demo::OnPaletteSelected` handler in both native modes.
 `syncProj.sh` copies that helper from the owning GacUI test project. The handler
 queues palette installation and theme refresh while preserving existing controls.
+The entry point also retains a local Cocoa clock attachment for
+`window.GetClockElement()` through the window run. The native remote entry point
+attaches the corresponding collection helper before processing protocol messages;
+its macOS hook is authored in the shared GacUI entry point and copied by
+`syncProj.sh`. See [raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing).
 
 ### Standard Mode — `SetupOSXCoreGraphicsRenderer()`
 

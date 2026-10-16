@@ -1,6 +1,7 @@
 #include "gac_include.h"
 #include "FullControlTest.h"
 #include "FullControlTestPalette.h"
+#include "FullControlTestRawElement.h"
 #include "../Mac/NativeWindow/CocoaAutomationService.h"
 #include "../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h"
 
@@ -29,6 +30,7 @@ int main(int argc, const char * argv[])
 void GuiMain()
 {
 	demo::MainWindow window;
+	auto rawClockAttachment = demo::AttachFullControlTestRawElement(window.GetClockElement());
 	window.PaletteSelected.Add(&demo::OnPaletteSelected);
 	window.ForceCalculateSizeImmediately();
 	window.MoveToScreenCenter();

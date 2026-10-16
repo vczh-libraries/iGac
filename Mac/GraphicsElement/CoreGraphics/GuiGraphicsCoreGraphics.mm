@@ -7,6 +7,7 @@
 //
 
 #include "GuiGraphicsCoreGraphics.h"
+#include "GuiCocoaElement.h"
 #include "GuiGraphicsCoreGraphicsRenderers.h"
 #include "GuiGraphicsLayoutProviderCoreText.h"
 
@@ -523,7 +524,7 @@ namespace vl {
 
                 Ptr<IGuiGraphicsElement> CreateRawElement() override
                 {
-                    CHECK_FAIL(L"Not Implemented!");
+                    return Ptr(GuiCocoaElement::Create());
                 }
             };
             
@@ -598,6 +599,7 @@ void CoreGraphicsMain(INativeController* nativeController, GuiHostedController* 
     elements_coregraphics::GuiImageFrameElementRenderer::Register();
     elements_coregraphics::GuiPolygonElementRenderer::Register();
     elements_coregraphics::GuiCoreGraphicsElementRenderer::Register();
+    elements_coregraphics::GuiCocoaElementRenderer::Register();
     elements_coregraphics::GuiInnerShadowElementRenderer::Register();
     elements_coregraphics::GuiFocusRectangleElementRenderer::Register();
     elements::GuiDocumentElementRenderer::Register();

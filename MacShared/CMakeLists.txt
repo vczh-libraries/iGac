@@ -25,6 +25,7 @@ set(GACUI_COMMON_FILES
 )
 
 set(GACOSX_FILES
+	"../Mac/GraphicsElement/CoreGraphics/GuiCocoaElement.cpp"
 	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm"
 	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphicsRenderers.mm"
 	"../Mac/GraphicsElement/CoreGraphics/GuiGraphicsLayoutProviderCoreText.mm"

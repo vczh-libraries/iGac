@@ -1,45 +1,43 @@
-# Test Matrix Card 2026-09-22T22:41:38-07:00
+# Test Matrix Card 2026-10-16T01:06:53.035Z
 
-Scope: remote FCT with the macOS native renderer over MiniHTTP only. All other runtime verifications are excluded by request; their results remain blank.
+Wasm is excluded by request. Results below belong to this run.
 
 ## Test Matrix
 
 | Test Item | 1st |
 | --- | --- |
-| [macOS][`test.sh --app:simple`] |  |
-| [macOS][`test.sh --app:fct`] (standard) |  |
-| [macOS][`test.sh --app:fct --hosted`] |  |
-| [macOS][Test_CppTest_Rvm][`/MiniHttp`] |  |
-| [macOS][`/RPT`][`/MiniHttp`] |  |
-| [macOS][`/FCT`][`/MiniHttp`] | 2026-09-22T22:41:38-07:00 |
-| [macOS][`/RVMT`][`/MiniHttp`] |  |
-| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] |  |
-
-## Build and synchronization
-
-2026-09-22T22:41:38-07:00: CodePack, import and sync passed; iGac all-target build passed. Core full rebuild through `test_core.sh --app:fct --protocol:minihttp` passed. Unit tests and all other runtime targets were excluded by request. Evidence: `/tmp/rpxplat-fct-20260922`.
-
-## FCT progress
-
-| Check | Result |
-| --- | --- |
-| Initial title and tabs | Passed |
-| Both lists add 0–9 and clear | Passed; exact 0–9 twice, then absent from Controls and active DOM |
-| Search and rich editor text, tab retention, brackets/braces | Passed; MacMiniHTTP922 / NativeMiniHTTP Hello[Ab]{Cd}, exact in both trees after tab round trip |
-| Canonical shortcut labels and local dialogs | Passed on all three renderers; canonical Command labels and exact local prompts dismissed |
-| Native global shortcut | Passed on all three renderers; native macOS Ctrl+Shift+Alt+Command+Q exact dialog |
-| Five mouse buttons and modifier combinations | Passed before and after replacement; all five down/up pairs × eight combinations, matching theme font/color; Mouse4/5 repeated after takeover |
-| Movement, double-click, both wheel axes | Passed before and after replacement; eight modifier combinations, all five double-click buttons, both wheel axes/directions; 480 total mouse-event assertions |
-| Renderer replacement and takeover, retained state, repeated input | Passed; same Core PID 4421, markers retained in renderers 2/3, renderer 2 exited and port 8889 closed, repeated local shortcuts and Mouse4/Mouse5 on renderer 3 |
-| Updated Easy Layout pages | Passed; editor/choice retention, both arrangement rebuilds, all four table splitters, rebuild restores 120×40 editor and retains text |
-| Application close and process cleanup | Passed; Exit → self.Close() (InvokeInMainThread), Core and active renderer exit 0; no remaining processes or listeners on 8888/8889/8890 |
-
-## Run details
-
-Completed 2026-09-22T22:56:39-07:00. Core source revision: GacUI `e8be96806`; iGac starting revision: `96acd7c`. All application input used the active native renderer, with System Events keyboard input for the Carbon global shortcut. Core Controls and active renderer DOM were checked after each state change. No functional defects were observed.
-
-`syncProj.sh` imported the current FullControlTest Easy Layout resources and regenerated their C++ snapshot. Framework CodePack output was unchanged apart from line endings; existing line endings were preserved. Generated C++ retains its existing CRLF format; `git -c core.whitespace=cr-at-eol diff --check` passed.
-
-Evidence is retained under `/tmp/rpxplat-fct-20260922`: build/sync/Core/renderer logs, Controls/DOM snapshots, renderer command log, `mouse-before-evidence.json`, `mouse-replacement-evidence.json`, and `takeover-detach.json`. Renderer 1 was deliberately killed to test replacement; renderer 2 exited 0 after takeover; Core and renderer 3 exited 0 through the application close action.
+| Import / sync / full build | 2026-10-15 17:40 (fixed) |
+| GacUI unit tests | Passed: 94 files, 1,837 cases |
+| Cocoa raw-element tests, native and hosted | 2026-10-15 18:44 (fixed) |
+| Local simple app | 2026-10-15 18:53 (passed) |
+| Local FullControlTest | 2026-10-15 18:57 (automation passed; native dialog/resize limits below) |
+| Hosted FullControlTest | 2026-10-15 19:03:03 (automation passed; native-alert limitation) |
+| [macOS][Test_CppTest_Rvm][`/MiniHttp`] | 2026-10-15 19:20:40 (normal/Unicode/rejected host/both loss variants passed) |
+| [macOS][`/RPT`][`/MiniHttp`] | 2026-10-15 19:08:47 (normal/replacement/takeover passed; global key unavailable) |
+| [macOS][`/FCT`][`/MiniHttp`] | 2026-10-15 19:16:45 (clock/UI/replacement/takeover passed; global key unavailable) |
+| [macOS][`/RVMT`][`/MiniHttp`] | 2026-10-15 19:23:54 (normal/Unicode/replacement/both loss terminations; native No unavailable) |
+| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] | 2026-10-15 19:23:54 (normal/Unicode/replacement/both loss terminations; native No unavailable) |
 
 ## Issues Found and Fix
+
+### Stable imported line endings
+
+The first import produced unrelated CRLF/LF rewrites. `import.sh` now normalizes snapshots to their existing conventions. Re-importing leaves only semantic framework updates (11 files), and the second synchronization is preserving the local Cocoa helper sources and target references.
+
+- CodePack, import, both complete synchronizations and the full native build passed. Apple legacy `Ptr`, `Rect`, and `Size` typedef collisions in new test/demo code were fixed by qualifying GacUI types. Local Cocoa helpers and CMake references survived the second sync.
+
+- Focused Cocoa tests: native 4/4 passed; hosted factory, offscreen state isolation and fixed-data clock tests passed (the real native-window remote case is intentionally native-only). The offscreen fixture needed the same flipped coordinate transform as the native view. LLDB launch required Developer Tools Access authentication; that probe was canceled and its processes stopped. The supported test runner then completed successfully.
+
+Native local FCT: both exact list sequences, Clear, and two keyboard-entered editor markers survived navigation. Ctrl+Q displayed the exact native alert (screenshot captured). Accessibility subsequently returned -25211, preventing native-dialog dismissal and desktop input verification; the remaining checks used isolated application/PTY automation. The blocked local run was terminated before a fresh run.
+
+Local FCT: real Cocoa clock screenshots show successive hand positions without input, including Ember refresh. Vertical layout pages, retained editor/choice state across Default/Ember/Aurora/Default, responsive 240x320 modal, eight account choices, list-end navigation, OK/Cancel/reopen and queued Close passed. Physical resize and native-dialog dismissal remain unavailable with Accessibility denied.
+
+Hosted FCT: list/editor continuity, real clock data and two screenshots across an input-free tick, palette refresh, 40 button/double-click combinations and 32 wheel combinations passed. Responsive hosted frame widths 291/366/456/685 exercised compact/details/menu/list layouts repeatedly, with OK/Cancel and clean queued Close. Local and hosted shortcut message boxes both use Cocoa native dialogs; Ctrl+Q was visible, but dismissal and OS global chords are unverified after Accessibility denial.
+
+Unexpected Core termination closed the configured native renderer cleanly (its GuiRemoteRendererSingle uses exit-on-disconnect). Retained raw-picture lifetime is covered by the focused renderer test; interactive fatal retention still needs the native No button, unavailable with Accessibility denied.
+
+Native RVMT network and stdio: Unicode RPC, replacement, normal Exit, manual second-host rejection and stdio child reaping passed. Both idle-next-call and blocked-call host losses terminated Core nonzero. The blocked stdio proof must be taken after input reaches Core; an immediate Controls read can overtake renderer input. Once Controls remained pending, killing the stopped child released Core promptly. Exact fatal prompts were captured, but Accessibility prevents No/retained-DOM/ordinary-input-rejection verification. Standalone RVMT also passed both unhandled host-loss terminations; its blocked network receive queue contained 389 bytes before termination, released in 4.99 s.
+
+A fresh ordinary local FCT also passed the full 40 button/double-click and 32 wheel modifier combinations, followed by queued Close with exit 0.
+
+Final native FCT replacement/takeover captures waited for fresh Raw data and a painted frame. All three renderers showed the actual clock; the takeover renderer's dial and three hands were visually inspected. The old renderer exited 0 on takeover, and queued Close ended the final Core and renderer with exit 0. An earlier immediate black capture was taken before first paint and was not used as rendering evidence.

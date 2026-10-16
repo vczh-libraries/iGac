@@ -1,63 +1,89 @@
-# Test Matrix Card 2026-09-21 (current run)
+# Test Matrix Card 2026-10-16T01:06:53.035Z
 
-This card records the current `job:rpXPlat` macOS TUI run. Results are filled only from this run's evidence. Remote protocol is not exercised by the TUI target.
+## Environment
+
+| Field | Value |
+| --- | --- |
+| Platform / application / commit / build configuration | macOS arm64 / Test_TuiControlTest / current master plus task changes / CMake default |
+| Terminal name / version / profile / viewport sizes | Apple Terminal 2.15 Basic, 120x40 then 80x24; owned xterm-256color PTY at 100x30, 80x25 and 120x40; Kitty 0.48.2 installed but unavailable for comparison |
+| Input methods / desktop availability | Initial Quartz mouse checks; later Accessibility -25211. Remaining input went only to an owned PTY master fd. Physical keyboard/IME/global delivery unverified |
 
 ## Test Matrix
 
-| SOP section | Initial result | Evidence / native-input limits |
-| --- | --- | --- |
-| Build / import / sync / repeat sync | PASS | Official import/sync/all-target build succeeded against GacUI revision `83fc7100b`. All 28 TUI resource/source/entry-point hashes match repeat generation. |
-| VlppOS unit suite | PASS | 14/14 files, 276/276 cases; evidence in `/tmp/rpxplat-20260921/vlppos-unit*.log`. |
-| GacUI unit suite | PASS | 92/92 files, 1802/1802 cases, including `TestTuiProvider.cpp` configured-tab geometry at intervals 4 and 8 with wide/supplementary characters, caret movement, alignment, wrapping and clipping; evidence in /tmp/rpxplat-20260921/gacui-unit.log. |
-| Linux and macOS launch | PASS scoped | Rebuilt `./test.sh --app:tui` launched foreground in Apple Terminal.app first at 120×40; the fresh native run reports `Test_TuiControlTest — 120×40`. Kitty 0.48.2 direct retry also launched. Unsupported `--unblock`, `--hosted`, and `--port` were rejected. Evidence: `records/terminal-native-final-startup.txt`, `records/terminal-app-startup-120x40.txt`, `records/test-unsupported-*.out`. |
-| Rules for every operation | PASS scoped | The pyte PTY bridge records each generated click/text/resize event and captures the resulting cell buffer. Corrected 1-based SGR navigation reached the requested pages and intermediate states; physical/native input remains separate. |
-| Startup, platform services and teardown | PASS scoped | 120x40 Terminal.app and 100x30/80x25 PTY startup buffers were captured. `pbcopy`/`pbpaste` clipboard round-trip passed, and fresh Exit→Stop via SGR returned code 0 with terminal mode restoration. System Events global F8 passed in the live TUI; physical input and final appearance remain unverified. |
-| Follow-up regression checks | PASS scoped | Responsive resize, editor retention, hosted dialog dismissal, clipboard round trip, exhaustive DataGrid cell hover/selection and separator-background checks, four default-column tab cases, child-window repaint/resize, retained document/grid/tree state after palette switches, and palette transitions were exercised. Physical/displayed appearance remains unverified. |
-| List / TextList | PASS scoped | Separate PTY byte replay verified Add10/Clear/two additions continuing 0–19, positional odd/even removal, source rotation and restoration, check/radio state, independent Dummy checks/radios, selection/scroll, and tab return. Evidence `/tmp/rpxplat-20260921/tui-lists-results.md` and `tui-lists-live-core*`. |
-| List / ListView | PASS scoped | Both panes rendered the complete text dataset including Task/005/16x16/005_Task_16x16_72.png; BigIcon, SmallIcon, List, Tile, Information, and Detail each reported effective Detail; selection/scroll, source rotation, and terminal resize/restore were replayed. Evidence `tui-lists-results.md`. |
-| List / TreeView | PASS scoped | All four roots and child datasets were present; both panes expanded/navigation replayed with keyboard assistance; right-source rotation emptied/restored. Evidence `tui-lists-results.md`. |
-| List / BindableDataGrid | PASS scoped | All five Japanese/Chinese records and headers, six views, source rotation, persisted Name/Website edits, filters 3/2/4/5, sort cycles with ties, and Name/Gender resize were replayed. Fresh regression replay hovered and selected every cell, inspected row-7/row-15 separator backgrounds including beyond the last column, and checked Name/Website caret movement with Shift-selection and Up/Down no-op. Gender and Category popups exercised collapse, Home/End/PageUp/PageDown and Enter commit; Birthday popup remains covered by the earlier calendar evidence. Evidence `tui-lists-results.md`, `tui-regression-final/grid-cell-audit.json`, `grid-background-audit.json`, `tui-lists-live-combo5..8`. |
-| Refresh List / TextList | PASS scoped | Six rows were rendered; model/direct check/uncheck and Read(true/false), selection and scrolling were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / BindableTextList | PASS scoped | Name/Title mapping, model check/read, direct state retention after returning to Name, and all three rows were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / ListView | PASS | Main and Sub mutations reverted; exact DataColumns sequence `[0,1,2] -> [1,1,2] -> [1,1] -> [0,1] -> [0,1,2]` and four-click header sequence were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / BindableListView | PASS | Name/Title, Sub1, exact DataColumns/header cycles, Category reinsertion, and binding follow-through (`SubColumn` then `One`) were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / TreeView | PASS scoped | First and First/Second mutations, reversion, expansion, and visible tree state were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / BindableTreeView | PASS scoped | Name/Title mapping, expansion, `*First`, and `*First/Second` mutation to Two were replayed. Evidence `tui-lists-results.md`. |
-| Refresh List / BindableDataGrid | PASS scoped | Name/Title, Sub1, exact collection/header cycles, all six effective Detail views, DataGrid return, File edit, Category reinsertion binding (`SubColumn`/`One`), selection, keyboard scroll, repaint, and resize/restore were replayed. Evidence `tui-lists-results.md`. |
-| Layout / Repeat / RepeatStack | PASS | Fresh bridge captures verify Add 10 (0–9), Add 20 (0–19), odd removal (1,3,5,7,9), even removal, Clear, reset counter, append behavior, item counts, and 80×25 restoration. Evidence `/tmp/rpxplat-20260921/tui-deep/repeatstack-*.txt`. |
-| Layout / Repeat / RepeatFlow | PASS | Independent RepeatFlow captures verify Add 10, odd removal, even removal, Clear, counter values and item counts. Evidence `tui-deep/repeatflow-{add10,odd,even,clear}.txt`. |
-| Layout / Repeat / SharedSize (RepeatFlow) | PASS | Independent SharedSize RepeatFlow captures verify Add 10, odd/even removal, Clear, and equal measured label placement. Evidence `tui-deep/shared-repeatflow-{add10,odd,even,clear}.txt`. |
-| Layout / Repeat / SharedSize (TextList) | PASS | Independent SharedSize TextList captures verify Add 10, odd/even removal, Clear, right-anchored labels and item counts. Evidence `tui-deep/shared-textlist-{add10,odd,even,clear}.txt`. |
-| Layout / Responsive | PASS | View/Stack/Group readouts show bounded 4/7/4 levels; marker and labels survive LevelUp/LevelDown, 80×25 and restored 120×40 captures. Evidence `tui-deep/responsive-*.txt`. |
-| Control / Document Editor (Toolstrip) | PASS scoped | Typed and retained markers, exercised clipboard through `pbpaste`, Edit select/cut/paste and Undo/Redo, opened all File/Edit/View/Format menus, captured style effects, and created/edited/removed a hyperlink. Fresh Preview selection was asserted by the menu check; true SGR hover changed link cells to active background and click opened `You Clicked a Hyperlink!` with the exact URL. Fixture image insertion produced the 32×32 textual image object; select/delete/undo/redo restored it. Evidence `tui-deep/doc-*.txt`, `tui-image-deep/image-deep-*.txt`, `tui-file-final/hyperlink-final-*.txt`. |
-| Control / TextBox / TextBox | PASS scoped | Original Archer/poem, CJK/supplementary marker, Ctrl+A replace/undo, redo, literal Tab insertion, four default-column tab cases (`TAB-X`, `a<TAB>X`, `abc<TAB>X`, `abcd<TAB>X`), clipboard `pbpaste`, wide wrapping/horizontal scroll, undo/redo, 80×25 clipping and restoration were captured. Evidence `tui-deep/tb-tab-*.txt`, `tui-regression-final/textbox-default4-*.txt`, `textbox-clipboard.txt`, `textbox-wide-*.txt`. |
-| Control / TextBox / TextBox (No Tab) | PASS scoped | Independent CJK/supplementary marker, Ctrl+A replace/undo and Tab focus traversal without inserted Tab were captured, with 80×25 sibling coverage. Evidence `tui-deep/tb-notab-*.txt`, `tui-selection/notab-selection-*.txt`. |
-| Control / TextBox / Document | PASS scoped | Fixed/relative panes retained independent CJK/supplementary markers; Ctrl+A replace/undo and resize captures completed. Evidence `tui-deep/doc-enabled-*.txt`, `tui-selection/doc-selection-*.txt`. |
-| Control / TextBox / Document (No Tab) | PASS scoped | No-tab document marker, Ctrl+A replace/undo and Tab focus traversal were captured in both panes, with 80×25 and restored-size captures. Evidence `tui-deep/doc-notab-*.txt`, `tui-selection/docnotab-selection-*.txt`. |
-| Control / Embedded Controls | PASS scoped | Complete heading/table and `RemoteProtocolTest` selection were captured; `RIGHT NOW` produced the expected dismissible `Pretend to be starting!` dialog. Evidence `tui-embedded/control-embedded-*.txt`. |
-| Misc / Localization | PASS scoped | en-US → zh-CN changed title, labels, CJK sentences and formatting, then a separately inspected selector returned to en-US/English. Evidence `tui-controls/misc-localization-zh.txt`, `misc-localization-en-final.txt`. |
-| Compact dialog and form layout checks | PASS scoped | Message, Color, Font, Open and Save dialogs were each opened and captured at 80×25 as well as the 120×40 run; Chinese ColorDialog controls were also opened at 80×25. Custom color palettes are unavailable in the shared fake dialog service, and final displayed appearance remains unverified. Evidence `/tmp/rpxplat-20260921/tui-80deep/dialog80-*.txt`. |
-| Misc / Dialogs / MessageDialog | PASS | All seven button sets, five icons, three default-button positions and default activation outputs were replayed; dialogs were captured and dismissed. Evidence `tui-deep/message2-*.txt`, `message-icon-*.txt`, `message-default-*.txt`. |
-| Misc / Dialogs / ColorDialog | PASS | RGB 12/34/56 was entered, canceled back to white, accepted as `#0C2238`, and reopened with the accepted value. Evidence `tui-deep/color-*.txt`. |
-| Misc / Dialogs / FontDialog | PASS scoped | Effect and Bold/Italic/Underline/Strike controls were enabled, nested Pick a Color was opened/canceled, font accepted and reopened with effects retained. Terminal font metrics/display remain unverified. Evidence `tui-deep/font-*.txt`. |
-| Misc / Dialogs / Open/Save FileDialog | PASS scoped | Exact `/tmp/rpxplat-20260921/fixtures` entry navigated to the fixture directory; bounded waits showed `nested/` and `alpha.txt`, and `All Files|*.*` showed `beta.csv`, `existing.bin`, and `image.png`. Timed double-click navigated into `nested/` and selected/opened `inside.txt`; AllowMultiple returned `"alpha.txt";"beta.csv"`; Save without an extension returned `created.txt`. Private/RTF/HTML filters, invalid missing-file validation, cancellation, overwrite cancel/accept, and the expected Workflow save-not-implemented result were also covered. Evidence `tui-file-final/file-final-*.txt`, `tui-deep/file-*.txt`, `tui-image-deep/file-deep-*.txt`. |
-| Misc / DatePicker | PASS | Year/month keyboard navigation reached February 2024 with visible Feb 29, one calendar changed independently, and date combo selection changed only DC1. Evidence `tui-deep/date-{2024,date-combo-selected,february-keyboard}.txt`. |
-| Window Manager | PARTIAL | At 120×40 and 80×25, child and grandchild windows opened with frame options; true SGR drag moved the grandchild, and a SizeBox-enabled child corner drag changed its frame from x37..84/y10..31 to x37..96/y10..26 before closure. System Events delivered global Ctrl+Shift+Alt+Command+F8 and the TUI showed `You pressed Ctrl+Shift+Alt+Win+F8!`; the fresh Apple Terminal run also delivered native Ctrl+Q and showed `You pressed Ctrl+Q!`. Native Ctrl+Alt+Command+Q was attempted in the same run without a TUI dialog. Kitty generated Ctrl+Q and Ctrl+Alt+Super+Q dialogs also passed. Physical input and final appearance remain unverified. Evidence `tui-regression-final/wm-global-f8-screen.txt`, `tui-controls/wm-*.txt`, `tui-80deep/wm80-grandchild-*.txt`, `tui-file-final/wm-final-child-resize-visible.txt`, `records/terminal-native-final-ctrlq.txt`, `records/terminal-native-final-ctrlaltcmdq-keycode.txt`, `records/kitty-direct3-screen.txt`, `kitty-direct4-screen.txt`. |
-| Live palette and clipping regression | PASS scoped | Fresh true-SGR motion/down/up selected all six themes at 120×40, including Pink at its actual glyph (x67,y3, hover underline inspected), and restored SkyBlue; the same six-theme sequence passed at 80×25. Physical/displayed palette appearance remains unverified. Resize and child overlays were captured. Evidence `tui-deep/palette-*.txt`, `tui-pink-pointer/pink-pointer-*.txt`, `tui-80deep/palette80-*.txt`. |
-| Exit | PASS scoped | Fresh runs exercised all four Hide/Close buttons and both Stop buttons: every path exited 0 and the bridge reported `termios_restored: true`. Cancellation replay kept the app alive with closing queries and ready=0 before normal Stop. Evidence `records/exit-six-results.json`, `tui-exit-cancel/exit2-*.txt`. |
-| Linux/macOS terminal comparison record card | PASS scoped | Fresh Apple Terminal.app 2.15 Basic at 120×40 received native System Events Ctrl+Q and displayed `You pressed Ctrl+Q!`; native Ctrl+Alt+Command+Q was attempted but produced no TUI dialog. The earlier bounded System Events Ctrl+Shift+Alt+Command+F8 also displayed the exact global message. Kitty 0.48.2 retry generated Ctrl+Q and Ctrl+Alt+Super+Q dialogs through its screen API. These are native System Events or generated terminal events; physical input and final font/color/cursor appearance remain unverified. Evidence `records/terminal-native-final-startup.txt`, `records/terminal-native-final-ctrlq.txt`, `records/terminal-native-final-ctrlaltcmdq-keycode.txt`, `records/tui-global-f8-*.txt`, `records/kitty-direct*-screen.txt`. |
-| Verification record (historical, before follow-up 3) |  | Historical row retained for SOP completeness; no current result claimed. |
-| Follow-up 3 verification (2026-09-09) |  | Historical row retained for SOP completeness; no current result claimed. |
-| Packaged tutorial checks (follow-up 3) |  | Historical row retained for SOP completeness; no current result claimed. |
-| Follow-up 3 continuation verification (2026-09-09) |  | Historical row retained for SOP completeness; no current result claimed. |
-| Follow-up 4 verification (2026-09-09) |  | Historical row retained for SOP completeness; no current result claimed. |
+| Test Item | 1st |
+| --- | --- |
+| Build / resource generation / import / sync | 2026-10-15 17:40 (passed) |
+| Unit tests | GacUI: 94 files, 1,837 cases passed |
+| Platform launch and terminal/input capabilities | 2026-10-15 (PTY launch/rejected options passed; native input limits below) |
+| Startup, platform services and teardown | 2026-10-15 (PTY 100x30/80x25 startup and six shutdown paths passed) |
+| Follow-up regression checks | 2026-10-15 (PTY editing/popup/resize subset exercised; limits below) |
+| List / TextList | 2026-10-15 (Native Add/Clear; PTY styles, mutations and retention passed) |
+| List / ListView | 2026-10-15 (Native six views/source rotation; effective Detail retained) |
+| List / TreeView | 2026-10-15 (Native all roots/children and source rotation passed) |
+| List / BindableDataGrid | 2026-10-15 (PTY five editors, default filters, sorts, views and retention passed) |
+| Refresh List / TextList | 2026-10-15 (Native Check/Uncheck/Read passed) |
+| Refresh List / BindableTextList | 2026-10-15 19:01 (PTY mutations passed) |
+| Refresh List / ListView | 2026-10-15 19:02 (PTY cycles passed) |
+| Refresh List / BindableListView | 2026-10-15 19:02 (PTY cycles passed) |
+| Refresh List / TreeView | 2026-10-15 19:01 (PTY mutations passed) |
+| Refresh List / BindableTreeView | 2026-10-15 19:01 (PTY mutations passed) |
+| Refresh List / BindableDataGrid | 2026-10-15 19:02 (PTY cycles passed) |
+| Layout / Repeat / RepeatStack | 2026-10-15 19:01:41 (PTY controller sequence passed) |
+| Layout / Repeat / RepeatFlow | 2026-10-15 19:01:41 (PTY controller sequence passed) |
+| Layout / Repeat / SharedSize (RepeatFlow) | 2026-10-15 19:01:41 (PTY controller sequence passed) |
+| Layout / Repeat / SharedSize (TextList) | 2026-10-15 19:01:41 (PTY controller sequence passed) |
+| Layout / Responsive | 2026-10-15 19:03:02 (PTY levels/state/resize passed) |
+| Control / Document Editor (Toolstrip) | 2026-10-15 (PTY editing, objects, alignment, modes and format dialogs passed) |
+| Control / TextBox / TextBox | 2026-10-15 19:17:44 (PTY editing, Tab behavior and retention) |
+| Control / TextBox / TextBox (No Tab) | 2026-10-15 19:17:44 (PTY editing, Tab behavior and retention) |
+| Control / TextBox / Document | 2026-10-15 19:17:44 (PTY editing, Tab behavior and retention) |
+| Control / TextBox / Document (No Tab) | 2026-10-15 19:17:44 (PTY editing, Tab behavior and retention) |
+| Control / Embedded Controls | 2026-10-15 19:17:44 (PTY combo and modal passed) |
+| Misc / Localization | 2026-10-15 19:17:44 (PTY translated labels; POSIX format limitation) |
+| Compact dialog and form layout checks | 2026-10-15 (PTY compact fields, popups and 80x25/120x40 resize exercised) |
+| Misc / Dialogs / MessageDialog | 2026-10-15 19:17:44 (PTY button/output/icon/default cases passed) |
+| Misc / Dialogs / ColorDialog | 2026-10-15 19:21:09 (PTY RGB accept/reopen/cancel/resize passed) |
+| Misc / Dialogs / FontDialog | 2026-10-15 19:21:09 (PTY simple/effects/nested color/retention/resize passed) |
+| Misc / Dialogs / Open/Save FileDialog | 2026-10-15 19:29:22 (PTY selection/filter/path validation/confirmations/resize) |
+| Misc / DatePicker | 2026-10-15 19:29:22 (PTY leap day/four independent values/retention/resize) |
+| Window Manager | 2026-10-15 (PTY local shortcuts, three buttons, wheels and child windows passed; OS checks unavailable) |
+| Live palette and clipping regression | 2026-10-15 (PTY six palettes, resize, retained edits and keyboard radio passed) |
+| Exit | 2026-10-15 (All four canceled requests; six fresh normal exits and shell restoration passed) |
+| Packaged tutorial checks (when requested) |  |
+| Linux/macOS legacy-terminal and Kitty comparison (when applicable) | 2026-10-15 (Apple Terminal partial native checks; Kitty/physical keys unavailable) |
 
-## Current run contract
+## Observations and Limitations
 
-- Legacy terminal first: Apple Terminal.app 2.15, Basic profile. Kitty 0.48.2 is a retry only for supported modifier delivery after a legacy failure.
-- Launch `./test.sh --app:tui` in the foreground with inherited terminal input/output. `--unblock`, `--hosted`, and `--port` are invalid for this target.
-- PTY/CSI/SGR replay proves decoder/application behavior only. Native terminal-generated input and physical input are recorded separately.
-- Native System Events delivery was verified for Ctrl+Q and Ctrl+Shift+Alt+Command+F8 in Apple Terminal; Ctrl+Alt+Command+Q did not produce a TUI dialog in the bounded run. Physical input, final colors/fonts/cursor, and unsupported modifier/mouse paths remain unverified.
-- Evidence directory: `/tmp/rpxplat-20260921`; every owned TUI, terminal, and helper process is cleaned up after each run.
+Packaged tutorial verification was not requested; its row remains blank. Wasm is excluded by request. Results distinguish actual terminal mouse input from SGR/CSI/UTF-8 replay and decoded terminal output. They do not establish physical keyboard delivery or displayed font/color fidelity.
 
-Rows marked PARTIAL or PASS scoped identify the exact replay coverage and the native/desktop observations that remain unverified.
+Apple Terminal rendered the fresh showcase and delivered a Quartz mouse click that added exact 0–9 to both TextLists, followed by Clear. Native ListView checks requested all six views, retained effective Detail and both datasets, and rotated only the right source away/back. Native TreeView checks expanded/collapsed all four roots in both panes, including all six Blue children, and restored the rotated source. Native Refresh TextList Check/Uncheck/Read returned true/false correctly.
+
+The initial owned Terminal run was stopped after checking its window ID, tty and process ownership. Accessibility subsequently returned -25211. After the user's window-targeting warning, desktop input helpers were disabled; remaining input targeted only the test PTY master fd. No generic desktop typing was used for the remaining checks.
+
+PTY TextList checks covered fresh positional removals (odd-caption leaves 1/3/5/7/9; even-caption leaves 0/2/4/6/8), two additions producing 0–19, all three styles, Dummy checks/radios, source rotation and counter continuation after Clear. Refresh bindable text/tree pages retained changed names/titles and check state. Refresh list/grid pages completed all four DataColumn states, column/subcolumn cycles and requested-view fallback; returning to DataGrid retained an edited File value. Original BindableDataGrid retained all five appropriate editor changes, including CJK/supplementary Name text, Gender, Category, Birthday and Website, through source rotation, six Detail fallbacks, DataGrid restoration and viewport changes. Default From/To/both filters produced 3/4/2 rows, with the expected two names; all five headers completed their three sort states.
+
+All four Repeat pages completed Clear/Reset/Add, both positional-removal sequences, continuing counters and 80x25/120x40 resizing. Responsive View/Stack/Group completed their 4/7/4 levels and boundaries while retaining a unique editor marker through tab changes and resizing.
+
+The Toolstrip editor retained its marker and history through text replacement, cut/copy/paste, undo/redo, four style toggles, color-dialog cancellation, alignment changes and Preview/Selectable/Editable behavior. Hyperlink activation displayed the exact URL; canceling an edit preserved it, and removal completed. Image selection cancellation, insertion of the textual 16x16 image object, cut/delete and undo/redo passed. All four format callbacks displayed their explanatory not-implemented messages with the selected path/format and created no output files. Long explanatory messages required widening to 240 columns to inspect the complete text. Persistence is an existing unimplemented sample behavior.
+
+All four TextBox/Document leaves retained independent markers, CJK/supplementary text, original poem/title content, undo/redo and font-size changes. Tab-enabled pages inserted TAB; No Tab pages traversed focus. Embedded Controls retained its combo selection and displayed/dismissed the exact RIGHT NOW modal. These are terminal-byte tests, not physical IME delivery or exhaustive live tab-stop geometry checks.
+
+Localization switched en-US/zh-CN/en-US labels and all three dollar sentences while retaining the stored time. POSIX date/number formatting remained en-US, matching the existing locale-service limitation. MessageDialog exercised every button set/output, all icons and second/third defaults. ColorDialog accepted/reopened RGB 12/34/56 as #0C2238 and preserved it on Cancel. FontDialog exercised simple/effects forms, all four effects, nested color acceptance, reopen/cancel and resize. The fake color service has no custom-color persistence. ReadOnlyCheckBox, DereferenceLinks, NetworkButton and AddToRecent remain inert fake-file options.
+
+File dialogs selected one and multiple fixture files, changed text/XML filters, navigated a subdirectory, validated a missing file, appended a default extension, and exercised both Cancel/OK create and overwrite confirmations without creating files. Picker Cancel preserved the previous selection. Compact forms and open dialogs were resized to 80x25 and restored. DatePicker selected leap day 2024-02-29 and independent values in all four controls, retaining them across tab changes and resize.
+
+Window Manager delivered exact Ctrl+Q and CSI-u Ctrl+Alt+Super+Q dialogs. SGR replay checked Left/Middle/Right down/up, double-click/movement and both wheel axes across eight Shift/Alt/Ctrl combinations. The POSIX decoder rejects Mouse4/Mouse5 and SGR has no Super bit; these inputs are not passed. Child and grandchild windows were overlapped, moved, resized, clipped at 80x25, restored and closed. Enabled Border/SizeBox/IconVisible/TitleBar options toggled; unavailable options remained unchanged. Local keyboard payloads do not verify Carbon global registration or native left/right Command delivery.
+
+All six palettes and return to SkyBlue were checked with exactly one selected radio at 120x40, 80x25 and restored 120x40. Shift+Tab plus Enter selected the previous radio. Retained document/image content, undo/redo and edited grid data survived palette changes. Full physical color-state comparison, every keyboard-only palette permutation, arbitrary caption editing, queued refresh inside a modal, cross-application clipboard transfer and native global shortcuts remain unverified in this environment.
+
+Exit checks first canceled all four Hide/Close buttons and observed invocation/query counts 1 through 4 with ready=0. Each accepted direct/queued Hide/Close and both Stop buttons then ran on a fresh PTY, after opening/dismissing a hosted dialog and changing pages. All six exited 0. Captures confirmed reset/mouse-disable/alternate-buffer/cursor-restoration sequences, restored persistent termios fields, and a shell read/echo of an exact input marker. Fresh startup at 100x30 and 80x25 was captured before resizing. Accepted notification ordering, reentrancy and listener-removal behavior are additionally covered by the passing GacUI provider regressions; the last notification need not be painted before exit.
+
+## Issues Found and Fix
+
+No new TUI product fix was required. Harness corrections included waiting for rendered state after resize/palette changes, choosing the actual short button caption instead of an underlying title, dismissing a grid editor by selecting another cell, and using Enter for POSIX radio activation. The hyperlink dialog intentionally starts empty on every invocation; retained URLs were checked by activation.
+
+A strict termios comparison initially differed only in macOS's transient PENDIN flag. An independent PTY raw-mode/restore probe reproduced that kernel behavior without GacUI. All persistent termios fields matched; normal shell input and output were verified separately. The comparison excludes only PENDIN.
+
+## Terminal Comparisons
+
+Apple Terminal's native mouse coverage and the owned PTY's decoded-output/input-byte coverage are separate. Accessibility denial prevented a physical Command/global-key retry and the requested legacy-terminal/Kitty comparison. No Kitty or physical keyboard success is claimed. Temporary PTY logs, decoded captures and exit results are retained locally under <iGac repo>/build/task4; they are ignored diagnostic artifacts, not committed source.

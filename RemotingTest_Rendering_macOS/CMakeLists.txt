@@ -30,6 +30,8 @@ set(APP_NAME "RemotingTest_Rendering_macOS")
 set(APP_SOURCE_FILES
 	"GuiMain.cpp"
 	"Main.cpp"
+	"../MacShared/FullControlTestRawElement.cpp"
+	"../MacShared/FullControlTestRawElementRemote.cpp"
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
 add_executable(${APP_NAME} MACOSX_BUNDLE ${APP_SOURCE_FILES})

@@ -55,8 +55,47 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 | `GuiImageFrameElementRenderer` | Image display |
 | `GuiPolygonElementRenderer` | Polygon shapes using `CGMutablePathRef` |
 | `GuiCoreGraphicsElementRenderer` | Custom CoreGraphics drawing element |
+| `GuiCocoaElementRenderer` | `<Raw/>` drawing through `GuiRawElementBase`, with callback-scoped CoreGraphics access |
 | `GuiInnerShadowElementRenderer` | Inner shadow effect using linear gradients (4 sides) and radial gradients (4 corners). Thickness is clamped to `min(width/2, height/2)`. |
 | `GuiFocusRectangleElementRenderer` | Focus indicator drawn as a 1px dashed border using macOS `keyboardFocusIndicatorColor`. |
+
+### Raw Cocoa Drawing
+
+`GuiCocoaElement` and its renderer live in `<iGac repo>/Mac/GraphicsElement/CoreGraphics/GuiCocoaElement.h/.cpp`.
+The element derives from `GuiRawElementBase` and supplies its own concrete factory.
+`CoreGraphicsResourceManager::CreateRawElement()` returns it in standard, hosted and
+native remote modes. The portable Core continues using its own raw element and
+transmits only the numeric renderer ID, application string ID and string data.
+
+Subscribe to `GuiCocoaElement::Rendering` for the element, bounds and borrowed
+`CGContextRef`. The context is valid only during that callback: do not retain or
+release it, retain its backing layer, or begin/end another frame. The renderer
+queries the current target on every paint, so resizing or replacing a layer does
+not leave a cached native context. No target-bound drawing resources or additional
+target-change events are needed.
+
+The callback uses the existing logical coordinates, Retina transform, hosted
+offsets and parent clip, intersected with the element bounds. The renderer restores
+graphics state, the text matrix and current path afterward. Empty clips and absent
+targets/contexts do not invoke the callback. The element has no intrinsic minimum
+size. Changed Data invalidates drawing; changed Id alone does not, and equal
+assignments do nothing.
+
+The FullControlTest clock attachments are test utilities under
+`<iGac repo>/MacShared/FullControlTestRawElement*.h/.cpp`, compiled directly into
+the local FCT and native remote renderer targets. They draw only
+`FullControlTest.Clock` with valid `HH:mm:ss` data; the application timer owns time
+updates. Keep the local attachment alive through the window run. The remote
+collection attachment subscribes before protocol dispatch, enumerates existing
+elements for late attachment, tracks identity across duplicate/empty IDs, and
+detaches when an ID changes away or an element is uninstalled. Destroy it before
+the renderer. Disconnected and fatal retained pictures keep their attachments
+until actual teardown.
+
+`<iGac repo>/MacTest/RawElement.cpp` verifies factory/state behavior in ordinary
+and hosted setup, bitmap pixels and callback isolation at two scales, target
+replacement, and the native remote collection/repaint lifecycle. Live local,
+hosted and remote clock checks are recorded in `<iGac repo>/TestMatrix_NativeRenderer.md`.
 
 ### Text Layout
 

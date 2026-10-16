@@ -35,6 +35,12 @@ Compare with the Windows implementation (`SetupWindowsDirect2DRendererInternal` 
 
 The standard mode entry point `SetupOSXCoreGraphicsRenderer()` passes `nullptr` for the hosted controller, so `CoreGraphicsMain` behaves identically to before.
 
+Hosted window management does not automatically replace the native dialog service.
+Local FullControlTest, including `--hosted`, still uses Cocoa message boxes for
+shortcut notifications. These dialogs are outside the GacUI automation tree and
+need macOS Accessibility access for automated dismissal. Remote Core and the TUI
+showcase explicitly use their fake dialog services instead.
+
 **Header:** `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` declares both `SetupOSXCoreGraphicsRenderer()` and `SetupOSXHostedCoreGraphicsRenderer()`.
 
 ## CoreGraphicsMain — Hosted vs Standard
@@ -111,6 +117,13 @@ The macOS-specific code implements only `StartRenderingOnNativeWindow()` and `St
 4. Calls `SetCurrentRenderTarget(0)`
 
 The per-virtual-window clipping (via `PushClipper`/`PopClipper`) uses `CGContextSaveGState`/`CGContextRestoreGState` with `CGContextClipToRect`, which works correctly in both modes since all virtual windows share the same `CGContext`.
+
+Hosted `<Raw/>` elements use `GuiCocoaElement` through the wrapped native resource
+manager. Their rendering callbacks borrow this same context with the current
+hosted offset, parent clip and Retina transform; they do not start a separate
+frame. The raw renderer restores the callback's graphics state, text matrix and
+current path before the next element or virtual window draws. See
+[raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing).
 
 ### Hosted Rendering Sequence (per frame)
 

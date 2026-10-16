@@ -40,6 +40,7 @@ list(FILTER FULL_CONTROL_TEST_GENERATED_SOURCES EXCLUDE REGEX "Reflection\\.cpp$
 set(APP_NAME "Test_FullControlTest")
 set(TESTAPP_SOURCE_FILES
 	"Main.mm"
+	"../MacShared/FullControlTestRawElement.cpp"
 	${FULL_CONTROL_TEST_GENERATED_SOURCES}
 )
 set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.darkfall.iGac.${APP_NAME}")
