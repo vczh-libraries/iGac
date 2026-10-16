@@ -115,7 +115,7 @@ namespace rptest
 		::vl::presentation::compositions::GuiBoundsComposition* __vwsn_precompile_11;
 		::vl::presentation::compositions::GuiCellComposition* __vwsn_precompile_12;
 		::vl::presentation::compositions::GuiCellComposition* __vwsn_precompile_13;
-		::vl::Ptr<::vl::presentation::elements::IGuiGraphicsElement> __vwsn_precompile_14;
+		::vl::Ptr<::vl::presentation::elements::GuiRawElementBase> __vwsn_precompile_14;
 		void __vwsn_rptest_ClickMeTab_Initialize(::rptest::ClickMeTab* __vwsn_this_);
 	public:
 		ClickMeTabConstructor();
