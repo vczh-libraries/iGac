@@ -15,7 +15,7 @@ All hosted mode infrastructure — `GuiHostedController`, `GuiHostedGraphicsReso
 ### Why Hosted Mode?
 
 - **Embedding**: GacUI can be embedded inside another application's window (e.g., a game engine editor, a plugin host).
-- **Remote rendering**: Hosted mode is a prerequisite for the remote protocol — the remote renderer operates in forced hosted mode since it has no real native windows.
+- **Remote rendering**: The remote Core uses hosted virtual windows. The native remote renderer uses `SetupRawOSXCoreGraphicsRenderer()` and renders the received composition tree into a real Cocoa window without wrapping its controller in hosted mode.
 - **Consistency**: All popups, menus, and dialogs stay within the host window boundary.
 
 ## Entry Point
@@ -28,12 +28,12 @@ All hosted mode infrastructure — `GuiHostedController`, `GuiHostedGraphicsReso
 2. Creates a `GuiHostedController` wrapping the native controller
 3. Calls `SetNativeController(hostedController)` — registers the hosted controller as the global controller (so `GetCurrentController()` returns `GuiHostedController`)
 4. Calls `SetHostedApplication(hostedController->GetHostedApplication())` — makes `GetHostedApplication()` available to application code
-5. Calls `CoreGraphicsMain(nativeController, hostedController)` — passes **both** the native controller and the hosted controller
+5. Calls `CoreGraphicsMain(nativeController, hostedController, false)` — passes **both** controllers and selects the normal GacUI application entry point
 6. Cleans up: `SetNativeController(nullptr)`, deletes the hosted controller, calls `StopOSXNativeController()`
 
 Compare with the Windows implementation (`SetupWindowsDirect2DRendererInternal` in `GacUI.Windows.cpp`), which follows the identical pattern: create the native controller, optionally wrap it in `GuiHostedController`, pass both to the renderer main function.
 
-The standard mode entry point `SetupOSXCoreGraphicsRenderer()` passes `nullptr` for the hosted controller, so `CoreGraphicsMain` behaves identically to before.
+The standard mode entry point `SetupOSXCoreGraphicsRenderer()` passes `nullptr` for the hosted controller and `false` for the raw flag. The native remote entry point `SetupRawOSXCoreGraphicsRenderer()` passes `nullptr` and `true`, selecting `GuiRawMain()` after registering the same native renderers. This entry-point flag is independent of the XML `<Raw/>` element, which works in all three graphical setups.
 
 Hosted window management does not automatically replace the native dialog service.
 Local FullControlTest, including `--hosted`, still uses Cocoa message boxes for
@@ -41,13 +41,13 @@ shortcut notifications. These dialogs are outside the GacUI automation tree and
 need macOS Accessibility access for automated dismissal. Remote Core and the TUI
 showcase explicitly use their fake dialog services instead.
 
-**Header:** `Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` declares both `SetupOSXCoreGraphicsRenderer()` and `SetupOSXHostedCoreGraphicsRenderer()`.
+**Header:** `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` declares `SetupOSXCoreGraphicsRenderer()`, `SetupOSXHostedCoreGraphicsRenderer()` and `SetupRawOSXCoreGraphicsRenderer()`.
 
 ## CoreGraphicsMain — Hosted vs Standard
 
 **File:** `Mac/GraphicsElement/CoreGraphics/GuiGraphicsCoreGraphics.mm`
 
-`CoreGraphicsMain(INativeController* nativeController, GuiHostedController* hostedController)` handles both modes. The key difference is in resource manager wrapping and the initialize/finalize lifecycle.
+`CoreGraphicsMain(INativeController* nativeController, GuiHostedController* hostedController, bool raw)` handles all three graphical setups. The hosted controller selects resource manager wrapping and the initialize/finalize lifecycle; `raw` selects `GuiRawMain()` instead of `GuiApplicationMain()`.
 
 ### Listener Installation
 

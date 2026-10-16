@@ -61,11 +61,18 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 
 ### Raw Cocoa Drawing
 
+`<Raw/>` is the standard, recommended GacUI owner-drawing element for local and
+remote graphical applications. Set `Id` and `Data` in XML or C++, give the owning
+composition useful bounds or a minimum size, and attach native drawing in C++.
+The TUI backend does not support `<Raw/>` and rejects its creation.
+
 `GuiCocoaElement` and its renderer live in `<iGac repo>/Mac/GraphicsElement/CoreGraphics/GuiCocoaElement.h/.cpp`.
 The element derives from `GuiRawElementBase` and supplies its own concrete factory.
 `CoreGraphicsResourceManager::CreateRawElement()` returns it in standard, hosted and
 native remote modes. The portable Core continues using its own raw element and
 transmits only the numeric renderer ID, application string ID and string data.
+There are no native contexts or rendered pixels in this descriptor; a browser
+client supplies its own page-owned painter for the same state.
 
 Subscribe to `GuiCocoaElement::Rendering` for the element, bounds and borrowed
 `CGContextRef`. The context is valid only during that callback: do not retain or
@@ -80,6 +87,18 @@ graphics state, the text matrix and current path afterward. Empty clips and abse
 targets/contexts do not invoke the callback. The element has no intrinsic minimum
 size. Changed Data invalidates drawing; changed Id alone does not, and equal
 assignments do nothing.
+
+`GuiRawElementBase` has no `IdChanged` or `DataChanged` event. In remote mode,
+dirty state is batched into frames: an isolated `Id` change waits for the next
+otherwise-required frame, while a `Data` change schedules one. Attach drawing
+in the renderer process through `GuiRemoteRendererSingle`'s `RawElementInstalled`,
+`RawElementChanged` and `RawElementUninstalled` events, with `GetRawElements()`
+for late subscription. Installation occurs with empty strings and before target
+assignment. Descriptors apply both strings before one changed event. Uninstall
+callbacks still see the element in the collection and can detach handlers;
+the renderer then clears its render target and removes it. Empty and duplicate
+application IDs are valid, so track element identity. Resize and target
+recreation do not reinstall the element.
 
 The FullControlTest clock attachments are test utilities under
 `<iGac repo>/MacShared/FullControlTestRawElement*.h/.cpp`, compiled directly into

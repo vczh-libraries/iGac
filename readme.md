@@ -225,9 +225,17 @@ does not copy the Windows clock helpers. The local FCT and native remote rendere
 compile the Cocoa helpers directly, while `GacOSX` supplies the reusable
 `GuiCocoaElement` from `<iGac repo>/Mac/GraphicsElement/CoreGraphics`.
 The shared renderer entry point's macOS attachment hook is maintained upstream
-and survives synchronization. `<Raw/>` now creates this element in ordinary,
+and survives synchronization. `<Raw/>` creates this element in ordinary,
 hosted and native remote modes. See [the drawing contract](doc/OSProvider_Graphics.md#raw-cocoa-drawing)
 for callback lifetime, clipping and received clock data.
+
+Use `<Raw/>` as the standard, recommended owner-drawing element for local and
+remote graphical applications. XML provides `Id` and `Data` through
+`GuiRawElementBase`; C++ subscribes to `GuiCocoaElement::Rendering` to draw with
+the callback's borrowed `CGContextRef`. The Core sends drawing state to remote
+clients, whose platform or browser code performs the drawing. Supply a useful
+composition size and retain/detach drawing handlers with their owner. TUI does
+not support `<Raw/>`.
 
 Each generated application also has an embedded-resource `.cpp` file. Full Control Test links `FullControlTestResource.cpp`, whose plugin loads the resource from compiled data; no `.bin` file is bundled or located at runtime.
 
@@ -235,7 +243,7 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 
 ```bash
 ./build.sh              # Incremental build
-./build.sh --rebuild    # Clean build (git clean -xdf + full rebuild)
+./build.sh --rebuild    # Clean build (git clean -Xdf + full rebuild)
 ```
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
@@ -355,7 +363,6 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 - VKEY mapping is quite big, should be shorter
 - Not Implemented:
   - `AsyncService::Semaphore::WaitForTime`
-  - `CoreGraphicsResourceManager::CreateRawElement`
   - `CocoaWindow::GetIcon` and `SetIcon`
 
 ## Planning

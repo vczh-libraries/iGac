@@ -35,7 +35,7 @@ The standard mode entry point is `SetupOSXCoreGraphicsRenderer()` (in `CoreGraph
 
 1. Calls `StartOSXNativeController()` — instantiates the Cocoa controller
 2. Calls `SetNativeController(GetOSXNativeController())` — registers it as the global controller
-3. Calls `CoreGraphicsMain()` — sets up the graphics resource manager, registers element renderers, and runs `GuiApplicationMain()`
+3. Calls `CoreGraphicsMain(nativeController, nullptr, false)` — sets up the graphics resource manager, registers element renderers, and runs `GuiApplicationMain()`
 4. Calls `StopOSXNativeController()` — cleans up
 
 ### Hosted Mode — `SetupOSXHostedCoreGraphicsRenderer()`
@@ -46,10 +46,28 @@ The hosted mode entry point is `SetupOSXHostedCoreGraphicsRenderer()` (in `CoreG
 2. Creates a `GuiHostedController` wrapping the native controller — virtualizes window management
 3. Calls `SetNativeController(hostedController)` — registers the hosted controller as the global controller
 4. Calls `SetHostedApplication(hostedController->GetHostedApplication())` — makes the hosted application interface available
-5. Calls `CoreGraphicsMain(hostedController)` — sets up the resource manager (wrapped in `GuiHostedGraphicsResourceManager`), registers element renderers, calls `hostedController->Initialize()`/`Finalize()`, and runs `GuiApplicationMain()`
+5. Calls `CoreGraphicsMain(nativeController, hostedController, false)` — sets up the resource manager (wrapped in `GuiHostedGraphicsResourceManager`), registers element renderers, calls `hostedController->Initialize()`/`Finalize()`, and runs `GuiApplicationMain()`
 6. Cleans up the hosted controller and calls `StopOSXNativeController()`
 
 `GuiHostedController`, `GuiHostedGraphicsResourceManager`, and all supporting types are platform-independent and live in `GacUI.cpp`/`GacUI.h`.
+
+### Native Remote Renderer — `SetupRawOSXCoreGraphicsRenderer()`
+
+All three entry points delegate to `SetupOSXCoreGraphicsRendererInternal(hosted, raw)`
+in `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm`. The native
+remote renderer passes `(false, true)`: it keeps the native Cocoa controller,
+registers the CoreGraphics element renderers, and calls `GuiRawMain()` instead
+of `GuiApplicationMain()`. `GuiRemoteRendererSingle` owns the real native window
+and renders the Core's protocol output there. The remote Core uses hosted
+virtual windows; the native renderer does not wrap its controller in hosted mode.
+
+This raw entry-point mode is separate from the XML `<Raw/>` graphics element.
+The element is supported in standard, hosted and native remote modes through
+`CoreGraphicsResourceManager::CreateRawElement()`, which creates `GuiCocoaElement`.
+Its renderer exposes the current `CGContextRef` during `Rendering`; application
+`Id`/`Data` state remains in `GuiRawElementBase`. See
+[raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing) for owner drawing,
+remote lifecycle and the TUI restriction.
 
 ## GetCurrentController() vs GetOSXNativeController()
 
