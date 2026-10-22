@@ -149,9 +149,16 @@ font.
 
 ### Global Timer
 
-`CocoaInputService` runs a GCD timer. On each tick it calls `GlobalTimerFunc()` which:
-1. Executes pending async tasks via `SharedAsyncService`
-2. Invokes the global timer, which triggers GacUI's render loop for all windows
+`CocoaInputService` runs a GCD timer. Each tick calls `GlobalTimerFunc()` to post
+one coalesced application-defined Cocoa event. `RunOneCycle()` consumes that
+event, executes pending async tasks via `SharedAsyncService`, and invokes the
+global timer to render windows.
+
+Application callbacks run after the GCD block returns. This lets a queued task
+open a hosted modal dialog while its nested event loop continues receiving timer
+events, rendering and queued automation input. Calling application code inside
+the GCD block would prevent the next tick from being scheduled until that modal
+closes. Pending timer events are ignored while the input timer is disabled.
 
 ## Service Implementations
 

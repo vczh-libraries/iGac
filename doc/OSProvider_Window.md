@@ -152,6 +152,24 @@ The framework layer (`GuiControlHost::GetEnabled()`) delegates to `native->IsEna
 - `Disable()` used `[nsWindow orderOut:nil]` which hid the window entirely.
 - Later `Disable()` used `[nsWindow setIgnoresMouseEvents:YES]` which made clicks pass through to whatever was behind the window, deactivating the app.
 
+## Native touch applicability
+
+iGac does not acquire native touch input in standard, hosted or remote-renderer
+mode. The imported `INativeWindowListener` point callbacks already provide empty
+default implementations; Cocoa does not add a point acquisition or gesture
+recognition subsystem. Mouse, trackpad wheel and keyboard input retain their
+existing paths.
+
+`CocoaAutomationServiceBase::RunIOCommandInternal` in
+`<iGac repo>/Mac/NativeWindow/CocoaAutomationService.cpp` does not supply point
+state to `RunIOCommandOnNativeWindow`, so point automation commands return
+`Unsupported: point input is unavailable on this native window adapter.`
+Synthetic input on a remote Core does not establish native
+Cocoa touch support. Native Touching and TouchingList gesture checks may be
+skipped, while Raw Clock and ordinary mouse/keyboard checks remain applicable.
+GacJS browser touch input on macOS has its own acquisition path and is still
+verified separately.
+
 ## CocoaBaseView
 
 **File:** `Mac/NativeWindow/OSX/CocoaBaseView.mm`

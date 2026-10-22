@@ -35,11 +35,16 @@ Compare with the Windows implementation (`SetupWindowsDirect2DRendererInternal` 
 
 The standard mode entry point `SetupOSXCoreGraphicsRenderer()` passes `nullptr` for the hosted controller and `false` for the raw flag. The native remote entry point `SetupRawOSXCoreGraphicsRenderer()` passes `nullptr` and `true`, selecting `GuiRawMain()` after registering the same native renderers. This entry-point flag is independent of the XML `<Raw/>` element, which works in all three graphical setups.
 
-Hosted window management does not automatically replace the native dialog service.
-Local FullControlTest, including `--hosted`, still uses Cocoa message boxes for
-shortcut notifications. These dialogs are outside the GacUI automation tree and
-need macOS Accessibility access for automated dismissal. Remote Core and the TUI
-showcase explicitly use their fake dialog services instead.
+`GuiHostedController` leaves its dialog service unset, so framework initialization
+installs `FakeDialogServiceBase`. FullControlTest with `--hosted` therefore uses
+hosted shortcut dialogs visible in the automation tree. Standard FullControlTest
+uses Cocoa message boxes outside that tree; automated dismissal requires macOS
+Accessibility access. Remote Core and the TUI also use fake dialog services.
+
+The Cocoa timer posts an event before invoking application callbacks. This keeps
+rendering and queued input running when a shortcut opens a hosted dialog inside
+an automation task. `<iGac repo>/MacTest/HostedModal.cpp` checks two consecutive
+modal openings, timer delivery, queued dismissal and normal main-window exit.
 
 **Header:** `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` declares `SetupOSXCoreGraphicsRenderer()`, `SetupOSXHostedCoreGraphicsRenderer()` and `SetupRawOSXCoreGraphicsRenderer()`.
 

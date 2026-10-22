@@ -166,6 +166,7 @@ namespace vl {
             using namespace collections;
             
             void GlobalTimerFunc();
+            constexpr short GlobalTimerEventSubtype = 1;
             
             class CocoaController : public Object, public virtual INativeController, public virtual INativeWindowService
             {
@@ -184,6 +185,7 @@ namespace vl {
                 
                 CocoaApplicationDelegate*               appDelegate;
                 INativeCallbackService*                 applicationEnvironmentCallbackService = nullptr;
+                bool                                    globalTimerEventPending = false;
                                 
             public:
                 CocoaController():
@@ -289,7 +291,19 @@ namespace vl {
                                                               dequeue:YES];
                         if (event != nil)
                         {
-                            [NSApp sendEvent:event];
+                            if ([event type] == NSEventTypeApplicationDefined && [event subtype] == GlobalTimerEventSubtype)
+                            {
+                                globalTimerEventPending = false;
+                                if (inputService.IsTimerEnabled())
+                                {
+                                    asyncService.ExecuteAsyncTasks();
+                                    callbackService.InvokeGlobalTimer();
+                                }
+                            }
+                            else
+                            {
+                                [NSApp sendEvent:event];
+                            }
                             [NSApp updateWindows];
                         }
                         asyncService.ExecuteAsyncTasks();
@@ -399,14 +413,22 @@ namespace vl {
                 
                 //=======================================================================
                 
-                void InvokeGlobalTimer()
+                void PostGlobalTimerEvent()
                 {
-                    callbackService.InvokeGlobalTimer();
-                }
-
-                void ExecuteAsyncTasks()
-                {
-                    asyncService.ExecuteAsyncTasks();
+                    if (globalTimerEventPending) return;
+                    globalTimerEventPending = true;
+                    // Leave the GCD callback before running application code. A task
+                    // can open a hosted modal and pump another Cocoa event loop.
+                    NSEvent* event = [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                                                      location:NSMakePoint(0, 0)
+                                                 modifierFlags:0
+                                                     timestamp:0
+                                                  windowNumber:0
+                                                       context:nil
+                                                       subtype:GlobalTimerEventSubtype
+                                                         data1:0
+                                                         data2:0];
+                    [NSApp postEvent:event atStart:NO];
                 }
 
                 void SetApplicationEnvironmentCallbackService(INativeCallbackService* value)
@@ -473,8 +495,7 @@ namespace vl {
             {
                 if (cocoaController)
                 {
-                    cocoaController->ExecuteAsyncTasks();
-                    cocoaController->InvokeGlobalTimer();
+                    cocoaController->PostGlobalTimerEvent();
                 }
             }
 

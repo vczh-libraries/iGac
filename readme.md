@@ -91,10 +91,11 @@ iGac/
 │   ├── osx_shared.h/mm         OS X helpers (string conversion, file utils, resource folder)
 │   └── UnixFileSystemInfo.*    Cross-platform file system utilities
 │
-├── MacTest/                    Simple test app (Hello World)
+├── MacTest/                    Hello World, Raw element and hosted modal tests
 │   ├── CMakeLists.txt
 │   ├── HelloWorlds/Cpp/Main.cpp
-│   └── RawElement.cpp          Focused Cocoa raw-element and remote-lifecycle tests
+│   ├── RawElement.cpp          Focused Cocoa raw-element and remote-lifecycle tests
+│   └── HostedModal.cpp         Nested modal timer/input regression
 │
 ├── MacFullControlTest/         Full-featured test app using BlackSkin control template
 │   ├── CMakeLists.txt
@@ -248,13 +249,17 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
 
-The official build also produces the focused raw-element tests. Run them in both
-setups after `./build.sh`:
+The official build also produces Raw element and hosted modal regression tests.
+Run these after `./build.sh`:
 
 ```bash
 ./build/MacTest/bin/Test_RawElement /C
 ./build/MacTest/bin/Test_RawElement /C --hosted
+./build/MacTest/bin/Test_HostedModal /C
 ```
+
+The modal test opens two dialogs from queued application work and requires
+continued timer delivery, queued dismissal and normal shutdown.
 
 For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
 `--hosted`, and repeat through `test_core.sh --app:fct --protocol:minihttp` plus
@@ -262,6 +267,14 @@ For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
 palette refresh and renderer replacement/takeover. The clock paints received
 data; it has no renderer-local timer. Results belong in
 `<iGac repo>/TestMatrix_NativeRenderer.md`.
+
+iGac does not support native touch experience. The synchronized FullControlTest
+includes Touching and TouchingList, but native touch acquisition and gesture
+checks are excluded. Existing empty point-listener callbacks satisfy the native
+interface; Cocoa point automation reports that input is unsupported. Raw Clock
+and ordinary mouse, wheel and keyboard verification remain required. This
+exclusion does not apply to GacJS browser touch on macOS. See
+[native touch applicability](doc/OSProvider_Window.md#native-touch-applicability).
 
 ### Static Libraries
 
