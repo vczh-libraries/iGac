@@ -203,3 +203,10 @@ connected renderer.
 CocoaInputService receives its callback service explicitly and registers its Carbon handler with the service instance as user data. CocoaClipboardService receives callback and image services explicitly; Submit and the TUI pump detect pasteboard change-count transitions through CheckForUpdates. The native Cocoa controller supplies its own services, and the terminal controller supplies its own, so clipboard and global shortcuts do not require GetOSXNativeController in TUI mode. Keyboard input itself comes from the terminal protocol, independently of Carbon global shortcut registration. Command delivery depends on terminal support; SGR mouse has no Command bit.
 
 `Test_TuiControlTest` has no automation endpoint. It uses the imported TuiSkin pair and synchronized showcase resources, with hosted popups and fake TUI dialogs supplied by GacUI. Normal Hide/Close and Stop unwind the shared controller and restore the terminal. See the upstream [TUI provider design](../../GacUI/.github/KnowledgeBase/KB_GacUI_Design_TuiPlatformProvider.md) and [terminal SOP](../../GacUI/.github/Jobs/DebugTuiControlTestSop.md).
+
+FullControlTest now calls `demo::AttachFctEvents<demo::DocumentEditorBase>` once
+per main window. The synchronized `FullControlTestEventHandlers.h/.cpp` retains
+the deferred palette refresh and attaches synchronous private load/save and
+RTF/HTML export to each editor's own viewer. The native remote entry point reads
+the shared opt-in `/remoteDT`, `/remoteLocale` and `/remoteFS` arguments; all three
+demo capabilities are false unless explicitly requested.

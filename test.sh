@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME=""
 HOSTED=0
 UNBLOCK=0
+INJECTION_ARGUMENTS=()
 PORT=""
 
 usage() {
@@ -15,7 +16,7 @@ Usage:
   ./test.sh --app:fct [--hosted] [--unblock]
   ./test.sh --app:rvmt [--unblock]
   ./test.sh --app:tui
-  ./test.sh --app:renderer [--port:<1-65535>] [--unblock]
+  ./test.sh --app:renderer [--port:<1-65535>] [-remoteDT] [-remoteLocale] [-remoteFS] [--unblock]
 EOF
 }
 
@@ -38,6 +39,9 @@ for argument in "$@"; do
             ;;
         --hosted)
             HOSTED=1
+            ;;
+        -remoteDT|-remoteLocale|-remoteFS)
+            INJECTION_ARGUMENTS+=("/${argument#-}")
             ;;
         --unblock)
             UNBLOCK=1
@@ -96,6 +100,11 @@ case "$APP_NAME" in
         ;;
 esac
 
+if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 && "$APP_NAME" != "renderer" ]]; then
+    echo "Remote injection options require --app:renderer." >&2
+    exit 1
+fi
+
 if [[ -n "$PORT" && "$APP_NAME" != "renderer" ]]; then
     echo "--port is only supported by --app:renderer." >&2
     exit 1
@@ -110,7 +119,7 @@ if [[ "$UNBLOCK" -eq 1 ]]; then
     if [[ "$HOSTED" -eq 1 ]]; then
         "$APP" --hosted &
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp)
+        RENDERER_ARGUMENTS=(/MiniHttp "${INJECTION_ARGUMENTS[@]}")
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi
@@ -125,7 +134,7 @@ else
     if [[ "$HOSTED" -eq 1 ]]; then
         exec "$APP" --hosted
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp)
+        RENDERER_ARGUMENTS=(/MiniHttp "${INJECTION_ARGUMENTS[@]}")
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi

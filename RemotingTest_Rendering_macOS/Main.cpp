@@ -1,4 +1,5 @@
 #include <GacUI.h>
+#include "../SharedArguments.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -14,6 +15,9 @@ int main(int argc, char* argv[])
 	bool portSpecified = false;
 	for (int i = 1; i < argc; i++)
 	{
+		auto consumed = gacui_test::remoteInjectionArguments.Consume(atow(AString(argv[i])));
+		if (consumed < 0) return 1;
+		if (consumed > 0) continue;
 		if (strcmp(argv[i], "/MiniHttp") == 0)
 		{
 			if (miniHttp)

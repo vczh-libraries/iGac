@@ -208,7 +208,7 @@ Staging artifacts are retained after success or failure and ignored by Git; the
 next synchronization replaces the copied resource trees. Generation,
 missing-artifact, merge and deployment failures stop synchronization with nonzero status.
 
-The script also copies the shared `FullControlTestPalette.h/.cpp` handler from
+The script also copies the shared `FullControlTestEventHandlers.h/.cpp` handler from
 `<GacUI repo>/Test/GacUISrc/Generated_FullControlTest/`; the local Full Control Test entry
 point attaches it so every Color Theme preset refreshes existing controls in
 both standard and hosted mode. It also refreshes the shared native-renderer and RVM entry points,
@@ -381,3 +381,19 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 ## Planning
 
 - Replace CGLayer with Metal for rendering
+## Remote feature options and document files
+
+The native renderer and portable core demo default to no feature injection. Pass
+`/remoteDT`, `/remoteLocale` and `/remoteFS` independently to both processes, for
+example `./test_core.sh --app:fct --protocol:minihttp -remoteDT -remoteLocale -remoteFS`
+and `./test.sh --app:renderer -remoteDT -remoteLocale -remoteFS`. The shell translates single-dash options to slash switches, which are forwarded in foreground and `--unblock` modes. Renderer capabilities are
+reevaluated after replacement. Missing DateTime/Locale capabilities use the core
+predecessor; an enabled filesystem without renderer support exposes an empty `/`
+root and never accesses core files.
+
+`FullControlTestEventHandlers.h/.cpp` replaces `FullControlTestPalette.h/.cpp` in
+the synchronized FullControlTest sources. The local entry point attaches the palette
+handler and all four persistence events to each editor's own document viewer.
+Private `.bin` files contain their image bytes; private save and RTF/HTML exports
+complete synchronously, including remote stream close. Synchronize the framework,
+resources and shared sources together after this protocol change.

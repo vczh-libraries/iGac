@@ -274,3 +274,10 @@ existing application controls while replacing their default templates.
 | `test_core.sh` | Full-builds and launches sibling GacUI Core-side remoting tests |
 | `Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
 | `Import/GacUI.cpp` | All hosted mode platform-independent implementations |
+
+FullControlTest now calls `demo::AttachFctEvents<demo::DocumentEditorBase>` once
+per main window. The synchronized `FullControlTestEventHandlers.h/.cpp` retains
+the deferred palette refresh and attaches synchronous private load/save and
+RTF/HTML export to each editor's own viewer. The native remote entry point reads
+the shared opt-in `/remoteDT`, `/remoteLocale` and `/remoteFS` arguments; all three
+demo capabilities are false unless explicitly requested.
