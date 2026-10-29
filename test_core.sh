@@ -20,7 +20,7 @@ usage() {
     cat >&2 <<'EOF'
 Usage:
   ./test_core.sh --app:cpptest_rvm --protocol:minihttp [--unblock]
-  ./test_core.sh --app:fct --protocol:minihttp [-remoteDT] [-remoteLocale] [-remoteFS] [--unblock]
+  ./test_core.sh --app:fct --protocol:minihttp [--remoteDT] [--remoteLocale] [--remoteFS] [--unblock]
   ./test_core.sh --app:rpt --protocol:minihttp [--unblock]
   ./test_core.sh --app:rvmt --protocol:minihttp [--cli] [--unblock]
 EOF
@@ -46,8 +46,8 @@ for argument in "$@"; do
         --cli)
             CLI=1
             ;;
-        -remoteDT|-remoteLocale|-remoteFS)
-            INJECTION_ARGUMENTS+=("/${argument#-}")
+        --remoteDT|--remoteLocale|--remoteFS)
+            INJECTION_ARGUMENTS+=("/${argument#--}")
             ;;
         --unblock)
             UNBLOCK=1

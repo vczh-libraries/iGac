@@ -18,7 +18,7 @@ Usage:
   ./test.sh --app:fct [--hosted] [--unblock]
   ./test.sh --app:rvmt [--unblock]
   ./test.sh --app:tui
-  ./test.sh --app:renderer [--corehost:<host>] [--port:<1-65535>] [-remoteDT] [-remoteLocale] [-remoteFS] [--unblock]
+  ./test.sh --app:renderer [--corehost:<host>] [--port:<1-65535>] [--remoteDT] [--remoteLocale] [--remoteFS] [--unblock]
 EOF
 }
 
@@ -42,8 +42,8 @@ for argument in "$@"; do
         --hosted)
             HOSTED=1
             ;;
-        -remoteDT|-remoteLocale|-remoteFS)
-            INJECTION_ARGUMENTS+=("/${argument#-}")
+        --remoteDT|--remoteLocale|--remoteFS)
+            INJECTION_ARGUMENTS+=("/${argument#--}")
             ;;
         --unblock)
             UNBLOCK=1

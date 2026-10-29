@@ -385,8 +385,8 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 
 The native renderer and portable core demo default to no feature injection. Pass
 `/remoteDT`, `/remoteLocale` and `/remoteFS` independently to both processes, for
-example `./test_core.sh --app:fct --protocol:minihttp -remoteDT -remoteLocale -remoteFS`
-and `./test.sh --app:renderer -remoteDT -remoteLocale -remoteFS`. The shell translates single-dash options to slash switches, which are forwarded in foreground and `--unblock` modes. Renderer capabilities are
+example `./test_core.sh --app:fct --protocol:minihttp --remoteDT --remoteLocale --remoteFS`
+and `./test.sh --app:renderer --remoteDT --remoteLocale --remoteFS`. The shell translates double-dash options to slash switches, which are forwarded in foreground and `--unblock` modes. Renderer capabilities are
 reevaluated after replacement. Missing DateTime/Locale capabilities use the core
 predecessor; an enabled filesystem without renderer support exposes an empty `/`
 root and never accesses core files.

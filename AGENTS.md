@@ -103,8 +103,8 @@ pkill -f 'Test_TuiControlTest|Test_FullControlTest|Test_HellWorld|Test_CppTest_R
 
 Native renderer executables accept `/remoteDT`, `/remoteLocale` and `/remoteFS`.
 All three demo options default to false. The corresponding `test.sh --app:renderer`
-and `test_core.sh --app:fct --protocol:minihttp` shell options are `-remoteDT`,
-`-remoteLocale` and `-remoteFS`; scripts translate them to slash switches in both
+and `test_core.sh --app:fct --protocol:minihttp` shell options are `--remoteDT`,
+`--remoteLocale` and `--remoteFS`; scripts translate them to slash switches in both
 foreground and `--unblock` modes. Enable each desired feature independently on
 both core and renderer. Keep the canonical renderer GuiMain and SharedArguments
 synchronized from GacUI. Reconnection reevaluates capabilities; DateTime/Locale
