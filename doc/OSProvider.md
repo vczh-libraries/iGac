@@ -210,3 +210,5 @@ the deferred palette refresh and attaches synchronous private load/save and
 RTF/HTML export to each editor's own viewer. The native remote entry point reads
 the shared opt-in `/remoteDT`, `/remoteLocale` and `/remoteFS` arguments; all three
 demo capabilities are false unless explicitly requested.
+
+The native remote entry point accepts one optional `/corehost:<host>`, default localhost, through the shared GacUI parser. It passes the unbracketed hostname/IP address into the shared `StartMiniHttpClient` composition. `<iGac repo>/test.sh --app:renderer --corehost:core.example.com --port:8889` forwards the destination in foreground and `--unblock` modes. Core protocol port remains 8888; `/port` selects local renderer automation. Platform `Main.cpp` remains local while SharedArguments and GuiMain are synchronized by `<iGac repo>/syncProj.sh`.

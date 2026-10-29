@@ -8,6 +8,8 @@ HOSTED=0
 UNBLOCK=0
 INJECTION_ARGUMENTS=()
 PORT=""
+CORE_HOST="localhost"
+CORE_HOST_SPECIFIED=0
 
 usage() {
     cat >&2 <<'EOF'
@@ -16,7 +18,7 @@ Usage:
   ./test.sh --app:fct [--hosted] [--unblock]
   ./test.sh --app:rvmt [--unblock]
   ./test.sh --app:tui
-  ./test.sh --app:renderer [--port:<1-65535>] [-remoteDT] [-remoteLocale] [-remoteFS] [--unblock]
+  ./test.sh --app:renderer [--corehost:<host>] [--port:<1-65535>] [-remoteDT] [-remoteLocale] [-remoteFS] [--unblock]
 EOF
 }
 
@@ -45,6 +47,14 @@ for argument in "$@"; do
             ;;
         --unblock)
             UNBLOCK=1
+            ;;
+        --corehost:*)
+            if [[ "$CORE_HOST_SPECIFIED" -eq 1 || -z "${argument#--corehost:}" ]]; then
+                echo "--corehost requires one nonempty destination host." >&2
+                exit 1
+            fi
+            CORE_HOST="${argument#--corehost:}"
+            CORE_HOST_SPECIFIED=1
             ;;
         --port:*)
             PORT="${argument#--port:}"
@@ -105,6 +115,11 @@ if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 && "$APP_NAME" != "renderer" ]]; then
     exit 1
 fi
 
+if [[ "$CORE_HOST_SPECIFIED" -eq 1 && "$APP_NAME" != "renderer" ]]; then
+    echo "--corehost is only supported by --app:renderer." >&2
+    exit 1
+fi
+
 if [[ -n "$PORT" && "$APP_NAME" != "renderer" ]]; then
     echo "--port is only supported by --app:renderer." >&2
     exit 1
@@ -119,7 +134,7 @@ if [[ "$UNBLOCK" -eq 1 ]]; then
     if [[ "$HOSTED" -eq 1 ]]; then
         "$APP" --hosted &
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp "${INJECTION_ARGUMENTS[@]}")
+        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST" "${INJECTION_ARGUMENTS[@]}")
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi
@@ -134,7 +149,7 @@ else
     if [[ "$HOSTED" -eq 1 ]]; then
         exec "$APP" --hosted
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp "${INJECTION_ARGUMENTS[@]}")
+        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST" "${INJECTION_ARGUMENTS[@]}")
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi
