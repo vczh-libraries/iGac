@@ -602,6 +602,8 @@ namespace vl {
                 
                 bool SetInlineObject(vint start, vint length, const InlineObjectProperties& properties) override
                 {
+                    if(length == 0) return true;
+                    if(start < 0 || length < 0 || start > paragraphText.Length() - length) return false;
                     vint reuseIndex = -1;
                     for(vint i = 0; i < inlineElements.Count(); ++i)
                     {
@@ -615,7 +617,7 @@ namespace vl {
                         }
                         else
                         {
-                            if(inlineElements.Keys().Contains(properties.backgroundImage.Obj()))
+                            if(properties.backgroundImage && inlineElements.Keys()[i] == properties.backgroundImage.Obj())
                             {
                                 return false;
                             }
@@ -684,31 +686,21 @@ namespace vl {
                 
                 bool ResetInlineObject(vint start, vint length) override
                 {
-                    IGuiGraphicsElement* element = 0;
-                    
+                    IGuiGraphicsElement* element = nullptr;
+                    if(!GetMap(graphicsElements, start, element) || !element) return false;
+                    GuiElementsTextCell* textCell = inlineElements[element].textCell;
+                    if(start != (vint)textCell.textRange.location || length != (vint)textCell.textRange.length) return false;
+
+                    auto storageRange = GetStorageRange(start, length);
                     [textStorage beginEditing];
-                    if(GetMap(graphicsElements, start, element) && element)
-                    {
-                        GuiElementsTextCell* textCell = inlineElements[element].textCell;
-                        
-                        [textStorage enumerateAttributesInRange:GetStorageRange(start, length)
-                                                        options:0
-                                                    usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop)
-                         {
-                             NSTextAttachment* attachment = [attrs objectForKey:NSAttachmentAttributeName];
-                             if(attachment)
-                             {
-                                 [textStorage removeAttribute:NSAttachmentAttributeName range:range];
-                                 [textStorage replaceCharactersInRange:NSMakeRange(range.location, 1) withString:@"\u200d"];
-                                 
-                                 needFormatData = true;
-                             }
-                         }];
-                        
-                        [textCellStorage removeObject:textCell];
-                    }
+                    [textStorage removeAttribute:NSAttachmentAttributeName range:storageRange];
+                    [textStorage replaceCharactersInRange:storageRange withString:WStringToNSString(paragraphText.Sub(start, length))];
                     [textStorage endEditing];
-                    
+                    if(auto renderer = element->GetRenderer()) renderer->SetRenderTarget(nullptr);
+                    inlineElements.Remove(element);
+                    SetMap(graphicsElements, start, length, static_cast<IGuiGraphicsElement*>(nullptr));
+                    [textCellStorage removeObject:textCell];
+                    needFormatData = true;
                     return true;
                 }
                 

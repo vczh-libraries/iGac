@@ -46,6 +46,10 @@ rendering and queued input running when a shortcut opens a hosted dialog inside
 an automation task. `<iGac repo>/MacTest/HostedModal.cpp` checks two consecutive
 modal openings, timer delivery, queued dismissal and normal main-window exit.
 
+The hosted Remote View Model Test stops its Workflow RPC server before global
+framework cleanup on normal exit. Its initialization is
+synchronized from the shared GacUI test entry point by `syncProj.sh`.
+
 **Header:** `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.h` declares `SetupOSXCoreGraphicsRenderer()`, `SetupOSXHostedCoreGraphicsRenderer()` and `SetupRawOSXCoreGraphicsRenderer()`.
 
 ## CoreGraphicsMain — Hosted vs Standard

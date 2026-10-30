@@ -9,6 +9,7 @@
 #include "CoreGraphicsApp.h"
 
 #include "../CocoaNativeController.h"
+#include <clocale>
 
 #import <GacUI.h>
 
@@ -18,6 +19,8 @@ using namespace vl::presentation::osx;
 
 int SetupOSXCoreGraphicsRendererInternal(bool hosted, bool raw)
 {
+    // Native filesystem paths use the locale's multibyte conversion.
+    CHECK_ERROR(std::setlocale(LC_CTYPE, "") != nullptr, L"SetupOSXCoreGraphicsRendererInternal#Failed to initialize the character locale.");
     StartOSXNativeController();
     auto nativeController = GetOSXNativeController();
 

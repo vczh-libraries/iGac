@@ -144,3 +144,11 @@ layout/render passes converge on the new geometry.
 ### Native text positions and AppKit ranges
 
 GacUI paragraph offsets on macOS count UTF-32 wchar_t scalars, while NSTextStorage ranges count UTF-16 units and NSLayoutManager also has separate glyph indices. CoreTextParagraph stores maps between native and UTF-16 boundaries. Font/style/color and attachment edits convert to storage ranges; glyph clusters and line fragments convert back to native positions for caret movement, selection, hit testing and background painting. Never index paragraphText with an AppKit character or glyph index. Supplementary characters may occupy two UTF-16 units, and ligatures or composed glyphs may span several native characters. Inline-object replacement preserves the original UTF-16 range length while its public range remains in native units.
+
+An inline image can be reapplied at its existing range when other images share
+the paragraph. Duplicate-image checks compare against each other range, so a
+selection or formatting update can refresh every image. Resetting an inline
+image requires its exact range, removes its attachment and lookup entries, and
+restores the original text. The image can then be inserted at another range.
+`Test_Paragraph` covers this lifecycle with a supplementary character before the
+images.

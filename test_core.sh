@@ -120,7 +120,9 @@ if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 && "$APP_NAME" == "cpptest_rvm" ]]; the
     echo "Remote injection options require the RemotingTest_Core application." >&2
     exit 1
 fi
-PRIMARY_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}")
+if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 ]]; then
+    PRIMARY_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}")
+fi
 
 if [[ "$NEEDS_MANUAL_HOST" -eq 0 ]]; then
     if [[ "$UNBLOCK" -eq 1 ]]; then

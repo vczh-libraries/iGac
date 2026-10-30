@@ -134,7 +134,10 @@ if [[ "$UNBLOCK" -eq 1 ]]; then
     if [[ "$HOSTED" -eq 1 ]]; then
         "$APP" --hosted &
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST" "${INJECTION_ARGUMENTS[@]}")
+        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST")
+        if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 ]]; then
+            RENDERER_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}")
+        fi
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi
@@ -149,7 +152,10 @@ else
     if [[ "$HOSTED" -eq 1 ]]; then
         exec "$APP" --hosted
     elif [[ "$APP_NAME" == "renderer" ]]; then
-        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST" "${INJECTION_ARGUMENTS[@]}")
+        RENDERER_ARGUMENTS=(/MiniHttp "/corehost:$CORE_HOST")
+        if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 ]]; then
+            RENDERER_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}")
+        fi
         if [[ -n "$PORT" ]]; then
             RENDERER_ARGUMENTS+=("/port:$PORT")
         fi

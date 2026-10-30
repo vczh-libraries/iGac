@@ -87,7 +87,7 @@ namespace vl {
                 vint count = 1;
                 if([imageRep isKindOfClass:[NSBitmapImageRep class]])
                 {
-                    vint count = (vint)[[(NSBitmapImageRep*)imageRep valueForProperty:NSImageFrameCount] intValue];
+                    count = (vint)[[(NSBitmapImageRep*)imageRep valueForProperty:NSImageFrameCount] intValue];
                     if(count == 0)
                         count = 1;
                 }
@@ -129,30 +129,11 @@ namespace vl {
                             
                             [bitmapRep setProperty:NSImageCurrentFrame withValue:@(index)];
                             
-                            CGDataProviderRef frameProvider = CGDataProviderCreateWithData(NULL,
-                                                                                           [bitmapRep bitmapData],
-                                                                                           [bitmapRep bytesPerRow] * [bitmapRep pixelsHigh],
-                                                                                           NULL
-                                                                                           );
-                            
-                            CGImageRef cgFrame = CGImageCreate ([bitmapRep pixelsWide],
-                                                                [bitmapRep pixelsHigh],
-                                                                8,
-                                                                [bitmapRep bitsPerPixel],
-                                                                [bitmapRep bytesPerRow],
-                                                                CGColorSpaceCreateDeviceRGB(),
-                                                                (CGBitmapInfo)kCGBitmapByteOrderDefault | (CGBitmapInfo)kCGImageAlphaLast,
-                                                                frameProvider,
-                                                                NULL,
-                                                                NO,
-                                                                kCGRenderingIntentDefault);
-                            
-                            CGDataProviderRelease(frameProvider);
-                            frame = Ptr(new CocoaImageFrame(this, cgFrame));
+                            frame = Ptr(new CocoaImageFrame(this, CGImageRetain([bitmapRep CGImage])));
                         }
                         else
                         {
-                            frame = Ptr(new CocoaImageFrame(this, [imageRep CGImageForProposedRect:nil context:nil hints:nil]));
+                            frame = Ptr(new CocoaImageFrame(this, CGImageRetain([imageRep CGImageForProposedRect:nil context:nil hints:nil])));
                         }
                         
                     }
@@ -164,6 +145,26 @@ namespace vl {
 
             void CocoaImage::SaveToStream(stream::IStream& stream, FormatType formatType)
             {
+                NSBitmapImageFileType fileType;
+                switch (formatType)
+                {
+                    case Unknown:
+                    case Png: fileType = NSBitmapImageFileTypePNG; break;
+                    case Bmp: fileType = NSBitmapImageFileTypeBMP; break;
+                    case Gif: fileType = NSBitmapImageFileTypeGIF; break;
+                    case Jpeg: fileType = NSBitmapImageFileTypeJPEG; break;
+                    case Tiff: fileType = NSBitmapImageFileTypeTIFF; break;
+                    default: CHECK_FAIL(L"CocoaImage::SaveToStream#Unsupported image format.");
+                }
+
+                auto frame = static_cast<CocoaImageFrame*>(GetFrame(0));
+                CHECK_ERROR(frame && frame->GetCGImage(), L"CocoaImage::SaveToStream#Missing image frame.");
+                NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithCGImage:frame->GetCGImage()];
+                NSData* data = [bitmap representationUsingType:fileType properties:@{}];
+                [bitmap release];
+                CHECK_ERROR(data && data.length > 0, L"CocoaImage::SaveToStream#Image encoding failed.");
+                auto length = static_cast<vint>(data.length);
+                CHECK_ERROR(stream.Write(const_cast<void*>(data.bytes), length) == length, L"CocoaImage::SaveToStream#Incomplete image write.");
             }
 
             ////

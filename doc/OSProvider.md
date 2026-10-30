@@ -54,8 +54,11 @@ The hosted mode entry point is `SetupOSXHostedCoreGraphicsRenderer()` (in `CoreG
 ### Native Remote Renderer — `SetupRawOSXCoreGraphicsRenderer()`
 
 All three entry points delegate to `SetupOSXCoreGraphicsRendererInternal(hosted, raw)`
-in `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm`. The native
-remote renderer passes `(false, true)`: it keeps the native Cocoa controller,
+in `<iGac repo>/Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm`. Before creating
+the controller, this function initializes `LC_CTYPE` from the process environment
+and rejects an unavailable locale. Launch with an installed UTF-8 locale, such as
+`LC_ALL=en_US.UTF-8`, so native filesystem conversions preserve Unicode paths.
+The native remote renderer passes `(false, true)`: it keeps the native Cocoa controller,
 registers the CoreGraphics element renderers, and calls `GuiRawMain()` instead
 of `GuiApplicationMain()`. `GuiRemoteRendererSingle` owns the real native window
 and renders the Core's protocol output there. The remote Core uses hosted
@@ -171,7 +174,7 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 | **CocoaResourceService** | `CocoaCursor` wraps `NSCursor` with all system cursor types. Reads the current default interface font from `NSFont messageFontOfSize:0`, preserves an explicit process override from `SetDefaultFont`, enumerates fonts via `NSFontManager`, and reports `Command` as the canonical Super-key name. |
 | **CocoaClipboardService** | Clipboard read/write via `NSPasteboard`. `CocoaClipboardWriter` collects text, document, and image data, then atomically writes all formats on `Submit()`. Text is written as `NSPasteboardTypeString`. Documents are written in three formats: a custom GacUI binary format (`com.gaclib.document`), RTF (`NSPasteboardTypeRTF`), and HTML (`NSPasteboardTypeHTML`). Images are written as TIFF (`NSPasteboardTypeTIFF`). `SetDocument()` auto-fills text and image fallbacks (like Windows). `CocoaClipboardReader` reads from the system pasteboard: text from `NSPasteboardTypeString`, documents from the custom GacUI format, and images from TIFF/PNG types via `ImageService`. Each `ReadClipboard()` call creates a fresh reader that queries the current pasteboard state. |
 | **CocoaDialogService** | Message boxes, color picker, font picker, file open/save dialogs using native macOS panels. |
-| **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` wraps `CGImageRef`. Creates images from file, memory, or stream. |
+| **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` retains the representation's `CGImageRef`, preserving its actual pixel format. Creates images from file, memory, or stream and exposes bitmap animation frames. `SaveToStream` encodes the first frame as PNG (also the `Unknown` default), BMP, GIF, JPEG, or TIFF. Unsupported formats, failed encoding and incomplete writes raise an error. Encoding is independent of remote filesystem injection. |
 | **CocoaAutomationService** | Exposes control-tree automation and routes IO commands to real `CocoaWindow` instances. Hosted and native-renderer variants use the same Cocoa input path with their respective automation tree implementations. |
 
 ### Default Font

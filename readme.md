@@ -249,17 +249,22 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
 
-The official build also produces Raw element and hosted modal regression tests.
+The official build also produces Raw element, hosted modal, image service and
+paragraph regression tests.
 Run these after `./build.sh`:
 
 ```bash
 ./build/MacTest/bin/Test_RawElement /C
 ./build/MacTest/bin/Test_RawElement /C --hosted
 ./build/MacTest/bin/Test_HostedModal /C
+./build/MacTest/bin/Test_ImageService /C
+./build/MacTest/bin/Test_Paragraph /C
 ```
 
 The modal test opens two dialogs from queued application work and requires
 continued timer delivery, queued dismissal and normal shutdown.
+The image test checks encoding, JPEG-to-PNG pixels and write failures. The
+paragraph test checks multiple inline images, reapplication and reset/reuse.
 
 For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
 `--hosted`, and repeat through `test_core.sh --app:fct --protocol:minihttp` plus
@@ -357,6 +362,7 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 [`Screenshots/`](Screenshots/) contains all six Full Control Test themes and all six TUI themes, captured with their native macOS window frames. Refresh them using the [screenshot update job](../GacUI/.github/Jobs/job.updateScreenshots.prompt.md).
 
 - [TestMatrix_Tui.md](TestMatrix_Tui.md) — macOS terminal showcase verification and host limitations.
+- [TestMatrix_Injection_XPlat.md](TestMatrix_Injection_XPlat.md) — Native and WebKit injection, document persistence and lifecycle verification.
 
 - [doc/OSProvider.md](doc/OSProvider.md) — Controller, services, entry point, and overall architecture of the macOS platform layer.
 - [doc/OSProvider_Window.md](doc/OSProvider_Window.md) — INativeWindow implementation (CocoaWindow): window lifecycle, Show/Hide, popups, child windows, custom frame, key differences from Windows.
@@ -367,7 +373,6 @@ Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugR
 ## TODO
 
 - `IGuiGraphicsParagraph`
-  - Need to test inserting image.
   - Test CocoaClipboardService when image is tested.
 
 ## Known Issues
@@ -390,6 +395,11 @@ and `./test.sh --app:renderer --remoteDT --remoteLocale --remoteFS`. The shell t
 reevaluated after replacement. Missing DateTime/Locale capabilities use the core
 predecessor; an enabled filesystem without renderer support exposes an empty `/`
 root and never accesses core files.
+
+Use an installed UTF-8 locale when launching native applications, for example
+`LC_ALL=en_US.UTF-8 ./test.sh --app:renderer --remoteFS`. The graphical entry
+points initialize character conversion from that environment. Both wrappers
+support macOS's system Bash 3.2, including runs with no injection switches.
 
 `FullControlTestEventHandlers.h/.cpp` replaces `FullControlTestPalette.h/.cpp` in
 the synchronized FullControlTest sources. The local entry point attaches the palette

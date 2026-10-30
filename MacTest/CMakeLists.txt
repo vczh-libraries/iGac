@@ -53,6 +53,12 @@ target_link_libraries(Test_RawElement ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIE
 add_executable(Test_HostedModal "HostedModal.cpp")
 target_link_libraries(Test_HostedModal ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
 
+add_executable(Test_ImageService "ImageService.mm")
+target_link_libraries(Test_ImageService ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+
+add_executable(Test_Paragraph "Paragraph.cpp")
+target_link_libraries(Test_Paragraph ${GACUI_LIBRARIES} ${DEPENDENCIES_LIBRARIES})
+
 #[[
 #
 set(SHARED_RESOURCES "Controls/AddressBook/AddressBook.bin"
