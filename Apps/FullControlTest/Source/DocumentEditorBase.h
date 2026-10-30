@@ -165,6 +165,3 @@ namespace demo
 #endif
 
 #endif
-// UNUSED_USER_CONTENT:
-//	/* USER_CONTENT_BEGIN(custom members of ::demo::DocumentEditorBase) */
-//	/* USER_CONTENT_END() */
