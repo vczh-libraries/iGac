@@ -56,6 +56,7 @@ namespace vl {
             
             CocoaWindow::~CocoaWindow()
             {
+                *disposed.Obj() = true;
                 if(nsWindow)
                 {
                     // Clear delegate to prevent further Cocoa callbacks after destruction.
@@ -351,7 +352,9 @@ namespace vl {
 
             void CocoaWindow::Hide(bool closeWindow)
             {
-                // On Windows, Hide() posts WM_CLOSE which:
+                if (windowMode != Normal && !IsVisible()) return;
+
+                // Windows posts WM_CLOSE for normal windows and sends it for popups:
                 //   1. Fires BeforeClosing/AfterClosing
                 //   2. ShowWindow(SW_HIDE) — hides the window
                 //   3. For non-main: skips DefWindowProc (no DestroyWindow)
@@ -1421,17 +1424,22 @@ namespace vl {
 
             void CocoaWindow::ClosePopupsOf(CocoaWindow* owner, collections::SortedList<CocoaWindow*>& exceptions)
             {
-                for (vint i = 0; i < owner->childWindows.Count(); i++)
+                collections::List<Pair<CocoaWindow*, Ptr<bool>>> children;
+                for (auto child : owner->childWindows)
                 {
-                    auto popup = owner->childWindows[i];
-                    if (popup->windowMode != Normal && popup->IsVisible())
+                    children.Add({ child, child->disposed });
+                }
+                for (auto [popup, popupDisposed] : children)
+                {
+                    if (*popupDisposed.Obj()) continue;
+                    ClosePopupsOf(popup, exceptions);
+                    if (!*popupDisposed.Obj() && popup->windowMode != Normal && popup->IsVisible())
                     {
                         if (!exceptions.Contains(popup))
                         {
                             popup->Hide(false);
                         }
                     }
-                    ClosePopupsOf(popup, exceptions);
                 }
             }
 

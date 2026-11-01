@@ -33,6 +33,7 @@ namespace vl {
                 friend class CocoaAutomationServiceBase;
             protected:
                 INativeController*                              cocoaController = nullptr;
+                Ptr<bool>                                       disposed = Ptr(new bool(false));
                 NativePoint                                     caretPoint;
                 CocoaWindow*                                    parentWindow = nullptr;
                 collections::List<CocoaWindow*>                 childWindows;
