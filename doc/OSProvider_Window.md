@@ -275,6 +275,11 @@ bool RunOneCycle() override {
 }
 ```
 
+`CocoaApplication::sendEvent:` handles the provider's coalesced timer event in
+both this loop and AppKit's native modal loops. It clears the pending flag before
+running queued work and global timer callbacks. Without this shared dispatch,
+an open/save panel can consume the event and leave future timer posts suppressed.
+
 ### Why `Run()` Must NOT Use `[NSApp run]`
 
 The previous implementation used `[NSApp run]` for the main loop and `RunOneCycle()` (via `nextEventMatchingMask:`) for framework-level modal sub-loops. This caused crashes because:
@@ -290,7 +295,7 @@ The fix: make `Run()` use `while(RunOneCycle())` — identical to Windows. Both 
 ### Key Design Decisions
 
 - **`[NSDate distantFuture]`** makes `nextEventMatchingMask:` block until an event arrives, matching Windows' `GetMessage` behavior. No busy-waiting, no CPU cost while idle. `[NSDate distantPast]` would poll without blocking and cause 100% CPU usage.
-- **GCD timers still fire** during `nextEventMatchingMask:` because `dispatch_after` on the main queue is processed as a run loop source in `NSDefaultRunLoopMode`. The 16ms timer from `CocoaInputService` continues to work — its callback (`GlobalTimerFunc`) executes *during* the `nextEventMatchingMask:` call, processing rendering and timer events without waiting for an NSEvent.
+- **GCD timers still fire** during `nextEventMatchingMask:` because `dispatch_after` on the main queue is processed as a run loop source in `NSDefaultRunLoopMode`. The 16ms timer callback (`GlobalTimerFunc`) posts an application-defined event; application work runs from `CocoaApplication::sendEvent:` after the GCD callback returns.
 - **`@autoreleasepool`** wraps each iteration. `[NSApp run]` creates autorelease pools automatically per iteration; our custom loop must do this explicitly to prevent memory buildup from temporary Cocoa objects.
 - **`[NSApp updateWindows]`** is called after dispatching the event to ensure window display updates happen synchronously, matching the behavior of `[NSApp run]`'s internal loop.
 

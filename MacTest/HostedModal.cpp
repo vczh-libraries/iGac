@@ -9,6 +9,8 @@ using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::controls;
 
+void VerifyNativeModalTimer();
+
 class ModalTimerListener : public Object, public INativeControllerListener
 {
 public:
@@ -37,7 +39,7 @@ public:
 
 TEST_FILE
 {
-	TEST_CASE(L"Hosted modal opened by queued input keeps timers and queued tasks running")
+	TEST_CASE(L"Hosted and AppKit modal loops retain timers, queued work and safe teardown")
 	{
 		std::jthread watchdog([](std::stop_token stop)
 		{
@@ -55,6 +57,11 @@ TEST_FILE
 		GuiWindow owner(theme::ThemeName::Window);
 		owner.SetText(L"Hosted modal event pump regression");
 		owner.SetClientSize(Size(480, 320));
+		auto dialog = new GuiWindow(theme::ThemeName::Window);
+		auto native = dialog->GetNativeWindow();
+		vint deleted = 0;
+		dialog->DeleteAfterProcessingAllEvents([&]() { deleted++; });
+		GetCurrentController()->WindowService()->DestroyNativeWindow(native);
 		ModalTimerListener listener;
 		listener.owner = &owner;
 		auto callbacks = GetCurrentController()->CallbackService();
@@ -75,11 +82,13 @@ TEST_FILE
 				listener.inModal = false;
 				if (listener.ticks >= 2 && listener.queuedTaskRan) completed++;
 			}
+			VerifyNativeModalTimer();
 			owner.Close();
 		});
 		GetApplication()->Run(&owner);
 		callbacks->UninstallListener(&listener);
 		TEST_ASSERT(completed == 2);
+		TEST_ASSERT(deleted == 1);
 	});
 }
 

@@ -95,7 +95,8 @@ iGac/
 │   ├── CMakeLists.txt
 │   ├── HelloWorlds/Cpp/Main.cpp
 │   ├── RawElement.cpp          Focused Cocoa raw-element and remote-lifecycle tests
-│   └── HostedModal.cpp         Nested modal timer/input regression
+│   ├── HostedModal.cpp         Nested modal timer/input regression
+│   └── NativeModal.mm          AppKit modal timer/input regression
 │
 ├── MacFullControlTest/         Full-featured test app using BlackSkin control template
 │   ├── CMakeLists.txt
@@ -261,10 +262,11 @@ Run these after `./build.sh`:
 ./build/MacTest/bin/Test_Paragraph /C
 ```
 
-The modal test opens two dialogs from queued application work and requires
-continued timer delivery, queued dismissal and normal shutdown.
+The modal test opens hosted and AppKit dialogs from queued application work and
+requires continued timer delivery, queued dismissal and normal shutdown.
 The image test checks encoding, JPEG-to-PNG pixels and write failures. The
-paragraph test checks multiple inline images, reapplication and reset/reuse.
+paragraph test checks multiple inline images, reapplication, reset/reuse and
+ellipsized-label composition sizing.
 
 For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
 `--hosted`, and repeat through `test_core.sh --app:fct --protocol:minihttp` plus
@@ -358,6 +360,9 @@ and start the new one with `--port:8890`.
 Follow [GacUI's native-renderer verification guide](../GacUI/.github/Jobs/DebugRemoteProtocolWithNativeRenderer.md) for the complete RPT/FCT, replacement, takeover, and cleanup workflow.
 
 ## Documentation
+
+- [TestMatrix_NativeRenderer.md](TestMatrix_NativeRenderer.md) — Native and hosted showcase and remoting verification.
+- [TestMatrix_GacJS.md](TestMatrix_GacJS.md) — Live macOS browser remoting verification.
 
 [`Screenshots/`](Screenshots/) contains all six Full Control Test themes and all six TUI themes, captured with their native macOS window frames. Refresh them using the [screenshot update job](../GacUI/.github/Jobs/job.updateScreenshots.prompt.md).
 

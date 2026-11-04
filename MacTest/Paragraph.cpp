@@ -5,9 +5,34 @@ using namespace vl;
 using namespace vl::presentation;
 using namespace vl::presentation::elements;
 using namespace vl::presentation::elements_coregraphics;
+using namespace vl::presentation::compositions;
 
 TEST_FILE
 {
+    TEST_CASE(L"Ellipsized captions fit their requested bounds and restore natural sizing")
+    {
+        auto label = Ptr(GuiSolidLabelElement::Create());
+        FontProperties font;
+        font.fontFamily = L"Helvetica";
+        font.size = 14;
+        label->SetFont(font);
+        label->SetText(L"A long window caption that must truncate inside the compact window");
+        GuiBoundsComposition composition;
+        composition.SetMinSizeLimitation(GuiGraphicsComposition::LimitToElement);
+        composition.SetExpectedBounds(Rect(0, 0, 240, 40));
+        composition.SetOwnedElement(label);
+        composition.ForceCalculateSizeImmediately();
+        auto naturalWidth = composition.GetCachedBounds().Width();
+        TEST_ASSERT(naturalWidth > 240);
+        label->SetEllipse(true);
+        composition.ForceCalculateSizeImmediately();
+        TEST_ASSERT(composition.GetCachedBounds().Width() == 240);
+        TEST_ASSERT(label->GetRenderer()->GetMinSize().y > 0);
+        label->SetEllipse(false);
+        composition.ForceCalculateSizeImmediately();
+        TEST_ASSERT(composition.GetCachedBounds().Width() == naturalWidth);
+    });
+
     TEST_CASE(L"Reapply and reset distinct inline images in one paragraph")
     {
         CoreTextLayoutProvider provider;

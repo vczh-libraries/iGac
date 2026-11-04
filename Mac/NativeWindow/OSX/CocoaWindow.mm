@@ -1424,7 +1424,7 @@ namespace vl {
 
             void CocoaWindow::ClosePopupsOf(CocoaWindow* owner, collections::SortedList<CocoaWindow*>& exceptions)
             {
-                collections::List<Pair<CocoaWindow*, Ptr<bool>>> children;
+                collections::List<collections::Pair<CocoaWindow*, Ptr<bool>>> children;
                 for (auto child : owner->childWindows)
                 {
                     children.Add({ child, child->disposed });

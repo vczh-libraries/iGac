@@ -41,10 +41,14 @@ hosted shortcut dialogs visible in the automation tree. Standard FullControlTest
 uses Cocoa message boxes outside that tree; automated dismissal requires macOS
 Accessibility access. Remote Core and the TUI also use fake dialog services.
 
-The Cocoa timer posts an event before invoking application callbacks. This keeps
-rendering and queued input running when a shortcut opens a hosted dialog inside
+The Cocoa timer posts an event before invoking application callbacks.
+`CocoaApplication::sendEvent:` dispatches it in both the provider loop and
+AppKit modal loops, so native panels retain timer delivery and queued work after
+dismissal. This keeps rendering and queued input running when a shortcut opens a hosted dialog inside
 an automation task. `<iGac repo>/MacTest/HostedModal.cpp` checks two consecutive
 modal openings, timer delivery, queued dismissal and normal main-window exit.
+It also destroys a native hosted child before its queued deletion runs, checking
+that framework teardown deletes the control host exactly once.
 
 The hosted Remote View Model Test stops its Workflow RPC server before global
 framework cleanup on normal exit. Its initialization is

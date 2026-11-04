@@ -153,9 +153,12 @@ font.
 ### Global Timer
 
 `CocoaInputService` runs a GCD timer. Each tick calls `GlobalTimerFunc()` to post
-one coalesced application-defined Cocoa event. `RunOneCycle()` consumes that
-event, executes pending async tasks via `SharedAsyncService`, and invokes the
-global timer to render windows.
+one coalesced application-defined Cocoa event. `CocoaApplication::sendEvent:`
+consumes that event, clears the pending flag, executes pending async tasks via
+`SharedAsyncService`, and invokes the global timer to render windows. Both
+`RunOneCycle()` and AppKit's native modal loops use this dispatch path. An
+open/save panel must not consume the event without clearing the flag, which
+would otherwise stop future timer posts after the panel closes.
 
 Application callbacks run after the GCD block returns. This lets a queued task
 open a hosted modal dialog while its nested event loop continues receiving timer
@@ -176,6 +179,10 @@ Brief description of each service under `Mac/NativeWindow/OSX/ServicesImpl/`:
 | **CocoaDialogService** | Message boxes, color picker, font picker, file open/save dialogs using native macOS panels. |
 | **CocoaImageService** | `CocoaImage` wraps `NSImage`, `CocoaImageFrame` retains the representation's `CGImageRef`, preserving its actual pixel format. Creates images from file, memory, or stream and exposes bitmap animation frames. `SaveToStream` encodes the first frame as PNG (also the `Unknown` default), BMP, GIF, JPEG, or TIFF. Unsupported formats, failed encoding and incomplete writes raise an error. Encoding is independent of remote filesystem injection. |
 | **CocoaAutomationService** | Exposes control-tree automation and routes IO commands to real `CocoaWindow` instances. Hosted and native-renderer variants use the same Cocoa input path with their respective automation tree implementations. |
+
+File-open panels allow folder navigation but return files only. Returning a
+directory to a document loader violates the file-dialog contract and can cause
+the loader's stream deserialization to fail.
 
 ### Default Font
 

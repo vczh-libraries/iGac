@@ -353,7 +353,7 @@ namespace vl {
                                                    options:NSStringDrawingUsesLineFragmentOrigin
                                                 attributes:nsAttributes];
                 
-                minSize = Size(rect.size.width, rect.size.height);
+                minSize = Size(element->GetEllipse() ? 0 : rect.size.width, rect.size.height);
             }
             
             void GuiSolidLabelElementRenderer::InitializeInternal()

@@ -1,41 +1,55 @@
-# Test Matrix Card 2026-10-22T00:41:59.196Z
+# Test Matrix Card 2026-11-04T04:02:01-08:00
 
 ## Test Matrix
 
 | Test Item | 1st |
 | --- | --- |
-| [macOS][Test_CppTest_Rvm][`/MiniHttp`] | 2026-10-22T01:29:15.290Z |
-| [macOS][`/RPT`][`/MiniHttp`] | 2026-10-22T01:32:08.744Z |
-| [macOS][`/FCT`][`/MiniHttp`] | 2026-10-22T01:37:04.479Z |
-| [macOS][`/RVMT`][`/MiniHttp`] | 2026-10-22T01:29:15.290Z |
-| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] | 2026-10-22T01:29:15.290Z |
-| Import / sync / official build | 2026-10-22T01:25:35.257Z |
-| Cocoa raw-element tests, native and hosted | 2026-10-22T01:25:35.257Z (native 4/4; hosted 3 active cases, one remote-only case skipped) |
-| Hosted modal event-pump regression | 2026-10-22T01:25:35.257Z (1/1; old implementation times out) |
-| Local simple app | 2026-10-22T00:59:28.451Z |
-| Local FullControlTest | 2026-10-22T01:07:32.114Z (see coverage notes) |
-| Hosted FullControlTest | 2026-10-22T01:15:06.673Z (fixed; see coverage notes) |
-| Native Touching acquisition and manipulation | |
-| Native TouchingList gestures | |
+| [macOS][Test_CppTest_Rvm][`/MiniHttp`] | 2026-11-04T12:31:37.713Z |
+| [macOS][`/RPT`][`/MiniHttp`] | 2026-11-04T12:34:57.063Z |
+| [macOS][`/FCT`][`/MiniHttp`] | 2026-11-04T13:15:07.265Z |
+| [macOS][`/RVMT`][`/MiniHttp`] | 2026-11-04T12:31:47.124Z |
+| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] | 2026-11-04T12:32:49.422Z |
+| Build / CodePack / import / sync | 2026-11-04T12:22:07.990Z (fixed) |
+| Local Hello World | 2026-11-04T12:34:45.353Z |
+| Local FullControlTest | 2026-11-04T12:38:01.214Z (fixed) |
+| Local FullControlTest --hosted | 2026-11-04T13:25:39.521Z (fixed) |
+| Native regression tests | 2026-11-04T12:31:37.711Z (fixed) |
+| Native Touching gestures (excluded: native touch unsupported) |  |
+| Native TouchingList gestures (excluded: native touch unsupported) |  |
+
+## Observations and Limitations
+
+macOS 26.5.2 arm64, CMake Debug; initial iGac commit `51967a6`, GacUI `7dbf1bc8e`, plus the fixes below. Final `./import.sh`, `./syncProj.sh`, and `./build.sh` succeeded in that order. CodePack, the portable Core/host builds, and generated resources were refreshed. Evidence is local and ignored under `<iGac repo>/_OUTPUT_/rpXPlat-20261104/`.
+
+| Coverage | Observed result / evidence |
+| --- | --- |
+| RPT | Initial UI, Home, shortcuts, all five mouse buttons and modifiers, grid add/clear, document dialog, replacement and takeover retained state. Normal Exit and Core-authored fatal error paths passed. `native-rpt-*.json`, `native-rpt-fatal.png`. |
+| RVM standalone and both remote host modes | Initial and Unicode RPC, second-host rejection for manual network hosts, replacement/takeover where applicable, normal shutdown, idle-next-call host loss and blocked-delivery host loss passed. Nine scenario results in `native-rvm-results.json`; stdio children exited with Core. |
+| Local FCT | Lists, independent editor markers, shortcuts/mouse, four vertical layout pages, palette retention, responsive modal size cycle, account/movie content and modal close paths passed. Open cancellation and private fixture loading retained timer/automation activity. Private-format save/reload retained serialized XML; RTF and HTML exports contained the document/images. `native-document-exports.json`, `native-local-modal-sizes.json`. |
+| Hosted FCT | Initial lists/input, retained editor text and layouts, palette changes and exact responsive dimensions passed after the ellipsis fix. Initial size is 240×320; the cycle covers widths 240/350/440/680 and heights 220/320/520. Title close and queued main Close exited normally. `native-Native-Hosted-Fixed-responsive.json`. |
+| Remote FCT | Initial, replacement and takeover retained state and input. Responsive sizes matched the requested dimensions after placing the modal within the host viewport. All 24 movie titles/directors and all eight accounts were checked; Oxford selection followed by Harper moved the green selection arrow. OK, Cancel and title close worked. `native-remote-films.json`, `native-remote-modal-exact.json`, `native-remote-account-harper.png`. |
+| Global shortcuts | Native generated Command+Control+Option+Shift+Q activated the hosted FCT dialog while Finder was focused. Concurrent FCT Q and TUI F8 both activated independently. Remote FCT Q passed initially, after replacement, and after takeover. `native-global-rounds.json`. These are OS registration/delivery checks, not physical-keyboard checks. |
+| Raw Clock | Local, hosted, remote and takeover screenshots showed changing clock/hand pixels, and palette changes retained the painter. Compared frames had thousands of changed clock pixels, including hand pixels. `native-*-clock-*.png`. |
+| Focused regressions | Raw elements: 4/4 native and 4/4 hosted; image service: 1/1; paragraph/ellipsis: 2/2. The combined hosted/AppKit modal and earlier-native-teardown regression passed five consecutive runs. `native-modal-combined-*.log`, `label-fixed.log`. |
+
+Native `wGac`/`iGac` touch is explicitly excluded by the job; the two touch rows remain blank. Synthetic Core input is not native touch evidence. Windows-only `/Pipe`, `/Http`, UIA and rebuilt `CppTest` sections 3.1/3.2 are outside this macOS matrix; native point-input document checks are expressly excluded by the shared SOP. Mouse/keyboard automation and native generated global chords do not establish physical-device coverage. No Linux or Windows runtime coverage is claimed.
 
 ## Issues Found and Fix
 
-Hosted FullControlTest froze twice after an automation shortcut opened a fake dialog. The nested loop ran inside `CocoaInputService::StartGCDTimer`, preventing the next tick from being scheduled. The Cocoa timer now posts a coalesced application event before running application callbacks. Both shortcut dialogs, subsequent input, Raw Clock and normal shutdown pass. The new `Test_HostedModal` regression times out on the old implementation and passes on the fix. Samples and before/after logs are under `<iGac repo>/build/touch-step4/`.
+### Initial build: popup snapshot type
 
-## Step 4 scope
+The first official build failed at `CocoaWindow.mm:1427`: `Pair` belongs to `vl::collections`. Qualifying it as `collections::Pair` repaired the macOS integration build. Imported framework files were regenerated only through import.
 
-WASM builds, tests and website deployment are excluded by request. Results belong only to this macOS run.
+### Native modal panels stopped subsequent timer delivery
 
-Native touch rows remain blank because iGac does not support native touch experience. Inherited empty point callbacks satisfy the updated interfaces. Native point automation returns `Unsupported: point input is unavailable on this native window adapter.` Raw Clock and mouse/keyboard checks remain applicable.
+Open-panel acceptance and cancellation both reproduced an unresponsive renderer/automation endpoint. AppKit consumed the coalesced timer event without clearing its pending flag, so no later timer event was posted. `CocoaApplication::sendEvent:` now dispatches that event in both the provider loop and AppKit modal loops. `NativeModal.mm` checks two AppKit modal loops and subsequent queued/timer work; live open, cancel, save and reload retests passed.
 
+The same open-panel investigation found that directories could be returned to the file loader, causing a serialization short read. Open panels now allow navigation but return files only. A selected test fixture subsequently loaded successfully.
 
+### Queued hosted-window deletion used an already-destroyed native window
 
-- RPT retained the clicked marker through replacement/takeover, passed grid/document and local shortcut/mouse checks, canceled and accepted close, and retained the Core-authored fatal error after No. Native OS global Q was not exercised.
+An intermittent SIGSEGV occurred twice across the targeted repeats; a deterministic regression reproduced earlier native-child destruction before queued deletion on the old snapshot. GacUI now checks the control-host disposal flag and its current native-window association before destroying the captured native window. The normal destruction notification still performs control-host deletion. Five combined modal/teardown runs passed, with exactly one deletion callback.
 
-- Remote FCT passed lists, two editors, local shortcuts, mouse/modifier and wheel cases, palettes, responsive modal resize/reopen, Raw Clock pixels, replacement/takeover and normal close. System Events delivered the registered Ctrl+Shift+Alt+Command+Q while Finder was active. Native touch remained unsupported.
+### Ellipsized captions forced hosted windows wider than requested
 
-## Coverage notes
-
-- Local and hosted FCT passed list add/clear, independent editor markers, local shortcuts, mouse/modifier cases and normal close. Raw Clock changed pixels without input, survived tab/palette changes and restarted correctly. Local responsive-modal client sizes included 240/350/440/680 by 320 and 680 by 220/520. Remote modal resizing was constrained by the host to width 671 and height 490 at the largest requested sizes; the actual bounds are retained in `<iGac repo>/build/touch-step4/remote-modal-sizes.json`.
-- All three native RPC configurations passed edited/Unicode greetings, normal shutdown, and idle/blocked host loss. Network receive queues and a pending stdio Controls read established blocked delivery before host termination. Remote renderers retained the exact fatal text after choosing No. Evidence: `<iGac repo>/build/touch-step4/native-rpc-results.json`.
-- Physical touch is excluded. Physical mouse/keyboard hardware, every responsive movie/account scrolling combination and title-bar-close variant were not exhaustively checked. The FCT global shortcut used generated System Events input; other native input used renderer/local automation.
+Hosted FCT's responsive modal opened at 291×320 and could not shrink to 240px because CoreGraphics counted the full ellipsized caption as minimum width. Windows label renderers contribute zero width in this mode. CoreGraphics now does likewise while retaining measured height. The new composition regression failed before the fix and passes afterward; live initial 240×320 sizing and all nine grow/shrink checks passed.

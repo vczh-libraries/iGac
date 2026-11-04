@@ -664,7 +664,7 @@ namespace vl {
                     [op setNameFieldStringValue:WStringToNSString(initialFileName)];
                     
                     [op setCanChooseFiles:YES];
-                    [op setCanChooseDirectories:YES];
+                    [op setCanChooseDirectories:NO];
                     [op setAllowsOtherFileTypes:allowAnyTypes];
                     [op setShowsTagField:NO];
                     if(options & FileDialogAllowMultipleSelection)

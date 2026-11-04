@@ -26,7 +26,21 @@
 namespace vl::presentation::osx
 {
     void RefreshCocoaDefaultFont();
+    bool DispatchCocoaTimerEvent(NSEvent* event);
 }
+
+@interface CocoaApplication: NSApplication
+@end
+
+@implementation CocoaApplication
+- (void)sendEvent:(NSEvent*)event
+{
+    if (!vl::presentation::osx::DispatchCocoaTimerEvent(event))
+    {
+        [super sendEvent:event];
+    }
+}
+@end
 
 @interface CocoaApplicationDelegate: NSObject<NSApplicationDelegate>
 
@@ -193,7 +207,7 @@ namespace vl {
                     inputService(&GlobalTimerFunc, &callbackService),
                     clipboardService(&callbackService, &imageService)
                 {
-                    [NSApplication sharedApplication];
+                    [CocoaApplication sharedApplication];
                     
                     appDelegate = [[CocoaApplicationDelegate alloc] init];
                     [[NSApplication sharedApplication] setDelegate:appDelegate];
@@ -291,19 +305,7 @@ namespace vl {
                                                               dequeue:YES];
                         if (event != nil)
                         {
-                            if ([event type] == NSEventTypeApplicationDefined && [event subtype] == GlobalTimerEventSubtype)
-                            {
-                                globalTimerEventPending = false;
-                                if (inputService.IsTimerEnabled())
-                                {
-                                    asyncService.ExecuteAsyncTasks();
-                                    callbackService.InvokeGlobalTimer();
-                                }
-                            }
-                            else
-                            {
-                                [NSApp sendEvent:event];
-                            }
+                            [NSApp sendEvent:event];
                             [NSApp updateWindows];
                         }
                         asyncService.ExecuteAsyncTasks();
@@ -413,6 +415,16 @@ namespace vl {
                 
                 //=======================================================================
                 
+                void DispatchGlobalTimerEvent()
+                {
+                    globalTimerEventPending = false;
+                    if (inputService.IsTimerEnabled())
+                    {
+                        asyncService.ExecuteAsyncTasks();
+                        callbackService.InvokeGlobalTimer();
+                    }
+                }
+
                 void PostGlobalTimerEvent()
                 {
                     if (globalTimerEventPending) return;
@@ -451,6 +463,16 @@ namespace vl {
             };
 
             CocoaController* cocoaController = nullptr;
+
+            bool DispatchCocoaTimerEvent(NSEvent* event)
+            {
+                if ([event type] != NSEventTypeApplicationDefined || [event subtype] != GlobalTimerEventSubtype)
+                {
+                    return false;
+                }
+                if (cocoaController) cocoaController->DispatchGlobalTimerEvent();
+                return true;
+            }
             
             INativeController* GetOSXNativeController()
             {

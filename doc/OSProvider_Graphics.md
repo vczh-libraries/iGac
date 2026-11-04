@@ -118,6 +118,12 @@ hosted and remote clock checks are recorded in `<iGac repo>/TestMatrix_NativeRen
 
 ### Text Layout
 
+Ellipsized solid labels contribute zero minimum width while retaining their
+measured height, matching the Windows label renderers. Their full text is drawn
+with tail truncation inside the assigned rectangle. This lets hosted captions
+and responsive rows fit narrow windows; toggling ellipsis off restores natural
+width. `Test_Paragraph` checks this through composition layout.
+
 `GuiGraphicsLayoutProviderCoreText.mm` provides `CoreTextLayoutProvider`, which implements `IGuiGraphicsLayoutProvider` using CoreText for rich text layout and rendering.
 
 Inline attachment cells (`GuiElementsTextCell`) must be created with `initWithGraphicsElement:properties:andCallback:` so their inline-object properties and paragraph callback are initialized. Plain `init` and `new` are unavailable.
