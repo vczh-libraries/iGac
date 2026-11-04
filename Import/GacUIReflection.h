@@ -244,6 +244,7 @@ Type List (Compositions)
 ***********************************************************************/
 
 #define GUIREFLECTIONCOMPOSITION_EXTRA_TYPELIST(F)\
+			F(presentation::compositions::MomentumScrolling)\
 			F(presentation::compositions::eazy_layout::GuiEasyLayoutDirection)\
 			F(presentation::compositions::eazy_layout::GuiEasyLayout)\
 			F(presentation::compositions::eazy_layout::GuiEasyCellLayout)\
@@ -334,6 +335,8 @@ Type List (Events)
 			F(presentation::compositions::GuiPointSequenceEndedEventArgs)\
 			F(presentation::compositions::GuiPointGesture_Scrolling)\
 			F(presentation::compositions::GuiPointGesture_DraggingAndRotation)\
+			F(presentation::compositions::GuiPointGesture_ShortPressing)\
+			F(presentation::compositions::GuiPointGesture_LongPressing)\
 			F(presentation::compositions::GuiPointGestureEventArgs)\
 			F(presentation::compositions::ControlSignal)\
 			F(presentation::compositions::GuiControlSignalEventArgs)\
@@ -1553,6 +1556,8 @@ namespace vl
 			DECL_TYPE_INFO(::tui_controls::TuiFullFontDialogWindowConstructor)
 			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxButtonTemplate)
 			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxButtonTemplateConstructor)
+			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxLabelTemplate)
+			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxLabelTemplateConstructor)
 			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxWindow)
 			DECL_TYPE_INFO(::tui_controls::TuiMessageBoxWindowConstructor)
 			DECL_TYPE_INFO(::tui_controls::TuiSimpleFontDialogWindow)

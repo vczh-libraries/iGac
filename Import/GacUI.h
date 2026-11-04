@@ -4065,26 +4065,31 @@ Event
 
 				void ExecuteWithNewSender(T& argument, GuiGraphicsComposition* newSender)
 				{
-					auto currentHandler=&handlers;
-					while(*currentHandler)
+					auto currentHandler = handlers;
+					while(currentHandler)
 					{
+						if (!currentHandler->handler->IsAttached())
+						{
+							currentHandler = currentHandler->next;
+							continue;
+						}
 						if constexpr (std::is_same_v<T, GuiPointSequenceStartedEventArgs>)
 						{
 							auto accepted = argument.acceptedComposition;
-							(*currentHandler)->handler->Execute(newSender ? newSender : sender, argument);
+							currentHandler->handler->Execute(newSender ? newSender : sender, argument);
 							if (accepted) argument.acceptedComposition = accepted;
 						}
 						else if constexpr (std::is_same_v<T, GuiPointGestureEventArgs>)
 						{
 							auto selected = argument.selected;
-							(*currentHandler)->handler->Execute(newSender ? newSender : sender, argument);
+							currentHandler->handler->Execute(newSender ? newSender : sender, argument);
 							argument.selected = selected || argument.selected;
 						}
 						else
 						{
-							(*currentHandler)->handler->Execute(newSender ? newSender : sender, argument);
+							currentHandler->handler->Execute(newSender ? newSender : sender, argument);
 						}
-						currentHandler=&(*currentHandler)->next;
+						currentHandler = currentHandler->next;
 					}
 				}
 
@@ -4288,6 +4293,10 @@ Predefined Point Events
 			{
 				/// <summary>Select the composition that will receive this sequence's actions and End, or leave null to decline.</summary>
 				GuiGraphicsComposition*						acceptedComposition = nullptr;
+				/// <summary>Allow an eligible accepted sequence to generate a deferred left click.</summary>
+				bool										generateLeftButtonClick = true;
+				/// <summary>Allow an eligible accepted long press to generate a deferred right click.</summary>
+				bool										generateRightButtonClick = true;
 
 				GuiPointSequenceStartedEventArgs(const collections::List<Nullable<Point>>& points);
 				GuiPointSequenceStartedEventArgs(GuiGraphicsComposition* composition, const collections::List<Nullable<Point>>& points);
@@ -4328,12 +4337,30 @@ Predefined Point Events
 				auto operator<=>(const GuiPointGesture_DraggingAndRotation&) const = default;
 			};
 
-			/// <summary>A predefined gesture offered directly to the accepted composition. Selection persists until the sequence ends.</summary>
+			/// <summary>A successful single-contact press shorter than 500000 microseconds, offered at End independently of click-generation flags.</summary>
+			struct GuiPointGesture_ShortPressing
+			{
+				/// <summary>The original screen start reprojected into the accepted composition's current logical coordinates at End.</summary>
+				Point										position;
+
+				auto operator<=>(const GuiPointGesture_ShortPressing&) const = default;
+			};
+
+			/// <summary>A successful single-contact press lasting at least 500000 microseconds, offered at End independently of click-generation flags.</summary>
+			struct GuiPointGesture_LongPressing
+			{
+				/// <summary>The original screen start reprojected into the accepted composition's current logical coordinates at End.</summary>
+				Point										position;
+
+				auto operator<=>(const GuiPointGesture_LongPressing&) const = default;
+			};
+
+			/// <summary>A predefined gesture offered directly to the accepted composition. Selection persists until the sequence ends and suppresses all deferred clicks.</summary>
 			class GuiPointGestureEventArgs : public GuiEventArgs, public Description<GuiPointGestureEventArgs>
 			{
 			public:
 				/// <summary>The writable reflected variant payload. Reading or extracting it produces a copy; assign the complete variant to write it back.</summary>
-				Variant<GuiPointGesture_Scrolling, GuiPointGesture_DraggingAndRotation> gesture;
+				Variant<GuiPointGesture_Scrolling, GuiPointGesture_DraggingAndRotation, GuiPointGesture_ShortPressing, GuiPointGesture_LongPressing> gesture;
 				/// <summary>Select this gesture when unhandled. Later handlers cannot undo selection.</summary>
 				bool										selected = false;
 
@@ -5458,231 +5485,6 @@ Tab-Combined Shortcut Key Interfaces Helpers
 }
 
 #endif
-
-/***********************************************************************
-.\APPLICATION\GRAPHICSHOST\GUIGRAPHICSHOST.H
-***********************************************************************/
-/***********************************************************************
-Vczh Library++ 3.0
-Developer: Zihan Chen(vczh)
-GacUI::Graphics Composition Host
-
-Interfaces:
-***********************************************************************/
-
-#ifndef VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST
-#define VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST
-
-
-namespace vl
-{
-	namespace presentation
-	{
-		namespace controls
-		{
-			class GuiWindow;
-		}
-
-		namespace compositions
-		{
-			class GuiPointActionManager;
-
-/***********************************************************************
-Animation
-***********************************************************************/
-
-			/// <summary>
-			/// Represents a timer callback object.
-			/// </summary>
-			class IGuiGraphicsTimerCallback : public virtual IDescriptable, public Description<IGuiGraphicsTimerCallback>
-			{
-			public:
-				/// <summary>Called periodically.</summary>
-				/// <returns>Returns false to indicate that this callback need to be removed.</returns>
-				virtual bool					Play() = 0;
-			};
-
-			/// <summary>
-			/// Timer callback manager.
-			/// </summary>
-			class GuiGraphicsTimerManager : public Object, public Description<GuiGraphicsTimerManager>
-			{
-				typedef collections::List<Ptr<IGuiGraphicsTimerCallback>>		CallbackList;
-			protected:
-				CallbackList					callbacks;
-
-			public:
-				GuiGraphicsTimerManager();
-				~GuiGraphicsTimerManager();
-
-				/// <summary>Add a new callback.</summary>
-				/// <param name="callback">The new callback to add.</param>
-				void							AddCallback(Ptr<IGuiGraphicsTimerCallback> callback);
-				/// <summary>Called periodically.</summary>
-				void							Play();
-			};
-
-/***********************************************************************
-Host
-***********************************************************************/
-
-			/// <summary>
-			/// GuiGraphicsHost hosts an <see cref="GuiWindowComposition"/> in an <see cref="INativeWindow"/>. The composition will fill the whole window.
-			/// </summary>
-			class GuiGraphicsHost : public Object, private INativeWindowListener, private INativeControllerListener, public Description<GuiGraphicsHost>
-			{
-				typedef collections::List<GuiGraphicsComposition*>							CompositionList;
-				typedef GuiGraphicsComposition::GraphicsHostRecord							HostRecord;
-				typedef collections::Pair<DescriptableObject*, vint>						ProcKey;
-				typedef collections::List<Func<void()>>										ProcList;
-				typedef collections::Dictionary<ProcKey, Func<void()>>						ProcMap;
-			public:
-				static const vuint64_t					CaretInterval = 500;
-
-			protected:
-				HostRecord								hostRecord;
-				bool									supressPaint = false;
-				bool									needRender = true;
-				bool									renderingTriggeredInLastFrame = false;
-				ProcList								afterRenderProcs;
-				ProcMap									afterRenderKeyedProcs;
-
-				GuiAltActionManager*					altActionManager = nullptr;
-				GuiTabActionManager*					tabActionManager = nullptr;
-				GuiPointActionManager*					pointActionManager = nullptr;
-				IGuiShortcutKeyManager*					shortcutKeyManager = nullptr;
-
-				controls::GuiControlHost*				controlHost = nullptr;
-				GuiWindowComposition*					windowComposition = nullptr;
-				GuiGraphicsComposition*					focusedComposition = nullptr;
-				NativeSize								previousClientSize;
-				Size									minSize;
-				Point									caretPoint;
-				vuint64_t								lastCaretTime = 0;
-
-				GuiGraphicsTimerManager					timerManager;
-				GuiGraphicsComposition*					mouseCaptureComposition = nullptr;
-				bool									mouseButtonStates[5] = {};
-				bool									suppressNativeMouseCapture = false;
-				CompositionList							mouseEnterCompositions;
-				void									RefreshRelatedHostRecord(INativeWindow* nativeWindow);
-
-				void									SetFocusInternal(GuiGraphicsComposition* composition);
-				void									DisconnectCompositionInternal(GuiGraphicsComposition* composition);
-				bool									AnyMouseButtonDown();
-				void									ResetMouseCapture();
-				void									MouseCapture(const NativeWindowMouseInfo& info);
-				void									MouseUncapture();
-				GuiGraphicsComposition*					FindInputComposition(NativePoint location);
-				void									PointCapture(GuiGraphicsComposition* composition);
-				void									PointUncapture();
-				void									ResetPointCapture();
-				void									OnCharInput(const NativeWindowCharInfo& info, GuiGraphicsComposition* composition, GuiCharEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
-				void									OnKeyInput(const NativeWindowKeyInfo& info, GuiGraphicsComposition* composition, GuiKeyEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
-				void									RaiseMouseEvent(GuiMouseEventArgs& arguments, GuiGraphicsComposition* composition, GuiMouseEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
-				void									OnMouseInput(NativeMouseButton button, const NativeWindowMouseInfo& info, bool capture, bool release, GuiMouseEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
-
-				void									ResetRenderTarget();
-				void									CreateRenderTarget();
-				
-			private:
-				INativeWindowListener::HitTestResult	HitTest(NativePoint location)override;
-				void									Moving(NativeRect& bounds, bool fixSizeOnly, bool draggingBorder)override;
-				void									Moved()override;
-				void									DpiChanged(bool preparing)override;
-				void									Paint()override;
-
-				void									MouseDown(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
-				void									MouseUp(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
-				void									MouseDoubleClick(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
-				void									HorizontalWheel(const NativeWindowMouseInfo& info)override;
-				void									VerticalWheel(const NativeWindowMouseInfo& info)override;
-				void									MouseMoving(const NativeWindowMouseInfo& info)override;
-				void									MouseEntered()override;
-				void									MouseLeaved()override;
-
-				void									PointSequenceStarted(const NativeWindowPointInfo& firstPoint, bool& accept) override;
-				void									PointDown(const NativeWindowPointInfo& info) override;
-				void									PointUpdate(const NativeWindowPointInfo& info) override;
-				void									PointUp(const NativeWindowPointInfo& info) override;
-				void									PointEntered(const NativeWindowPointInfo& info) override;
-				void									PointLeaved(const NativeWindowPointInfo& info) override;
-				void									PointSequenceEnded(const PointSequenceEndInfo& info) override;
-
-				void									KeyDown(const NativeWindowKeyInfo& info)override;
-				void									KeyUp(const NativeWindowKeyInfo& info)override;
-				void									Char(const NativeWindowCharInfo& info)override;
-
-				bool									NeedRefresh()override;
-				void									ForceRefresh(bool handleFailure, bool& updated, bool& failureByResized, bool& failureByLostDevice)override;
-				void									GlobalTimer()override;
-
-				elements::RenderTargetFailure			Render(bool forceUpdate, bool handleFailure, bool& updated);
-
-			public:
-				GuiGraphicsHost(controls::GuiControlHost* _controlHost, GuiGraphicsComposition* boundsComposition);
-				~GuiGraphicsHost();
-
-				/// <summary>Get the associated window.</summary>
-				/// <returns>The associated window.</returns>
-				INativeWindow*							GetNativeWindow();
-				/// <summary>Associate a window. A <see cref="GuiWindowComposition"/> will fill and appear in the window.</summary>
-				/// <param name="_nativeWindow">The window to associated.</param>
-				void									SetNativeWindow(INativeWindow* _nativeWindow);
-				/// <summary>Get the main <see cref="GuiWindowComposition"/>. If a window is associated, everything that put into the main composition will be shown in the window.</summary>
-				/// <returns>The main compositoin.</returns>
-				GuiGraphicsComposition*					GetMainComposition();
-				/// <summary>Request rendering.</summary>
-				void									RequestRender();
-				/// <summary>Request updating sizes of compositions.</summary>
-				void									RequestUpdateSizeFromNativeWindow();
-				/// <summary>Invoke a specified function after rendering.</summary>
-				/// <param name="proc">The specified function.</param>
-				/// <param name="key">A key to cancel a previous binded key if not null.</param>
-				void									InvokeAfterRendering(const Func<void()>& proc, ProcKey key = { nullptr,-1 });
-
-				/// <summary>Invalidte the internal tab order control list. Next time when TAB is pressed it will be rebuilt.</summary>
-				void									InvalidateTabOrderCache();
-				/// <summary>Get the <see cref="IGuiShortcutKeyManager"/> attached with this graphics host.</summary>
-				/// <returns>The shortcut key manager.</returns>
-				IGuiShortcutKeyManager*					GetShortcutKeyManager();
-				/// <summary>Attach or detach the <see cref="IGuiShortcutKeyManager"/> associated with this graphics host. When this graphics host is disposing, the associated shortcut key manager will be deleted if exists.</summary>
-				/// <param name="value">The shortcut key manager. Set to null to detach the previous shortcut key manager from this graphics host.</param>
-				void									SetShortcutKeyManager(IGuiShortcutKeyManager* value);
-
-				/// <summary>Set the focus composition. A focused composition will receive keyboard messages.</summary>
-				/// <returns>Returns true if this operation succeeded.</returns>
-				/// <param name="composition">The composition to set focus. This composition should be or in the main composition.</param>
-				bool									SetFocus(GuiGraphicsComposition* composition);
-				/// <summary>Unset the focus composition. There will be no focus composition.</summary>
-				/// <returns>Returns true if this operation succeeded.</returns>
-				bool									ClearFocus();
-				/// <summary>Get the focus composition. A focused composition will receive keyboard messages.</summary>
-				/// <returns>The focus composition.</returns>
-				GuiGraphicsComposition*					GetFocusedComposition();
-				/// <summary>Get the caret point. A caret point is the position to place the edit box of the activated input method editor.</summary>
-				/// <returns>The caret point.</returns>
-				Point									GetCaretPoint();
-				/// <summary>Set the caret point. A caret point is the position to place the edit box of the activated input method editor.</summary>
-				/// <param name="value">The caret point.</param>
-				/// <param name="referenceComposition">The point space. If this argument is null, the "value" argument will use the point space of the client area in the main composition.</param>
-				void									SetCaretPoint(Point value, GuiGraphicsComposition* referenceComposition=0);
-
-				/// <summary>Get the timer manager.</summary>
-				/// <returns>The timer manager.</returns>
-				GuiGraphicsTimerManager*				GetTimerManager();
-				/// <summary>Get the composition capturing the current point sequence.</summary>
-				GuiGraphicsComposition*					GetPointCapture();
-				/// <summary>Notify that a composition is going to disconnect from this graphics host. Generally this happens when a composition's parent line changes.</summary>
-				/// <param name="composition">The composition to disconnect</param>
-				void									DisconnectComposition(GuiGraphicsComposition* composition);
-			};
-		}
-	}
-}
-
-#endif
-
 
 /***********************************************************************
 .\GRAPHICSCOMPOSITION\INCLUDEFORWARD.H
@@ -9604,6 +9406,8 @@ namespace vl
 
 		namespace controls
 		{
+			class GuiPopup;
+
 			template<typename T, typename=void>
 			struct QueryServiceHelper;
 
@@ -9707,6 +9511,8 @@ Basic Construction
 				description::Value						tag;
 				GuiControl*								tooltipControl = nullptr;
 				vint									tooltipWidth = 0;
+				GuiPopup*								contextMenu = nullptr;
+				bool									displayContextMenuOnRightClick = true;
 
 				virtual void							BeforeControlTemplateUninstalled();
 				virtual void							AfterControlTemplateInstalled(bool initialize);
@@ -9730,6 +9536,7 @@ Basic Construction
 				virtual void							OnPointSequenceEnded(compositions::GuiGraphicsComposition* sender, compositions::GuiPointSequenceEndedEventArgs& arguments);
 				void									OnGotFocus(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
 				void									OnLostFocus(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
+				void									OnContextMenuMouseUp(compositions::GuiGraphicsComposition* sender, compositions::GuiMouseEventArgs& arguments);
 				void									SetFocusableComposition(compositions::GuiGraphicsComposition* value);
 
 				bool									IsControlVisibleAndEnabled();
@@ -9911,6 +9718,18 @@ Basic Construction
 				/// <summary>Set the tag object of the control.</summary>
 				/// <param name="value">The tag object of the control.</param>
 				void									SetTag(const description::Value& value);
+				/// <summary>Get the borrowed context menu. Null by default.</summary>
+				/// <returns>The borrowed context menu.</returns>
+				GuiPopup*								GetContextMenu();
+				/// <summary>Set the borrowed context menu. Replacing or clearing it, or deleting this control, does not delete the popup. Clear or replace the pointer before deleting its target, and keep the popup owner alive while it is shown.</summary>
+				/// <param name="value">The borrowed context menu, or null to clear it.</param>
+				void									SetContextMenu(GuiPopup* value);
+				/// <summary>Get whether unhandled right-button releases on the bounds automatically display the context menu. True by default.</summary>
+				/// <returns>True to automatically display the context menu.</returns>
+				bool									GetDisplayContextMenuOnRightClick();
+				/// <summary>Set automatic context-menu display. Disable it for custom handling on the same bounds. Both context-menu settings survive template replacement and theme refresh.</summary>
+				/// <param name="value">True to automatically display the context menu.</param>
+				void									SetDisplayContextMenuOnRightClick(bool value);
 				/// <summary>Get the tooltip control of the control.</summary>
 				/// <returns>The tooltip control of the control.</returns>
 				GuiControl*								GetTooltipControl();
@@ -10638,6 +10457,7 @@ Window
 			/// </summary>
 			class GuiPopup : public GuiWindow, public Description<GuiPopup>
 			{
+				friend class GuiApplication;
 			protected:
 				union PopupInfo
 				{
@@ -10656,10 +10476,13 @@ Window
 			protected:
 				vint									popupType = -1;
 				PopupInfo								popupInfo;
+				bool									hasPopupOwner = false;
+				bool									closingForOwner = false;
 
 				void									UpdateClientSizeAfterRendering(Size preferredSize, Size clientSize)override;
 				void									PopupOpened(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
-				void									PopupClosed(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
+				void									BeforeClosing(bool& cancel)override;
+				void									Closed()override;
 				void									OnKeyDown(compositions::GuiGraphicsComposition* sender, compositions::GuiKeyEventArgs& arguments);
 
 				static bool								IsClippedByScreen(NativeSize size, NativePoint location, INativeScreen* screen);
@@ -10712,7 +10535,7 @@ Window
 
 				void									GlobalTimer()override;
 				void									TooltipOpened(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
-				void									TooltipClosed(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
+				void									Closed()override;
 
 			public:
 				/// <summary>Create a control with a specified default theme.</summary>
@@ -10811,6 +10634,7 @@ Application
 				void											NotifyNativeWindowChanged(GuiControlHost* controlHost, INativeWindow* previousNativeWindow);
 				void											RegisterPopupOpened(GuiPopup* popup);
 				void											RegisterPopupClosed(GuiPopup* popup);
+				void											CloseOwnedPopups(INativeWindow* owner);
 				void											TooltipMouseEnter(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
 				void											TooltipMouseLeave(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
 			public:
@@ -19894,6 +19718,8 @@ GuiDocumentCommonInterface
 				GuiControl*									documentControl = nullptr;
 				elements::GuiDocumentElement*				documentElement = nullptr;
 				compositions::GuiBoundsComposition*			documentComposition = nullptr;
+				compositions::GuiGraphicsComposition*		documentPointEventComposition = nullptr;
+				bool										pointStartedInDocument = false;
 
 				compositions::GuiGraphicsComposition*		documentMouseArea = nullptr;
 				INativeCursor*								documentCursor = nullptr;
@@ -19901,7 +19727,6 @@ GuiDocumentCommonInterface
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseDownHandler;
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseUpHandler;
 				Ptr<compositions::IGuiGraphicsEventHandler>	onMouseLeaveHandler;
-				Ptr<compositions::IGuiGraphicsEventHandler>	onPointSequenceStartedHandler;
 
 				Ptr<DocumentHyperlinkRun::Package>			activeHyperlinks;
 				bool										dragging = false;
@@ -19925,6 +19750,7 @@ GuiDocumentCommonInterface
 																compositions::GuiGraphicsComposition* _mouseArea,
 																compositions::GuiGraphicsComposition* _container,
 																compositions::GuiGraphicsComposition* eventComposition,
+																compositions::GuiGraphicsComposition* pointEventComposition,
 																compositions::GuiGraphicsComposition* focusableComposition
 																);
 				void										ReplaceMouseArea(compositions::GuiGraphicsComposition* _mouseArea);
@@ -19950,6 +19776,7 @@ GuiDocumentCommonInterface
 				void										OnMouseUp(compositions::GuiGraphicsComposition* sender, compositions::GuiMouseEventArgs& arguments);
 				void										OnMouseLeave(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments);
 				void										OnPointSequenceStarted(compositions::GuiGraphicsComposition* sender, compositions::GuiPointSequenceStartedEventArgs& arguments);
+				void										OnPointGesture(compositions::GuiGraphicsComposition* sender, compositions::GuiPointGestureEventArgs& arguments);
 
 				virtual Point								GetDocumentViewPosition() = 0;
 				virtual void								EnsureRectVisible(Rect bounds) = 0;
@@ -26028,6 +25855,7 @@ GuiRemoteEvents
 	{
 	protected:
 		GuiRemoteController*						remote;
+		wchar_t										pendingHighSurrogate = 0;
 
 	public:
 		GuiRemoteEvents(GuiRemoteController* _remote);
@@ -26062,6 +25890,7 @@ GuiRemoteEvents
 }
 
 #endif
+
 
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTE\GUIREMOTEWINDOW.H
@@ -26898,6 +26727,332 @@ Interfaces:
 
 
 /***********************************************************************
+.\APPLICATION\GRAPHICSHOST\GUIGRAPHICSHOST_POINT.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+GacUI::Graphics Composition Host
+***********************************************************************/
+
+#ifndef VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST_POINT
+#define VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST_POINT
+
+
+namespace vl
+{
+	namespace presentation
+	{
+		namespace compositions
+		{
+			class GuiGraphicsHost;
+			class MomentumScrollingState;
+
+			/// <summary>Optional inertial scrolling for controls accepting point sequences. Own this component with GuiInstanceRootObject::AddComponent.</summary>
+			class MomentumScrolling : public controls::GuiComponent, public Description<MomentumScrolling>
+			{
+				friend class MomentumScrollingState;
+			protected:
+				controls::GuiInstanceRootObject*                rootObject = nullptr;
+				collections::List<Ptr<MomentumScrollingState>>  states;
+				double                                          deceleration = 1.0;
+
+				void                                            RetireDisposedControls();
+			public:
+				MomentumScrolling();
+				~MomentumScrolling();
+
+				void                                            Attach(controls::GuiInstanceRootObject* rootObject)override;
+				void                                            Detach(controls::GuiInstanceRootObject* rootObject)override;
+				void                                            EnvironmentChanged()override;
+				/// <summary>Observe a control's persistent bounds without changing AcceptPointEvents. Repeated attachment is a no-op.</summary>
+				/// <param name="control">The control to observe; attachments do not own controls.</param>
+				void                                            AttachControl(controls::GuiControl* control);
+				/// <summary>Stop continuation and remove listeners. An unattached control is a no-op.</summary>
+				/// <param name="control">The control to detach.</param>
+				void                                            DetachControl(controls::GuiControl* control);
+				/// <summary>Get the positive deceleration multiplier, initially 1.0 (320 logical pixels per second squared).</summary>
+				/// <returns>The multiplier.</returns>
+				double                                          GetDeceleration();
+				/// <summary>Set a finite positive multiplier for subsequent playbacks.</summary>
+				/// <param name="value">The multiplier; twice the value halves the stopping time.</param>
+				void                                            SetDeceleration(double value);
+			};
+
+			class IGuiPointGesture : public virtual Interface
+			{
+			public:
+				virtual void								OnPointSequenceStarted(const GuiPointSequenceStartedEventArgs& arguments) = 0;
+				virtual void								OnPointAction(const GuiPointEventArgs& arguments) = 0;
+				virtual void								OnPointSequenceEnded(const GuiPointSequenceEndedEventArgs& arguments) = 0;
+				virtual bool								IsGestureSelected() = 0;
+				virtual Nullable<NativeMouseButton>			GetFallbackClick() = 0;
+			};
+
+			class GuiPointActionManager : public Object
+			{
+			protected:
+				GuiGraphicsHost*							host;
+				GuiGraphicsComposition*						captureComposition = nullptr;
+				NativeWindowPointInfo						firstPoint;
+				NativePoint									firstPointScreen;
+				NativePoint									currentPointScreen;
+				collections::List<Nullable<NativePoint>>	nativePoints;
+				collections::List<Nullable<Point>>			points;
+				collections::List<Ptr<IGuiPointGesture>>	gestures;
+				IGuiPointGesture*							selectedGesture = nullptr;
+				bool										ended = false;
+
+			public:
+				GuiPointActionManager(GuiGraphicsHost* _host);
+				void										OnPointSequenceStarted(const NativeWindowPointInfo& info, const GuiPointSequenceStartedEventArgs& query);
+				void										OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType);
+				bool										OnPointSequenceEnded(const PointSequenceEndInfo& info);
+
+				void										PointCapture(GuiGraphicsComposition* composition);
+				void										ResetPointCapture();
+				GuiGraphicsComposition*						GetPointCapture();
+
+				const collections::List<Nullable<NativePoint>>& GetNativePoints();
+				const collections::List<Nullable<Point>>&	GetPoints(GuiGraphicsComposition* relativeTo);
+				NativePoint									GetScreenPoint(const NativeWindowPointInfo& info);
+				NativePoint									GetCurrentScreenPoint();
+				Point										ConvertPoint(NativePoint screen, GuiGraphicsComposition* relativeTo);
+				WindowPointInfo								ConvertSample(const NativeWindowPointInfo& info, GuiGraphicsComposition* relativeTo);
+				NativeWindowPointInfo						GetFirstPoint();
+				Nullable<NativeMouseButton>					GetFallbackClick();
+			};
+		}
+	}
+}
+
+#endif
+
+
+/***********************************************************************
+.\APPLICATION\GRAPHICSHOST\GUIGRAPHICSHOST.H
+***********************************************************************/
+/***********************************************************************
+Vczh Library++ 3.0
+Developer: Zihan Chen(vczh)
+GacUI::Graphics Composition Host
+
+Interfaces:
+***********************************************************************/
+
+#ifndef VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST
+#define VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST
+
+
+namespace vl
+{
+	namespace presentation
+	{
+		namespace controls
+		{
+			class GuiWindow;
+		}
+
+		namespace compositions
+		{
+/***********************************************************************
+Animation
+***********************************************************************/
+
+			/// <summary>
+			/// Represents a timer callback object.
+			/// </summary>
+			class IGuiGraphicsTimerCallback : public virtual IDescriptable, public Description<IGuiGraphicsTimerCallback>
+			{
+			public:
+				/// <summary>Called periodically.</summary>
+				/// <returns>Returns false to indicate that this callback need to be removed.</returns>
+				virtual bool					Play() = 0;
+			};
+
+			/// <summary>
+			/// Timer callback manager.
+			/// </summary>
+			class GuiGraphicsTimerManager : public Object, public Description<GuiGraphicsTimerManager>
+			{
+				typedef collections::List<Ptr<IGuiGraphicsTimerCallback>>		CallbackList;
+			protected:
+				CallbackList					callbacks;
+
+			public:
+				GuiGraphicsTimerManager();
+				~GuiGraphicsTimerManager();
+
+				/// <summary>Add a new callback.</summary>
+				/// <param name="callback">The new callback to add.</param>
+				void							AddCallback(Ptr<IGuiGraphicsTimerCallback> callback);
+				/// <summary>Called periodically.</summary>
+				void							Play();
+			};
+
+/***********************************************************************
+Host
+***********************************************************************/
+
+			/// <summary>
+			/// GuiGraphicsHost hosts an <see cref="GuiWindowComposition"/> in an <see cref="INativeWindow"/>. The composition will fill the whole window.
+			/// </summary>
+			class GuiGraphicsHost : public Object, private INativeWindowListener, private INativeControllerListener, public Description<GuiGraphicsHost>
+			{
+				typedef collections::List<GuiGraphicsComposition*>							CompositionList;
+				typedef GuiGraphicsComposition::GraphicsHostRecord							HostRecord;
+				typedef collections::Pair<DescriptableObject*, vint>						ProcKey;
+				typedef collections::List<Func<void()>>										ProcList;
+				typedef collections::Dictionary<ProcKey, Func<void()>>						ProcMap;
+			public:
+				static const vuint64_t					CaretInterval = 500;
+
+			protected:
+				HostRecord								hostRecord;
+				bool									supressPaint = false;
+				bool									needRender = true;
+				bool									renderingTriggeredInLastFrame = false;
+				ProcList								afterRenderProcs;
+				ProcMap									afterRenderKeyedProcs;
+
+				GuiAltActionManager*					altActionManager = nullptr;
+				GuiTabActionManager*					tabActionManager = nullptr;
+				GuiPointActionManager*					pointActionManager = nullptr;
+				IGuiShortcutKeyManager*					shortcutKeyManager = nullptr;
+
+				controls::GuiControlHost*				controlHost = nullptr;
+				GuiWindowComposition*					windowComposition = nullptr;
+				GuiGraphicsComposition*					focusedComposition = nullptr;
+				NativeSize								previousClientSize;
+				Size									minSize;
+				Point									caretPoint;
+				vuint64_t								lastCaretTime = 0;
+
+				GuiGraphicsTimerManager					timerManager;
+				GuiGraphicsComposition*					mouseCaptureComposition = nullptr;
+				bool									mouseButtonStates[5] = {};
+				bool									suppressNativeMouseCapture = false;
+				CompositionList							mouseEnterCompositions;
+				void									RefreshRelatedHostRecord(INativeWindow* nativeWindow);
+
+				void									SetFocusInternal(GuiGraphicsComposition* composition);
+				void									DisconnectCompositionInternal(GuiGraphicsComposition* composition);
+				bool									AnyMouseButtonDown();
+				void									ResetMouseCapture();
+				void									MouseCapture(const NativeWindowMouseInfo& info);
+				void									MouseUncapture();
+				GuiGraphicsComposition*					FindInputComposition(NativePoint location);
+				void									PointCapture(GuiGraphicsComposition* composition);
+				void									PointUncapture();
+				void									ResetPointCapture();
+				void									OnCharInput(const NativeWindowCharInfo& info, GuiGraphicsComposition* composition, GuiCharEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
+				void									OnKeyInput(const NativeWindowKeyInfo& info, GuiGraphicsComposition* composition, GuiKeyEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
+				void									RaiseMouseEvent(GuiMouseEventArgs& arguments, GuiGraphicsComposition* composition, GuiMouseEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
+				void									OnMouseInput(NativeMouseButton button, const NativeWindowMouseInfo& info, bool capture, bool release, GuiMouseEvent GuiGraphicsEventReceiver::* eventReceiverEvent);
+
+				void									ResetRenderTarget();
+				void									CreateRenderTarget();
+				
+			private:
+				INativeWindowListener::HitTestResult	HitTest(NativePoint location)override;
+				void									Moving(NativeRect& bounds, bool fixSizeOnly, bool draggingBorder)override;
+				void									Moved()override;
+				void									DpiChanged(bool preparing)override;
+				void									Paint()override;
+
+				void									MouseDown(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
+				void									MouseUp(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
+				void									MouseDoubleClick(NativeMouseButton button, const NativeWindowMouseInfo& info)override;
+				void									HorizontalWheel(const NativeWindowMouseInfo& info)override;
+				void									VerticalWheel(const NativeWindowMouseInfo& info)override;
+				void									MouseMoving(const NativeWindowMouseInfo& info)override;
+				void									MouseEntered()override;
+				void									MouseLeaved()override;
+
+				void									PointSequenceStarted(const NativeWindowPointInfo& firstPoint, bool& accept) override;
+				void									PointDown(const NativeWindowPointInfo& info) override;
+				void									PointUpdate(const NativeWindowPointInfo& info) override;
+				void									PointUp(const NativeWindowPointInfo& info) override;
+				void									PointEntered(const NativeWindowPointInfo& info) override;
+				void									PointLeaved(const NativeWindowPointInfo& info) override;
+				void									PointSequenceEnded(const PointSequenceEndInfo& info) override;
+
+				void									KeyDown(const NativeWindowKeyInfo& info)override;
+				void									KeyUp(const NativeWindowKeyInfo& info)override;
+				void									Char(const NativeWindowCharInfo& info)override;
+
+				bool									NeedRefresh()override;
+				void									ForceRefresh(bool handleFailure, bool& updated, bool& failureByResized, bool& failureByLostDevice)override;
+				void									GlobalTimer()override;
+
+				elements::RenderTargetFailure			Render(bool forceUpdate, bool handleFailure, bool& updated);
+
+			public:
+				GuiGraphicsHost(controls::GuiControlHost* _controlHost, GuiGraphicsComposition* boundsComposition);
+				~GuiGraphicsHost();
+
+				/// <summary>Get the associated window.</summary>
+				/// <returns>The associated window.</returns>
+				INativeWindow*							GetNativeWindow();
+				/// <summary>Associate a window. A <see cref="GuiWindowComposition"/> will fill and appear in the window.</summary>
+				/// <param name="_nativeWindow">The window to associated.</param>
+				void									SetNativeWindow(INativeWindow* _nativeWindow);
+				/// <summary>Get the main <see cref="GuiWindowComposition"/>. If a window is associated, everything that put into the main composition will be shown in the window.</summary>
+				/// <returns>The main compositoin.</returns>
+				GuiGraphicsComposition*					GetMainComposition();
+				/// <summary>Request rendering.</summary>
+				void									RequestRender();
+				/// <summary>Request updating sizes of compositions.</summary>
+				void									RequestUpdateSizeFromNativeWindow();
+				/// <summary>Invoke a specified function after rendering.</summary>
+				/// <param name="proc">The specified function.</param>
+				/// <param name="key">A key to cancel a previous binded key if not null.</param>
+				void									InvokeAfterRendering(const Func<void()>& proc, ProcKey key = { nullptr,-1 });
+
+				/// <summary>Invalidte the internal tab order control list. Next time when TAB is pressed it will be rebuilt.</summary>
+				void									InvalidateTabOrderCache();
+				/// <summary>Get the <see cref="IGuiShortcutKeyManager"/> attached with this graphics host.</summary>
+				/// <returns>The shortcut key manager.</returns>
+				IGuiShortcutKeyManager*					GetShortcutKeyManager();
+				/// <summary>Attach or detach the <see cref="IGuiShortcutKeyManager"/> associated with this graphics host. When this graphics host is disposing, the associated shortcut key manager will be deleted if exists.</summary>
+				/// <param name="value">The shortcut key manager. Set to null to detach the previous shortcut key manager from this graphics host.</param>
+				void									SetShortcutKeyManager(IGuiShortcutKeyManager* value);
+
+				/// <summary>Set the focus composition. A focused composition will receive keyboard messages.</summary>
+				/// <returns>Returns true if this operation succeeded.</returns>
+				/// <param name="composition">The composition to set focus. This composition should be or in the main composition.</param>
+				bool									SetFocus(GuiGraphicsComposition* composition);
+				/// <summary>Unset the focus composition. There will be no focus composition.</summary>
+				/// <returns>Returns true if this operation succeeded.</returns>
+				bool									ClearFocus();
+				/// <summary>Get the focus composition. A focused composition will receive keyboard messages.</summary>
+				/// <returns>The focus composition.</returns>
+				GuiGraphicsComposition*					GetFocusedComposition();
+				/// <summary>Get the caret point. A caret point is the position to place the edit box of the activated input method editor.</summary>
+				/// <returns>The caret point.</returns>
+				Point									GetCaretPoint();
+				/// <summary>Set the caret point. A caret point is the position to place the edit box of the activated input method editor.</summary>
+				/// <param name="value">The caret point.</param>
+				/// <param name="referenceComposition">The point space. If this argument is null, the "value" argument will use the point space of the client area in the main composition.</param>
+				void									SetCaretPoint(Point value, GuiGraphicsComposition* referenceComposition=0);
+
+				/// <summary>Get the timer manager.</summary>
+				/// <returns>The timer manager.</returns>
+				GuiGraphicsTimerManager*				GetTimerManager();
+				/// <summary>Get the composition capturing the current point sequence.</summary>
+				GuiGraphicsComposition*					GetPointCapture();
+				/// <summary>Notify that a composition is going to disconnect from this graphics host. Generally this happens when a composition's parent line changes.</summary>
+				/// <param name="composition">The composition to disconnect</param>
+				void									DisconnectComposition(GuiGraphicsComposition* composition);
+			};
+		}
+	}
+}
+
+#endif
+
+
+/***********************************************************************
 .\GACUIREFLECTIONHELPER.H
 ***********************************************************************/
 /***********************************************************************
@@ -26986,75 +27141,6 @@ External Functions
 			extern void														GuiTableComposition_SetRows(presentation::compositions::GuiTableComposition* thisObject, vint value);
 			extern void														GuiTableComposition_SetColumns(presentation::compositions::GuiTableComposition* thisObject, vint value);
 			extern void														IGuiAltActionHost_CollectAltActions(presentation::compositions::IGuiAltActionHost* host, collections::List<presentation::compositions::IGuiAltAction*>& actions);
-		}
-	}
-}
-
-#endif
-
-
-/***********************************************************************
-.\APPLICATION\GRAPHICSHOST\GUIGRAPHICSHOST_POINT.H
-***********************************************************************/
-/***********************************************************************
-Vczh Library++ 3.0
-Developer: Zihan Chen(vczh)
-GacUI::Graphics Composition Host
-***********************************************************************/
-
-#ifndef VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST_POINT
-#define VCZH_PRESENTATION_HOST_GUIGRAPHICSHOST_POINT
-
-
-namespace vl
-{
-	namespace presentation
-	{
-		namespace compositions
-		{
-			class GuiGraphicsHost;
-
-			class IGuiPointGesture : public virtual Interface
-			{
-			public:
-				virtual void								OnPointSequenceStarted(const NativeWindowPointInfo& info) = 0;
-				virtual void								OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType) = 0;
-				virtual void								OnPointSequenceEnded(const PointSequenceEndInfo& info) = 0;
-				virtual bool								IsGestureSelected() = 0;
-				virtual Nullable<NativeMouseButton>			GetFallbackClick() = 0;
-			};
-
-			class GuiPointActionManager : public Object
-			{
-			protected:
-				GuiGraphicsHost*							host;
-				GuiGraphicsComposition*						captureComposition = nullptr;
-				NativeWindowPointInfo						firstPoint;
-				NativePoint									firstPointScreen;
-				collections::List<Nullable<NativePoint>>	nativePoints;
-				collections::List<Nullable<Point>>			points;
-				collections::List<Ptr<IGuiPointGesture>>	gestures;
-				IGuiPointGesture*							selectedGesture = nullptr;
-				bool										ended = false;
-
-			public:
-				GuiPointActionManager(GuiGraphicsHost* _host);
-				void										OnPointSequenceStarted(const NativeWindowPointInfo& info, GuiGraphicsComposition* composition);
-				void										OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType);
-				bool										OnPointSequenceEnded(const PointSequenceEndInfo& info);
-
-				void										PointCapture(GuiGraphicsComposition* composition);
-				void										ResetPointCapture();
-				GuiGraphicsComposition*						GetPointCapture();
-
-				const collections::List<Nullable<NativePoint>>& GetNativePoints();
-				const collections::List<Nullable<Point>>&	GetPoints(GuiGraphicsComposition* relativeTo);
-				NativePoint									GetScreenPoint(const NativeWindowPointInfo& info);
-				Point										ConvertPoint(NativePoint screen, GuiGraphicsComposition* relativeTo);
-				WindowPointInfo								ConvertSample(const NativeWindowPointInfo& info, GuiGraphicsComposition* relativeTo);
-				NativeWindowPointInfo						GetFirstPoint();
-				Nullable<NativeMouseButton>					GetFallbackClick();
-			};
 		}
 	}
 }
@@ -30777,8 +30863,12 @@ namespace vl_workflow_global
 	struct __vwsnf75_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxButtonTemplateConstructor___vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize_;
 	struct __vwsnf76_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxButtonTemplateConstructor___vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize_;
 	struct __vwsnf77_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxButtonTemplateConstructor___vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize_;
-	struct __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+	struct __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+	struct __vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
 	struct __vwsnf7_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_;
+	struct __vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+	struct __vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+	struct __vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
 	struct __vwsnf8_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_;
 	struct __vwsnf9_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_;
 	struct __vwsno32_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_;
@@ -30830,7 +30920,10 @@ namespace vl_workflow_global
 	class __vwsnc51_TuiFakeDialogServiceUI_tui_controls_TuiSimpleFontDialogWindowConstructor___vwsn_tui_controls_TuiSimpleFontDialogWindow_Initialize__vl_reflection_description_IValueSubscription;
 	class __vwsnc52_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxButtonTemplateConstructor___vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize__vl_reflection_description_IValueSubscription;
 	class __vwsnc53_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxButtonTemplateConstructor___vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize__vl_reflection_description_IValueSubscription;
-	class __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings;
+	class __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+	class __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+	class __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+	class __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings;
 	class __vwsnc5_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize__vl_reflection_description_IValueSubscription;
 	class __vwsnc6_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize__vl_reflection_description_IValueSubscription;
 	class __vwsnc7_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize__vl_reflection_description_IValueSubscription;
@@ -30860,6 +30953,8 @@ namespace tui_controls
 	class TuiFullFontDialogWindow;
 	class TuiMessageBoxButtonTemplateConstructor;
 	class TuiMessageBoxButtonTemplate;
+	class TuiMessageBoxLabelTemplateConstructor;
+	class TuiMessageBoxLabelTemplate;
 	class TuiMessageBoxWindowConstructor;
 	class TuiMessageBoxWindow;
 	class TuiSimpleFontDialogWindowConstructor;
@@ -31137,7 +31232,7 @@ namespace tui_controls
 
 	class TuiDialogStrings : public ::vl::Object, public ::vl::reflection::Description<TuiDialogStrings>
 	{
-		friend class ::vl_workflow_global::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings;
+		friend class ::vl_workflow_global::__vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings;
 #ifdef VCZH_DESCRIPTABLEOBJECT_WITH_METADATA
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiDialogStrings>;
 #endif
@@ -31575,8 +31670,8 @@ namespace tui_controls
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiMessageBoxButtonTemplateConstructor>;
 #endif
 	protected:
-		::vl::Ptr<::vl::presentation::IMessageBoxDialogAction> Action;
 		::tui_controls::TuiMessageBoxButtonTemplate* self;
+		::vl::Ptr<::vl::presentation::IMessageBoxDialogAction> Action;
 		::vl::presentation::controls::GuiButton* buttonControl;
 		::vl::presentation::compositions::GuiBoundsComposition* __vwsn_precompile_0;
 		void __vwsn_tui_controls_TuiMessageBoxButtonTemplate_Initialize(::tui_controls::TuiMessageBoxButtonTemplate* __vwsn_this_);
@@ -31615,9 +31710,46 @@ namespace tui_controls
 		~TuiMessageBoxButtonTemplate();
 	};
 
+	class TuiMessageBoxLabelTemplateConstructor : public ::vl::Object, public ::vl::reflection::Description<TuiMessageBoxLabelTemplateConstructor>
+	{
+		friend class ::vl_workflow_global::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend class ::vl_workflow_global::__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend class ::vl_workflow_global::__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend struct ::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+#ifdef VCZH_DESCRIPTABLEOBJECT_WITH_METADATA
+		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiMessageBoxLabelTemplateConstructor>;
+#endif
+	protected:
+		::tui_controls::TuiMessageBoxLabelTemplate* self;
+		::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement> __vwsn_precompile_0;
+		void __vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize(::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_this_);
+	public:
+		TuiMessageBoxLabelTemplateConstructor();
+	};
+
+	class TuiMessageBoxLabelTemplate : public ::vl::presentation::templates::GuiLabelTemplate, public ::tui_controls::TuiMessageBoxLabelTemplateConstructor, public ::vl::reflection::Description<TuiMessageBoxLabelTemplate>
+	{
+		friend class ::tui_controls::TuiMessageBoxLabelTemplateConstructor;
+		friend class ::vl_workflow_global::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend class ::vl_workflow_global::__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend class ::vl_workflow_global::__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription;
+		friend struct ::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_;
+#ifdef VCZH_DESCRIPTABLEOBJECT_WITH_METADATA
+		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiMessageBoxLabelTemplate>;
+#endif
+	public:
+		TuiMessageBoxLabelTemplate();
+		~TuiMessageBoxLabelTemplate();
+	};
+
 	class TuiMessageBoxWindowConstructor : public ::vl::Object, public ::vl::reflection::Description<TuiMessageBoxWindowConstructor>
 	{
-		friend struct ::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
 #ifdef VCZH_DESCRIPTABLEOBJECT_WITH_METADATA
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiMessageBoxWindowConstructor>;
 #endif
@@ -31642,7 +31774,8 @@ namespace tui_controls
 	class TuiMessageBoxWindow : public ::vl::presentation::controls::GuiWindow, public ::tui_controls::TuiMessageBoxWindowConstructor, public ::vl::reflection::Description<TuiMessageBoxWindow>
 	{
 		friend class ::tui_controls::TuiMessageBoxWindowConstructor;
-		friend struct ::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
+		friend struct ::vl_workflow_global::__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_;
 #ifdef VCZH_DESCRIPTABLEOBJECT_WITH_METADATA
 		friend struct ::vl::reflection::description::CustomTypeDescriptorSelector<TuiMessageBoxWindow>;
 #endif
@@ -32412,13 +32545,22 @@ Closures
 		void operator()(const ::vl::reflection::description::Value& __vwsn_value_) const;
 	};
 
-	struct __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_
+	struct __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_
 	{
-		::tui_controls::TuiMessageBoxWindowConstructor* __vwsnthis_0;
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
 
-		__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0);
+		__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
 
-		::vl::presentation::templates::GuiTemplate* operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const;
+		void operator()(const ::vl::reflection::description::Value& __vwsn_value_) const;
+	};
+
+	struct __vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_
+	{
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
+
+		__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
+
+		void operator()(const ::vl::reflection::description::Value& __vwsn_value_) const;
 	};
 
 	struct __vwsnf7_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_
@@ -32428,6 +32570,33 @@ Closures
 		__vwsnf7_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_(::tui_controls::TuiColorDialogControlConstructor* __vwsnctorthis_0);
 
 		void operator()(const ::vl::reflection::description::Value& __vwsn_value_) const;
+	};
+
+	struct __vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_
+	{
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
+
+		__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
+
+		void operator()(const ::vl::reflection::description::Value& __vwsn_value_) const;
+	};
+
+	struct __vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_
+	{
+		::tui_controls::TuiMessageBoxWindowConstructor* __vwsnthis_0;
+
+		__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0);
+
+		::vl::presentation::templates::GuiControlTemplate* operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const;
+	};
+
+	struct __vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_
+	{
+		::tui_controls::TuiMessageBoxWindowConstructor* __vwsnthis_0;
+
+		__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0);
+
+		::vl::presentation::templates::GuiTemplate* operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const;
 	};
 
 	struct __vwsnf8_TuiFakeDialogServiceUI_tui_controls_TuiColorDialogControlConstructor___vwsn_tui_controls_TuiColorDialogControl_Initialize_
@@ -33356,10 +33525,67 @@ Closures
 		bool Close() override;
 	};
 
-	class __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings : public ::vl::Object, public virtual ::tui_controls::ITuiDialogStringsStrings
+	class __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
 	{
 	public:
-		__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings();
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
+
+		__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
+
+		::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_bind_cache_0 = nullptr;
+		::vl::Ptr<::vl::reflection::description::IEventHandler> __vwsn_bind_handler_0_0;
+		bool __vwsn_bind_opened_ = false;
+		bool __vwsn_bind_closed_ = false;
+		void __vwsn_bind_activator_();
+		void __vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1);
+		bool Open() override;
+		bool Update() override;
+		bool Close() override;
+	};
+
+	class __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
+	{
+	public:
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
+
+		__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
+
+		::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_bind_cache_0 = nullptr;
+		::vl::Ptr<::vl::reflection::description::IEventHandler> __vwsn_bind_handler_0_0;
+		bool __vwsn_bind_opened_ = false;
+		bool __vwsn_bind_closed_ = false;
+		void __vwsn_bind_activator_();
+		void __vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1);
+		bool Open() override;
+		bool Update() override;
+		bool Close() override;
+	};
+
+	class __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription : public ::vl::Object, public virtual ::vl::reflection::description::IValueSubscription
+	{
+	public:
+		::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnthis_0;
+
+		__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0);
+
+		::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_bind_cache_0 = nullptr;
+		::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_bind_cache_1 = nullptr;
+		::vl::Ptr<::vl::reflection::description::IEventHandler> __vwsn_bind_handler_0_0;
+		::vl::Ptr<::vl::reflection::description::IEventHandler> __vwsn_bind_handler_1_0;
+		bool __vwsn_bind_opened_ = false;
+		bool __vwsn_bind_closed_ = false;
+		void __vwsn_bind_activator_();
+		void __vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1);
+		void __vwsn_bind_callback_1_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1);
+		bool Open() override;
+		bool Update() override;
+		bool Close() override;
+	};
+
+	class __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings : public ::vl::Object, public virtual ::tui_controls::ITuiDialogStringsStrings
+	{
+	public:
+		__vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings();
 
 		::vl::WString Abort() override;
 		::vl::WString Blue() override;

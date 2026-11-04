@@ -312,6 +312,11 @@ GuiApplication
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::controls::GuiApplication::UnregisterWindow(GuiWindow*)#"
 				CHECK_ERROR(window->registeredInApplication, ERROR_MESSAGE_PREFIX L"The window has not been registered");
 				window->registeredInApplication = false;
+				if (sharedTooltipOwnerWindow == window)
+				{
+					sharedTooltipOwnerWindow = nullptr;
+					sharedTooltipOwner = nullptr;
+				}
 				if (auto nativeWindow = window->GetNativeWindow())
 				{
 					windowMap.Remove(nativeWindow);
@@ -351,6 +356,28 @@ GuiApplication
 			void GuiApplication::RegisterPopupClosed(GuiPopup* popup)
 			{
 				openingPopups.Remove(popup);
+			}
+
+			void GuiApplication::CloseOwnedPopups(INativeWindow* owner)
+			{
+				if (!owner) return;
+				while (true)
+				{
+					GuiPopup* child = nullptr;
+					for (auto popup : openingPopups)
+					{
+						if (popup->hasPopupOwner && popup->GetNativeWindow()->GetParent() == owner)
+						{
+							child = popup;
+							break;
+						}
+					}
+					if (!child) break;
+					// Consume the association before callbacks can mutate the popup list.
+					child->hasPopupOwner = false;
+					child->closingForOwner = true;
+					child->Hide();
+				}
 			}
 
 			void GuiApplication::TooltipMouseEnter(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments)
@@ -1171,6 +1198,7 @@ GuiControl
 
 					boundsComposition->AddChild(containerComposition);
 					auto receiver = boundsComposition->GetEventReceiver();
+					receiver->mouseUp.AttachMethod(this, &GuiControl::OnContextMenuMouseUp);
 					receiver->pointSequenceStarted.AttachMethod(this, &GuiControl::OnPointSequenceStarted);
 					receiver->pointAction.AttachMethod(this, &GuiControl::OnPointAction);
 					receiver->pointGesture.AttachMethod(this, &GuiControl::OnPointGesture);
@@ -1191,6 +1219,15 @@ GuiControl
 					ContextChanged.SetAssociatedComposition(boundsComposition);
 				}
 				sharedPtrDestructorProc = &GuiControl::SharedPtrDestructorProc;
+			}
+
+			void GuiControl::OnContextMenuMouseUp(GuiGraphicsComposition* sender, GuiMouseEventArgs& arguments)
+			{
+				if (!arguments.handled && arguments.button == NativeMouseButton::Right && displayContextMenuOnRightClick && contextMenu)
+				{
+					arguments.handled = true;
+					contextMenu->ShowPopup(this, Point(arguments.x, arguments.y));
+				}
 			}
 
 			void GuiControl::OnPointSequenceStarted(GuiGraphicsComposition* sender, GuiPointSequenceStartedEventArgs& arguments)
@@ -1564,6 +1601,26 @@ GuiControl
 			void GuiControl::SetTag(const description::Value& value)
 			{
 				tag=value;
+			}
+
+			GuiPopup* GuiControl::GetContextMenu()
+			{
+				return contextMenu;
+			}
+
+			void GuiControl::SetContextMenu(GuiPopup* value)
+			{
+				contextMenu = value;
+			}
+
+			bool GuiControl::GetDisplayContextMenuOnRightClick()
+			{
+				return displayContextMenuOnRightClick;
+			}
+
+			void GuiControl::SetDisplayContextMenuOnRightClick(bool value)
+			{
+				displayContextMenuOnRightClick = value;
 			}
 
 			GuiControl* GuiControl::GetTooltipControl()
@@ -2302,6 +2359,7 @@ GuiControlHost
 
 			void GuiControlHost::AfterClosing()
 			{
+				GetApplication()->CloseOwnedPopups(GetNativeWindow());
 				WindowReadyToClose.Execute(GetNotifyEventArguments());
 			}
 
@@ -2312,6 +2370,7 @@ GuiControlHost
 
 			void GuiControlHost::Destroying()
 			{
+				GetApplication()->CloseOwnedPopups(GetNativeWindow());
 				WindowDestroying.Execute(GetNotifyEventArguments());
 				calledDestroyed = true;
 				if (deleteWhenDestroyed)
@@ -2412,6 +2471,7 @@ GuiControlHost
 				auto previousNativeWindow = host->GetNativeWindow();
 				if(previousNativeWindow)
 				{
+					GetApplication()->CloseOwnedPopups(previousNativeWindow);
 					host->GetNativeWindow()->UninstallListener(this);
 				}
 				if (window)
@@ -3066,6 +3126,7 @@ GuiWindow
 
 			GuiWindow::~GuiWindow()
 			{
+				GetApplication()->CloseOwnedPopups(GetNativeWindow());
 				FinalizeAggregation();
 				GetApplication()->UnregisterWindow(this);
 				INativeWindow* window=host->GetNativeWindow();
@@ -3306,14 +3367,23 @@ GuiPopup
 				GetApplication()->RegisterPopupOpened(this);
 			}
 
-			void GuiPopup::PopupClosed(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments)
+			void GuiPopup::BeforeClosing(bool& cancel)
+			{
+				GuiWindow::BeforeClosing(cancel);
+				if (closingForOwner) cancel = false;
+			}
+
+			void GuiPopup::Closed()
 			{
 				popupType = -1;
+				hasPopupOwner = false;
+				closingForOwner = false;
 				GetApplication()->RegisterPopupClosed(this);
 				if(auto window = GetNativeWindow())
 				{
 					window->SetParent(nullptr);
 				}
+				GuiWindow::Closed();
 			}
 
 			void GuiPopup::OnKeyDown(compositions::GuiGraphicsComposition* sender, compositions::GuiKeyEventArgs& arguments)
@@ -3441,9 +3511,10 @@ GuiPopup
 				case 4: controlWindow = popupInfo._4.controlWindow; break;
 				}
 
+				hasPopupOwner = controlWindow != nullptr;
+				window->SetParent(controlWindow);
 				if (controlWindow)
 				{
-					window->SetParent(controlWindow);
 					SetTopMost(controlWindow->GetTopMost());
 				}
 				else
@@ -3466,7 +3537,6 @@ GuiPopup
 				SetShowInTaskBar(false);
 
 				WindowOpened.AttachMethod(this, &GuiPopup::PopupOpened);
-				WindowClosed.AttachMethod(this, &GuiPopup::PopupClosed);
 				boundsComposition->GetEventReceiver()->keyDown.AttachMethod(this, &GuiPopup::OnKeyDown);
 			}
 
@@ -3565,9 +3635,10 @@ GuiPopup
 			{
 			}
 
-			void GuiTooltip::TooltipClosed(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments)
+			void GuiTooltip::Closed()
 			{
 				SetTemporaryContentControl(0);
+				GuiPopup::Closed();
 			}
 
 			GuiTooltip::GuiTooltip(theme::ThemeName themeName)
@@ -3578,7 +3649,6 @@ GuiPopup
 				GetCurrentController()->CallbackService()->InstallListener(this);
 
 				WindowOpened.AttachMethod(this, &GuiTooltip::TooltipOpened);
-				WindowClosed.AttachMethod(this, &GuiTooltip::TooltipClosed);
 			}
 
 			GuiTooltip::~GuiTooltip()
@@ -5117,7 +5187,7 @@ GuiGraphicsHost
 					composition = composition->GetParent();
 				}
 				accept = arguments.acceptedComposition != nullptr;
-				if (accept) pointActionManager->OnPointSequenceStarted(firstPoint, arguments.acceptedComposition);
+				if (accept) pointActionManager->OnPointSequenceStarted(firstPoint, arguments);
 			}
 
 			void GuiGraphicsHost::PointDown(const NativeWindowPointInfo& info)
@@ -7338,7 +7408,10 @@ GuiScrollView
 
 			void GuiScrollView::OnPointGesture(GuiGraphicsComposition* sender, GuiPointGestureEventArgs& arguments)
 			{
-				if (arguments.handled || !GetVisuallyEnabled() || GetPointEventComposition() != boundsComposition) return;
+				if (arguments.handled || !GetVisuallyEnabled()) return;
+				if (arguments.compositionSource != boundsComposition || arguments.eventSource != boundsComposition) return;
+				auto capture = GetPointEventComposition();
+				if (capture && capture != boundsComposition) return;
 				if (auto scrolling = arguments.gesture.TryGet<GuiPointGesture_Scrolling>())
 				{
 					auto scroll = scrolling->isVertical ? GetVerticalScroll() : GetHorizontalScroll();
@@ -18876,6 +18949,7 @@ GuiDocumentCommonInterface
 				compositions::GuiGraphicsComposition* _mouseArea,
 				compositions::GuiGraphicsComposition* _container,
 				compositions::GuiGraphicsComposition* eventComposition,
+				compositions::GuiGraphicsComposition* pointEventComposition,
 				compositions::GuiGraphicsComposition* focusableComposition
 			)
 			{
@@ -18893,6 +18967,9 @@ GuiDocumentCommonInterface
 				documentComposition->SetAlignmentToParent(GetTuiApplication() ? Margin(0, 0, 0, 0) : Margin(2, 2, 2, 2));
 				_container->AddChild(documentComposition);
 				ReplaceMouseArea(_mouseArea);
+				documentPointEventComposition = pointEventComposition;
+				pointEventComposition->GetEventReceiver()->pointSequenceStarted.AttachMethod(this, &GuiDocumentCommonInterface::OnPointSequenceStarted);
+				pointEventComposition->GetEventReceiver()->pointGesture.AttachMethod(this, &GuiDocumentCommonInterface::OnPointGesture);
 
 				focusableComposition->GetEventReceiver()->caretNotify.AttachMethod(this, &GuiDocumentCommonInterface::OnCaretNotify);
 				focusableComposition->GetEventReceiver()->gotFocus.AttachMethod(this, &GuiDocumentCommonInterface::OnGotFocus);
@@ -18927,13 +19004,11 @@ GuiDocumentCommonInterface
 					documentMouseArea->GetEventReceiver()->mouseDown.Detach(onMouseDownHandler);
 					documentMouseArea->GetEventReceiver()->mouseUp.Detach(onMouseUpHandler);
 					documentMouseArea->GetEventReceiver()->mouseLeave.Detach(onMouseLeaveHandler);
-					documentMouseArea->GetEventReceiver()->pointSequenceStarted.Detach(onPointSequenceStartedHandler);
 
 					onMouseMoveHandler = nullptr;
 					onMouseDownHandler = nullptr;
 					onMouseUpHandler = nullptr;
 					onMouseLeaveHandler = nullptr;
-					onPointSequenceStartedHandler = nullptr;
 				}
 				documentMouseArea = _mouseArea;
 				if (documentMouseArea)
@@ -18947,15 +19022,48 @@ GuiDocumentCommonInterface
 					onMouseDownHandler = documentMouseArea->GetEventReceiver()->mouseDown.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseDown);
 					onMouseUpHandler = documentMouseArea->GetEventReceiver()->mouseUp.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseUp);
 					onMouseLeaveHandler = documentMouseArea->GetEventReceiver()->mouseLeave.AttachMethod(this, &GuiDocumentCommonInterface::OnMouseLeave);
-					onPointSequenceStartedHandler = documentMouseArea->GetEventReceiver()->pointSequenceStarted.AttachMethod(this, &GuiDocumentCommonInterface::OnPointSequenceStarted);
 				}
 			}
 
 			void GuiDocumentCommonInterface::OnPointSequenceStarted(GuiGraphicsComposition* sender, GuiPointSequenceStartedEventArgs& arguments)
 			{
-				if (documentControl->GetVisuallyEnabled() && editMode != GuiDocumentEditMode::ViewOnly)
+				pointStartedInDocument = false;
+				for (auto composition = arguments.compositionSource; composition; composition = composition->GetParent())
 				{
-					arguments.handled = true;
+					if (composition == documentMouseArea)
+					{
+						pointStartedInDocument = true;
+						break;
+					}
+					if (auto control = composition->GetAssociatedControl(); control && control != documentControl) break;
+				}
+			}
+
+			void GuiDocumentCommonInterface::OnPointGesture(GuiGraphicsComposition* sender, GuiPointGestureEventArgs& arguments)
+			{
+				if (arguments.handled || !pointStartedInDocument || !documentControl->GetVisuallyEnabled() || editMode == GuiDocumentEditMode::ViewOnly) return;
+				if (arguments.eventSource != documentPointEventComposition || arguments.compositionSource != documentPointEventComposition) return;
+				if (documentControl->GetPointEventComposition() != documentPointEventComposition) return;
+
+				auto shortPress = arguments.gesture.TryGet<GuiPointGesture_ShortPressing>();
+				auto longPress = arguments.gesture.TryGet<GuiPointGesture_LongPressing>();
+				if (!shortPress && !longPress) return;
+				auto position = shortPress ? shortPress->position : longPress->position;
+				auto pointOrigin = documentPointEventComposition->GetGlobalBounds().LeftTop();
+				auto documentOrigin = documentComposition->GetGlobalBounds().LeftTop();
+				auto caret = documentElement->CalculateCaretFromPoint(Point(position.x + pointOrigin.x - documentOrigin.x, position.y + pointOrigin.y - documentOrigin.y));
+				auto begin = documentElement->GetCaretBegin();
+				auto end = documentElement->GetCaretEnd();
+				if (shortPress && begin != end && ((begin <= caret && caret <= end) || (end <= caret && caret <= begin)))
+				{
+					documentControl->SetFocused();
+					arguments.selected = arguments.handled = true;
+				}
+				else if (longPress && begin == end && caret != end)
+				{
+					documentControl->SetFocused();
+					Move(caret, true, caret < end);
+					arguments.selected = arguments.handled = true;
 				}
 			}
 
@@ -19127,7 +19235,7 @@ GuiDocumentCommonInterface
 
 			void GuiDocumentCommonInterface::OnLostFocus(compositions::GuiGraphicsComposition* sender, compositions::GuiEventArgs& arguments)
 			{
-#ifdef VCZH_WCHAR_UTF16
+#if defined VCZH_WCHAR_UTF16
 				pendingHighSurrogate = 0;
 #endif
 				if(documentControl->GetVisuallyEnabled())
@@ -20572,7 +20680,7 @@ GuiDocumentViewer
 			{
 				SetAcceptTabInput(true);
 				SetFocusableComposition(boundsComposition);
-				InstallDocumentViewer(this, containerComposition->GetParent(), containerComposition, boundsComposition, focusableComposition);
+				InstallDocumentViewer(this, containerComposition->GetParent(), containerComposition, boundsComposition, boundsComposition, focusableComposition);
 
 				SetExtendToFullWidth(config.wrapLine);
 				SetHorizontalAlwaysVisible(!config.wrapLine);
@@ -20721,11 +20829,12 @@ GuiDocumentLabel
 				, GuiDocumentCommonInterface(FixConfig(GuiDocumentConfig::OverrideConfig(GuiDocumentConfig::GetDocumentLabelDefaultConfig(), _config)))
 			{
 				SetAcceptTabInput(true);
+				SetAcceptPointEvents(true);
 				SetFocusableComposition(boundsComposition);
 
 				if (config.autoExpand)
 				{
-					InstallDocumentViewer(this, containerComposition, containerComposition, boundsComposition, focusableComposition);
+					InstallDocumentViewer(this, containerComposition, containerComposition, boundsComposition, boundsComposition, focusableComposition);
 				}
 				else
 				{
@@ -20739,7 +20848,7 @@ GuiDocumentLabel
 
 					scrollingContainer->CachedBoundsChanged.AttachMethod(this, &GuiDocumentLabel::scrollingContainer_CachedBoundsChanged);
 					documentContainer->CachedBoundsChanged.AttachMethod(this, &GuiDocumentLabel::documentContainer_CachedMinSizeChanged);
-					InstallDocumentViewer(this, containerComposition, documentContainer, boundsComposition, focusableComposition);
+					InstallDocumentViewer(this, containerComposition, documentContainer, boundsComposition, boundsComposition, focusableComposition);
 				}
 			}
 
@@ -36996,6 +37105,7 @@ GuiRemoteEvents (events)
 
 	void GuiRemoteEvents::OnControllerConnect(const remoteprotocol::ControllerGlobalConfig& arguments)
 	{
+		pendingHighSurrogate = 0;
 		remote->remoteMessages.RequestControllerConnectionEstablished();
 		remote->OnControllerConnect(arguments);
 		bool disconnected = false;
@@ -37006,6 +37116,7 @@ GuiRemoteEvents (events)
 
 	void GuiRemoteEvents::OnControllerDisconnect()
 	{
+		pendingHighSurrogate = 0;
 		remote->OnControllerDisconnect();
 	}
 
@@ -37127,7 +37238,25 @@ GuiRemoteEvents (events)
 
 	void GuiRemoteEvents::OnIOChar(const NativeWindowCharInfo& arguments)
 	{
-		for (auto l : remote->remoteWindow.listeners) l->Char(arguments);
+		auto info = arguments;
+#if defined VCZH_WCHAR_UTF32
+		// UTF-16 renderers send one code unit per IOChar event.
+		if (info.code >= 0xD800 && info.code <= 0xDBFF)
+		{
+			pendingHighSurrogate = info.code;
+			return;
+		}
+		if (info.code >= 0xDC00 && info.code <= 0xDFFF)
+		{
+			if (!pendingHighSurrogate) return;
+			char16_t pair[] = { (char16_t)pendingHighSurrogate,(char16_t)info.code };
+			char32_t scalar;
+			encoding::UtfConversion<char16_t>::To32(pair, 2, scalar);
+			info.code = (wchar_t)scalar;
+		}
+		pendingHighSurrogate = 0;
+#endif
+		for (auto l : remote->remoteWindow.listeners) l->Char(info);
 	}
 }
 
@@ -71705,20 +71834,38 @@ Closures
 
 	//-------------------------------------------------------------------
 
-	__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0)
+	__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
 		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
 	{
 	}
 
-	::vl::presentation::templates::GuiTemplate* __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const
+	void __vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
 	{
+		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->GetText();
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::WString>(__vwsn_value_);
+		if ((__vwsn_old_ == __vwsn_new_))
 		{
-			if ([&](){ auto __vwsn_temp__ = __vwsn_viewModel_; return __vwsn_temp__.GetSharedPtr() && ::vl::__vwsn::RawPtrCast<::vl::presentation::IMessageBoxDialogAction>(__vwsn_temp__.GetRawPtr()) != nullptr; }())
-			{
-				return static_cast<::vl::presentation::templates::GuiTemplate*>(new ::tui_controls::TuiMessageBoxButtonTemplate(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::IMessageBoxDialogAction>>(__vwsn_viewModel_)));
-			}
+			return;
 		}
-		throw ::vl::Exception(::vl::WString::Unmanaged(L"Cannot find a matched control template to create."));
+		::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->SetText(__vwsn_new_);
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+	}
+
+	void __vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
+	{
+		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->GetFont();
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::presentation::FontProperties>(__vwsn_value_);
+		if ((__vwsn_old_ == __vwsn_new_))
+		{
+			return;
+		}
+		::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->SetFont(__vwsn_new_);
 	}
 
 	//-------------------------------------------------------------------
@@ -71737,6 +71884,56 @@ Closures
 			return;
 		}
 		::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_14)->SetText(__vwsn_new_);
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+	}
+
+	void __vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_value_) const
+	{
+		auto __vwsn_old_ = ::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->GetColor();
+		auto __vwsn_new_ = ::vl::__vwsn::Unbox<::vl::presentation::Color>(__vwsn_value_);
+		if ((__vwsn_old_ == __vwsn_new_))
+		{
+			return;
+		}
+		::vl::__vwsn::This(__vwsnthis_0->__vwsn_precompile_0.Obj())->SetColor(__vwsn_new_);
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+	}
+
+	::vl::presentation::templates::GuiControlTemplate* __vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const
+	{
+		{
+			return static_cast<::vl::presentation::templates::GuiControlTemplate*>(new ::tui_controls::TuiMessageBoxLabelTemplate());
+		}
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(::tui_controls::TuiMessageBoxWindowConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+	}
+
+	::vl::presentation::templates::GuiTemplate* __vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_::operator()(const ::vl::reflection::description::Value& __vwsn_viewModel_) const
+	{
+		{
+			if ([&](){ auto __vwsn_temp__ = __vwsn_viewModel_; return __vwsn_temp__.GetSharedPtr() && ::vl::__vwsn::RawPtrCast<::vl::presentation::IMessageBoxDialogAction>(__vwsn_temp__.GetRawPtr()) != nullptr; }())
+			{
+				return static_cast<::vl::presentation::templates::GuiTemplate*>(new ::tui_controls::TuiMessageBoxButtonTemplate(::vl::__vwsn::Unbox<::vl::Ptr<::vl::presentation::IMessageBoxDialogAction>>(__vwsn_viewModel_)));
+			}
+		}
+		throw ::vl::Exception(::vl::WString::Unmanaged(L"Cannot find a matched control template to create."));
 	}
 
 	//-------------------------------------------------------------------
@@ -74859,201 +75056,400 @@ Closures
 
 	//-------------------------------------------------------------------
 
-	__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings()
+	__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+		this->__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr);
+		this->__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>();
+		this->__vwsn_bind_opened_ = false;
+		this->__vwsn_bind_closed_ = false;
+	}
+
+	void __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
+	{
+		auto __vwsn_bind_activator_result_ = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetText();
+		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
+	}
+
+	void __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1)
+	{
+		this->__vwsn_bind_activator_();
+	}
+
+	bool __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Open()
+	{
+		if ((! __vwsn_bind_opened_))
+		{
+			(__vwsn_bind_opened_ = true);
+			(__vwsn_bind_cache_0 = [&](){ try{ return __vwsnthis_0->self; } catch(...){ return static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr); } }());
+			(__vwsn_bind_handler_0_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_0)->TextChanged, ::vl::Func<void(::vl::presentation::compositions::GuiGraphicsComposition*, ::vl::presentation::compositions::GuiEventArgs*)>(this, &__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Update()
+	{
+		if ((__vwsn_bind_opened_ && (! __vwsn_bind_closed_)))
+		{
+			this->__vwsn_bind_activator_();
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Close()
+	{
+		if ((! __vwsn_bind_closed_))
+		{
+			(__vwsn_bind_closed_ = true);
+			if (static_cast<bool>(__vwsn_bind_handler_0_0))
+			{
+				::vl::__vwsn::EventDetach(::vl::__vwsn::This(__vwsn_bind_cache_0)->TextChanged, __vwsn_bind_handler_0_0);
+				(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			}
+			(__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr));
+			(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			return true;
+		}
+		return false;
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+		this->__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr);
+		this->__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>();
+		this->__vwsn_bind_opened_ = false;
+		this->__vwsn_bind_closed_ = false;
+	}
+
+	void __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
+	{
+		auto __vwsn_bind_activator_result_ = ::vl::__vwsn::This(__vwsn_bind_cache_0)->GetFont();
+		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
+	}
+
+	void __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1)
+	{
+		this->__vwsn_bind_activator_();
+	}
+
+	bool __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Open()
+	{
+		if ((! __vwsn_bind_opened_))
+		{
+			(__vwsn_bind_opened_ = true);
+			(__vwsn_bind_cache_0 = [&](){ try{ return __vwsnthis_0->self; } catch(...){ return static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr); } }());
+			(__vwsn_bind_handler_0_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_0)->FontChanged, ::vl::Func<void(::vl::presentation::compositions::GuiGraphicsComposition*, ::vl::presentation::compositions::GuiEventArgs*)>(this, &__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Update()
+	{
+		if ((__vwsn_bind_opened_ && (! __vwsn_bind_closed_)))
+		{
+			this->__vwsn_bind_activator_();
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Close()
+	{
+		if ((! __vwsn_bind_closed_))
+		{
+			(__vwsn_bind_closed_ = true);
+			if (static_cast<bool>(__vwsn_bind_handler_0_0))
+			{
+				::vl::__vwsn::EventDetach(::vl::__vwsn::This(__vwsn_bind_cache_0)->FontChanged, __vwsn_bind_handler_0_0);
+				(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			}
+			(__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr));
+			(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			return true;
+		}
+		return false;
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(::tui_controls::TuiMessageBoxLabelTemplateConstructor* __vwsnctorthis_0)
+		:__vwsnthis_0(::vl::__vwsn::This(__vwsnctorthis_0))
+	{
+		this->__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr);
+		this->__vwsn_bind_cache_1 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr);
+		this->__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>();
+		this->__vwsn_bind_handler_1_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>();
+		this->__vwsn_bind_opened_ = false;
+		this->__vwsn_bind_closed_ = false;
+	}
+
+	void __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_activator_()
+	{
+		auto __vwsn_bind_activator_result_ = (::vl::__vwsn::This(__vwsn_bind_cache_0)->GetVisuallyEnabled() ? ::vl::__vwsn::This(__vwsn_bind_cache_1)->GetTextColor() : ::vl::__vwsn::Parse<::vl::presentation::Color>(::vl::WString::Unmanaged(L"#404040")));
+		::vl::__vwsn::EventInvoke(this->ValueChanged)(::vl::__vwsn::Box(__vwsn_bind_activator_result_));
+	}
+
+	void __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1)
+	{
+		this->__vwsn_bind_activator_();
+	}
+
+	void __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0(::vl::presentation::compositions::GuiGraphicsComposition* __vwsn_bind_callback_argument_0, ::vl::presentation::compositions::GuiEventArgs* __vwsn_bind_callback_argument_1)
+	{
+		this->__vwsn_bind_activator_();
+	}
+
+	bool __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Open()
+	{
+		if ((! __vwsn_bind_opened_))
+		{
+			(__vwsn_bind_opened_ = true);
+			(__vwsn_bind_cache_0 = [&](){ try{ return __vwsnthis_0->self; } catch(...){ return static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr); } }());
+			(__vwsn_bind_cache_1 = [&](){ try{ return __vwsnthis_0->self; } catch(...){ return static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr); } }());
+			(__vwsn_bind_handler_0_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_0)->VisuallyEnabledChanged, ::vl::Func<void(::vl::presentation::compositions::GuiGraphicsComposition*, ::vl::presentation::compositions::GuiEventArgs*)>(this, &__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_0_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
+			(__vwsn_bind_handler_1_0 = [&](){ try{ return ::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_bind_cache_1)->TextColorChanged, ::vl::Func<void(::vl::presentation::compositions::GuiGraphicsComposition*, ::vl::presentation::compositions::GuiEventArgs*)>(this, &__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::__vwsn_bind_callback_1_0)); } catch(...){ return ::vl::Ptr<::vl::reflection::description::IEventHandler>(); } }());
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Update()
+	{
+		if ((__vwsn_bind_opened_ && (! __vwsn_bind_closed_)))
+		{
+			this->__vwsn_bind_activator_();
+			return true;
+		}
+		return false;
+	}
+
+	bool __vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription::Close()
+	{
+		if ((! __vwsn_bind_closed_))
+		{
+			(__vwsn_bind_closed_ = true);
+			if (static_cast<bool>(__vwsn_bind_handler_0_0))
+			{
+				::vl::__vwsn::EventDetach(::vl::__vwsn::This(__vwsn_bind_cache_0)->VisuallyEnabledChanged, __vwsn_bind_handler_0_0);
+				(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			}
+			if (static_cast<bool>(__vwsn_bind_handler_1_0))
+			{
+				::vl::__vwsn::EventDetach(::vl::__vwsn::This(__vwsn_bind_cache_1)->TextColorChanged, __vwsn_bind_handler_1_0);
+				(__vwsn_bind_handler_1_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			}
+			(__vwsn_bind_cache_0 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr));
+			(__vwsn_bind_cache_1 = static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr));
+			(__vwsn_bind_handler_0_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			(__vwsn_bind_handler_1_0 = ::vl::Ptr<::vl::reflection::description::IEventHandler>());
+			return true;
+		}
+		return false;
+	}
+
+	//-------------------------------------------------------------------
+
+	__vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::__vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings()
 	{
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Abort()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Abort()
 	{
 		return ::vl::WString::Unmanaged(L"Abort");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Blue()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Blue()
 	{
 		return ::vl::WString::Unmanaged(L"Blue:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Bold()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Bold()
 	{
 		return ::vl::WString::Unmanaged(L"Bold");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Cancel()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Cancel()
 	{
 		return ::vl::WString::Unmanaged(L"Cancel");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Color()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Color()
 	{
 		return ::vl::WString::Unmanaged(L"Color:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::ColorDialogTitle()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::ColorDialogTitle()
 	{
 		return ::vl::WString::Unmanaged(L"Choose Color");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Continue()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Continue()
 	{
 		return ::vl::WString::Unmanaged(L"Continue");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogAskCreateFile()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogAskCreateFile()
 	{
 		return ::vl::WString::Unmanaged(L"Do you want to create the following file(s):");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogAskOverrideFile()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogAskOverrideFile()
 	{
 		return ::vl::WString::Unmanaged(L"Do you want to override the following file(s):");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorEmptySelection()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorEmptySelection()
 	{
 		return ::vl::WString::Unmanaged(L"At least one file must be selected.");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFileExpected()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFileExpected()
 	{
 		return ::vl::WString::Unmanaged(L"File(s) expected but folder(s) selected:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFileNotExist()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFileNotExist()
 	{
 		return ::vl::WString::Unmanaged(L"File(s) not exist:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFolderNotExist()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorFolderNotExist()
 	{
 		return ::vl::WString::Unmanaged(L"Folder not exist:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorMultipleSelectionNotEnabled()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogErrorMultipleSelectionNotEnabled()
 	{
 		return ::vl::WString::Unmanaged(L"Multiple selection is not enabled in this dialog.");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogFileName()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogFileName()
 	{
 		return ::vl::WString::Unmanaged(L"File Name:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogOpen()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogOpen()
 	{
 		return ::vl::WString::Unmanaged(L"Open");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogSave()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogSave()
 	{
 		return ::vl::WString::Unmanaged(L"Save");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogTextLoadingFiles()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogTextLoadingFiles()
 	{
 		return ::vl::WString::Unmanaged(L"(Loading Folders and Files...)");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogTextLoadingFolders()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FileDialogTextLoadingFolders()
 	{
 		return ::vl::WString::Unmanaged(L"(Loading...)");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontColorGroup()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontColorGroup()
 	{
 		return ::vl::WString::Unmanaged(L"Color:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontColorGroup2()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontColorGroup2()
 	{
 		return ::vl::WString::Unmanaged(L"Pick a Color:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontDialogTitle()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontDialogTitle()
 	{
 		return ::vl::WString::Unmanaged(L"Choose Font");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontEffectGroup()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontEffectGroup()
 	{
 		return ::vl::WString::Unmanaged(L"Effect:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontNameGroup()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontNameGroup()
 	{
 		return ::vl::WString::Unmanaged(L"Font:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontPreviewGroup()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontPreviewGroup()
 	{
 		return ::vl::WString::Unmanaged(L"Preview:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontSizeGroup()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::FontSizeGroup()
 	{
 		return ::vl::WString::Unmanaged(L"Size:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Green()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Green()
 	{
 		return ::vl::WString::Unmanaged(L"Green:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::HAA()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::HAA()
 	{
 		return ::vl::WString::Unmanaged(L"Horizontal Antialias");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Ignore()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Ignore()
 	{
 		return ::vl::WString::Unmanaged(L"Ignore");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Italic()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Italic()
 	{
 		return ::vl::WString::Unmanaged(L"Italic");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::No()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::No()
 	{
 		return ::vl::WString::Unmanaged(L"No");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::OK()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::OK()
 	{
 		return ::vl::WString::Unmanaged(L"OK");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Red()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Red()
 	{
 		return ::vl::WString::Unmanaged(L"Red:");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Retry()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Retry()
 	{
 		return ::vl::WString::Unmanaged(L"Retry");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Strikeline()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Strikeline()
 	{
 		return ::vl::WString::Unmanaged(L"Strike-through");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::TryAgain()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::TryAgain()
 	{
 		return ::vl::WString::Unmanaged(L"Try Again");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Underline()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Underline()
 	{
 		return ::vl::WString::Unmanaged(L"Underline");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::VAA()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::VAA()
 	{
 		return ::vl::WString::Unmanaged(L"Vertical Antialias");
 	}
 
-	::vl::WString __vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Yes()
+	::vl::WString __vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings::Yes()
 	{
 		return ::vl::WString::Unmanaged(L"Yes");
 	}
@@ -76191,7 +76587,7 @@ Class (::tui_controls::TuiDialogStrings)
 
 	::vl::Ptr<::tui_controls::ITuiDialogStringsStrings> TuiDialogStrings::__vwsn_ls_en_US_BuildStrings(::vl::Locale __vwsn_ls_locale)
 	{
-		return ::vl::Ptr<::tui_controls::ITuiDialogStringsStrings>(new ::vl_workflow_global::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings());
+		return ::vl::Ptr<::tui_controls::ITuiDialogStringsStrings>(new ::vl_workflow_global::__vwsnc57_TuiFakeDialogServiceUI_tui_controls_TuiDialogStrings___vwsn_ls_en_US_BuildStrings__tui_controls_ITuiDialogStringsStrings());
 	}
 
 	void TuiDialogStrings::Install(::vl::Locale __vwsn_ls_locale, ::vl::Ptr<::tui_controls::ITuiDialogStringsStrings> __vwsn_ls_impl)
@@ -76476,13 +76872,13 @@ Class (::tui_controls::TuiFilePickerControlConstructor)
 			::vl::__vwsn::This(this->treeView)->SetChildrenProperty(vl::Func(::vl_workflow_global::__vwsnf28_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_(this)));
 		}
 		{
+			::vl::__vwsn::This(this->treeView)->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf29_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_(this)));
+		}
+		{
 			::vl::__vwsn::This(this->treeView)->SetHorizontalAlwaysVisible(false);
 		}
 		{
 			::vl::__vwsn::This(this->treeView)->SetVerticalAlwaysVisible(false);
-		}
-		{
-			::vl::__vwsn::This(this->treeView)->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf29_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_(this)));
 		}
 		(this->__vwsn_precompile_4 = ::vl::__vwsn::This(this->treeView)->GetBoundsComposition());
 		{
@@ -76660,13 +77056,13 @@ Class (::tui_controls::TuiFilePickerControlConstructor)
 			(this->__vwsn_precompile_23 = new ::vl::presentation::controls::GuiBindableTextList(::vl::presentation::theme::ThemeName::TextList));
 		}
 		{
+			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf30_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_(this)));
+		}
+		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetHorizontalAlwaysVisible(false);
 		}
 		{
 			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetVerticalAlwaysVisible(false);
-		}
-		{
-			::vl::__vwsn::This(this->__vwsn_precompile_23)->SetTextProperty(vl::Func(::vl_workflow_global::__vwsnf30_TuiFakeDialogServiceUI_tui_controls_TuiFilePickerControlConstructor___vwsn_tui_controls_TuiFilePickerControl_Initialize_(this)));
 		}
 		{
 			(this->comboBox = new ::vl::presentation::controls::GuiComboBoxListControl(::vl::presentation::theme::ThemeName::ComboBox, static_cast<::vl::presentation::controls::GuiSelectableListControl*>(this->__vwsn_precompile_23)));
@@ -77646,8 +78042,8 @@ Class (::tui_controls::TuiMessageBoxButtonTemplateConstructor)
 	}
 
 	TuiMessageBoxButtonTemplateConstructor::TuiMessageBoxButtonTemplateConstructor()
-		: Action(::vl::Ptr<::vl::presentation::IMessageBoxDialogAction>())
-		, self(static_cast<::tui_controls::TuiMessageBoxButtonTemplate*>(nullptr))
+		: self(static_cast<::tui_controls::TuiMessageBoxButtonTemplate*>(nullptr))
+		, Action(::vl::Ptr<::vl::presentation::IMessageBoxDialogAction>())
 		, buttonControl(static_cast<::vl::presentation::controls::GuiButton*>(nullptr))
 		, __vwsn_precompile_0(static_cast<::vl::presentation::compositions::GuiBoundsComposition*>(nullptr))
 	{
@@ -77806,6 +78202,72 @@ Class (::tui_controls::TuiMessageBoxButtonTemplate)
 	}
 
 /***********************************************************************
+Class (::tui_controls::TuiMessageBoxLabelTemplateConstructor)
+***********************************************************************/
+
+	void TuiMessageBoxLabelTemplateConstructor::__vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize(::tui_controls::TuiMessageBoxLabelTemplate* __vwsn_this_)
+	{
+		(this->self = __vwsn_this_);
+		{
+			::vl::__vwsn::This(this->self)->SetDefaultTextColor(::vl::__vwsn::Parse<::vl::presentation::Color>(::vl::WString::Unmanaged(L"#808080")));
+		}
+		{
+			::vl::__vwsn::This(this->self)->SetMinSizeLimitation(::vl::presentation::compositions::GuiGraphicsComposition::MinSizeLimitation::LimitToElementAndChildren);
+		}
+		(this->__vwsn_precompile_0 = ::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>(::vl::reflection::description::Element_Constructor<::vl::presentation::elements::GuiSolidLabelElement>()));
+		{
+			::vl::__vwsn::This(this->__vwsn_precompile_0.Obj())->SetWrapLineHeightCalculation(true);
+		}
+		{
+			::vl::__vwsn::This(this->__vwsn_precompile_0.Obj())->SetWrapLine(true);
+		}
+		{
+			::vl::__vwsn::This(this->__vwsn_precompile_0.Obj())->SetMultiline(true);
+		}
+		{
+			::vl::__vwsn::This(this->self)->SetOwnedElement(::vl::Ptr<::vl::presentation::elements::IGuiGraphicsElement>(this->__vwsn_precompile_0));
+		}
+		{
+			auto __vwsn_created_subscription_ = ::vl::Ptr<::vl::reflection::description::IValueSubscription>(new ::vl_workflow_global::__vwsnc54_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(this));
+			::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_created_subscription_.Obj())->ValueChanged, vl::Func(::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(this)));
+			::vl::__vwsn::This(__vwsn_this_)->AddSubscription(__vwsn_created_subscription_);
+		}
+		{
+			auto __vwsn_created_subscription_ = ::vl::Ptr<::vl::reflection::description::IValueSubscription>(new ::vl_workflow_global::__vwsnc55_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(this));
+			::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_created_subscription_.Obj())->ValueChanged, vl::Func(::vl_workflow_global::__vwsnf79_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(this)));
+			::vl::__vwsn::This(__vwsn_this_)->AddSubscription(__vwsn_created_subscription_);
+		}
+		{
+			auto __vwsn_created_subscription_ = ::vl::Ptr<::vl::reflection::description::IValueSubscription>(new ::vl_workflow_global::__vwsnc56_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize__vl_reflection_description_IValueSubscription(this));
+			::vl::__vwsn::EventAttach(::vl::__vwsn::This(__vwsn_created_subscription_.Obj())->ValueChanged, vl::Func(::vl_workflow_global::__vwsnf80_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxLabelTemplateConstructor___vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize_(this)));
+			::vl::__vwsn::This(__vwsn_this_)->AddSubscription(__vwsn_created_subscription_);
+		}
+	}
+
+	TuiMessageBoxLabelTemplateConstructor::TuiMessageBoxLabelTemplateConstructor()
+		: self(static_cast<::tui_controls::TuiMessageBoxLabelTemplate*>(nullptr))
+		, __vwsn_precompile_0(::vl::Ptr<::vl::presentation::elements::GuiSolidLabelElement>())
+	{
+	}
+
+/***********************************************************************
+Class (::tui_controls::TuiMessageBoxLabelTemplate)
+***********************************************************************/
+
+	TuiMessageBoxLabelTemplate::TuiMessageBoxLabelTemplate()
+	{
+		auto __vwsn_resource_ = ::vl::__vwsn::This(::vl::presentation::GetResourceManager())->GetResourceFromClassName(::vl::WString::Unmanaged(L"tui_controls::TuiMessageBoxLabelTemplate"));
+		auto __vwsn_resolver_ = ::vl::Ptr<::vl::presentation::GuiResourcePathResolver>(new ::vl::presentation::GuiResourcePathResolver(__vwsn_resource_, ::vl::__vwsn::This(__vwsn_resource_.Obj())->GetWorkingDirectory()));
+		::vl::__vwsn::This(this)->SetResourceResolver(__vwsn_resolver_);
+		::vl::__vwsn::This(this)->__vwsn_tui_controls_TuiMessageBoxLabelTemplate_Initialize(this);
+	}
+
+	TuiMessageBoxLabelTemplate::~TuiMessageBoxLabelTemplate()
+	{
+		this->FinalizeInstanceRecursively(static_cast<::vl::presentation::templates::GuiTemplate*>(this));
+	}
+
+/***********************************************************************
 Class (::tui_controls::TuiMessageBoxWindowConstructor)
 ***********************************************************************/
 
@@ -77814,10 +78276,10 @@ Class (::tui_controls::TuiMessageBoxWindowConstructor)
 		(this->self = __vwsn_this_);
 		(this->ViewModel = ::vl::__vwsn::This(__vwsn_this_)->GetViewModel());
 		{
-			::vl::__vwsn::This(this->self)->SetIconVisible(false);
+			::vl::__vwsn::This(this->self)->SetSizeBox(false);
 		}
 		{
-			::vl::__vwsn::This(this->self)->SetSizeBox(false);
+			::vl::__vwsn::This(this->self)->SetIconVisible(false);
 		}
 		{
 			::vl::__vwsn::This(this->self)->SetMinimizedBox(false);
@@ -77874,6 +78336,9 @@ Class (::tui_controls::TuiMessageBoxWindowConstructor)
 			::vl::__vwsn::This(this->__vwsn_precompile_5)->SetAlignmentToParent([&](){ ::vl::presentation::Margin __vwsn_temp__; __vwsn_temp__.left = static_cast<::vl::vint>(0); __vwsn_temp__.top = static_cast<::vl::vint>(0); __vwsn_temp__.right = static_cast<::vl::vint>(0); __vwsn_temp__.bottom = static_cast<::vl::vint>(0); return __vwsn_temp__; }());
 		}
 		{
+			::vl::__vwsn::This(this->__vwsn_precompile_4)->SetControlTemplate(vl::Func(::vl_workflow_global::__vwsnf81_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(this)));
+		}
+		{
 			::vl::__vwsn::This(this->__vwsn_precompile_3)->AddChild(static_cast<::vl::presentation::compositions::GuiGraphicsComposition*>(::vl::__vwsn::This(this->__vwsn_precompile_4)->GetBoundsComposition()));
 		}
 		{
@@ -77907,7 +78372,7 @@ Class (::tui_controls::TuiMessageBoxWindowConstructor)
 		(this->buttonStack = new ::vl::presentation::compositions::GuiRepeatStackComposition());
 		::vl::__vwsn::This(__vwsn_this_)->SetNamedObject(::vl::WString::Unmanaged(L"buttonStack"), ::vl::__vwsn::Box(this->buttonStack));
 		{
-			::vl::__vwsn::This(this->buttonStack)->SetItemTemplate(vl::Func(::vl_workflow_global::__vwsnf78_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(this)));
+			::vl::__vwsn::This(this->buttonStack)->SetItemTemplate(vl::Func(::vl_workflow_global::__vwsnf82_TuiFakeDialogServiceUI_tui_controls_TuiMessageBoxWindowConstructor___vwsn_tui_controls_TuiMessageBoxWindow_Initialize_(this)));
 		}
 		{
 			::vl::__vwsn::This(this->buttonStack)->SetPadding(static_cast<::vl::vint>(0));
@@ -78339,9 +78804,9 @@ namespace vl
 			class TuiFakeDialogServiceUIResourceReader
 			{
 			public:
-				static const vint parserBufferLength = 1497; // 1497 bytes before compressing
+				static const vint parserBufferLength = 1549; // 1549 bytes before compressing
 				static const vint parserBufferBlock = 1024;
-				static const vint parserBufferRemain = 473;
+				static const vint parserBufferRemain = 525;
 				static const vint parserBufferRows = 2;
 				static const char* parserBuffer[2];
 
@@ -78352,8 +78817,8 @@ namespace vl
 			};
 
 			const char* TuiFakeDialogServiceUIResourceReader::parserBuffer[] = {
-				"\x60\x00\x00\x00\x00\x00\x00\x00\x60\x00\x00\x00\x3C\x52\x65\x73\x6F\x75\x72\x63\x65\x4D\x65\x74\x61\x64\x61\x74\x61\x20\x4E\x61\x6D\x65\x3D\x22\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x22\x20\x56\x65\x72\x73\x69\x6F\x6E\x3D\x22\x31\x2E\x30\x22\x3E\x3C\x44\x65\x70\x65\x6E\x64\x65\x6E\x63\x69\x65\x73\x2F\x3E\x3C\x2F\x52\x65\x73\x6F\x75\x72\x63\x65\x4D\x65\x74\x61\x64\x61\x74\x61\x3E\x04\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x4C\x6F\x63\x61\x6C\x69\x7A\x65\x64\x53\x74\x72\x69\x6E\x67\x73\x08\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x49\x6E\x73\x74\x61\x6E\x63\x65\x04\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x54\x65\x78\x74\x0F\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x43\x6C\x61\x73\x73\x4E\x61\x6D\x65\x52\x65\x63\x6F\x72\x64\x00\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x00\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x46\x69\x6C\x65\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x47\x61\x63\x47\x65\x6E\x43\x6F\x6E\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x43\x70\x70\x00\x00\x00\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x43\x70\x70\x43\x6F\x6D\x70\x72\x65\x73\x73\x65\x64\x1A\x00\x00\x00\x00\x00\x00\x00\x1A\x00\x00\x00\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x2E\x63\x70\x70\x02\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x4E\x61\x6D\x65\x16\x00\x00\x00\x00\x00\x00\x00\x16\x00\x00\x00\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x02\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x4E\x6F\x72\x6D\x61\x6C\x49\x6E\x63\x6C\x75\x64\x65\x13\x00\x00\x00\x00\x00\x00\x00\x13\x00\x00\x00\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x47\x61\x63\x55\x49\x2E\x68\x02\x00\x00\x00\x00\x00\x00\x00\x11\x00\x00\x00\x00\x00\x00\x00\x11\x00\x00\x00\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x49\x6E\x63\x6C\x75\x64\x65\x3C\x00\x00\x00\x00\x00\x00\x00\x3C\x00\x00\x00\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x2F\x54\x79\x70\x65\x44\x65\x73\x63\x72\x69\x70\x74\x6F\x72\x73\x2F\x47\x75\x69\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x50\x6C\x75\x67\x69\x6E\x2E\x68\x02\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x53\x6F\x75\x72\x63\x65\x46\x6F\x6C\x64\x65\x72\x06\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x53\x6F\x75\x72\x63\x65\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0B\x00\x00\x00\x00\x00\x00\x00\x0B\x00\x00\x00\x50\x72\x65\x63\x6F\x6D\x70\x69\x6C\x65\x64\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x43\x6C\x61\x73\x73\x4E\x61\x6D\x65\x52\x65\x63\x6F\x72\x64\x0B\x00\x00\x00\x00\x00\x00\x00\x26\x00\x00\x00\x00\x00\x00\x00\x26\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x43\x6F\x6E\x74\x72\x6F\x6C\x23\x00\x00\x00\x00",
-				"\x00\x00\x00\x23\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6E\x74\x72\x6F\x6C\x22\x00\x00\x00\x00\x00\x00\x00\x22\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x21\x00\x00\x00\x00\x00\x00\x00\x21\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x69\x6C\x65\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x22\x00\x00\x00\x00\x00\x00\x00\x22\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x69\x6C\x65\x50\x69\x63\x6B\x65\x72\x43\x6F\x6E\x74\x72\x6F\x6C\x20\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x6F\x6E\x74\x4E\x61\x6D\x65\x43\x6F\x6E\x74\x72\x6F\x6C\x20\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x6F\x6E\x74\x53\x69\x7A\x65\x43\x6F\x6E\x74\x72\x6F\x6C\x25\x00\x00\x00\x00\x00\x00\x00\x25\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x75\x6C\x6C\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x27\x00\x00\x00\x00\x00\x00\x00\x27\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x53\x69\x6D\x70\x6C\x65\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x29\x00\x00\x00\x00\x00\x00\x00\x29\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x42\x75\x74\x74\x6F\x6E\x54\x65\x6D\x70\x6C\x61\x74\x65\x21\x00\x00\x00\x00\x00\x00\x00\x21\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x57\x69\x6E\x64\x6F\x77\x00\x00\x00\x00\x00\x00\x00\x00",
+				"\x60\x00\x00\x00\x00\x00\x00\x00\x60\x00\x00\x00\x3C\x52\x65\x73\x6F\x75\x72\x63\x65\x4D\x65\x74\x61\x64\x61\x74\x61\x20\x4E\x61\x6D\x65\x3D\x22\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x22\x20\x56\x65\x72\x73\x69\x6F\x6E\x3D\x22\x31\x2E\x30\x22\x3E\x3C\x44\x65\x70\x65\x6E\x64\x65\x6E\x63\x69\x65\x73\x2F\x3E\x3C\x2F\x52\x65\x73\x6F\x75\x72\x63\x65\x4D\x65\x74\x61\x64\x61\x74\x61\x3E\x04\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x4C\x6F\x63\x61\x6C\x69\x7A\x65\x64\x53\x74\x72\x69\x6E\x67\x73\x08\x00\x00\x00\x00\x00\x00\x00\x08\x00\x00\x00\x49\x6E\x73\x74\x61\x6E\x63\x65\x04\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x54\x65\x78\x74\x0F\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x43\x6C\x61\x73\x73\x4E\x61\x6D\x65\x52\x65\x63\x6F\x72\x64\x00\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x00\x00\x00\x00\x00\x15\x00\x00\x00\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x46\x69\x6C\x65\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x47\x61\x63\x47\x65\x6E\x43\x6F\x6E\x66\x69\x67\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x43\x70\x70\x00\x00\x00\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x43\x70\x70\x43\x6F\x6D\x70\x72\x65\x73\x73\x65\x64\x1A\x00\x00\x00\x00\x00\x00\x00\x1A\x00\x00\x00\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x2E\x63\x70\x70\x02\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00\x04\x00\x00\x00\x4E\x61\x6D\x65\x16\x00\x00\x00\x00\x00\x00\x00\x16\x00\x00\x00\x54\x75\x69\x46\x61\x6B\x65\x44\x69\x61\x6C\x6F\x67\x53\x65\x72\x76\x69\x63\x65\x55\x49\x02\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x00\x00\x00\x00\x0D\x00\x00\x00\x4E\x6F\x72\x6D\x61\x6C\x49\x6E\x63\x6C\x75\x64\x65\x13\x00\x00\x00\x00\x00\x00\x00\x13\x00\x00\x00\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x47\x61\x63\x55\x49\x2E\x68\x02\x00\x00\x00\x00\x00\x00\x00\x11\x00\x00\x00\x00\x00\x00\x00\x11\x00\x00\x00\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x49\x6E\x63\x6C\x75\x64\x65\x3C\x00\x00\x00\x00\x00\x00\x00\x3C\x00\x00\x00\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x2E\x2E\x2F\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x2F\x54\x79\x70\x65\x44\x65\x73\x63\x72\x69\x70\x74\x6F\x72\x73\x2F\x47\x75\x69\x52\x65\x66\x6C\x65\x63\x74\x69\x6F\x6E\x50\x6C\x75\x67\x69\x6E\x2E\x68\x02\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x00\x00\x00\x00\x0C\x00\x00\x00\x53\x6F\x75\x72\x63\x65\x46\x6F\x6C\x64\x65\x72\x06\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x53\x6F\x75\x72\x63\x65\x00\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x00\x00\x00\x00\x14\x00\x00\x00\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x73\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0B\x00\x00\x00\x00\x00\x00\x00\x0B\x00\x00\x00\x50\x72\x65\x63\x6F\x6D\x70\x69\x6C\x65\x64\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\x03\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00\x0F\x00\x00\x00\x43\x6C\x61\x73\x73\x4E\x61\x6D\x65\x52\x65\x63\x6F\x72\x64\x0C\x00\x00\x00\x00\x00\x00\x00\x26\x00\x00\x00\x00\x00\x00\x00\x26\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x43\x6F\x6D\x70\x6F\x6E\x65\x6E\x74\x43\x6F\x6E\x74\x72\x6F\x6C\x23\x00\x00\x00\x00",
+				"\x00\x00\x00\x23\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x43\x6F\x6E\x74\x72\x6F\x6C\x22\x00\x00\x00\x00\x00\x00\x00\x22\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x43\x6F\x6C\x6F\x72\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x21\x00\x00\x00\x00\x00\x00\x00\x21\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x69\x6C\x65\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x22\x00\x00\x00\x00\x00\x00\x00\x22\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x69\x6C\x65\x50\x69\x63\x6B\x65\x72\x43\x6F\x6E\x74\x72\x6F\x6C\x20\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x6F\x6E\x74\x4E\x61\x6D\x65\x43\x6F\x6E\x74\x72\x6F\x6C\x20\x00\x00\x00\x00\x00\x00\x00\x20\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x6F\x6E\x74\x53\x69\x7A\x65\x43\x6F\x6E\x74\x72\x6F\x6C\x25\x00\x00\x00\x00\x00\x00\x00\x25\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x46\x75\x6C\x6C\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x27\x00\x00\x00\x00\x00\x00\x00\x27\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x53\x69\x6D\x70\x6C\x65\x46\x6F\x6E\x74\x44\x69\x61\x6C\x6F\x67\x57\x69\x6E\x64\x6F\x77\x29\x00\x00\x00\x00\x00\x00\x00\x29\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x42\x75\x74\x74\x6F\x6E\x54\x65\x6D\x70\x6C\x61\x74\x65\x28\x00\x00\x00\x00\x00\x00\x00\x28\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x4C\x61\x62\x65\x6C\x54\x65\x6D\x70\x6C\x61\x74\x65\x21\x00\x00\x00\x00\x00\x00\x00\x21\x00\x00\x00\x74\x75\x69\x5F\x63\x6F\x6E\x74\x72\x6F\x6C\x73\x3A\x3A\x54\x75\x69\x4D\x65\x73\x73\x61\x67\x65\x42\x6F\x78\x57\x69\x6E\x64\x6F\x77\x00\x00\x00\x00\x00\x00\x00\x00",
 				};
 
 			class TuiFakeDialogServiceUIResourceLoaderPlugin : public Object, public IGuiPlugin
@@ -79039,6 +79504,284 @@ namespace vl
 			constexpr vint StaticPointRange = 8;
 
 /***********************************************************************
+MomentumScrollingState
+***********************************************************************/
+
+			class MomentumScrollingState : public Object, public controls::IGuiAnimation
+			{
+			public:
+				struct Sample
+				{
+					vuint64_t time;
+					double position;
+				};
+
+				MomentumScrolling* owner;
+				controls::GuiControl* control;
+				Ptr<controls::GuiDisposedFlag> disposed;
+				GuiGraphicsComposition* bounds;
+				GuiGraphicsHost* host = nullptr;
+				Ptr<IGuiGraphicsEventHandler> startedHandler, actionHandler, gestureHandler, endedHandler;
+				List<Sample> samples;
+				vuint64_t sequence = 0, started = 0, timestamp = 0, playbackStart = 0, version = 0;
+				double position = 0, velocity = 0, duration = 0, elapsed = 0, residue = 0;
+				vint boundary = 1;
+				bool vertical = false, scrolling = false, stopped = true, generating = false;
+
+				MomentumScrollingState(MomentumScrolling* _owner, controls::GuiControl* _control)
+					:owner(_owner), control(_control), disposed(_control->GetDisposedFlag()), bounds(_control->GetBoundsComposition())
+				{
+					auto receiver = bounds->GetEventReceiver();
+					startedHandler = receiver->pointSequenceStarted.AttachMethod(this, &MomentumScrollingState::OnStarted);
+					actionHandler = receiver->pointAction.AttachMethod(this, &MomentumScrollingState::OnAction);
+					gestureHandler = receiver->pointGesture.AttachMethod(this, &MomentumScrollingState::OnGesture);
+					endedHandler = receiver->pointSequenceEnded.AttachMethod(this, &MomentumScrollingState::OnEnded);
+				}
+
+				void Stop()
+				{
+					version++;
+					stopped = true;
+					sequence = 0;
+					samples.Clear();
+				}
+
+				void Detach()
+				{
+					Stop();
+					owner = nullptr;
+					if (!disposed->IsDisposed())
+					{
+						auto receiver = bounds->GetEventReceiver();
+						receiver->pointSequenceStarted.Detach(startedHandler);
+						receiver->pointAction.Detach(actionHandler);
+						receiver->pointGesture.Detach(gestureHandler);
+						receiver->pointSequenceEnded.Detach(endedHandler);
+					}
+				}
+
+				void Record(vuint64_t time)
+				{
+					if (samples.Count() && samples[samples.Count() - 1].time == time)
+					{
+						samples[samples.Count() - 1].position = position;
+					}
+					else
+					{
+						samples.Add({ time,position });
+					}
+					auto left = time > 500000 ? time - 500000 : 0;
+					while (samples.Count() > 1 && samples[1].time <= left) samples.RemoveAt(0);
+				}
+
+				void OnStarted(GuiGraphicsComposition*, GuiPointSequenceStartedEventArgs& arguments)
+				{
+					Stop();
+					if (!owner || disposed->IsDisposed()) return;
+					// A later Started handler can still accept this bounds. Rejected queries receive no actions.
+					if (arguments.acceptedComposition && arguments.acceptedComposition != bounds) return;
+					sequence = arguments.sequenceId;
+					started = timestamp = arguments.timestamp;
+					position = 0;
+					scrolling = false;
+					host = bounds->GetRelatedGraphicsHost();
+					Record(started);
+				}
+
+				void OnAction(GuiGraphicsComposition*, GuiPointEventArgs& arguments)
+				{
+					if (!sequence || arguments.sequenceId != sequence) return;
+					if (arguments.compositionSource != bounds || arguments.eventSource != bounds) return;
+					if (arguments.eventType == GuiPointEventsType::Down && arguments.pointId != 0)
+					{
+						Stop();
+						return;
+					}
+					timestamp = arguments.timestamp;
+				}
+
+				void OnGesture(GuiGraphicsComposition*, GuiPointGestureEventArgs& arguments)
+				{
+					if (!owner || disposed->IsDisposed() || generating || !sequence) return;
+					if (arguments.compositionSource != bounds || arguments.eventSource != bounds) return;
+					if (auto gesture = arguments.gesture.TryGet<GuiPointGesture_Scrolling>())
+					{
+						arguments.selected = true;
+						scrolling = true;
+						vertical = gesture->isVertical;
+						position += gesture->distance;
+						Record(timestamp);
+					}
+				}
+
+				void OnEnded(GuiGraphicsComposition*, GuiPointSequenceEndedEventArgs& arguments)
+				{
+					if (!owner || disposed->IsDisposed() || !sequence || arguments.sequenceId != sequence) return;
+					sequence = 0;
+					if (arguments.reason != PointSequenceEndReason::Succeeded || !scrolling || !owner->rootObject) return;
+					if (bounds->GetRelatedGraphicsHost() != host) return;
+					Record(arguments.timestamp);
+					auto left = arguments.timestamp - started > 500000 ? arguments.timestamp - 500000 : started;
+					if (left == arguments.timestamp || samples.Count() < 2) return;
+					auto first = samples[0];
+					auto next = samples[1];
+					auto initial = first.position + (next.position - first.position) * ((double)(left - first.time) / (next.time - first.time));
+					velocity = (position - initial) * 1000000 / (arguments.timestamp - left);
+					if (velocity == 0) return;
+					duration = std::abs(velocity) / 320 / owner->deceleration;
+					if (duration == 0) return;
+					stopped = false;
+					// Start also resets an animation still awaiting retirement from the previous sequence.
+					Start();
+					for (auto state : owner->states)
+					{
+						if (state.Obj() == this)
+						{
+							owner->rootObject->AddAnimation(state);
+							break;
+						}
+					}
+				}
+
+				void Start()override
+				{
+					if (stopped) return;
+					playbackStart = DateTime::UtcTime().osMilliseconds;
+					elapsed = residue = 0;
+					boundary = 1;
+				}
+
+				void Pause()override { Stop(); }
+				void Resume()override {}
+				bool GetStopped()override { return stopped; }
+
+				void Run()override
+				{
+					if (!owner) return;
+					if (disposed->IsDisposed())
+					{
+						owner->RetireDisposedControls();
+						return;
+					}
+					if (stopped) return;
+					if (bounds->GetRelatedGraphicsHost() != host)
+					{
+						Stop();
+						return;
+					}
+					auto now = DateTime::UtcTime().osMilliseconds;
+					auto time = (double)(now >= playbackStart ? now - playbackStart : 0) / 1000;
+					auto speed = std::abs(velocity);
+					auto playbackVersion = version;
+					while (!stopped)
+					{
+						auto end = std::min(boundary / 10.0, duration);
+						if (time < end) break;
+						auto distance = speed * (1 - (elapsed / duration + end / duration) / 2) * (end - elapsed);
+						residue += velocity < 0 ? -distance : distance;
+						auto rounded = std::round(residue);
+						// A carried half-pixel must not reverse direction on a zero-distance tail.
+						auto increment = (vint)(velocity < 0 ? std::min(0.0, rounded) : std::max(0.0, rounded));
+						residue -= increment;
+						elapsed = end;
+						boundary++;
+						if (end == duration) stopped = true;
+						if (increment != 0)
+						{
+							GuiPointGestureEventArgs arguments(bounds);
+							arguments.gesture = GuiPointGesture_Scrolling{ vertical,increment };
+							generating = true;
+							bounds->GetEventReceiver()->pointGesture.Execute(arguments);
+							generating = false;
+							if (!owner || disposed->IsDisposed() || version != playbackVersion) return;
+							if (bounds->GetRelatedGraphicsHost() != host) Stop();
+						}
+					}
+				}
+			};
+
+/***********************************************************************
+MomentumScrolling
+***********************************************************************/
+
+			MomentumScrolling::MomentumScrolling() {}
+
+			MomentumScrolling::~MomentumScrolling()
+			{
+				Detach(rootObject);
+			}
+
+			void MomentumScrolling::Attach(controls::GuiInstanceRootObject* value)
+			{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::compositions::MomentumScrolling::Attach#"
+				CHECK_ERROR(!rootObject, ERROR_MESSAGE_PREFIX L"The component already has an owner.");
+				rootObject = value;
+				RetireDisposedControls();
+#undef ERROR_MESSAGE_PREFIX
+			}
+
+			void MomentumScrolling::Detach(controls::GuiInstanceRootObject*)
+			{
+				for (auto state : states) state->Detach();
+				states.Clear();
+				rootObject = nullptr;
+			}
+
+			void MomentumScrolling::EnvironmentChanged()
+			{
+				RetireDisposedControls();
+				for (auto state : states) state->Stop();
+			}
+
+			void MomentumScrolling::RetireDisposedControls()
+			{
+				for (vint i = states.Count() - 1; i >= 0; i--)
+				{
+					if (states[i]->disposed->IsDisposed())
+					{
+						states[i]->Detach();
+						states.RemoveAt(i);
+					}
+				}
+			}
+
+			void MomentumScrolling::AttachControl(controls::GuiControl* control)
+			{
+				RetireDisposedControls();
+				for (auto state : states) if (state->control == control) return;
+				states.Add(Ptr(new MomentumScrollingState(this, control)));
+			}
+
+			void MomentumScrolling::DetachControl(controls::GuiControl* control)
+			{
+				RetireDisposedControls();
+				for (auto [state, index] : indexed(states))
+				{
+					if (state->control == control)
+					{
+						state->Detach();
+						states.RemoveAt(index);
+						return;
+					}
+				}
+			}
+
+			double MomentumScrolling::GetDeceleration()
+			{
+				RetireDisposedControls();
+				return deceleration;
+			}
+
+			void MomentumScrolling::SetDeceleration(double value)
+			{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::compositions::MomentumScrolling::SetDeceleration#"
+				CHECK_ERROR(std::isfinite(value) && value > 0, ERROR_MESSAGE_PREFIX L"Deceleration must be finite and positive.");
+				RetireDisposedControls();
+				deceleration = value;
+#undef ERROR_MESSAGE_PREFIX
+			}
+
+/***********************************************************************
 Predefined Gestures
 ***********************************************************************/
 
@@ -79057,7 +79800,7 @@ Predefined Gestures
 				GuiPointActionManager* manager;
 				bool selected = false;
 
-				void RaiseGesture(const Variant<GuiPointGesture_Scrolling, GuiPointGesture_DraggingAndRotation>& payload)
+				void RaiseGesture(const decltype(GuiPointGestureEventArgs::gesture)& payload)
 				{
 					auto target = manager->GetPointCapture();
 					GuiPointGestureEventArgs arguments(target);
@@ -79071,7 +79814,7 @@ Predefined Gestures
 				GuiPointGestureBase(GuiPointActionManager* _manager) : manager(_manager) {}
 				bool IsGestureSelected()override { return selected; }
 				Nullable<NativeMouseButton> GetFallbackClick()override { return {}; }
-				void OnPointSequenceEnded(const PointSequenceEndInfo&)override {}
+				void OnPointSequenceEnded(const GuiPointSequenceEndedEventArgs&)override {}
 			};
 
 			namespace predefined_gestures
@@ -79081,52 +79824,97 @@ Predefined Gestures
 				protected:
 					NativePoint first;
 					vuint64_t timestamp = 0;
-					vuint64_t minimumDuration;
 					vint downCount = 0;
 					bool eligible = false;
+					bool generateClick = false;
 					Nullable<NativeMouseButton> fallback;
 
 				public:
-					RightClickGesture(GuiPointActionManager* manager, vuint64_t duration = 500000)
-						:GuiPointGestureBase(manager), minimumDuration(duration) {}
+					RightClickGesture(GuiPointActionManager* manager) : GuiPointGestureBase(manager) {}
 
-					void OnPointSequenceStarted(const NativeWindowPointInfo& info)override
+					void OnPointSequenceStarted(const GuiPointSequenceStartedEventArgs& info)override
 					{
 						selected = false;
-						first = manager->GetScreenPoint(info);
+						first = manager->GetCurrentScreenPoint();
 						timestamp = info.timestamp;
 						downCount = 0;
 						eligible = true;
+						generateClick = info.generateRightButtonClick;
 						fallback.Reset();
 					}
 
-					void OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType)override
+					void OnPointAction(const GuiPointEventArgs& info)override
 					{
-						if (eventType == GuiPointEventsType::Down && ++downCount != 1) eligible = false;
+						if (info.eventType == GuiPointEventsType::Down && ++downCount != 1) eligible = false;
 						if (eligible && info.pointId == 0)
 						{
 							auto start = manager->ConvertPoint(first, nullptr);
-							auto current = manager->ConvertPoint(manager->GetScreenPoint(info), nullptr);
+							auto current = manager->ConvertPoint(manager->GetCurrentScreenPoint(), nullptr);
 							if (IsOutsideStaticPointRange(start, current)) eligible = false;
 						}
 					}
 
-					void OnPointSequenceEnded(const PointSequenceEndInfo& info)override
+					void OnPointSequenceEnded(const GuiPointSequenceEndedEventArgs& info)override
 					{
 						if (eligible && downCount == 1 && info.reason == PointSequenceEndReason::Succeeded
-							&& info.timestamp - timestamp >= minimumDuration)
+							&& info.timestamp - timestamp >= 500000)
 						{
-							fallback = minimumDuration == 0 ? NativeMouseButton::Left : NativeMouseButton::Right;
+							if (generateClick) fallback = NativeMouseButton::Right;
+							RaiseGesture(GuiPointGesture_LongPressing{ manager->ConvertPoint(first, manager->GetPointCapture()) });
 						}
 					}
 
 					Nullable<NativeMouseButton> GetFallbackClick()override { return fallback; }
 				};
 
-				class LeftClickGesture : public RightClickGesture
+				class LeftClickGesture : public GuiPointGestureBase
 				{
+				protected:
+					NativePoint first;
+					vuint64_t timestamp = 0;
+					vint downCount = 0;
+					bool eligible = false;
+					bool generateClick = false;
+					Nullable<NativeMouseButton> fallback;
+
 				public:
-					LeftClickGesture(GuiPointActionManager* manager) : RightClickGesture(manager, 0) {}
+					LeftClickGesture(GuiPointActionManager* manager) : GuiPointGestureBase(manager) {}
+
+					void OnPointSequenceStarted(const GuiPointSequenceStartedEventArgs& info)override
+					{
+						selected = false;
+						first = manager->GetCurrentScreenPoint();
+						timestamp = info.timestamp;
+						downCount = 0;
+						eligible = true;
+						generateClick = info.generateLeftButtonClick;
+						fallback.Reset();
+					}
+
+					void OnPointAction(const GuiPointEventArgs& info)override
+					{
+						if (info.eventType == GuiPointEventsType::Down && ++downCount != 1) eligible = false;
+						if (eligible && info.pointId == 0)
+						{
+							auto start = manager->ConvertPoint(first, nullptr);
+							auto current = manager->ConvertPoint(manager->GetCurrentScreenPoint(), nullptr);
+							if (IsOutsideStaticPointRange(start, current)) eligible = false;
+						}
+					}
+
+					void OnPointSequenceEnded(const GuiPointSequenceEndedEventArgs& info)override
+					{
+						if (eligible && downCount == 1 && info.reason == PointSequenceEndReason::Succeeded)
+						{
+							if (generateClick) fallback = NativeMouseButton::Left;
+							if (info.timestamp - timestamp < 500000)
+							{
+								RaiseGesture(GuiPointGesture_ShortPressing{ manager->ConvertPoint(first, manager->GetPointCapture()) });
+							}
+						}
+					}
+
+					Nullable<NativeMouseButton> GetFallbackClick()override { return fallback; }
 				};
 
 				class ScrollingGesture : public GuiPointGestureBase
@@ -79139,19 +79927,19 @@ Predefined Gestures
 				public:
 					ScrollingGesture(GuiPointActionManager* manager) : GuiPointGestureBase(manager) {}
 
-					void OnPointSequenceStarted(const NativeWindowPointInfo& info)override
+					void OnPointSequenceStarted(const GuiPointSequenceStartedEventArgs& info)override
 					{
 						selected = false;
-						previous = manager->GetScreenPoint(info);
+						previous = manager->GetCurrentScreenPoint();
 						axis = 0;
 						stopped = false;
 					}
 
-					void OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType)override
+					void OnPointAction(const GuiPointEventArgs& info)override
 					{
-						if (eventType == GuiPointEventsType::Down && info.pointId != 0) stopped = true;
+						if (info.eventType == GuiPointEventsType::Down && info.pointId != 0) stopped = true;
 						if (stopped || info.pointId != 0) return;
-						auto screen = manager->GetScreenPoint(info);
+						auto screen = manager->GetCurrentScreenPoint();
 						auto start = manager->ConvertPoint(previous, nullptr);
 						auto current = manager->ConvertPoint(screen, nullptr);
 						auto dx = (vint64_t)current.x - start.x;
@@ -79234,7 +80022,7 @@ Predefined Gestures
 				public:
 					DraggingAndRotationGesture(GuiPointActionManager* manager) : GuiPointGestureBase(manager) {}
 
-					void OnPointSequenceStarted(const NativeWindowPointInfo&)override
+					void OnPointSequenceStarted(const GuiPointSequenceStartedEventArgs&)override
 					{
 						selected = false;
 						residualX = residualY = 0;
@@ -79242,15 +80030,15 @@ Predefined Gestures
 						RaiseGesture(GuiPointGesture_DraggingAndRotation{});
 					}
 
-					void OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType)override
+					void OnPointAction(const GuiPointEventArgs& info)override
 					{
 						if (!selected) return;
 						auto&& current = manager->GetNativePoints();
-						if (eventType == GuiPointEventsType::Up)
+						if (info.eventType == GuiPointEventsType::Up)
 						{
 							List<Nullable<NativePoint>> finalSample;
 							CopyFrom(finalSample, current);
-							finalSample[info.pointId] = manager->GetScreenPoint(info);
+							finalSample[info.pointId] = manager->GetCurrentScreenPoint();
 							UpdateTransform(finalSample);
 							CopyFrom(baseline, current);
 						}
@@ -79272,16 +80060,22 @@ GuiPointActionManager
 				gestures.Add(Ptr(new predefined_gestures::DraggingAndRotationGesture(this)));
 			}
 
-			void GuiPointActionManager::OnPointSequenceStarted(const NativeWindowPointInfo& info, GuiGraphicsComposition* composition)
+			void GuiPointActionManager::OnPointSequenceStarted(const NativeWindowPointInfo& info, const GuiPointSequenceStartedEventArgs& query)
 			{
 				ResetPointCapture();
 				firstPoint = info;
 				firstPointScreen = GetScreenPoint(info);
+				currentPointScreen = firstPointScreen;
 				nativePoints.Add(firstPointScreen);
-				PointCapture(composition);
+				PointCapture(query.acceptedComposition);
+				GuiPointSequenceStartedEventArgs arguments(captureComposition, GetPoints(captureComposition));
+				static_cast<WindowPointInfo&>(arguments) = ConvertSample(info, captureComposition);
+				arguments.acceptedComposition = captureComposition;
+				arguments.generateLeftButtonClick = query.generateLeftButtonClick;
+				arguments.generateRightButtonClick = query.generateRightButtonClick;
 				for (auto gesture : gestures)
 				{
-					gesture->OnPointSequenceStarted(info);
+					gesture->OnPointSequenceStarted(arguments);
 					if (gesture->IsGestureSelected())
 					{
 						selectedGesture = gesture.Obj();
@@ -79293,15 +80087,16 @@ GuiPointActionManager
 			void GuiPointActionManager::OnPointAction(const NativeWindowPointInfo& info, GuiPointEventsType eventType)
 			{
 				if (!captureComposition || ended || firstPoint.sequenceId != info.sequenceId) return;
+				currentPointScreen = GetScreenPoint(info);
 				while (nativePoints.Count() <= info.pointId) nativePoints.Add({});
-				nativePoints[info.pointId] = eventType == GuiPointEventsType::Up ? Nullable<NativePoint>() : Nullable<NativePoint>(GetScreenPoint(info));
+				nativePoints[info.pointId] = eventType == GuiPointEventsType::Up ? Nullable<NativePoint>() : Nullable<NativePoint>(currentPointScreen);
 				GuiPointEventArgs arguments(captureComposition, eventType, GetPoints(captureComposition));
 				static_cast<WindowPointInfo&>(arguments) = ConvertSample(info, captureComposition);
 				if (captureComposition->HasEventReceiver()) captureComposition->GetEventReceiver()->pointAction.Execute(arguments);
-				if (selectedGesture) selectedGesture->OnPointAction(info, eventType);
+				if (selectedGesture) selectedGesture->OnPointAction(arguments);
 				else for (auto gesture : gestures)
 				{
-					gesture->OnPointAction(info, eventType);
+					gesture->OnPointAction(arguments);
 					if (gesture->IsGestureSelected())
 					{
 						selectedGesture = gesture.Obj();
@@ -79314,19 +80109,19 @@ GuiPointActionManager
 			{
 				if (!captureComposition || ended || firstPoint.sequenceId != info.sequenceId) return false;
 				ended = true;
-				if (selectedGesture) selectedGesture->OnPointSequenceEnded(info);
+				GuiPointSequenceEndedEventArgs arguments(captureComposition, GetPoints(captureComposition));
+				static_cast<PointSequenceEndInfo&>(arguments) = info;
+				arguments.accepted = true;
+				if (selectedGesture) selectedGesture->OnPointSequenceEnded(arguments);
 				else for (auto gesture : gestures)
 				{
-					gesture->OnPointSequenceEnded(info);
+					gesture->OnPointSequenceEnded(arguments);
 					if (gesture->IsGestureSelected())
 					{
 						selectedGesture = gesture.Obj();
 						break;
 					}
 				}
-				GuiPointSequenceEndedEventArgs arguments(captureComposition, GetPoints(captureComposition));
-				static_cast<PointSequenceEndInfo&>(arguments) = info;
-				arguments.accepted = true;
 				if (captureComposition->HasEventReceiver()) captureComposition->GetEventReceiver()->pointSequenceEnded.Execute(arguments);
 				return true;
 			}
@@ -79345,6 +80140,7 @@ GuiPointActionManager
 				captureComposition = nullptr;
 				firstPoint = {};
 				firstPointScreen = {};
+				currentPointScreen = {};
 				nativePoints.Clear();
 				points.Clear();
 				selectedGesture = nullptr;
@@ -79375,6 +80171,11 @@ GuiPointActionManager
 			{
 				auto origin = host->GetNativeWindow()->GetClientBoundsInScreen().LeftTop();
 				return NativePoint(info.position.x + origin.x, info.position.y + origin.y);
+			}
+
+			NativePoint GuiPointActionManager::GetCurrentScreenPoint()
+			{
+				return currentPointScreen;
 			}
 
 			Point GuiPointActionManager::ConvertPoint(NativePoint screen, GuiGraphicsComposition* relativeTo)
@@ -79427,7 +80228,7 @@ GuiPointActionManager
 			Nullable<NativeMouseButton> GuiPointActionManager::GetFallbackClick()
 			{
 				if (!captureComposition || !ended) return {};
-				if (selectedGesture) return selectedGesture->GetFallbackClick();
+				if (selectedGesture) return {};
 				for (auto gesture : gestures)
 				{
 					if (auto button = gesture->GetFallbackClick()) return button;
