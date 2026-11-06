@@ -107,7 +107,7 @@ else
             exit 1
         fi
         HOST_EXE="$(cd "$(dirname "$HOST_EXE")" && pwd)/$(basename "$HOST_EXE")"
-        PRIMARY_ARGUMENTS+=("/Cli:$HOST_EXE")
+        PRIMARY_ARGUMENTS+=("/Cli:\"$HOST_EXE\"")
         NEEDS_MANUAL_HOST=0
     elif [[ "$APP_NAME" == "rvmt" ]]; then
         NEEDS_MANUAL_HOST=1

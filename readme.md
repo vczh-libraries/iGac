@@ -329,6 +329,13 @@ unblocked manual run prints both PIDs. `--cli` is supported by `--app:rvmt`,
 prebuilds the host, and lets Core auto-launch it over stdio. Portable
 `Test_CppTest_Rvm` remains manual `/MiniHttp` only.
 
+`test_core.sh --app:rvmt --protocol:minihttp --cli` passes a quoted native-host
+command to Core. Core's `/Cli:<command>` option also accepts
+`node "<absolute path to cli.js>"` as one argument and appends ` /Cli`.
+Use the built script at `<GacJS repo>/Gaclib/website/rvmhost/lib/src/cli.js`
+and `node` from PATH. Keep the shared `CppTest_Rvm/GuiMain.cpp` synchronized
+from GacUI; renderer implementations are independent of this host launch mode.
+
 The native GUI test applications own a mode-specific Cocoa automation service and a
 MiniHTTP endpoint. Append `/Controls` for control-tree applications, `/Dom`
 for the native renderer, or `/IO` for input:

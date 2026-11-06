@@ -10,10 +10,15 @@
 | [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over stdio `/Cli:<path>`] | 2026-11-04T12:09:14.882Z |
 | [macOS][`/RVMT`][`/MiniHttp`][GacJS browser host `?rvmhost`] | 2026-11-04T12:09:27.925Z |
 | [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over network] | 2026-11-04T12:09:49.419Z |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node SEA over stdio `/Cli:<path>`] | 2026-11-04T12:10:10.436Z |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over stdio `/Cli:<command>`] | Pending: replacement command not verified on this platform |
 | Import / codegen / build / tests | 2026-11-04T12:08:17.848Z |
 
 ## Observations and Limitations
+
+The replacement Node command has not been verified on macOS. Platform
+verification was explicitly skipped during the Windows maintenance task. The
+retired packaged-host row previously passed at 2026-11-04T12:10:10.436Z;
+the observations below describe that historical run, not the replacement command.
 
 Playwright WebKit on macOS 26.5.2 arm64, with a fresh `/MiniHttp` Core for each topology. Initial GacJS commit `5531c26`, plus the capture fix below. Local ignored evidence is under `<iGac repo>/_OUTPUT_/rpXPlat-20261104/`.
 
@@ -22,7 +27,7 @@ Playwright WebKit on macOS 26.5.2 arm64, with a fresh `/MiniHttp` Core for each 
 | Build and portable tests | `yarn run import`, code generation twice with identical generated output, build and test passed: 236 tests in 30 files. Windows-only native-browser suites are intentionally skipped on macOS. |
 | RPT | Initial UI/Home, shortcuts, mouse input, add/clear grid, document dialog, renderer replacement/takeover and retained state, normal exit and Core-authored fatal overlay passed. `webkit-rpt-*.json`. |
 | FCT | Lists, two editor markers and OEM brackets, keyboard/mouse input, layout tabs and palette retention, four responsive appearances and nine sizes, scrolling, account selection, OK/Cancel/title-close and normal exit passed. A final browser-driven scroll sweep verified all 24 movie titles and their directors in Core controls and rendered DOM (`webkit-all-films.json`). Raw Clock pixels/state survived palette and renderer lifecycle changes. `webkit-fct-editors.json`, `webkit-responsive-sizes.json`, `webkit-modal-scroll.json`, `webkit-clock.png`. |
-| Five RVM host topologies | Initial/Unicode RPC and renderer replacement, normal exit, idle-next-call host loss and blocked-delivery host loss passed for native network, native stdio, browser host, Node network and Node SEA stdio. Manual network/browser modes rejected a second host. Stdio children terminated after normal Core shutdown. Fifteen results in `webkit-rvm-results.json`. |
+| Five historical RVM host topologies | Initial/Unicode RPC and renderer replacement, normal exit, idle-next-call host loss and blocked-delivery host loss passed for native network, native stdio, browser host, Node network and the retired packaged Node stdio host. Manual network/browser modes rejected a second host. Stdio children terminated after normal Core shutdown. Fifteen results in `webkit-rvm-results.json`. |
 | Browser touch | Shared Touching, TouchingList and ordinary/document gesture helpers passed through DOM-synthetic PointerEvents, including transforms, cancellation, fallback, row identities, selection and momentum checks. `webkit-touching.json`, `webkit-touching-list.json`, `webkit-ordinary-touch.json`. |
 | Mouse capture regression | Three outside-release resize repetitions and two title-drag repetitions passed after observing Core's capture request. Returning without a pressed button left bounds unchanged. `webkit-outside-release-after.json`, `webkit-title-capture.json`. |
 
