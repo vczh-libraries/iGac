@@ -1,11 +1,13 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 cd "$SCRIPT_DIR"
 
-if [[ "$1" == "--rebuild" ]]; then
+if [[ "${1:-}" == "--rebuild" ]]; then
     # Clean everything
     git clean -Xdf
 fi

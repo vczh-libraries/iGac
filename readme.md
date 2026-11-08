@@ -249,6 +249,8 @@ Each generated application also has an embedded-resource `.cpp` file. Full Contr
 ```
 
 Build output goes to `build/`. The build system requires CMake 3.20 or newer and uses C++23.
+The build script stops on the first failed command and returns a nonzero status;
+if CMake configuration fails, it does not run `make` against an older build tree.
 
 The official build also produces Raw element, hosted modal, image service and
 paragraph regression tests.
