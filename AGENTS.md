@@ -110,10 +110,12 @@ both core and renderer. Keep the canonical renderer GuiMain and SharedArguments
 synchronized from GacUI. Reconnection reevaluates capabilities; DateTime/Locale
 fall back to the predecessor, while an unavailable injected filesystem is empty.
 
-FullControlTest's authored shared helper is `FullControlTestEventHandlers.h/.cpp`.
+FullControlTest's authored shared helper is `<GacUI repo>/Test/GacUISrc/Generated_FullControlTest/FullControlTestEventHandlers.h/.cpp`.
 Synchronize it with the XML/generated event definitions. Native entry points call
-`demo::AttachFctEvents<demo::DocumentEditorBase>` once per main window, attaching
-four document events per editor plus the palette event to their correct owners.
+`demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSkinItem>` once per main window, attaching
+four document events per editor and populating observable skin items. Synchronize
+`<GacUI repo>/Test/GacUISrc/SharedDocumentEditor.h/.cpp` with both showcases and
+`<GacUI repo>/Test/GacUISrc/Generated_TuiControlTest/TuiControlTestEventHandlers.h/.cpp` with TuiControlTest.
 
 ## Choosing the remote Core host
 

@@ -209,10 +209,7 @@ Staging artifacts are retained after success or failure and ignored by Git; the
 next synchronization replaces the copied resource trees. Generation,
 missing-artifact, merge and deployment failures stop synchronization with nonzero status.
 
-The script also copies the shared `FullControlTestEventHandlers.h/.cpp` handler from
-`<GacUI repo>/Test/GacUISrc/Generated_FullControlTest/`; the local Full Control Test entry
-point attaches it so every Color Theme preset refreshes existing controls in
-both standard and hosted mode. It also refreshes the shared native-renderer and RVM entry points,
+The script also copies `<GacUI repo>/Test/GacUISrc/Generated_FullControlTest/FullControlTestEventHandlers.h/.cpp`. The local FullControlTest entry point uses it to populate `SkinItems` and attach each editor's document events. Selected item actions refresh existing controls in both standard and hosted modes. It also refreshes the shared native-renderer and RVM entry points,
 the RVM initializer, and `<GacUI repo>/Test/GacUISrc/CppTest_Tui/Main.cpp` as `<iGac repo>/MacTuiControlTest/GuiMain.cpp`.
 The RVM entry point's shared automation argument header is copied to the committed
 root `<iGac repo>/SharedArguments.h`, so a fresh clone can build without sibling sources or
@@ -415,9 +412,8 @@ Use an installed UTF-8 locale when launching native applications, for example
 points initialize character conversion from that environment. Both wrappers
 support macOS's system Bash 3.2, including runs with no injection switches.
 
-`FullControlTestEventHandlers.h/.cpp` replaces `FullControlTestPalette.h/.cpp` in
-the synchronized FullControlTest sources. The local entry point attaches the palette
-handler and all four persistence events to each editor's own document viewer.
+The local entry point uses `<iGac repo>/Apps/FullControlTest/Source/FullControlTestEventHandlers.h/.cpp` to populate observable skin items
+and attaches all four persistence events to each editor's own document viewer.
 Private `.bin` files contain their image bytes; private save and RTF/HTML exports
 complete synchronously, including remote stream close. Synchronize the framework,
 resources and shared sources together after this protocol change.
@@ -434,3 +430,9 @@ resources and shared sources together after this protocol change.
 Native renderers here use `/MiniHttp`; `/Pipe` and `/Http` are Windows transports. Protocol TCP port is always 8888. `--port` changes only local renderer automation, default 8889, and can be combined with destination and injection options. The local Core/requester launchers need no destination option. A manually launched `RemotingTest_RvmHost /MiniHttp /corehost:core.example.com` connects to Core `/RVMT` or a requester server; its local `/Cli` mode rejects an explicit host.
 
 Keep SharedArguments and renderer GuiMain synchronized from GacUI, and maintain the platform Main.cpp separately. Socket destinations are unbracketed IPv6; HTTP authorities add brackets. Native listeners use wildcard interfaces; network reachability still depends on the host environment. Same-machine hostname checks do not verify another computer.
+
+## Showcase skin items and TUI document files
+
+The synchronization script copies `<GacUI repo>/Test/GacUISrc/SharedDocumentEditor.h/.cpp` into both showcase source folders and `<GacUI repo>/Test/GacUISrc/Generated_TuiControlTest/TuiControlTestEventHandlers.h/.cpp` into TuiControlTest. The TUI target explicitly compiles both helpers. FullControlTest compiles SharedDocumentEditor alongside its existing native helper through the generated-source inventory. Native composition populates the observable skin-item collections before showing each window. The repeated radios invoke item-owned actions and queue a single theme refresh, preserving selected identity.
+
+TUI private load/save and RTF/HTML export use the common native formats. Image runs become embedded labels while displayed and return to image runs for serialization. File labels retain their path; binary/memory images display `[Image, width x height]`. Files embed image data and preserve unused style definitions. Regenerate both showcase resources when updating these helpers, then follow `<GacUI repo>/.github/Jobs/DebugTuiControlTestSop.md` for fresh-process round trips and normal shutdown.

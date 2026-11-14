@@ -15,6 +15,8 @@ target_link_libraries(GacOSXTui PUBLIC GacUI GacOSX
 add_executable(Test_TuiControlTest
     "Main.cpp"
     "GuiMain.cpp"
+    "../Apps/TuiControlTest/Source/TuiControlTestEventHandlers.cpp"
+    "../Apps/TuiControlTest/Source/SharedDocumentEditor.cpp"
     "../Apps/TuiControlTest/Source/TuiControlTestPartialClasses.cpp"
     "../Apps/TuiControlTest/Source/TuiControlTestResource.cpp"
     "../Import/Skins/TuiSkin/TuiSkin.cpp"

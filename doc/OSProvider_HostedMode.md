@@ -264,11 +264,12 @@ Window Management checkbox. Generic windows such as the Simple test still use
 `ThemeName::Window`; the macOS DarkSkin registration resolves that generic
 theme to `SystemFrameWindow` in standard mode.
 
-The entry point attaches `demo::OnPaletteSelected` to the main window's
-`PaletteSelected` event in both modes. `syncProj.sh` copies this shared handler
-from GacUI's Full Control Test inventory. It queues palette installation and
-`GuiApplication::RefreshThemes()` together after input dispatch, preserving
-existing application controls while replacing their default templates.
+The entry point populates the main window's observable skin-item collection in
+both modes. `<iGac repo>/syncProj.sh` copies this shared native composition from
+GacUI. The repeated radio selection retains its item and queues `SelectSkin()`
+with `GuiApplication::RefreshThemes()` after input dispatch. Initial population,
+deselection and template reconstruction do not execute actions; existing controls
+and selected-item identity survive default-template replacement.
 
 ## Files Involved
 
@@ -283,9 +284,9 @@ existing application controls while replacing their default templates.
 | `Import/GacUI.h` | `GuiHostedController`, `GuiHostedWindow`, `GuiHostedGraphicsResourceManager`, `GuiGraphicsRenderTarget`, `IGuiHostedWindowProxy`, `hosted_window_manager::WindowManager` declarations |
 | `Import/GacUI.cpp` | All hosted mode platform-independent implementations |
 
-FullControlTest now calls `demo::AttachFctEvents<demo::DocumentEditorBase>` once
-per main window. The synchronized `FullControlTestEventHandlers.h/.cpp` retains
-the deferred palette refresh and attaches synchronous private load/save and
+FullControlTest calls `demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSkinItem>` once
+per main window. The synchronized `<iGac repo>/Apps/FullControlTest/Source/FullControlTestEventHandlers.h/.cpp` retains
+the observable skin-item initialization and attaches synchronous private load/save and
 RTF/HTML export to each editor's own viewer. The native remote entry point reads
 the shared opt-in `/remoteDT`, `/remoteLocale` and `/remoteFS` arguments; all three
 demo capabilities are false unless explicitly requested.

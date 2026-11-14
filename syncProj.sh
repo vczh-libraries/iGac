@@ -13,6 +13,8 @@ RVM_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Rvm/GuiMain.cpp"
 SHARED_ARGUMENTS_SOURCE="$GACUI_DIR/Test/GacUISrc/SharedArguments.h"
 RVM_INITIALIZER_DIR="$GACUI_DIR/Test/GacUISrc/Generated_RemoteViewModelTest"
 FCT_HANDLERS_DIR="$GACUI_DIR/Test/GacUISrc/Generated_FullControlTest"
+TUI_HANDLERS_DIR="$GACUI_DIR/Test/GacUISrc/Generated_TuiControlTest"
+DOCUMENT_HANDLERS_DIR="$GACUI_DIR/Test/GacUISrc"
 TUI_GUI_MAIN_SOURCE="$GACUI_DIR/Test/GacUISrc/CppTest_Tui/Main.cpp"
 
 require_file() {
@@ -109,6 +111,10 @@ require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.h"
 require_file "$RVM_INITIALIZER_DIR/RemoteViewModelTestInitialize.cpp"
 require_file "$FCT_HANDLERS_DIR/FullControlTestEventHandlers.h"
 require_file "$FCT_HANDLERS_DIR/FullControlTestEventHandlers.cpp"
+require_file "$TUI_HANDLERS_DIR/TuiControlTestEventHandlers.h"
+require_file "$TUI_HANDLERS_DIR/TuiControlTestEventHandlers.cpp"
+require_file "$DOCUMENT_HANDLERS_DIR/SharedDocumentEditor.h"
+require_file "$DOCUMENT_HANDLERS_DIR/SharedDocumentEditor.cpp"
 require_directory "$SCRIPT_DIR/RemotingTest_Rendering_macOS"
 require_directory "$SCRIPT_DIR/MacCppTestRvm"
 require_directory "$SCRIPT_DIR/MacTuiControlTest"
@@ -142,6 +148,12 @@ sync_application "RemoteViewModelTest" "RemoteViewModelTest"
 
 cp "$FCT_HANDLERS_DIR/FullControlTestEventHandlers.h" "$SCRIPT_DIR/Apps/FullControlTest/Source/"
 cp "$FCT_HANDLERS_DIR/FullControlTestEventHandlers.cpp" "$SCRIPT_DIR/Apps/FullControlTest/Source/"
+cp "$TUI_HANDLERS_DIR/TuiControlTestEventHandlers.h" "$SCRIPT_DIR/Apps/TuiControlTest/Source/"
+cp "$TUI_HANDLERS_DIR/TuiControlTestEventHandlers.cpp" "$SCRIPT_DIR/Apps/TuiControlTest/Source/"
+for app in FullControlTest TuiControlTest; do
+    cp "$DOCUMENT_HANDLERS_DIR/SharedDocumentEditor.h" "$SCRIPT_DIR/Apps/$app/Source/"
+    cp "$DOCUMENT_HANDLERS_DIR/SharedDocumentEditor.cpp" "$SCRIPT_DIR/Apps/$app/Source/"
+done
 cp "$TUI_GUI_MAIN_SOURCE" "$SCRIPT_DIR/MacTuiControlTest/GuiMain.cpp"
 
 cp "$REMOTE_RENDERER_SOURCE" "$SCRIPT_DIR/RemotingTest_Rendering_macOS/GuiMain.cpp"

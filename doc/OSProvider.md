@@ -19,10 +19,11 @@ Shared test utilities live in `MacShared/`.
 
 ## Entry Point
 
-`MacFullControlTest/Main.mm` connects the generated window's `PaletteSelected`
-event to the shared `demo::OnPaletteSelected` handler in both native modes.
-`syncProj.sh` copies that helper from the owning GacUI test project. The handler
-queues palette installation and theme refresh while preserving existing controls.
+`<iGac repo>/MacFullControlTest/Main.mm` populates the generated window's observable
+skin items through `demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSkinItem>`
+in both native modes. `<iGac repo>/syncProj.sh` copies the shared composition and
+document helpers from GacUI. Each selected item queues its native action and theme
+refresh while preserving existing controls.
 The entry point also retains a local Cocoa clock attachment for
 `window.GetClockElement()` through the window run. The native remote entry point
 attaches the corresponding collection helper before processing protocol messages;
@@ -214,11 +215,16 @@ CocoaInputService receives its callback service explicitly and registers its Car
 
 `Test_TuiControlTest` has no automation endpoint. It uses the imported TuiSkin pair and synchronized showcase resources, with hosted popups and fake TUI dialogs supplied by GacUI. Normal Hide/Close and Stop unwind the shared controller and restore the terminal. See the upstream [TUI provider design](../../GacUI/.github/KnowledgeBase/KB_GacUI_Design_TuiPlatformProvider.md) and [terminal SOP](../../GacUI/.github/Jobs/DebugTuiControlTestSop.md).
 
-FullControlTest now calls `demo::AttachFctEvents<demo::DocumentEditorBase>` once
-per main window. The synchronized `FullControlTestEventHandlers.h/.cpp` retains
-the deferred palette refresh and attaches synchronous private load/save and
+FullControlTest calls `demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSkinItem>` once
+per main window. The synchronized `<iGac repo>/Apps/FullControlTest/Source/FullControlTestEventHandlers.h/.cpp` retains
+the observable skin-item initialization and attaches synchronous private load/save and
 RTF/HTML export to each editor's own viewer. The native remote entry point reads
 the shared opt-in `/remoteDT`, `/remoteLocale` and `/remoteFS` arguments; all three
 demo capabilities are false unless explicitly requested.
+
+The synchronized TUI entry point similarly calls `AttachTuiEvents` once. Its image
+labels retain decoded data, and its saving model restores image runs for the shared
+private/RTF/HTML formats. Binary-loaded images use the pathless label form. This
+does not add a terminal image renderer or change the platform entry point.
 
 The native remote entry point accepts one optional `/corehost:<host>`, default localhost, through the shared GacUI parser. It passes the unbracketed hostname/IP address into the shared `StartMiniHttpClient` composition. `<iGac repo>/test.sh --app:renderer --corehost:core.example.com --port:8889` forwards the destination in foreground and `--unblock` modes. Core protocol port remains 8888; `/port` selects local renderer automation. Platform `Main.cpp` remains local while SharedArguments and GuiMain are synchronized by `<iGac repo>/syncProj.sh`.

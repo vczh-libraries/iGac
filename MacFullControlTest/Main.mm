@@ -31,7 +31,7 @@ void GuiMain()
 {
 	demo::MainWindow window;
 	auto rawClockAttachment = demo::AttachFullControlTestRawElement(window.GetClockElement());
-	demo::AttachFctEvents<demo::DocumentEditorBase>(&window);
+	demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSkinItem>(&window);
 	window.ForceCalculateSizeImmediately();
 	window.MoveToScreenCenter();
 
