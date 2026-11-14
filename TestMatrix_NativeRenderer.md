@@ -1,55 +1,45 @@
-# Test Matrix Card 2026-11-04T04:02:01-08:00
+# Test Matrix Card 2026-11-14 08:39 PST
+
+## Focused scope and provenance
+
+Execution of `<GacUI repo>/TODO_TASK_iGac.md` on macOS 26.5.2 (25F84), arm64 Debug, Apple clang 21.0.0, `VCZH_DEBUG_NO_REFLECTION`. Upstream GacUI `6c3d81ee1`, iGac baseline `d59347e`, GacJS `9f8a5f8`; fetched and current before synchronization. Selected FCT Window Manager skins, both document editors and fake Open/Save dialogs; corresponding TUI pages only. RPT, RVMT, host modes, Wasm, Raw Clock, touch and unrelated pages are excluded and their rows remain blank. This is a focused subset, not a full SOP pass. Historical cards supply no current passes.
 
 ## Test Matrix
 
 | Test Item | 1st |
 | --- | --- |
-| [macOS][Test_CppTest_Rvm][`/MiniHttp`] | 2026-11-04T12:31:37.713Z |
-| [macOS][`/RPT`][`/MiniHttp`] | 2026-11-04T12:34:57.063Z |
-| [macOS][`/FCT`][`/MiniHttp`] | 2026-11-04T13:15:07.265Z |
-| [macOS][`/RVMT`][`/MiniHttp`] | 2026-11-04T12:31:47.124Z |
-| [macOS][`/RVMT`][`/MiniHttp /Cli:<path>`] | 2026-11-04T12:32:49.422Z |
-| Build / CodePack / import / sync | 2026-11-04T12:22:07.990Z (fixed) |
-| Local Hello World | 2026-11-04T12:34:45.353Z |
-| Local FullControlTest | 2026-11-04T12:38:01.214Z (fixed) |
-| Local FullControlTest --hosted | 2026-11-04T13:25:39.521Z (fixed) |
-| Native regression tests | 2026-11-04T12:31:37.711Z (fixed) |
-| Native Touching gestures (excluded: native touch unsupported) |  |
-| Native TouchingList gestures (excluded: native touch unsupported) |  |
-
-## Observations and Limitations
-
-macOS 26.5.2 arm64, CMake Debug; initial iGac commit `51967a6`, GacUI `7dbf1bc8e`, plus the fixes below. Final `./import.sh`, `./syncProj.sh`, and `./build.sh` succeeded in that order. CodePack, the portable Core/host builds, and generated resources were refreshed. Evidence is local and ignored under `<iGac repo>/_OUTPUT_/rpXPlat-20261104/`.
-
-| Coverage | Observed result / evidence |
-| --- | --- |
-| RPT | Initial UI, Home, shortcuts, all five mouse buttons and modifiers, grid add/clear, document dialog, replacement and takeover retained state. Normal Exit and Core-authored fatal error paths passed. `native-rpt-*.json`, `native-rpt-fatal.png`. |
-| RVM standalone and both remote host modes | Initial and Unicode RPC, second-host rejection for manual network hosts, replacement/takeover where applicable, normal shutdown, idle-next-call host loss and blocked-delivery host loss passed. Nine scenario results in `native-rvm-results.json`; stdio children exited with Core. |
-| Local FCT | Lists, independent editor markers, shortcuts/mouse, four vertical layout pages, palette retention, responsive modal size cycle, account/movie content and modal close paths passed. Open cancellation and private fixture loading retained timer/automation activity. Private-format save/reload retained serialized XML; RTF and HTML exports contained the document/images. `native-document-exports.json`, `native-local-modal-sizes.json`. |
-| Hosted FCT | Initial lists/input, retained editor text and layouts, palette changes and exact responsive dimensions passed after the ellipsis fix. Initial size is 240×320; the cycle covers widths 240/350/440/680 and heights 220/320/520. Title close and queued main Close exited normally. `native-Native-Hosted-Fixed-responsive.json`. |
-| Remote FCT | Initial, replacement and takeover retained state and input. Responsive sizes matched the requested dimensions after placing the modal within the host viewport. All 24 movie titles/directors and all eight accounts were checked; Oxford selection followed by Harper moved the green selection arrow. OK, Cancel and title close worked. `native-remote-films.json`, `native-remote-modal-exact.json`, `native-remote-account-harper.png`. |
-| Global shortcuts | Native generated Command+Control+Option+Shift+Q activated the hosted FCT dialog while Finder was focused. Concurrent FCT Q and TUI F8 both activated independently. Remote FCT Q passed initially, after replacement, and after takeover. `native-global-rounds.json`. These are OS registration/delivery checks, not physical-keyboard checks. |
-| Raw Clock | Local, hosted, remote and takeover screenshots showed changing clock/hand pixels, and palette changes retained the painter. Compared frames had thousands of changed clock pixels, including hand pixels. `native-*-clock-*.png`. |
-| Focused regressions | Raw elements: 4/4 native and 4/4 hosted; image service: 1/1; paragraph/ellipsis: 2/2. The combined hosted/AppKit modal and earlier-native-teardown regression passed five consecutive runs. `native-modal-combined-*.log`, `label-fixed.log`. |
-
-Native `wGac`/`iGac` touch is explicitly excluded by the job; the two touch rows remain blank. Synthetic Core input is not native touch evidence. Windows-only `/Pipe`, `/Http`, UIA and rebuilt `CppTest` sections 3.1/3.2 are outside this macOS matrix; native point-input document checks are expressly excluded by the shared SOP. Mouse/keyboard automation and native generated global chords do not establish physical-device coverage. No Linux or Windows runtime coverage is claimed.
+| [macOS][Test_CppTest_Rvm][`/MiniHttp`] |  |
+| [macOS][`/RPT`][`/MiniHttp`] |  |
+| [macOS][`/FCT`][`/MiniHttp`] | 09:29 Core-local and remoteFS focused subsets passed |
+| [macOS][`/RVMT`][`/MiniHttp`] |  |
+| [macOS][`/RVMT`][`/MiniHttp /Cli:<command>`] |  |
+| [macOS][Local FullControlTest][hosted] | 09:06 selected behaviors passed; limits below |
+| [macOS][Local FullControlTest][Cocoa panels] | 09:18 selected behaviors passed |
+| Build / release / import / sync | 08:44 passed: Codepack, import, sync, Debug arm64 build; x32/x64 generation |
 
 ## Issues Found and Fix
 
-### Initial build: popup snapshot type
+### Portable Core link failure
 
-The first official build failed at `CocoaWindow.mm:1427`: `Pair` belongs to `vl::collections`. Qualifying it as `collections::Pair` repaired the macOS integration build. Imported framework files were regenerated only through import.
+At 08:44, `<iGac repo>/test_core.sh --app:fct --protocol:minihttp` failed to link on arm64 with undefined `gacui_demo::LoadDocument`, `SaveDocument`, `ExportDocumentRtf` and `ExportDocumentHtml`. The portable Core's authored `vmake` inventory included the FCT event handlers but omitted `<GacUI repo>/Test/GacUISrc/SharedDocumentEditor.cpp`. Added that implementation once in `<GacUI repo>/Test/Linux/RemotingTest_Core/vmake`, regenerated through the normal wrapper and repeated full builds and the WebKit/native-renderer runtime checks successfully. No framework/provider change is needed; the test-app-only unit-test exemption applies.
 
-### Native modal panels stopped subsequent timer delivery
+## Focused evidence
 
-Open-panel acceptance and cancellation both reproduced an unresponsive renderer/automation endpoint. AppKit consumed the coalesced timer event without clearing its pending flag, so no later timer event was posted. `CocoaApplication::sendEvent:` now dispatches that event in both the provider loop and AppKit modal loops. `NativeModal.mm` checks two AppKit modal loops and subsequent queued/timer work; live open, cancel, save and reload retests passed.
+- `Codepack` exited 0. Release content matched HEAD after Git line-ending normalization. Official `import.sh`, `syncProj.sh`, `build.sh` each exited 0. All four applications generated both x32 and x64 staging outputs and eight deployment manifests; no resource error files. Only arm64 executables were run. The two regenerated resource buffers differ solely in six CRLF-to-LF text separators and corresponding lengths. The CppMerge build also regenerated `<Workflow repo>/Tools/CppMerge/makefile` with spacing-only changes. Shared persistence compiled once per executable; no TUI DarkSkin or reflection addition.
+- Hosted and standard FCT started and closed normally. Both six-item GUI selectors retained one selection through pointer, Tab/Enter, reconstruction and navigation. Ribbon Unicode edits and selection survived skin changes; the standard Toolstrip editor also retained edited content/selection.
+- Both Cocoa editors loaded `TestDocument.bin`; accepted private save and RTF/HTML export produced real files containing Unicode and embedded images. Open/Save cancellation left documents intact. Cocoa overwrite Cancel preserved bytes; Replace wrote the edited document. Accessibility operated actual native panels, including nested overwrite sheets. All repeated commands remained responsive.
+- Hosted English and Chinese fake dialogs created CJK/space names; cancellation and invalid empty/dot/parent/rooted/slash names changed nothing; duplicate folder and file collision errors kept the input usable. Captured mixed selection deleted an ordinary CJK file, empty and populated folders, preserving the independently typed save name. Delete cancellation preserved fixtures. Both selected symlinks and directories containing directory symlinks were rejected, with target sentinel intact and unrelated selections deleted. A verified EACCES descendant caused one combined failure; its sibling still deleted, and permission restoration allowed retry.
+- Browser-to-TUI-to-hosted/Cocoa/Core document interchange retained three embedded images (1250×500, 256×256, 123×456), Unicode, alignment, hyperlink and nine styles including an unused style. Original document fixture was never overwritten.
+- Native remote Core-local run cycled skins by pointer/keyboard, retained ribbon edit/selection through refresh, saved private/HTML, cross-opened the TUI document, and created/deleted a CJK folder plus populated folder through renderer IO. Core and renderer both closed normally.
 
-The same open-panel investigation found that directories could be returned to the file loader, causing a serialization short read. Open panels now allow navigation but return files only. A selected test fixture subsequently loaded successfully.
+- Repeated the official full Core build and launched Core/renderer with `--remoteFS` on both. Private save/reload preserved the Cocoa ribbon document. Renderer filesystem injection created and deleted a CJK folder; the unselected sentinel survived. Core and renderer were co-located on this Mac; fixtures were created/inspected on the renderer host under `<GacUI repo>/Test/FileDialogPlayground/renderer-fs`. DateTime/Locale injection remained disabled. Both processes exited normally.
 
-### Queued hosted-window deletion used an already-destroyed native window
+## Evidence and limits
 
-An intermittent SIGSEGV occurred twice across the targeted repeats; a deterministic regression reproduced earlier native-child destruction before queued deletion on the old snapshot. GacUI now checks the control-host disposal flag and its current native-window association before destroying the captured native window. The normal destruction notification still performs control-host deletion. Five combined modal/teardown runs passed, with exactly one deletion callback.
+Local evidence is retained under `<iGac repo>/build/followup-20261114/` (ignored): `hosted-*.json`, `cocoa-*.json`, `remote-local-*.json`, `remotefs-*.json`, build logs and artifact inventory. GUI automation used fresh control trees; native panels used macOS accessibility. An initial hosted launch while Core owned the port failed with a bind exception; stopping Core and relaunching succeeded. This was a test scheduling error.
 
-### Ellipsized captions forced hosted windows wider than requested
+Exact queued-action counts, underlying document pointer identity and modified-state transitions were inspected in source but not instrumented at runtime. No duplicate visible action was observed. Exhaustive pending-enumeration races and every expanded/collapsed/unloaded tree permutation are not claimed. The file-backed image-label branch was not reachable through private-format loading (which materializes stream-backed images); embedded-image persistence was exercised independently.
 
-Hosted FCT's responsive modal opened at 291×320 and could not shrink to 240px because CoreGraphics counted the full ellipsized caption as minimum width. Windows label renderers contribute zero width in this mode. CoreGraphics now does likewise while retaining measured height. The new composition regression failed before the fix and passes afterward; live initial 240×320 sizing and all nine grow/shrink checks passed.
+## Completion
+
+Upstream Core linkage fix: GacUI `40bd03efb`. Final fetch included documentation-only upstream commits through `edd40756c`; the fix was rebased, and a scoped Git comparison confirmed all tested source, release, resource and build inputs unchanged. Build logs, control/cell captures and output hashes are retained locally in `<iGac repo>/build/followup-20261114/` and are not committed. The verified owned playground was removed after checking all target sentinels, restoring directory permissions and unlinking symlinks without following them. Original `TestDocument.bin` remained unchanged. No temporary test instrumentation was added to tracked application sources.
