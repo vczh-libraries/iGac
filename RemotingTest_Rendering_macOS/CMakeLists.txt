@@ -30,6 +30,8 @@ set(APP_NAME "RemotingTest_Rendering_macOS")
 set(APP_SOURCE_FILES
 	"GuiMain.cpp"
 	"Main.cpp"
+	"../MacShared/FullControlTestRawClockInterpretor.cpp"
+	"../MacShared/FullControlTestRawClockInterpretorCocoa.cpp"
 	"../MacShared/FullControlTestRawElement.cpp"
 	"../MacShared/FullControlTestRawElementRemote.cpp"
 )

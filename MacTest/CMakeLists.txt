@@ -45,6 +45,8 @@ MACOSX_BUNDLE_GUI_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER} )
 
 add_executable(Test_RawElement
 	"RawElement.cpp"
+	"../MacShared/FullControlTestRawClockInterpretor.cpp"
+	"../MacShared/FullControlTestRawClockInterpretorCocoa.cpp"
 	"../MacShared/FullControlTestRawElement.cpp"
 	"../MacShared/FullControlTestRawElementRemote.cpp"
 )

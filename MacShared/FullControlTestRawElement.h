@@ -6,7 +6,9 @@
 namespace demo
 {
 	// Retain through the window's drawing lifetime; destruction detaches the callback.
-	extern vl::Ptr<vl::Object> AttachFullControlTestRawElement(vl::Ptr<vl::presentation::elements::GuiRawElementBase> element);
+	// Data: centerX,centerY,axisX,axisY,count followed by count triples of pointId,x,y.
+	// The axis rotates/scales a 160 by 100 rectangle. Interpretor remains empty.
+	extern vl::Ptr<vl::Object> AttachFullControlTestTouchingElement(vl::Ptr<vl::presentation::elements::GuiRawElementBase> element);
 }
 
 #endif

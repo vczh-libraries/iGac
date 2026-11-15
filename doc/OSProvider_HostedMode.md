@@ -134,8 +134,12 @@ The per-virtual-window clipping (via `PushClipper`/`PopClipper`) uses `CGContext
 Hosted `<Raw/>` elements use `GuiCocoaElement` through the wrapped native resource
 manager. Their rendering callbacks borrow this same context with the current
 hosted offset, parent clip and Retina transform; they do not start a separate
-frame. The raw renderer restores the callback's graphics state, text matrix and
-current path before the next element or virtual window draws. See
+frame. The Clock plugin registers through the active hosted resource manager,
+which forwards factory lookup and registration to the native manager. Each raw
+renderer retains its own interpretor across shared-target replacement; manual
+Touching drawing remains attached independently. The raw renderer restores the
+callback's graphics state, text matrix and current path before the next element
+or virtual window draws. See
 [raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing).
 
 ### Hosted Rendering Sequence (per frame)

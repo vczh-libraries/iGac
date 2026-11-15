@@ -27,6 +27,7 @@ namespace vl::presentation::elements
 	protected:
 		GuiCocoaElement() = default;
 	public:
+								~GuiCocoaElement();
 		static vint				GetElementType();
 		static GuiCocoaElement*	Create();
 
@@ -37,16 +38,13 @@ namespace vl::presentation::elements
 
 namespace vl::presentation::elements_coregraphics
 {
-	class GuiCocoaElementRenderer : public GuiElementRendererBase<GuiCocoaElement, GuiCocoaElementRenderer, ICoreGraphicsRenderTarget>
+	class GuiCocoaElementRenderer : public GuiRawElementRendererBase<GuiCocoaElement, GuiCocoaElementRenderer, ICoreGraphicsRenderTarget>
 	{
 		friend class GuiElementRendererBase<GuiCocoaElement, GuiCocoaElementRenderer, ICoreGraphicsRenderTarget>;
 	protected:
-		void			InitializeInternal();
-		void			FinalizeInternal();
 		void			RenderTargetChangedInternal(ICoreGraphicsRenderTarget* oldTarget, ICoreGraphicsRenderTarget* newTarget);
 	public:
 		void			Render(Rect bounds) override;
-		void			OnElementStateChanged() override;
 	};
 }
 

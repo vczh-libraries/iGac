@@ -87,7 +87,8 @@ iGac/
 ├── MacShared/                  Shared static libraries and test utilities
 │   ├── CMakeLists.txt          Builds GacUI, GacOSX, GacOSXShared static libraries
 │   ├── gac_include.h           Convenience header: includes GacUI, registers DarkSkin theme
-│   ├── FullControlTestRawElement* Cocoa clock and remote collection attachments for test apps
+│   ├── FullControlTestRawClockInterpretor* Portable Clock base and local Cocoa plugin
+│   ├── FullControlTestRawElement* Manual Cocoa Touching painter and remote collection adapter
 │   ├── osx_shared.h/mm         OS X helpers (string conversion, file utils, resource folder)
 │   └── UnixFileSystemInfo.*    Cross-platform file system utilities
 │
@@ -219,22 +220,35 @@ neither is maintained as a local `<iGac repo>/MacShared/Mini*.cpp` copy. Generat
 reflection files are retained in `<iGac repo>/Apps/*/Source/`, but test targets compile with
 `VCZH_DEBUG_NO_REFLECTION` and do not include them.
 
-The clock helpers remain macOS-owned under `<iGac repo>/MacShared`; synchronization
-does not copy the Windows clock helpers. The local FCT and native remote renderer
-compile the Cocoa helpers directly, while `GacOSX` supplies the reusable
-`GuiCocoaElement` from `<iGac repo>/Mac/GraphicsElement/CoreGraphics`.
-The shared renderer entry point's macOS attachment hook is maintained upstream
-and survives synchronization. `<Raw/>` creates this element in ordinary,
-hosted and native remote modes. See [the drawing contract](doc/OSProvider_Graphics.md#raw-cocoa-drawing)
-for callback lifetime, clipping and received clock data.
+Synchronization copies both portable Clock files from
+`<GacUI repo>/Test/GacUISrc/Generated_FullControlTest/FullControlTestRawClockInterpretor.h/.cpp`
+into `<iGac repo>/MacShared/`, adapting the header's framework include. Windows
+concrete painters and registration remain guarded upstream. The local
+`<iGac repo>/MacShared/FullControlTestRawClockInterpretorCocoa.cpp` supplies the
+CoreGraphics primitives and controller-related plugin; synchronization preserves
+it. FCT, the native renderer and `Test_RawElement` each compile the portable base
+and Cocoa plugin directly once, outside the general `GacOSX` platform library.
 
-Use `<Raw/>` as the standard, recommended owner-drawing element for local and
-remote graphical applications. XML provides `Id` and `Data` through
-`GuiRawElementBase`; C++ subscribes to `GuiCocoaElement::Rendering` to draw with
-the callback's borrowed `CGContextRef`. The Core sends drawing state to remote
-clients, whose platform or browser code performs the drawing. Supply a useful
-composition size and retain/detach drawing handlers with their owner. TUI does
-not support `<Raw/>`.
+The plugin registers `FullControlTest::Clock` through the active graphics resource
+manager before local window construction or remote message processing. Clock keeps
+`Id="FullControlTest.Clock"` and selects that factory with `Interpretor`. Its
+Workflow timer supplies the time; the Cocoa painter never reads a local clock.
+
+`<iGac repo>/MacShared/FullControlTestRawElement.h/.cpp` now provides the manual
+Touching painter. The local entry point retains its attachment for
+`GetTouchingElement()`; the remote collection helper reconciles
+`Id="FullControlTest.Touching"`, including late subscription and replacement.
+Touching keeps an empty `Interpretor`. Its center/axis/contact payload draws a
+transformed SkyBlue rectangle and yellow contact rings.
+
+Use `<Raw/>` as the standard owner-drawing element for graphical applications.
+`GuiRawElementBase` supplies independent `Id`, `Interpretor` and `Data` properties.
+Cocoa uses the common named-factory registry and renderer lifetime, while manual
+`GuiCocoaElement::Rendering` subscriptions remain valid with no interpretor. The
+callback borrows its `CGContextRef` with logical bounds, clipping and backing scale
+already applied. Keep Core/renderer protocol snapshots synchronized. See
+[the drawing contract](doc/OSProvider_Graphics.md#raw-cocoa-drawing) for lifetime,
+received state and the TUI restriction.
 
 Each generated application also has an embedded-resource `.cpp` file. Full Control Test links `FullControlTestResource.cpp`, whose plugin loads the resource from compiled data; no `.bin` file is bundled or located at runtime.
 
@@ -267,11 +281,15 @@ The image test checks encoding, JPEG-to-PNG pixels and write failures. The
 paragraph test checks multiple inline images, reapplication, reset/reuse and
 ellipsized-label composition sizing.
 
-For runtime clock verification, open Misc / Raw Clock in local FCT, repeat with
+For focused runtime verification, open Misc / Raw Clock and Misc / Touching in local FCT, repeat with
 `--hosted`, and repeat through `test_core.sh --app:fct --protocol:minihttp` plus
 `test.sh --app:renderer`. Verify ticking without input, resizing, tab return,
 palette refresh and renderer replacement/takeover. The clock paints received
-data; it has no renderer-local timer. Results belong in
+data; it has no renderer-local timer. `Test_RawElement` checks controlled local
+Touching payloads and fixed-data interpretor-only remote repaint. Send synthetic
+`!PointDown`/`!PointUpdate`/`!PointUp` to Core for remote Touching state/rendering
+checks; Cocoa point-command automation and physical touch remain unsupported.
+Results belong in
 `<iGac repo>/TestMatrix_NativeRenderer.md`.
 
 iGac does not support native touch experience. The synchronized FullControlTest

@@ -8,7 +8,7 @@ namespace demo
 	using namespace vl::presentation::elements;
 	using namespace vl::presentation::remote_renderer;
 
-	class CocoaClockCollectionAttachment : public Object
+	class CocoaTouchingCollectionAttachment : public Object
 	{
 	protected:
 		GuiRemoteRendererSingle&					renderer;
@@ -18,11 +18,11 @@ namespace demo
 		void Update(const GuiRemoteRawElementEventArgs& arguments)
 		{
 			auto element = arguments.element;
-			if (element->GetId() == L"FullControlTest.Clock")
+			if (element->GetId() == L"FullControlTest.Touching")
 			{
 				if (!attachments.Keys().Contains(element.Obj()))
 				{
-					attachments.Add(element.Obj(), AttachFullControlTestRawElement(element));
+					attachments.Add(element.Obj(), AttachFullControlTestTouchingElement(element));
 				}
 			}
 			else
@@ -31,10 +31,10 @@ namespace demo
 			}
 		}
 	public:
-		CocoaClockCollectionAttachment(GuiRemoteRendererSingle& _renderer) : renderer(_renderer)
+		CocoaTouchingCollectionAttachment(GuiRemoteRendererSingle& _renderer) : renderer(_renderer)
 		{
-			installed = renderer.RawElementInstalled.Add(this, &CocoaClockCollectionAttachment::Update);
-			changed = renderer.RawElementChanged.Add(this, &CocoaClockCollectionAttachment::Update);
+			installed = renderer.RawElementInstalled.Add(this, &CocoaTouchingCollectionAttachment::Update);
+			changed = renderer.RawElementChanged.Add(this, &CocoaTouchingCollectionAttachment::Update);
 			uninstalled = renderer.RawElementUninstalled.Add([this](const GuiRemoteRawElementEventArgs& arguments)
 			{
 				attachments.Remove(arguments.element.Obj());
@@ -42,7 +42,7 @@ namespace demo
 			for (auto element : renderer.GetRawElements()) Update({ element });
 		}
 
-		~CocoaClockCollectionAttachment()
+		~CocoaTouchingCollectionAttachment()
 		{
 			renderer.RawElementInstalled.Remove(installed);
 			renderer.RawElementChanged.Remove(changed);
@@ -52,6 +52,6 @@ namespace demo
 
 	Ptr<Object> AttachFullControlTestRawElements(GuiRemoteRendererSingle& renderer)
 	{
-		return Ptr(new CocoaClockCollectionAttachment(renderer));
+		return Ptr(new CocoaTouchingCollectionAttachment(renderer));
 	}
 }

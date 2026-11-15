@@ -40,6 +40,8 @@ list(FILTER FULL_CONTROL_TEST_GENERATED_SOURCES EXCLUDE REGEX "Reflection\\.cpp$
 set(APP_NAME "Test_FullControlTest")
 set(TESTAPP_SOURCE_FILES
 	"Main.mm"
+	"../MacShared/FullControlTestRawClockInterpretor.cpp"
+	"../MacShared/FullControlTestRawClockInterpretorCocoa.cpp"
 	"../MacShared/FullControlTestRawElement.cpp"
 	${FULL_CONTROL_TEST_GENERATED_SOURCES}
 )

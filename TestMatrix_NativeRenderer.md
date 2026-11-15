@@ -1,3 +1,37 @@
+# Test Matrix Card 2026-11-15 06:09 PST
+
+## Focused scope and provenance
+
+Execution of `<GacUI repo>/TODO_TASK_iGac.md` on macOS 26.5.2 (25F84), arm64 Debug, Apple clang 21.0.0, `VCZH_DEBUG_NO_REFLECTION`. GacUI source/release baseline `ea5e1b330`, iGac baseline `6d2ef8a`. The final GacUI fast-forward to `516112669` changes only release notes; tested source, releases, resources and build inputs are unchanged. Application coverage is limited to Misc / Raw Clock and Misc / Touching, with Window Manager used only to refresh their palette. GacJS, physical touch, unrelated pages, RPT, RVMT and TUI runtime checks were not run.
+
+## Test Matrix
+
+| Test Item | Result |
+| --- | --- |
+| Import, synchronization and incremental build | Both sequences passed; repeated import/synchronization preserved all 322 input hashes |
+| Clean `build.sh --rebuild` | Passed without compiler warnings; all application and fixture targets rebuilt |
+| Native `Test_RawElement /C` | Seven cases passed again after the clean build |
+| Hosted `Test_RawElement /C --hosted` | Five shared cases passed again after the clean build; two native-window remote cases intentionally return early (runner reports 7/7) |
+| Local FCT, native | 06:05 Clock and Touching rendering, Clock updates, resize, tab return, Aurora refresh and normal shutdown passed; fresh binaries repeated startup/ticking/Touching at 06:13 |
+| Local FCT, hosted | 06:06 Same focused page checks and normal shutdown passed; fresh binaries repeated startup/ticking/Touching at 06:13 |
+| FCT Core with native renderer, MiniHTTP | 05:58–06:04 Clock/Touching, synthetic points, resize, palette, renderer replacement, takeover and normal shutdown passed |
+
+## State and rendering evidence
+
+- Upstream release sources and both full Reflection32/Reflection64 metadata inventories already contain the common registry, reflected `Interpretor`, combined setter and four-field remote descriptor. Resource synchronization preserves the Clock's named selection. No upstream regeneration was needed.
+- The shared Clock plugin is present before `GuiMain` in native and hosted setup; registration forwards through the hosted manager. Each consumer directly links the portable base and Cocoa plugin once. No entry point performs explicit Clock registration.
+- The focused fixture covers empty/known/missing names, switching factories, atomic name/data visibility, data-only/ID-only/no-op updates, no retry after late registration, independent instances, manual-handler survival and exactly-once finalization with and without targets. Context replacement preserves interpretor ownership. Graphics state, text matrix, path, logical offsets and clipping are checked at 1x and 2x.
+- Fixed payloads exercise Clock pixels without a native timer. Actual remote `EndRendering` calls verify interpretor-only repaint with unchanged time, unchanged-frame suppression, data repaint and removal. Touching checks translation, rotation, scale, contact rings and malformed payload rejection; late enumeration, ID changes, replacement, uninstall and adapter teardown preserve the expected pixel hashes without duplicate drawing.
+- Local and remote Controls expose `Id="FullControlTest.Clock"`, `Interpretor="FullControlTest::Clock"` and received `HH:mm:ss`. Sixteen native window captures show the white face/ticks and cyan/green/yellow hands. Pixel-derived hand directions agree with the recorded times, including resize, palette refresh and replay; one capture crosses a one-second boundary. Fresh binaries show native time advancing from 06:13:25 to 06:13:28 and hosted time from 06:13:02 to 06:13:04 without input between captures. Controls/IO were used locally; Core Controls/IO and renderer Dom/IO were used remotely.
+- Touching keeps an empty `Interpretor`. Core point commands change `180,140,1,0,0` to `240,180,1,0,1,0,240,180`, then `280,140,0,1.5,2,0,280,140,1,280,260`. Captures show the translated rectangle, the 90-degree rotation at 1.5x scale, and both yellow rings. Releasing contacts removes the rings. Controlled local payloads use the bitmap fixture because Cocoa native point acquisition/automation is unsupported.
+- Renderer replacement terminates only the renderer while Core remains alive. The replacement receives Touching state and attaches its manual painter; Clock name/data and drawing resume on tab return. A second renderer on port 8890 takes over from port 8889, whose process exits normally. The new renderer draws the replayed Clock, retains the translated Touching state, accepts further point updates and closes normally with Core. Exact handler cleanup and duplicate suppression are asserted separately in the fixture.
+
+## Evidence and limits
+
+Evidence is retained locally under `<iGac repo>/build/raw-interpretor-20261115/` (ignored): build/synchronization logs, fixture output, Controls/Dom captures, native PNGs and screenshot hand/time comparisons. The available display reports backing scale 1; real 2x display migration was unavailable, so 2x coverage is limited to controlled CoreGraphics bitmap transforms. No physical-touch or browser coverage is claimed.
+
+An early fill assertion sampled a partially covered yellow ring; moving it inside the ring removed the antialiasing ambiguity. Review also added rejection of incomplete contact triples. LLDB launch required macOS authorization and was canceled; temporary pixel diagnostics were removed. All owned application/debugger processes and their dialogs were closed after the live checks. Historical ignored evidence is preserved across the clean rebuild.
+
 # Test Matrix Card 2026-11-14 08:39 PST
 
 ## Focused scope and provenance

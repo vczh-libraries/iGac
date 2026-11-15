@@ -3,6 +3,12 @@
 
 namespace vl::presentation::elements
 {
+	GuiCocoaElement::~GuiCocoaElement()
+	{
+		// Detach interpretor handlers before the concrete event members are destroyed.
+		if (renderer) renderer->Finalize();
+	}
+
 	vint GuiCocoaElement::GetElementType()
 	{
 		return GetElementTypeInternal<GuiCocoaElement>();
@@ -16,14 +22,6 @@ namespace vl::presentation::elements
 
 namespace vl::presentation::elements_coregraphics
 {
-	void GuiCocoaElementRenderer::InitializeInternal()
-	{
-	}
-
-	void GuiCocoaElementRenderer::FinalizeInternal()
-	{
-	}
-
 	void GuiCocoaElementRenderer::RenderTargetChangedInternal(ICoreGraphicsRenderTarget*, ICoreGraphicsRenderTarget*)
 	{
 	}
@@ -54,9 +52,5 @@ namespace vl::presentation::elements_coregraphics
 			CGContextAddPath(context, path);
 			CGPathRelease(path);
 		}
-	}
-
-	void GuiCocoaElementRenderer::OnElementStateChanged()
-	{
 	}
 }

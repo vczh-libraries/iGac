@@ -24,11 +24,13 @@ skin items through `demo::AttachFctEvents<demo::DocumentEditorBase, demo::FctSki
 in both native modes. `<iGac repo>/syncProj.sh` copies the shared composition and
 document helpers from GacUI. Each selected item queues its native action and theme
 refresh while preserving existing controls.
-The entry point also retains a local Cocoa clock attachment for
-`window.GetClockElement()` through the window run. The native remote entry point
-attaches the corresponding collection helper before processing protocol messages;
-its macOS hook is authored in the shared GacUI entry point and copied by
-`syncProj.sh`. See [raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing).
+The controller-related Clock plugin registers `FullControlTest::Clock` through the
+active graphics resource manager before `GuiMain`, in standard, hosted and raw
+remote startup. Neither entry point registers Clock explicitly. The local entry
+point retains a manual Touching attachment for `window.GetTouchingElement()` until
+before window destruction. The shared remote entry point retains its Touching
+collection adapter before processing protocol messages; synchronization preserves
+that hook. See [raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing).
 
 ### Standard Mode — `SetupOSXCoreGraphicsRenderer()`
 
@@ -69,7 +71,7 @@ This raw entry-point mode is separate from the XML `<Raw/>` graphics element.
 The element is supported in standard, hosted and native remote modes through
 `CoreGraphicsResourceManager::CreateRawElement()`, which creates `GuiCocoaElement`.
 Its renderer exposes the current `CGContextRef` during `Rendering`; application
-`Id`/`Data` state remains in `GuiRawElementBase`. See
+`Id`/`Interpretor`/`Data` state remains in `GuiRawElementBase`. See
 [raw Cocoa drawing](OSProvider_Graphics.md#raw-cocoa-drawing) for owner drawing,
 remote lifecycle and the TUI restriction.
 

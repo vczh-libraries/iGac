@@ -62,59 +62,82 @@ The base class `GuiGraphicsRenderTarget` handles the `StartRendering()`/`StopRen
 ### Raw Cocoa Drawing
 
 `<Raw/>` is the standard, recommended GacUI owner-drawing element for local and
-remote graphical applications. Set `Id` and `Data` in XML or C++, give the owning
-composition useful bounds or a minimum size, and attach native drawing in C++.
-The TUI backend does not support `<Raw/>` and rejects its creation.
+remote graphical applications. Set `Id`, `Interpretor` and `Data` in XML or C++,
+give the owning composition useful bounds or a minimum size, and select a named
+interpretor or attach native drawing manually. TUI rejects raw-element creation.
 
 `GuiCocoaElement` and its renderer live in `<iGac repo>/Mac/GraphicsElement/CoreGraphics/GuiCocoaElement.h/.cpp`.
 The element derives from `GuiRawElementBase` and supplies its own concrete factory.
 `CoreGraphicsResourceManager::CreateRawElement()` returns it in standard, hosted and
-native remote modes. The portable Core continues using its own raw element and
-transmits only the numeric renderer ID, application string ID and string data.
-There are no native contexts or rendered pixels in this descriptor; a browser
-client supplies its own page-owned painter for the same state.
+native remote modes. Core transports `ElementDesc_Raw` with numeric renderer `id`,
+application string `rawId`, `interpretor` and `data` as separate fields; no native
+context or rendered pixels cross the protocol. Keep Core and renderer snapshots
+synchronized when this schema changes.
 
-Subscribe to `GuiCocoaElement::Rendering` for the element, bounds and borrowed
+`GuiCocoaElementRenderer` inherits `GuiRawElementRendererBase`. Register an
+`IGuiGraphicsRawInterpretorFactory` with the active graphics resource manager after
+backend setup and before constructing consumers or processing remote messages.
+Hosted registration and lookup forward to the native registry. Each renderer owns
+a fresh interpretor. `Initialize` borrows the element and attaches handlers;
+`Finalize` detaches those handlers. An owning element pointer would create a cycle.
+`GuiCocoaElement` finalizes its renderer while `Rendering` still exists; later base
+finalization does not finalize the same interpretor twice.
+
+Selection uses `Interpretor` independently of `Id`. Empty and unknown names remove
+only the renderer-owned handlers, preserving independent manual drawing. Unknown
+names remain stored; registering them later does not retry installation. Data-only,
+ID-only and identical assignments do not reinstall an unchanged name.
+`SetInterpretorAndData` assigns both fields before initialization. Changed name or
+data invalidates drawing; an ID-only change does not request repaint. All strings
+start empty, and empty or duplicate IDs are valid.
+
+Subscribe to `GuiCocoaElement::Rendering` for the element, logical bounds and borrowed
 `CGContextRef`. The context is valid only during that callback: do not retain or
 release it, retain its backing layer, or begin/end another frame. The renderer
-queries the current target on every paint, so resizing or replacing a layer does
-not leave a cached native context. No target-bound drawing resources or additional
-target-change events are needed.
+queries the target on every paint; interpretor lifetime is independent of target,
+layer and context replacement. No target-bound resources or extra target events
+are needed for these CoreGraphics primitives.
 
-The callback uses the existing logical coordinates, Retina transform, hosted
-offsets and parent clip, intersected with the element bounds. The renderer restores
-graphics state, the text matrix and current path afterward. Empty clips and absent
-targets/contexts do not invoke the callback. The element has no intrinsic minimum
-size. Changed Data invalidates drawing; changed Id alone does not, and equal
-assignments do nothing.
+The provider already applies Retina scale, hosted offsets and the parent clip,
+intersected with element bounds. Do not scale or flip again. The renderer restores
+graphics state, text matrix and current path afterward. Empty clips and absent
+targets/contexts do not invoke callbacks. The element has no intrinsic minimum size.
 
-`GuiRawElementBase` has no `IdChanged` or `DataChanged` event. In remote mode,
-dirty state is batched into frames: an isolated `Id` change waits for the next
-otherwise-required frame, while a `Data` change schedules one. Attach drawing
-in the renderer process through `GuiRemoteRendererSingle`'s `RawElementInstalled`,
-`RawElementChanged` and `RawElementUninstalled` events, with `GetRawElements()`
-for late subscription. Installation occurs with empty strings and before target
-assignment. Descriptors apply both strings before one changed event. Uninstall
-callbacks still see the element in the collection and can detach handlers;
-the renderer then clears its render target and removes it. Empty and duplicate
-application IDs are valid, so track element identity. Resize and target
-recreation do not reinstall the element.
+`GuiRawElementBase` has no property-change events. Remote dirty state is batched
+into frames: ID-only changes wait for another required frame; name/data changes
+schedule one. `RawElementInstalled` fires with empty strings before target assignment.
+Descriptors assign all three strings before one `RawElementChanged`; identical
+updates emit nothing. `RawElementUninstalled` fires while the element remains in
+`GetRawElements()`, allowing manual handlers to detach before target removal.
+Track element identity, enumerate existing elements when subscribing late, and do
+not treat resize, hidden DOM nodes or retained disconnected pictures as removal.
 
-The FullControlTest clock attachments are test utilities under
-`<iGac repo>/MacShared/FullControlTestRawElement*.h/.cpp`, compiled directly into
-the local FCT and native remote renderer targets. They draw only
-`FullControlTest.Clock` with valid `HH:mm:ss` data; the application timer owns time
-updates. Keep the local attachment alive through the window run. The remote
-collection attachment subscribes before protocol dispatch, enumerates existing
-elements for late attachment, tracks identity across duplicate/empty IDs, and
-detaches when an ID changes away or an element is uninstalled. Destroy it before
-the renderer. Disconnected and fatal retained pictures keep their attachments
-until actual teardown.
+The application Clock module is outside the platform provider. `<iGac repo>/syncProj.sh`
+copies both portable `FullControlTestRawClockInterpretor.h/.cpp` files from GacUI into
+`<iGac repo>/MacShared/`, adapting the framework include. The separate local
+`FullControlTestRawClockInterpretorCocoa.cpp` implements the CoreGraphics primitives
+and a controller-related `IGuiPlugin`. It registers exactly `FullControlTest::Clock`
+through the active manager before `GuiMain`, including raw remote startup. Both
+implementations compile directly once into FCT, the renderer and `Test_RawElement`;
+they cannot be discarded as unreferenced static-library objects. Clock preserves
+`Id="FullControlTest.Clock"` but selects by `Interpretor`; the portable base draws
+received `HH:mm:ss` data with upstream geometry/colors and no native timer.
 
-`<iGac repo>/MacTest/RawElement.cpp` verifies factory/state behavior in ordinary
-and hosted setup, bitmap pixels and callback isolation at two scales, target
-replacement, and the native remote collection/repaint lifecycle. Live local,
-hosted and remote clock checks are recorded in `<iGac repo>/TestMatrix_NativeRenderer.md`.
+`<iGac repo>/MacShared/FullControlTestRawElement.h/.cpp` implements the manual
+Touching painter with empty `Interpretor`. FCT retains the attachment for
+`MainWindow::GetTouchingElement()` until before window destruction. Its payload is
+`centerX,centerY,axisX,axisY,count`, followed by `count` triples of `pointId,x,y`.
+The complex axis rotates/scales a filled SkyBlue 160 by 100 rectangle, with yellow
+radius-16 contact rings. The remote adapter in `FullControlTestRawElementRemote.h/.cpp`
+reconciles `Id="FullControlTest.Touching"`, attaches existing elements on late
+subscription, and detaches on ID changes, replacement, uninstall and adapter
+teardown. It does not attach Clock and must be destroyed before the renderer.
+
+`<iGac repo>/MacTest/RawElement.cpp` checks selection/lifetime in native and hosted
+setup, manual handler survival, fixed-data Clock pixels, Touching transforms/contact
+rings, clipping/offsets at 1x and 2x, and remote interpretor-only repaint without
+input or timer delivery. Application observations and display limitations belong
+in `<iGac repo>/TestMatrix_NativeRenderer.md`.
 
 ### Text Layout
 
