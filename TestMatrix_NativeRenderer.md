@@ -2,7 +2,7 @@
 
 ## Focused scope and provenance
 
-Execution of `<GacUI repo>/TODO_TASK_iGac.md` on macOS 26.5.2 (25F84), arm64 Debug, Apple clang 21.0.0, `VCZH_DEBUG_NO_REFLECTION`. GacUI source/release baseline `ea5e1b330`, iGac baseline `6d2ef8a`. The final GacUI fast-forward to `516112669` changes only release notes; tested source, releases, resources and build inputs are unchanged. Application coverage is limited to Misc / Raw Clock and Misc / Touching, with Window Manager used only to refresh their palette. GacJS, physical touch, unrelated pages, RPT, RVMT and TUI runtime checks were not run.
+Execution of `<GacUI repo>/TODO_TASK_iGac.md` on macOS 26.5.2 (25F84), arm64 Debug, Apple clang 21.0.0, `VCZH_DEBUG_NO_REFLECTION`. GacUI source/release baseline `ea5e1b330`, iGac baseline `6d2ef8a`. GacUI later advanced through `bbf462ef0` with release-note and Wayland raw-interpretor documentation changes only; the Cocoa guidance was reconciled with those edits. Tested source, releases, resources and build inputs are unchanged. Application coverage is limited to Misc / Raw Clock and Misc / Touching, with Window Manager used only to refresh their palette. GacJS, physical touch, unrelated pages, RPT, RVMT and TUI runtime checks were not run.
 
 ## Test Matrix
 
