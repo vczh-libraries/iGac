@@ -159,7 +159,7 @@ int StartClient(
 	GuiRemoteProtocolAsyncJsonChannelRenderer asyncRendererChannel(channelClient.GetProtocolChannel());
 	auto&& injection = gacui_test::remoteInjectionArguments;
 	GuiRemoteRendererSingle remoteRenderer(true, { injection.injectDateTime, injection.injectLocale, injection.injectFileSystem });
-	auto rawClockAttachments = demo::AttachFullControlTestRawElements(remoteRenderer);
+	auto rawElementAttachments = demo::AttachFullControlTestRawElements(remoteRenderer);
 	GuiRemoteProtocolRendererChannel rendererChannel(&asyncRendererChannel, &remoteRenderer);
 	channelClient.SetRenderer(&remoteRenderer);
 	channelClient.SetAsyncRendererChannel(&asyncRendererChannel);
