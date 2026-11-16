@@ -4025,6 +4025,16 @@ GuiGraphicsComposition
 				return isRendering;
 			}
 
+			GuiGraphicsComposition::EditableAttributeValues GuiGraphicsComposition::GetEditableAttributes()
+			{
+				return editableAttributes;
+			}
+
+			void GuiGraphicsComposition::SetEditableAttributes(const EditableAttributeValues& value)
+			{
+				editableAttributes = value;
+			}
+
 			GuiGraphicsComposition* GuiGraphicsComposition::GetParent()
 			{
 				return parent;
@@ -4214,7 +4224,7 @@ GuiGraphicsComposition
 							}
 						}
 
-						if (children.Count() > 0 || associatedHitTestResult != INativeWindowListener::NoDecision || associatedCursor)
+						if (children.Count() > 0 || associatedHitTestResult != INativeWindowListener::NoDecision || associatedCursor || editableAttributes.featured)
 						{
 							renderTarget->PushClipper(bounds, this);
 							if (!renderTarget->IsClipperCoverWholeTarget())
@@ -18966,13 +18976,31 @@ GuiDocumentCommonInterface
 				return false;
 			}
 
+			void GuiDocumentCommonInterface::UpdateEditableAttributes()
+			{
+				if (!documentControl) return;
+				auto composition = documentControl->GetFocusableComposition();
+				auto oldValue = composition->GetEditableAttributes();
+				GuiGraphicsComposition::EditableAttributeValues value;
+				value.featured = true;
+				value.focused = documentControl->GetVisuallyEnabled() && documentControl->GetFocused();
+				value.editable = documentControl->GetVisuallyEnabled() && editMode == GuiDocumentEditMode::Editable;
+				if (oldValue.featured != value.featured || oldValue.focused != value.focused || oldValue.editable != value.editable)
+				{
+					composition->SetEditableAttributes(value);
+					if (auto host = composition->GetRelatedGraphicsHost())
+					{
+						host->RequestRender();
+					}
+				}
+			}
+
 			void GuiDocumentCommonInterface::InstallDocumentViewer(
 				GuiControl* _sender,
 				compositions::GuiGraphicsComposition* _mouseArea,
 				compositions::GuiGraphicsComposition* _container,
 				compositions::GuiGraphicsComposition* eventComposition,
-				compositions::GuiGraphicsComposition* pointEventComposition,
-				compositions::GuiGraphicsComposition* focusableComposition
+				compositions::GuiGraphicsComposition* pointEventComposition
 			)
 			{
 				documentControl = _sender;
@@ -18993,12 +19021,6 @@ GuiDocumentCommonInterface
 				pointEventComposition->GetEventReceiver()->pointSequenceStarted.AttachMethod(this, &GuiDocumentCommonInterface::OnPointSequenceStarted);
 				pointEventComposition->GetEventReceiver()->pointGesture.AttachMethod(this, &GuiDocumentCommonInterface::OnPointGesture);
 
-				focusableComposition->GetEventReceiver()->caretNotify.AttachMethod(this, &GuiDocumentCommonInterface::OnCaretNotify);
-				focusableComposition->GetEventReceiver()->gotFocus.AttachMethod(this, &GuiDocumentCommonInterface::OnGotFocus);
-				focusableComposition->GetEventReceiver()->lostFocus.AttachMethod(this, &GuiDocumentCommonInterface::OnLostFocus);
-				focusableComposition->GetEventReceiver()->keyDown.AttachMethod(this, &GuiDocumentCommonInterface::OnKeyDown);
-				focusableComposition->GetEventReceiver()->charInput.AttachMethod(this, &GuiDocumentCommonInterface::OnCharInput);
-
 				undoRedoProcessor->Setup(documentElement, documentComposition);
 				ActiveHyperlinkChanged.SetAssociatedComposition(eventComposition);
 				BeforeActiveHyperlinkExecuted.SetAssociatedComposition(eventComposition);
@@ -19011,6 +19033,17 @@ GuiDocumentCommonInterface
 				undoRedoProcessor->UndoRedoChanged.Add(this, &GuiDocumentCommonInterface::InvokeUndoRedoChanged);
 				undoRedoProcessor->ModifiedChanged.Add(this, &GuiDocumentCommonInterface::InvokeModifiedChanged);
 				SetDocument(Ptr(new DocumentModel));
+
+				// This getter can install the template and relocate the document mouse area.
+				auto focusableComposition = _sender->GetFocusableComposition();
+				focusableComposition->GetEventReceiver()->caretNotify.AttachMethod(this, &GuiDocumentCommonInterface::OnCaretNotify);
+				focusableComposition->GetEventReceiver()->gotFocus.AttachMethod(this, &GuiDocumentCommonInterface::OnGotFocus);
+				focusableComposition->GetEventReceiver()->lostFocus.AttachMethod(this, &GuiDocumentCommonInterface::OnLostFocus);
+				focusableComposition->GetEventReceiver()->keyDown.AttachMethod(this, &GuiDocumentCommonInterface::OnKeyDown);
+				focusableComposition->GetEventReceiver()->charInput.AttachMethod(this, &GuiDocumentCommonInterface::OnCharInput);
+				documentControl->FocusedChanged.AttachLambda([this](GuiGraphicsComposition*, GuiEventArgs&) { UpdateEditableAttributes(); });
+				documentControl->VisuallyEnabledChanged.AttachLambda([this](GuiGraphicsComposition*, GuiEventArgs&) { UpdateEditableAttributes(); });
+				UpdateEditableAttributes();
 			}
 
 			void GuiDocumentCommonInterface::ReplaceMouseArea(compositions::GuiGraphicsComposition* _mouseArea)
@@ -20197,6 +20230,7 @@ GuiDocumentCommonInterface
 				}
 
 				editMode = value;
+				UpdateEditableAttributes();
 				if (editMode == GuiDocumentEditMode::ViewOnly)
 				{
 					UpdateCursor(nullptr);
@@ -20696,7 +20730,7 @@ GuiDocumentViewer
 			{
 				SetAcceptTabInput(true);
 				SetFocusableComposition(boundsComposition);
-				InstallDocumentViewer(this, containerComposition->GetParent(), containerComposition, boundsComposition, boundsComposition, focusableComposition);
+				InstallDocumentViewer(this, containerComposition->GetParent(), containerComposition, boundsComposition, boundsComposition);
 
 				SetExtendToFullWidth(config.wrapLine);
 				SetHorizontalAlwaysVisible(!config.wrapLine);
@@ -20850,7 +20884,7 @@ GuiDocumentLabel
 
 				if (config.autoExpand)
 				{
-					InstallDocumentViewer(this, containerComposition, containerComposition, boundsComposition, boundsComposition, focusableComposition);
+					InstallDocumentViewer(this, containerComposition, containerComposition, boundsComposition, boundsComposition);
 				}
 				else
 				{
@@ -20864,7 +20898,7 @@ GuiDocumentLabel
 
 					scrollingContainer->CachedBoundsChanged.AttachMethod(this, &GuiDocumentLabel::scrollingContainer_CachedBoundsChanged);
 					documentContainer->CachedBoundsChanged.AttachMethod(this, &GuiDocumentLabel::documentContainer_CachedMinSizeChanged);
-					InstallDocumentViewer(this, containerComposition, documentContainer, boundsComposition, boundsComposition, focusableComposition);
+					InstallDocumentViewer(this, containerComposition, documentContainer, boundsComposition, boundsComposition);
 				}
 			}
 
@@ -37473,6 +37507,24 @@ GuiRemoteGraphicsRenderTarget
 		return {};
 	}
 
+	Nullable<remoteprotocol::ElementEditableAttribute> GuiRemoteGraphicsRenderTarget::GetEditableAttributeFromGenerator(reflection::DescriptableObject* generator)
+	{
+		if (auto composition = dynamic_cast<GuiGraphicsComposition*>(generator))
+		{
+			auto value = composition->GetEditableAttributes();
+			if (value.featured)
+			{
+				auto host = composition->GetRelatedGraphicsHost();
+				auto window = host ? host->GetNativeWindow() : nullptr;
+				remoteprotocol::ElementEditableAttribute attribute;
+				attribute.focused = value.focused && window && window->IsActivated();
+				attribute.editable = value.editable;
+				return attribute;
+			}
+		}
+		return {};
+	}
+
 	void GuiRemoteGraphicsRenderTarget::StartRenderingOnNativeWindow()
 	{
 		CHECK_ERROR(hitTestResults.Count() == 0, L"vl::presentation::elements::GuiRemoteGraphicsRenderTarget::StartRenderingOnNativeWindow()#Internal error: hit test result stack is not cleared.");
@@ -37656,9 +37708,10 @@ GuiRemoteGraphicsRenderTarget
 			cursors.Add(cursor.Value());
 		}
 
-		if (arguments.hitTestResult || arguments.cursor)
+		arguments.editableAttribute = GetEditableAttributeFromGenerator(generator);
+		if (arguments.hitTestResult || arguments.cursor || arguments.editableAttribute)
 		{
-			// GetHitTestResultFromGenerator or GetCursorFromGenerator ensures generator must be a composition
+			// A hit test, cursor or editing attribute ensures generator is a composition.
 			auto composition = dynamic_cast<GuiGraphicsComposition*>(generator);
 			if (composition->remoteId == -1)
 			{
@@ -37686,7 +37739,7 @@ GuiRemoteGraphicsRenderTarget
 		clipperValidArea = validArea;
 		auto hitTestResult = GetHitTestResultFromGenerator(generator);
 		auto cursor = GetCursorFromGenerator(generator);
-		bool needEndBoundary = false;
+		bool needEndBoundary = GetEditableAttributeFromGenerator(generator);
 
 		if (hitTestResult != INativeWindowListener::NoDecision)
 		{
@@ -39180,7 +39233,7 @@ GuiRemoteGraphicsParagraph
 
 			if (bounds.x1 <= point.x && point.x < bounds.x2 && bounds.y1 <= point.y && point.y < bounds.y2)
 			{
-				return caret;
+				return GetNearestCaretFromTextPos(caret, true);
 			}
 
 			vint horizontalDistance = 0;
@@ -39199,7 +39252,9 @@ GuiRemoteGraphicsParagraph
 			}
 		}
 
-		return bestCaret;
+		// Bounds exist for every text offset, including offsets inside an inline
+		// object or a glyph cluster. Only the renderer knows its valid boundaries.
+		return GetNearestCaretFromTextPos(bestCaret, true);
 	}
 
 	Nullable<IGuiGraphicsParagraph::InlineObjectProperties> GuiRemoteGraphicsParagraph::GetInlineObjectFromPoint(Point point, vint& start, vint& length)
@@ -43173,6 +43228,7 @@ namespace vl::presentation::remoteprotocol
 		dom->id = (arguments.id << 2) + 2;
 		dom->content.hitTestResult = arguments.hitTestResult;
 		dom->content.cursor = arguments.cursor;
+		dom->content.editableAttribute = arguments.editableAttribute;
 		dom->content.bounds = arguments.bounds;
 		dom->content.validArea = arguments.areaClippedBySelf;
 		domBoundaries.Add(Push(dom));
@@ -43208,6 +43264,7 @@ namespace vl::presentation::remoteprotocol
 		return domRoot;
 	}
 }
+
 
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTE\PROTOCOL\FRAMEOPERATIONS\GUIREMOTEPROTOCOLSCHEMA_COPYDOM.CPP
@@ -43533,7 +43590,17 @@ namespace vl::presentation::remoteprotocol
 			diff.id = domFrom->id;
 			diff.diffType = RenderingDom_DiffType::Modified;
 
+			auto&& fromEditable = domFrom->content.editableAttribute;
+			auto&& toEditable = domTo->content.editableAttribute;
+			bool editableDifferent = bool(fromEditable) != bool(toEditable);
+			if (fromEditable && toEditable)
+			{
+				editableDifferent = fromEditable.Value().focused != toEditable.Value().focused
+					|| fromEditable.Value().editable != toEditable.Value().editable;
+			}
+
 			if (
+				editableDifferent ||
 				domFrom->content.hitTestResult != domTo->content.hitTestResult ||
 				domFrom->content.cursor != domTo->content.cursor ||
 				domFrom->content.element != domTo->content.element ||
@@ -43614,6 +43681,7 @@ namespace vl::presentation::remoteprotocol
 #undef ERROR_MESSAGE_PREFIX
 	}
 }
+
 
 /***********************************************************************
 .\PLATFORMPROVIDERS\REMOTE\PROTOCOL\GENERATED\GUIREMOTEPROTOCOLSCHEMA.CPP
@@ -44594,12 +44662,21 @@ namespace vl::presentation::remoteprotocol
 		return node;
 	}
 
+	template<> vl::Ptr<vl::glr::json::JsonNode> ConvertCustomTypeToJson<::vl::presentation::remoteprotocol::ElementEditableAttribute>(const ::vl::presentation::remoteprotocol::ElementEditableAttribute & value)
+	{
+		auto node = Ptr(new glr::json::JsonObject);
+		ConvertCustomTypeToJsonField(node, L"focused", value.focused);
+		ConvertCustomTypeToJsonField(node, L"editable", value.editable);
+		return node;
+	}
+
 	template<> vl::Ptr<vl::glr::json::JsonNode> ConvertCustomTypeToJson<::vl::presentation::remoteprotocol::ElementBoundary>(const ::vl::presentation::remoteprotocol::ElementBoundary & value)
 	{
 		auto node = Ptr(new glr::json::JsonObject);
 		ConvertCustomTypeToJsonField(node, L"id", value.id);
 		ConvertCustomTypeToJsonField(node, L"hitTestResult", value.hitTestResult);
 		ConvertCustomTypeToJsonField(node, L"cursor", value.cursor);
+		ConvertCustomTypeToJsonField(node, L"editableAttribute", value.editableAttribute);
 		ConvertCustomTypeToJsonField(node, L"bounds", value.bounds);
 		ConvertCustomTypeToJsonField(node, L"areaClippedBySelf", value.areaClippedBySelf);
 		return node;
@@ -44649,6 +44726,7 @@ namespace vl::presentation::remoteprotocol
 		ConvertCustomTypeToJsonField(node, L"element", value.element);
 		ConvertCustomTypeToJsonField(node, L"bounds", value.bounds);
 		ConvertCustomTypeToJsonField(node, L"validArea", value.validArea);
+		ConvertCustomTypeToJsonField(node, L"editableAttribute", value.editableAttribute);
 		return node;
 	}
 
@@ -45972,6 +46050,20 @@ namespace vl::presentation::remoteprotocol
 #undef ERROR_MESSAGE_PREFIX
 	}
 
+	template<> void ConvertJsonToCustomType<::vl::presentation::remoteprotocol::ElementEditableAttribute>(vl::Ptr<vl::glr::json::JsonNode> node, ::vl::presentation::remoteprotocol::ElementEditableAttribute& value)
+	{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::ConvertJsonToCustomType<::vl::presentation::remoteprotocol::ElementEditableAttribute>(Ptr<JsonNode>, ::vl::presentation::remoteprotocol::ElementEditableAttribute&)#"
+		auto jsonNode = node.Cast<glr::json::JsonObject>();
+		CHECK_ERROR(jsonNode, ERROR_MESSAGE_PREFIX L"Json node does not match the expected type.");
+		for (auto field : jsonNode->fields)
+		{
+			if (field->name.value == L"focused") ConvertJsonToCustomType(field->value, value.focused); else
+			if (field->name.value == L"editable") ConvertJsonToCustomType(field->value, value.editable); else
+			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
+		}
+#undef ERROR_MESSAGE_PREFIX
+	}
+
 	template<> void ConvertJsonToCustomType<::vl::presentation::remoteprotocol::ElementBoundary>(vl::Ptr<vl::glr::json::JsonNode> node, ::vl::presentation::remoteprotocol::ElementBoundary& value)
 	{
 #define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::ConvertJsonToCustomType<::vl::presentation::remoteprotocol::ElementBoundary>(Ptr<JsonNode>, ::vl::presentation::remoteprotocol::ElementBoundary&)#"
@@ -45982,6 +46074,7 @@ namespace vl::presentation::remoteprotocol
 			if (field->name.value == L"id") ConvertJsonToCustomType(field->value, value.id); else
 			if (field->name.value == L"hitTestResult") ConvertJsonToCustomType(field->value, value.hitTestResult); else
 			if (field->name.value == L"cursor") ConvertJsonToCustomType(field->value, value.cursor); else
+			if (field->name.value == L"editableAttribute") ConvertJsonToCustomType(field->value, value.editableAttribute); else
 			if (field->name.value == L"bounds") ConvertJsonToCustomType(field->value, value.bounds); else
 			if (field->name.value == L"areaClippedBySelf") ConvertJsonToCustomType(field->value, value.areaClippedBySelf); else
 			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
@@ -46061,6 +46154,7 @@ namespace vl::presentation::remoteprotocol
 			if (field->name.value == L"element") ConvertJsonToCustomType(field->value, value.element); else
 			if (field->name.value == L"bounds") ConvertJsonToCustomType(field->value, value.bounds); else
 			if (field->name.value == L"validArea") ConvertJsonToCustomType(field->value, value.validArea); else
+			if (field->name.value == L"editableAttribute") ConvertJsonToCustomType(field->value, value.editableAttribute); else
 			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
 		}
 #undef ERROR_MESSAGE_PREFIX
@@ -49422,7 +49516,7 @@ namespace vl
 
 				void Visit(DocumentTextRun* run)override
 				{
-					WString text = run->GetRepresentationText();
+					auto text = wtou16(run->GetRepresentationText());
 					if (text.Length() > 0)
 					{
 						ResolvedStyle style = styles[styles.Count() - 1];
@@ -49441,7 +49535,10 @@ namespace vl
 
 						for (vint i = 0; i < text.Length(); i++)
 						{
-							writer.WriteString(L"\\u" + itow(text[i]));
+							// RTF Unicode escapes contain signed 16-bit UTF-16 code units.
+							vint value = text[i];
+							if (value >= 0x8000) value -= 0x10000;
+							writer.WriteString(L"\\u" + itow(value));
 						}
 
 						writer.WriteString(L"}");
@@ -49587,6 +49684,7 @@ namespace vl
 		}
 	}
 }
+
 
 /***********************************************************************
 .\RESOURCES\GUIDOCUMENTEDITOR_ADDCONTAINER.CPP
@@ -51213,6 +51311,7 @@ ClearStyleVisitor		: Remove all styles that intersect with the specified range
 
 				void Visit(DocumentHyperlinkRun* run)override
 				{
+					VisitContainer(run);
 					RemoveContainer(run);
 				}
 			};
@@ -51302,6 +51401,7 @@ ClearStyleVisitor		: Remove all styles that intersect with the specified range
 		}
 	}
 }
+
 
 /***********************************************************************
 .\RESOURCES\GUIDOCUMENTEDITOR_REMOVERUN.CPP
@@ -52383,7 +52483,19 @@ DocumentModel::EditHyperlink
 
 			auto paragraph = paragraphs[paragraphIndex];
 			auto package = LocateHyperlink(paragraph.Obj(), runRanges, paragraphIndex, begin, end);
-			document_editor::RemoveHyperlink(paragraph.Obj(), runRanges, package->start, package->end);
+			if (package->hyperlinks.Count() > 0)
+			{
+				begin = package->start;
+				end = package->end;
+			}
+			else
+			{
+				// Split intersecting links so their unselected parts keep their references.
+				CutEditRange(TextPos(paragraphIndex, begin), TextPos(paragraphIndex, end));
+				runRanges.Clear();
+				GetRunRange(paragraph.Obj(), runRanges);
+			}
+			document_editor::RemoveHyperlink(paragraph.Obj(), runRanges, begin, end);
 			ClearUnnecessaryRun(paragraph.Obj(), this);
 			return true;
 		}
