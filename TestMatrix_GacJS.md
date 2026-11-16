@@ -1,47 +1,45 @@
-# Test Matrix Card 2026-11-14 08:39 PST
-
-## Focused scope and provenance
-
-Execution of `<GacUI repo>/TODO_TASK_iGac.md` on macOS 26.5.2 (25F84), arm64 Debug, Apple clang 21.0.0, `VCZH_DEBUG_NO_REFLECTION`. Upstream GacUI `6c3d81ee1`, iGac baseline `d59347e`, GacJS `9f8a5f8`; fetched and current before synchronization. Selected FCT Window Manager skins, both document editors and fake Open/Save dialogs; corresponding TUI pages only. RPT, RVMT, host modes, Wasm, Raw Clock, touch and unrelated pages are excluded and their rows remain blank. This is a focused subset, not a full SOP pass. Historical cards supply no current passes.
+# Test Matrix Card 2026-11-16 08:19:48 PST
 
 ## Test Matrix
 
+Current execution of `<GacUI repo>/.github/Jobs/job.rpXPlat.prompt.md`; historical results are not current passes. Evidence is retained in `<iGac repo>/build/rpXPlat-20261116/`.
+
 | Test Item | 1st |
 | --- | --- |
-| [macOS][`/RPT`][`/MiniHttp`] |  |
-| [macOS][`/FCT`][`/MiniHttp`] | 09:01 selected WebKit behaviors passed; limits below |
-| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over network] |  |
-| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over stdio `/Cli:<command>`] |  |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS browser host `?rvmhost`] |  |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over network] |  |
-| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over stdio `/Cli:<command>`] |  |
+| [macOS][`/RPT`][`/MiniHttp`] | 08:29:16 PST |
+| [macOS][`/FCT`][`/MiniHttp`] | 11:03:42 PST (fixed) |
+| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over network] | 08:29:38 PST |
+| [macOS][`/RVMT`][`/MiniHttp`][Native `RemotingTest_RvmHost` over stdio `/Cli:<command>`] | 08:30:34 PST |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS browser host `?rvmhost`] | 08:31:00 PST |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over network] | 08:31:23 PST |
+| [macOS][`/RVMT`][`/MiniHttp`][GacJS Node `cli.js` over stdio `/Cli:<command>`] | 08:31:56 PST |
+| Build / resource generation / import / sync | 10:53:21 PST |
+| Portable unit tests | 10:53:50 PST; 279 passed |
+
+## Observations and Limitations
+
+Verification used Playwright WebKit 26.0 on macOS 26.5.2 arm64. Windows-only E2E skips do not establish live browser coverage. No Windows, Linux or Wasm application run is claimed.
+
+- RPT passed normal controls, exact shortcut labels and local dialogs, grid add/clear, document modal, renderer replacement/takeover, detached-page input rejection, queued close and the exact Core-authored fatal overlay. Each renderer passed 100 button/movement/wheel cases, including modifier payloads, double-clicks and Mouse4/Mouse5 history suppression.
+- All five RVM host modes passed RPC, replacement/takeover, applicable second-host rejection, normal shutdown, idle-next-call loss and blocked-delivery loss. Both stdio commands used paths containing spaces; the Node command included `--no-warnings`. Core-authored fatal errors arrived once. Blocked network loss completed around five seconds; stdio around 55 ms. Evidence: `rvm-*.json` in the run directory.
+- Final import, code generation and build succeeded. Root `yarn test --concurrency 1` passed 279 tests in 11 packages, including the new mouse-capture regression. The initial missing pinned Firefox prerequisite was installed using Node 22 after the Node 26 installer stalled; the actual suite used the normal Node 26 environment. Logs: `gacjs-test-mouse-capture.log` and `gacjs-build-mouse-capture.log`.
+- Live FCT supplemental editor/clock/replacement tests passed 47/47. WebKit DOM pointer tests passed Touching, TouchingList and ordinary/document touch, including momentum; Chromium additionally passed real browser capture loss and outside-surface touch movement. The imported observer required an explicit End-event barrier when reused over HTTP. Logs: `webkit-portable-supplement.log`, `webkit-touch.log`, `chromium-touch.log` and `chromium-touch-retry.log`.
+- Ribbon passed fixture loading, context/ribbon/shortcut clipboard actions, formatting, colors, alignment, hyperlink edit/activation/all removal paths, read-only commands and mode shortcuts, eight styles at wide/narrow sizes, sample items, group expansion, private persistence, RTF/HTML exports and palette retention. The browser font picker exposes only its configured Segoe UI family; size changes and cancellation passed, while unsupported-family typing was correctly rejected.
+- Toolstrip repeated applicable commands with DOM point input: short/long presses, reversed/end-point selection, blank-space equivalence to mouse clicks, scrolling with unchanged range, and context menus retained through Down/Cancel/scroll. Six endpoint cases and phase-by-phase popup evidence are retained. Toolbar and Object image/link commands, cancellation, Undo/Redo, read-only modes, private persistence and exports passed. Physical touch remains distinct from this injection.
+- Responsive layout passed 240/350/440/680-pixel widths and reverse cycles: rows returned from 106 to 27 pixels and Vertigo remained selected. All 24 films/directors were collected in each appearance; all eight accounts, selection-arrow movement, independent scrolling, 680×220/520 layouts and natural 32×32 account images passed. Equal-width footer buttons remained reachable. OK, Cancel, title close and a changed-palette opening passed.
+- Five rapid outside-release attempts passed after the fix, with release preceding Core's capture request. Outside title drag, subsequent ordinary resize and close also passed. Evidence: `browser-fast-capture-fixed.json` and `browser-final-modal-capture-closes.json`.
+- FCT initial and replacement renderers each passed both local shortcuts and 100 mouse cases. Raw Clock had one canvas, changing Core data and corresponding changing pixels before/after tab changes, resize, palette and replacement; backing dimensions matched bounds/DPR. The old painter stopped after replacement. Force Exit ended Core normally with exit 0.
+- An owned headful WebKit window was attempted for interactive IME/UIA coverage. A final System Events query found the Playwright process but zero accessible windows. Actual candidate selection/cancellation, physical software-keyboard appearance, physical input and OS-global hotkeys remain unavailable. Direct Unicode, automated composition and DOM touch are separate coverage. Evidence: `browser-interactive-ime-access-final.json`. The owned headful browser was closed.
 
 ## Issues Found and Fix
 
-### Portable Core link failure
+- Rapid outside mouse release could arrive before `IORequireCapture`, leaving a modal resize active. It reproduced twice. `<GacJS repo>/Gaclib/gaclib/renderer/src/GacUIRendererImpl.ts` now acquires browser pointer capture on mouse press and releases owned capture during disposal. The new real-browser test failed on the old implementation and passed after the fix; five live WebKit attempts also passed. The shared SOP now includes this rapid-release case.
+- Responsive rows retained their detailed height after shrinking. `<GacUI repo>/Test/Resources/App/FullControlTest/EasyLayoutResponsiveWindow.xml` now replaces the arranger on level changes. Selection is retained and measurements reset; repeated live grow/shrink cycles passed.
+- Repeated hyperlink edits over separately formatted runs left nested old links. The shared document model now removes the selected links while preserving unselected fragments and clears pre-existing nested links. Final GUI edits retained only the chosen URL, Preview activated it, and all removal paths preserved text.
+- RTF exported platform `wchar_t` values instead of signed UTF-16 units. The shared exporter now writes signed units, including surrogate pairs. The final browser export round-tripped `BrowserExport中😀` through `textutil`, with formatting and embedded images retained.
 
-The initial Core build failed with four undefined shared document functions. See `<iGac repo>/TestMatrix_NativeRenderer.md` for the upstream source-inventory correction and revalidation. GacJS import, codegen, build and 235 portable tests passed; the reported Windows-only E2E skip does not count as WebKit coverage. The required WebKit 26.0 engine is installed with Playwright 1.58.2.
+All observed product failures above were fixed. Desktop and physical-input limitations remain explicitly unverified.
 
-## Focused evidence
+A final RPT smoke run on the fixed renderer repeated both local shortcuts and 100 mouse cases, then Force Exit returned 0 without page errors. Evidence: `browser-final-rpt-smoke.json`.
 
-Node 26.5.0, Yarn 1.22.22, Playwright 1.58.2, WebKit 26.0 (build 2248). `yarn run import`, `yarn codegen`, `yarn build`, `yarn test` succeeded: 235 portable tests across 11 packages. The Windows-only E2E skip was excluded from browser results. Repeated codegen produced a byte-identical diff. Imported upstream snapshots and generated snapshot index are committed separately.
-
-The live browser used the corrected portable Core with `/FCT /MiniHttp` and the entry server on port 8896. Core-local filesystem services were used; Core/browser filesystem, DateTime and Locale injection were disabled. Playwright pointer and keyboard input drove the renderer; Core Controls supplied fresh read-only document/selection evidence. No application/page error occurred during interaction. Intentional Core shutdown logged a lost-network-connection console message in each WebKit session. Core closed normally via the application's Close action.
-
-- All six GUI skins appeared in order, Default initially selected. Pointer and Tab/Enter cycles, Shift+Tab, return to Default, and navigation away/back passed.
-- Both editors loaded the original `<GacUI repo>/Test/TestDocument.bin` with Unicode title, styles and two images. Ribbon and Toolstrip edits and exact XML/selection survived skin reconstruction. Ribbon Undo changed the document after refresh and Redo restored its exact XML.
-- Private saves, Unicode RTF/HTML exports with embedded images, Open/Save cancellation, and overwrite Cancel/OK were exercised. Cancellation preserved document/file bytes; accepted overwrite produced the expected content. Export selection was captured.
-- The interchange fixture added a 123×456 image, hyperlink, alignment and unused style. Browser private output contained all three images and nine styles, then TUI and fresh native GUI processes cross-opened it. TUI resaves were subsequently reopened with the source PNG unavailable.
-- English Open and Chinese Save fake dialogs exercised creation, localized validation, cancellation, folder/file collisions, and deletion. Empty, dot, parent, rooted and slash names were rejected. POSIX backslash is a valid name and was accepted. CJK fixture names displayed correctly. Captured multi-selection, independently typed filename preservation, recursive deletion, cancellation, symlink rejection, a verified EACCES descendant with continued sibling deletion, and successful retry all passed; sentinels survived.
-
-## Evidence and limits
-
-Local evidence: `<iGac repo>/build/followup-20261114/webkit-*.json`, `webkit-final.png`, build/test logs and artifact inventory. The card records a focused subset only. Exact queued-action counts, object identity and modified-state timing were not instrumented; all tree enumeration/sorting permutations were not exhausted. Playwright `keyboard.type` omitted CJK characters because this renderer handles keydown text while Playwright uses text insertion for those characters; direct CJK typing is not a pass. Unicode file/document persistence is separately verified. A fresh Core/WebKit pair subsequently reopened the TUI private file with all three images and the unused style while the original PNG was unavailable. Synthetic DOM keydown/keyup events also created a CJK folder; this verifies the renderer event path, not physical IME or Playwright text-insertion support.
-
-## Installed Safari supplementary check
-
-Safari 26.5.2 loaded the live FCT page with a fresh `/FCT /MiniHttp` Core and no injection. The rendered window, selected initial page, labels, controls and layout were visually inspected in `safari.png`; startup Controls were captured in `safari-startup.json`. This is a startup/rendering smoke check only. Safari denied JavaScript from Apple Events because its setting is disabled; generated pointer attempts did not establish delivery, so further interactive Safari results are unverified. The owned Safari window was closed. The supplementary Core-only automation Close attempt was not confirmed, and Core was explicitly terminated during cleanup; normal shutdown for this supplementary run is not claimed. This supplementary observation does not replace the required WebKit run.
-
-## Completion
-
-Upstream Core linkage fix: GacUI `40bd03efb`. Final fetch included documentation-only upstream commits through `edd40756c`; the fix was rebased, and a scoped Git comparison confirmed all tested source, release, resource and build inputs unchanged. Build logs, control/cell captures and output hashes are retained locally in `<iGac repo>/build/followup-20261114/` and are not committed. The verified owned playground was removed after checking all target sentinels, restoring directory permissions and unlinking symlinks without following them. Original `<GacUI repo>/Test/TestDocument.bin` remained unchanged. No temporary test instrumentation was added to tracked application sources.
+Rebased GacUI onto concurrent Linux verification commits. Their release refresh was already present in the tested CodePack output; production source/release text stayed unchanged. Their touch expectation now matches the short/long-press behavior verified live above. Evidence: `rebase-audit.json`.
