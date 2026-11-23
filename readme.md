@@ -239,7 +239,7 @@ Touching painter. The local entry point retains its attachment for
 `GetTouchingElement()`; the remote collection helper reconciles
 `Id="FullControlTest.Touching"`, including late subscription and replacement.
 Touching keeps an empty `Interpretor`. Its center/axis/contact payload draws a
-transformed SkyBlue rectangle and yellow contact rings.
+transformed SkyBlue rectangle with a black border and orange (`#FF8800`) contact rings.
 
 Use `<Raw/>` as the standard owner-drawing element for graphical applications.
 `GuiRawElementBase` supplies independent `Id`, `Interpretor` and `Data` properties.

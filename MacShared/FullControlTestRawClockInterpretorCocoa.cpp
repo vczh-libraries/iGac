@@ -15,10 +15,15 @@ namespace demo
 		vl::Ptr<IGuiGraphicsEventHandler>		renderingHandler;
 		CGContextRef						context = nullptr;
 
-		void DrawLine(vint color, double x1, double y1, double x2, double y2) override
+		void SelectStroke(Stroke stroke) override
 		{
-			Color colors[] = { Color(255,255,255), Color(0,255,255), Color(0,255,0), Color(255,255,0) };
-			CGContextSetRGBStrokeColor(context, colors[color].r / 255.0, colors[color].g / 255.0, colors[color].b / 255.0, 1);
+			auto color = GetStrokeColor(stroke);
+			CGContextSetRGBStrokeColor(context, color.r / 255.0, color.g / 255.0, color.b / 255.0, 1);
+			CGContextSetLineWidth(context, GetStrokeWidth(stroke));
+		}
+
+		void DrawLine(double x1, double y1, double x2, double y2) override
+		{
 			CGContextMoveToPoint(context, x1, y1);
 			CGContextAddLineToPoint(context, x2, y2);
 			CGContextStrokePath(context);
@@ -26,14 +31,12 @@ namespace demo
 
 		void DrawEllipse(double cx, double cy, double radius) override
 		{
-			CGContextSetRGBStrokeColor(context, 1, 1, 1, 1);
 			CGContextStrokeEllipseInRect(context, CGRectMake(cx - radius, cy - radius, radius * 2, radius * 2));
 		}
 
 		void Render(GuiGraphicsComposition*, GuiCocoaElementEventArgs& arguments)
 		{
 			context = arguments.context;
-			CGContextSetLineWidth(context, 2);
 			DrawClock(arguments.bounds);
 			context = nullptr;
 		}

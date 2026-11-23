@@ -796,7 +796,7 @@ namespace vl {
                     NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
                     [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:rect.origin];
 
-                    if(caretPos != -1)
+                    if(caretVisible && caretColor.a > 0)
                     {
                         Rect caretBounds = GetCaretBounds(caretPos, caretFrontSide);
                         vint x = caretBounds.x1 + bounds.x1;
@@ -805,7 +805,7 @@ namespace vl {
                         
                         CGPoint points[2];
                         CGContextSetLineWidth(context, 2.0f);
-                        CGContextSetRGBStrokeColor(context, 255, 255, 255, 1);
+                        CGContextSetRGBStrokeColor(context, caretColor.r / 255.0f, caretColor.g / 255.0f, caretColor.b / 255.0f, caretColor.a / 255.0f);
                         
                         points[0] = CGPointMake(x, y1);
                         points[1] = CGPointMake(x, y2);

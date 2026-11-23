@@ -47,9 +47,10 @@ namespace demo
 			CGContextBeginPath(context);
 			CGContextAddLines(context, polygon, 4);
 			CGContextClosePath(context);
-			CGContextFillPath(context);
-			CGContextSetRGBStrokeColor(context, 1, 1, 0, 1);
 			CGContextSetLineWidth(context, 2);
+			CGContextSetRGBStrokeColor(context, 0, 0, 0, 1);
+			CGContextDrawPath(context, kCGPathFillStroke);
+			CGContextSetRGBStrokeColor(context, 1, 136.0 / 255, 0, 1);
 			for (vint i = 5; i < values.Count(); i += 3)
 			{
 				auto cx = bounds.x1 + (vint)values[i + 1];

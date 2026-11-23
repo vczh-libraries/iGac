@@ -121,13 +121,13 @@ through the active manager before `GuiMain`, including raw remote startup. Both
 implementations compile directly once into FCT, the renderer and `Test_RawElement`;
 they cannot be discarded as unreferenced static-library objects. Clock preserves
 `Id="FullControlTest.Clock"` but selects by `Interpretor`; the portable base draws
-received `HH:mm:ss` data with upstream geometry/colors and no native timer.
+the received `HH:mm:ss` over the skin background. A three-pixel black stroke outlines the dial, hour marks and hands.
 
 `<iGac repo>/MacShared/FullControlTestRawElement.h/.cpp` implements the manual
 Touching painter with empty `Interpretor`. FCT retains the attachment for
 `MainWindow::GetTouchingElement()` until before window destruction. Its payload is
 `centerX,centerY,axisX,axisY,count`, followed by `count` triples of `pointId,x,y`.
-The complex axis rotates/scales a filled SkyBlue 160 by 100 rectangle, with yellow
+The complex axis rotates/scales a filled SkyBlue 160 by 100 rectangle with a black border and orange (`#FF8800`)
 radius-16 contact rings. The remote adapter in `FullControlTestRawElementRemote.h/.cpp`
 reconciles `Id="FullControlTest.Touching"`, attaches existing elements on late
 subscription, and detaches on ID changes, replacement, uninstall and adapter
@@ -147,7 +147,7 @@ with tail truncation inside the assigned rectangle. This lets hosted captions
 and responsive rows fit narrow windows; toggling ellipsis off restores natural
 width. `Test_Paragraph` checks this through composition layout.
 
-`GuiGraphicsLayoutProviderCoreText.mm` provides `CoreTextLayoutProvider`, which implements `IGuiGraphicsLayoutProvider` using CoreText for rich text layout and rendering.
+`GuiGraphicsLayoutProviderCoreText.mm` provides `CoreTextLayoutProvider`, which implements `IGuiGraphicsLayoutProvider` using CoreText for rich text layout and rendering. The paragraph caret uses its requested RGBA color during the visible blink phase.
 
 Inline attachment cells (`GuiElementsTextCell`) must be created with `initWithGraphicsElement:properties:andCallback:` so their inline-object properties and paragraph callback are initialized. Plain `init` and `new` are unavailable.
 

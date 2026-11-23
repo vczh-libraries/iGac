@@ -357,6 +357,8 @@ TEST_FILE
 		TEST_ASSERT(three != blank && draw() == three);
 		TEST_ASSERT(target.Pixel(170, 120) == Color(0, 255, 255));
 		TEST_ASSERT(target.Pixel(120, 50) == Color(255, 255, 0));
+		auto outline = target.Pixel(121, 50);
+		TEST_ASSERT(outline.a > 0 && outline.r == 0 && outline.g == 0 && outline.b == 0);
 		TEST_ASSERT(target.Pixel(80, 160).a == 0);
 		element->SetData(L"06:30:45");
 		TEST_ASSERT(draw() != three && draw() != blank);
@@ -410,6 +412,7 @@ TEST_FILE
 			TEST_ASSERT(draw(L"120,120,1,0,0", scale) != blank);
 			TEST_ASSERT(target.Pixel(135 * scale, 146 * scale) == Color(135, 206, 235));
 			TEST_ASSERT(target.Pixel(60 * scale, 100 * scale) == Color(135, 206, 235));
+			TEST_ASSERT(target.Pixel(55 * scale, 100 * scale) == Color(0, 0, 0));
 			TEST_ASSERT(target.Pixel(50 * scale, 100 * scale).a == 0);
 			draw(L"150,150,1,0,0", scale);
 			TEST_ASSERT(target.Pixel(60 * scale, 100 * scale).a == 0);
@@ -418,9 +421,9 @@ TEST_FILE
 			TEST_ASSERT(target.Pixel(135 * scale, 110 * scale) == Color(135, 206, 235));
 			TEST_ASSERT(target.Pixel(165 * scale, 146 * scale).a == 0);
 			draw(L"120,120,1,0,2,7,120,120,9,20,20", scale);
-			// The rings have transparent centers and a yellow two-unit outline.
+			// The rings have transparent centers and an orange two-unit outline.
 			auto ring = target.Pixel(151 * scale - 1, 146 * scale);
-			TEST_ASSERT(ring.r > 220 && ring.g > 220 && ring.b < 40);
+			TEST_ASSERT(ring.r > 220 && ring.g >= 120 && ring.g <= 155 && ring.b < 40);
 			TEST_ASSERT(target.Pixel(35 * scale, 46 * scale).a == 0);
 			draw(L"0,0,1,0,1,7,0,0", scale);
 			// Sample the clipped fill well inside the ring's antialiased inner edge.
@@ -513,7 +516,7 @@ TEST_FILE
 		auto touching = target.PixelHash();
 		TEST_ASSERT(touching != blank && target.Pixel(60, 80) == Color(135, 206, 235));
 		auto ring = target.Pixel(135, 120);
-		TEST_ASSERT(ring.r > 220 && ring.g > 220 && ring.b < 40);
+		TEST_ASSERT(ring.r > 220 && ring.g >= 120 && ring.g <= 155 && ring.b < 40);
 		update(L"FullControlTest.Touching", L"", L"120,120,0,0.5,0");
 		renderer.RequestRendererEndRendering(10);
 		TEST_ASSERT(target.PixelHash() != touching && target.Pixel(60, 80).a == 0);
