@@ -12,6 +12,8 @@
 
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+#include <cmath>
+
 @interface NSPanelProxy: NSWindow
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag;
@@ -527,10 +529,10 @@ namespace vl {
                 if(![delegate isCancelled])
                 {
                     NSColor* color = [[colorPanel color] colorUsingType:NSColorTypeComponentBased];
-                    selection = Color([color redComponent] * 255.0,
-                                      [color greenComponent] * 255.0,
-                                      [color blueComponent] * 255.0,
-                                      [color alphaComponent] * 255.0);
+                    selection = Color(std::lround([color redComponent] * 255.0),
+                                      std::lround([color greenComponent] * 255.0),
+                                      std::lround([color blueComponent] * 255.0),
+                                      std::lround([color alphaComponent] * 255.0));
                 }
                 
                 return ![delegate isCancelled];

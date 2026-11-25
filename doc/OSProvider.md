@@ -187,6 +187,10 @@ File-open panels allow folder navigation but return files only. Returning a
 directory to a document loader violates the file-dialog contract and can cause
 the loader's stream deserialization to fail.
 
+Color-panel acceptance rounds each normalized RGBA component to the nearest
+byte value. Truncating the floating-point conversion can reduce an entered
+component by one, such as blue 90 becoming 89.
+
 ### Default Font
 
 `CocoaResourceService` queries `NSFont messageFontOfSize:0` at controller
