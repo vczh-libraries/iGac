@@ -281,11 +281,7 @@ GuiApplication
 
 			GuiApplication::~GuiApplication()
 			{
-				if(sharedTooltipControl)
-				{
-					delete sharedTooltipControl;
-					sharedTooltipControl=0;
-				}
+				ResetSharedTooltip();
 				GetCurrentController()->CallbackService()->UninstallListener(this);
 			}
 
@@ -435,6 +431,9 @@ GuiApplication
 
 			void GuiApplication::RefreshThemes()
 			{
+				// The shared window can have an explicit tooltip template from its previous owner.
+				ResetSharedTooltip();
+
 				collections::List<Pair<GuiWindow*, Ptr<GuiDisposedFlag>>> snapshot;
 				for (auto window : windows)
 				{
@@ -470,13 +469,30 @@ GuiApplication
 				return index == -1 ? nullptr : windowMap.Values()[index];
 			}
 
+			void GuiApplication::ResetSharedTooltip()
+			{
+				auto tooltip = sharedTooltipControl;
+				sharedTooltipControl = nullptr;
+				sharedTooltipOwnerWindow = nullptr;
+				sharedTooltipOwner = nullptr;
+				sharedTooltipHovering = false;
+				sharedTooltipClosing = false;
+				if (tooltip)
+				{
+					if (tooltip->GetOpening()) tooltip->Hide();
+					delete tooltip;
+				}
+			}
+
 			void GuiApplication::ShowTooltip(GuiControl* owner, GuiControl* tooltip, vint preferredContentWidth, Point location)
 			{
 				GuiWindow* ownerWindow = dynamic_cast<GuiWindow*>(owner->GetRelatedControlHost());
-				if (sharedTooltipOwnerWindow != ownerWindow)
+				if (sharedTooltipControl && sharedTooltipOwnerWindow != ownerWindow)
 				{
-					delete sharedTooltipControl;
-					sharedTooltipControl = 0;
+					auto ownerDisposed = owner->GetDisposedFlag();
+					auto tooltipDisposed = tooltip->GetDisposedFlag();
+					ResetSharedTooltip();
+					if (sharedTooltipControl || ownerDisposed->IsDisposed() || tooltipDisposed->IsDisposed()) return;
 				}
 
 				if(!sharedTooltipControl)
@@ -772,6 +788,8 @@ namespace vl
 			using namespace collections;
 			using namespace reflection::description;
 
+			theme_refresh::IGuiThemeRefreshObserver* theme_refresh::themeRefreshObserver = nullptr;
+
 /***********************************************************************
 GuiDisposedFlag
 ***********************************************************************/
@@ -815,7 +833,13 @@ GuiControl
 			void GuiControl::RefreshThemes()
 			{
 				if (!controlTemplate) RebuildControlTemplate();
+				if (theme_refresh::themeRefreshObserver) theme_refresh::themeRefreshObserver->ControlThemeRebuilt(this);
 				List<Pair<GuiControl*, Ptr<GuiDisposedFlag>>> snapshot;
+				// Hidden tooltip content is owned by this control but is outside its child tree.
+				if (tooltipControl && !tooltipControl->GetParent())
+				{
+					snapshot.Add({ tooltipControl, tooltipControl->GetDisposedFlag() });
+				}
 				for (auto child : children)
 				{
 					snapshot.Add({ child, child->GetDisposedFlag() });
@@ -2231,6 +2255,16 @@ GuiControlHost
 				return nullptr;
 			}
 
+			static Ptr<INativeDelay> DelayCloseTooltip(GuiControl* owner, GuiTooltip* tooltip, vint milliseconds)
+			{
+				auto ownerDisposed = owner->GetDisposedFlag();
+				auto tooltipDisposed = tooltip->GetDisposedFlag();
+				return GetApplication()->DelayExecuteInMainThread([=]()
+				{
+					if (!ownerDisposed->IsDisposed() && !tooltipDisposed->IsDisposed()) owner->CloseTooltip();
+				}, milliseconds);
+			}
+
 			void GuiControlHost::MoveIntoTooltipControl(GuiControl* tooltipControl, Point location)
 			{
 				if (tooltipLocation != location)
@@ -2243,12 +2277,9 @@ GuiControlHost
 							if (tooltipCloseDelay)
 							{
 								tooltipCloseDelay->Cancel();
-								tooltipCloseDelay = 0;
+								tooltipCloseDelay = nullptr;
 							}
-							GetApplication()->DelayExecuteInMainThread([=]()
-							{
-								currentOwner->CloseTooltip();
-							}, TooltipDelayCloseTime);
+							DelayCloseTooltip(currentOwner, GetApplication()->sharedTooltipControl, TooltipDelayCloseTime);
 						}
 					}
 					if (!tooltipControl)
@@ -2267,18 +2298,19 @@ GuiControlHost
 					{
 						tooltipOpenDelay = GetApplication()->DelayExecuteInMainThread([this]()
 						{
+							tooltipOpenDelay = nullptr;
 							GuiControl* owner = GetTooltipOwner(tooltipLocation);
 							if (owner)
 							{
 								Point offset = owner->GetBoundsComposition()->GetGlobalBounds().LeftTop();
 								Point p(tooltipLocation.x - offset.x, tooltipLocation.y - offset.y + 24);
+								auto hostDisposed = GetDisposedFlag();
+								auto ownerDisposed = owner->GetDisposedFlag();
 								owner->DisplayTooltip(p);
-								tooltipOpenDelay = 0;
-
-								tooltipCloseDelay = GetApplication()->DelayExecuteInMainThread([this, owner]()
+								if (!hostDisposed->IsDisposed() && !ownerDisposed->IsDisposed() && GetApplication()->GetTooltipOwner() == owner)
 								{
-									owner->CloseTooltip();
-								}, TooltipDelayLifeTime);
+									tooltipCloseDelay = DelayCloseTooltip(owner, GetApplication()->sharedTooltipControl, TooltipDelayLifeTime);
+								}
 							}
 						}, TooltipDelayOpenTime);
 					}
@@ -2426,6 +2458,8 @@ GuiControlHost
 
 			GuiControlHost::~GuiControlHost()
 			{
+				if (tooltipOpenDelay) tooltipOpenDelay->Cancel();
+				if (tooltipCloseDelay) tooltipCloseDelay->Cancel();
 				FinalizeInstanceRecursively(this);
 				OnBeforeReleaseGraphicsHost();
 				delete host;
@@ -3113,6 +3147,8 @@ GuiWindow
 				SetAltControl(this, true);
 				ChildCompositionUpdated.SetAssociatedComposition(boundsComposition);
 				BoundsChanged.SetAssociatedComposition(boundsComposition);
+				BeforeRebuildingTheme.SetAssociatedComposition(boundsComposition);
+				AfterRebuildingTheme.SetAssociatedComposition(boundsComposition);
 
 				INativeWindow* window = GetCurrentController()->WindowService()->CreateNativeWindow(windowMode);
 				SetNativeWindow(window);
@@ -3152,6 +3188,19 @@ GuiWindow
 				{
 					return GuiControlHost::QueryService(identifier);
 				}
+			}
+
+			void GuiWindow::RefreshThemes()
+			{
+				CHECK_ERROR(!refreshingTheme, L"GuiWindow::RefreshThemes() cannot be called recursively.");
+				refreshingTheme = true;
+				auto observer = Ptr(theme_refresh::themeRefreshObserver);
+				if (observer) observer->WindowThemeBoundary(this, true);
+				BeforeRebuildingTheme.Execute(GuiEventArgs(boundsComposition));
+				GuiControl::RefreshThemes();
+				if (observer) observer->WindowThemeBoundary(this, false);
+				AfterRebuildingTheme.Execute(GuiEventArgs(boundsComposition));
+				refreshingTheme = false;
 			}
 
 			void GuiWindow::MoveToScreenCenter()
@@ -3658,6 +3707,7 @@ GuiPopup
 
 			GuiTooltip::~GuiTooltip()
 			{
+				SetTemporaryContentControl(nullptr);
 				GetCurrentController()->CallbackService()->UninstallListener(this);
 			}
 
@@ -4646,6 +4696,7 @@ GuiGraphicsComposition
 				{
 					cachedBounds = value;
 					CachedBoundsChanged.Execute(GuiEventArgs(this));
+					if (auto host = GetRelatedGraphicsHost()) host->RaiseCompositionCachedBoundsChanged(this);
 					InvokeOnCompositionStateChanged();
 				}
 			}
@@ -4724,6 +4775,7 @@ GuiGraphicsComposition
 		}
 	}
 }
+
 
 /***********************************************************************
 .\APPLICATION\GRAPHICSCOMPOSITIONS\GUIGRAPHICSEVENTRECEIVER.CPP
@@ -5674,6 +5726,12 @@ GuiGraphicsHost
 			GuiGraphicsComposition* GuiGraphicsHost::GetPointCapture()
 			{
 				return pointActionManager->GetPointCapture();
+			}
+
+			void GuiGraphicsHost::RaiseCompositionCachedBoundsChanged(GuiGraphicsComposition* sender)
+			{
+				GuiEventArgs arguments(sender);
+				CompositionCachedBoundsChanged.ExecuteWithNewSender(arguments, sender);
 			}
 
 			INativeWindow* GuiGraphicsHost::GetNativeWindow()
@@ -7941,6 +7999,7 @@ GuiDateComboBox
 		}
 	}
 }
+
 
 /***********************************************************************
 .\CONTROLS\GUIDIALOGS.CPP
@@ -21331,6 +21390,7 @@ GuiMenu
 			GuiMenu::GuiMenu(theme::ThemeName themeName, GuiControl* _owner)
 				:GuiPopup(themeName, INativeWindow::Menu)
 				, owner(_owner)
+				, ownerDisposed(_owner ? _owner->GetDisposedFlag() : nullptr)
 			{
 				UpdateMenuService();
 				WindowOpened.AttachMethod(this, &GuiMenu::OnWindowOpened);
@@ -21341,12 +21401,14 @@ GuiMenu
 			{
 			}
 
+			GuiControl* GuiMenu::GetOwnerControl()
+			{
+				return ownerDisposed && !ownerDisposed->IsDisposed() ? owner : nullptr;
+			}
+
 			void GuiMenu::UpdateMenuService()
 			{
-				if(owner)
-				{
-					parentMenuService=owner->QueryTypedService<IGuiMenuService>();
-				}
+				parentMenuService = ownerDisposed && !ownerDisposed->IsDisposed() ? owner->QueryTypedService<IGuiMenuService>() : nullptr;
 			}
 
 			IDescriptable* GuiMenu::QueryService(const WString& identifier)
@@ -21457,6 +21519,17 @@ GuiMenuButton
 				ct->SetShortcutText(shortcutText);
 				ct->SetSubMenuExisting(subMenu != nullptr);
 
+				if (subMenuTemplateState == SubMenuTemplateState::Inherited)
+				{
+					subMenuTemplateState = SubMenuTemplateState::Applying;
+					subMenu->SetControlTemplate(ct->GetSubMenuTemplate());
+					if (subMenuTemplateState == SubMenuTemplateState::Applying)
+					{
+						// Assigning an empty factory to an already theme-selected menu raises no change event.
+						subMenuTemplateState = SubMenuTemplateState::Inherited;
+					}
+				}
+
 				hostClickedHandler = host->BeforeClicked.AttachMethod(this, &GuiMenuButton::OnBeforeClicked);
 				hostMouseEnterHandler = host->GetBoundsComposition()->GetEventReceiver()->mouseEnter.AttachMethod(this, &GuiMenuButton::OnMouseEnter);
 			}
@@ -21554,6 +21627,7 @@ GuiMenuButton
 
 			void GuiMenuButton::DetachSubMenu()
 			{
+				subMenuTemplateState = SubMenuTemplateState::Independent;
 				if (subMenu)
 				{
 					subMenu->WindowOpened.Detach(subMenuWindowOpenedHandler);
@@ -21657,13 +21731,28 @@ GuiMenuButton
 				return subMenu;
 			}
 
+			void GuiMenuButton::SetCreatedSubMenu(GuiMenu* menu, TemplateProperty<templates::GuiMenuTemplate> subMenuTemplate)
+			{
+				menu->SetControlTemplate(subMenuTemplate ? subMenuTemplate : TypedControlTemplateObject(true)->GetSubMenuTemplate());
+				if (!subMenuTemplate)
+				{
+					subMenuTemplateState = SubMenuTemplateState::Inherited;
+					menu->ControlTemplateChanged.AttachLambda([this](GuiGraphicsComposition*, GuiEventArgs&)
+					{
+						// A direct assignment to the popup takes precedence over future owner templates.
+						subMenuTemplateState = subMenuTemplateState == SubMenuTemplateState::Applying
+							? SubMenuTemplateState::Inherited
+							: SubMenuTemplateState::Independent;
+					});
+				}
+				SetSubMenu(menu, true);
+			}
+
 			GuiMenu* GuiMenuButton::CreateSubMenu(TemplateProperty<templates::GuiMenuTemplate> subMenuTemplate)
 			{
 				if (!subMenu)
 				{
-					GuiMenu* newSubMenu = new GuiMenu(theme::ThemeName::Menu, this);
-					newSubMenu->SetControlTemplate(subMenuTemplate ? subMenuTemplate : TypedControlTemplateObject(true)->GetSubMenuTemplate());
-					SetSubMenu(newSubMenu, true);
+					SetCreatedSubMenu(new GuiMenu(theme::ThemeName::Menu, this), subMenuTemplate);
 				}
 				return subMenu;
 			}
@@ -22008,6 +22097,8 @@ GuiRibbonGroupMenu
 			class GuiRibbonGroupMenu : public GuiMenu, public Description<GuiRibbonGroupMenu>
 			{
 			private:
+				GuiRibbonGroup*							group;
+
 				IGuiMenuService::Direction GetPreferredDirection()override
 				{
 					return IGuiMenuService::Horizontal;
@@ -22019,9 +22110,15 @@ GuiRibbonGroupMenu
 				}
 
 			public:
-				GuiRibbonGroupMenu(theme::ThemeName themeName, GuiControl* _owner)
-					:GuiMenu(themeName, _owner)
+				GuiRibbonGroupMenu(theme::ThemeName themeName, GuiControl* button, GuiRibbonGroup* _group)
+					:GuiMenu(themeName, button)
+					, group(_group)
 				{
+				}
+
+				GuiControl* GetOwnerControl()override
+				{
+					return group;
 				}
 			};
 
@@ -22151,7 +22248,9 @@ GuiRibbonGroup
 					responsiveFixedButton->SetAlignmentToParent(Margin(0, 0, 0, 0));
 					responsiveFixedButton->AddChild(dropdownButton->GetBoundsComposition());
 
-					dropdownMenu = new GuiRibbonGroupMenu(theme::ThemeName::RibbonGroupMenu, dropdownButton);
+					// The group owns and rethemes this menu even when its responsive
+					// view detaches the dropdown button from the control tree.
+					dropdownMenu = new GuiRibbonGroupMenu(theme::ThemeName::RibbonGroupMenu, dropdownButton, this);
 				}
 
 				responsiveView = new GuiResponsiveViewComposition();
@@ -22177,6 +22276,15 @@ GuiRibbonGroup
 					SafeDeleteComposition(responsiveFixedButton);
 				}
 				delete dropdownMenu;
+			}
+
+			void GuiRibbonGroup::RefreshThemes()
+			{
+				auto button = dropdownButton;
+				auto detached = !button->GetParent();
+				auto disposed = button->GetDisposedFlag();
+				GuiControl::RefreshThemes();
+				if (detached && !disposed->IsDisposed()) button->RefreshThemes();
 			}
 
 			bool GuiRibbonGroup::GetExpandable()
@@ -22748,6 +22856,20 @@ GuiRibbonToolstrips
 
 			GuiRibbonToolstrips::~GuiRibbonToolstrips()
 			{
+			}
+
+			void GuiRibbonToolstrips::RefreshThemes()
+			{
+				List<Pair<GuiToolstripToolBar*, Ptr<GuiDisposedFlag>>> detached;
+				for (auto toolbar : toolbars)
+				{
+					if (!toolbar->GetParent()) detached.Add({ toolbar, toolbar->GetDisposedFlag() });
+				}
+				GuiControl::RefreshThemes();
+				for (auto&& [toolbar, disposed] : detached)
+				{
+					if (!disposed->IsDisposed()) toolbar->RefreshThemes();
+				}
 			}
 
 			collections::ObservableListBase<GuiToolstripGroup*>& GuiRibbonToolstrips::GetGroups()
@@ -24767,16 +24889,7 @@ GuiToolstripButton
 			{
 				if (!subMenu)
 				{
-					auto newSubMenu = new GuiToolstripMenu(theme::ThemeName::Menu, this);
-					if (subMenuTemplate)
-					{
-						newSubMenu->SetControlTemplate(subMenuTemplate);
-					}
-					else
-					{
-						newSubMenu->SetControlTemplate(TypedControlTemplateObject(true)->GetSubMenuTemplate());
-					}
-					SetSubMenu(newSubMenu, true);
+					SetCreatedSubMenu(new GuiToolstripMenu(theme::ThemeName::Menu, this), subMenuTemplate);
 				}
 			}
 
