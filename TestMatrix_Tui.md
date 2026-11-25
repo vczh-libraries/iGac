@@ -105,3 +105,5 @@ All evidence below is under `<iGac repo>/build/rpXPlat-20261125/`. The full per-
 | Kitty retry after failure | Kitty 0.48.2 remote screen/ANSI capture and cell-size resize produced bounded 80-column content; list/grid/editor and retained-state checks passed. |
 | Conclusion | Both terminal displays were usable for the inspected checks. Kitty supplied reliable bounded captures; Terminal.app's untrimmed AppleScript output must not be used as physical viewport evidence. |
 | Evidence / cleanup | `<iGac repo>/build/rpXPlat-20261125/tui-terminal-80.txt`, `tui-listview-kitty-*`, `tui-grid-root-*`, `tui-root-final-native-display.png`, and compact dialog PNGs. Only owned sessions are closed. |
+
+- Final cleanup stopped the two leftover TUI processes, their owned brokers and Kitty, separately from the six successful normal-exit tests. Terminal retained window objects 115, 184 and 534 after their owned processes exited; close attempts during the locked session did not remove them. User Terminal window 43 was preserved. No TUI application, broker or verification HTTP listener remained.
