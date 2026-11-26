@@ -18,6 +18,7 @@ REPOSITORIES=(
     Tools
     wGac
     iGac
+    xgSkins
 )
 
 red_error() {
