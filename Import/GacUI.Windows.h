@@ -1901,6 +1901,7 @@ namespace vl
 				UINT							WCF_Document;
 				UINT							WCF_RTF;
 				UINT							WCF_HTML;
+				UINT							WCF_PNG;
 				WindowsClipboardReader*			reader = nullptr;
 
 			public:

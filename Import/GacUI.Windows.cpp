@@ -13043,11 +13043,25 @@ WindowsClipboardReader
 
 			bool WindowsClipboardReader::ContainsImage()
 			{
-				return ContainsFormat(CF_BITMAP);
+				return ContainsFormat(service->WCF_PNG) || ContainsFormat(CF_BITMAP);
 			}
 
 			Ptr<INativeImage> WindowsClipboardReader::GetImage()
 			{
+				if (auto png = ::GetClipboardData(service->WCF_PNG))
+				{
+					auto size = ::GlobalSize(png);
+					if (size > 0 && size <= INT_MAX)
+					{
+						if (auto data = ::GlobalLock(png))
+						{
+							auto image = GetCurrentController()->ImageService()->CreateImageFromMemory(data, (vint)size);
+							::GlobalUnlock(png);
+							if (image) return image;
+						}
+					}
+				}
+
 				HBITMAP handle = (HBITMAP)::GetClipboardData(CF_BITMAP);
 				if (handle != 0)
 				{
@@ -13150,12 +13164,13 @@ WindowsClipboardWriter
 				}
 				if (imageData)
 				{
+					auto png = Ptr(new stream::MemoryStream);
+					imageData->SaveToStream(*png.Obj(), INativeImage::Png);
+					if (png->Size() > 0) formats.Add({ service->WCF_PNG, png });
 					if (service->nativeImageService && imageData->GetImageService() != service->nativeImageService)
 					{
-						stream::MemoryStream png;
-						imageData->SaveToStream(png, INativeImage::Png);
-						png.SeekFromBegin(0);
-						imageData = service->nativeImageService->CreateImageFromStream(png);
+						png->SeekFromBegin(0);
+						imageData = service->nativeImageService->CreateImageFromStream(*png.Obj());
 					}
 					if (!imageData || imageData->GetFrameCount() == 0) return false;
 					auto wicBitmap = GetWICBitmap(imageData->GetFrame(0));
@@ -13201,6 +13216,7 @@ WindowsClipboardService
 				WCF_Document = ::RegisterClipboardFormat(L"GacUI Document Format");
 				WCF_RTF = ::RegisterClipboardFormat(L"Rich Text Format");
 				WCF_HTML = ::RegisterClipboardFormat(L"HTML Format");
+				WCF_PNG = ::RegisterClipboardFormat(L"PNG");
 			}
 
 			constexpr UINT_PTR ClipboardReadRetryTimer = 2;
