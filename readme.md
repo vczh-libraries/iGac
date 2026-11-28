@@ -340,7 +340,7 @@ only with `--app:renderer` and selects that renderer's automation listener; it
 does not change the `/MiniHttp` Core connection on port 8888. The default
 renderer automation port is 8889.
 
-After `./build.sh`, `./test.sh --app:core` starts the local CMake target over MiniHTTP and defaults to FCT. Pass `/RPT` or `/RVMT` to select another application. Both endpoints enable clipboard sharing by default. Either accepts `--denyClipboard`, and Core accepts `--fakeClipboard` to select its in-memory fallback. Use `?remoteClipboard=false` to disable the browser offer.
+After `./build.sh`, `./test.sh --app:core` starts the local CMake target over MiniHTTP and defaults to FCT. Pass `/RPT` or `/RVMT` to select another application. Both endpoints enable clipboard sharing by default. Either accepts `--denyClipboard`, and Core accepts `--fakeClipboard` to select its in-memory fallback. Use `?remoteClipboard=false` to disable the browser offer. While sharing, Copy in the remote editor makes the selection available to other applications on the renderer machine. If either endpoint denies sharing, the headless Core uses its macOS pasteboard or the selected fake clipboard.
 
 `test_core.sh` accepts `--protocol:minihttp` and uses the same platform Core for `fct`, `rpt` and `rvmt`. In manual RVMT and `cpptest_rvm` modes it launches the local requester or Core, then builds and starts the sibling `RemotingTest_RvmHost`. An unblocked run prints both PIDs. With `--app:rvmt --cli` it prebuilds that host and Core starts it over stdio. Use `test.sh --app:core /RVMT` when GacJS supplies a network host, or pass a complete `/Cli:<command>` as one argument.
 
