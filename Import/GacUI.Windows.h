@@ -1907,6 +1907,7 @@ namespace vl
 				WindowsClipboardService(WindowsImageService* _nativeImageService = nullptr);
 
 				Ptr<INativeClipboardReader>		ReadClipboard()override;
+				Ptr<INativeClipboardReader>		TryReadClipboard()override;
 				Ptr<INativeClipboardWriter>		WriteClipboard()override;
 
 				void							SetOwnerHandle(HWND handle);

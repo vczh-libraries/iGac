@@ -270,21 +270,21 @@
           </ev.Executed-eval>
         </ToolstripCommand>
 
-        <ToolstripCommand ref.Name="commandCopy" Text="Copy" Image-uri="res://ToolbarImages/Copy" LargeImage-uri="res://ToolbarImages/CopyLarge" ShortcutBuilder-bind="document.Focused ? &quot;Ctrl+C&quot; : &quot;&quot;">
+        <ToolstripCommand ref.Name="commandCopy" Text="Copy" Image-uri="res://ToolbarImages/Copy" LargeImage-uri="res://ToolbarImages/CopyLarge" ShortcutBuilder="Ctrl+C">
           <att.Enabled-bind>document.observe as _(_.CanCopy() on _.SelectionChanged)</att.Enabled-bind>
           <ev.Executed-eval>
             <![CDATA[document.Copy();]]>
           </ev.Executed-eval>
         </ToolstripCommand>
 
-        <ToolstripCommand ref.Name="commandCut" Text="Cut" Image-uri="res://ToolbarImages/Cut" LargeImage-uri="res://ToolbarImages/CutLarge" ShortcutBuilder-bind="document.Focused ? &quot;Ctrl+X&quot; : &quot;&quot;">
+        <ToolstripCommand ref.Name="commandCut" Text="Cut" Image-uri="res://ToolbarImages/Cut" LargeImage-uri="res://ToolbarImages/CutLarge" ShortcutBuilder="Ctrl+X">
           <att.Enabled-bind>self.HasEditableSelection</att.Enabled-bind>
           <ev.Executed-eval>
             <![CDATA[document.Cut();]]>
           </ev.Executed-eval>
         </ToolstripCommand>
 
-        <ToolstripCommand ref.Name="commandPaste" Text="Paste" Image-uri="res://ToolbarImages/Paste" LargeImage-uri="res://ToolbarImages/PasteLarge" ShortcutBuilder-bind="document.Focused ? &quot;Ctrl+V&quot; : &quot;&quot;">
+        <ToolstripCommand ref.Name="commandPaste" Text="Paste" Image-uri="res://ToolbarImages/Paste" LargeImage-uri="res://ToolbarImages/PasteLarge" ShortcutBuilder="Ctrl+V">
           <att.Enabled-bind>self.observe as _(document.CanPaste() on _.BoundsComposition.clipboardNotify)</att.Enabled-bind>
           <ev.Executed-eval>
             <![CDATA[document.Paste();]]>

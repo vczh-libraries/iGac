@@ -7014,7 +7014,7 @@ WinBitmap
 					Header2.bV5BitCount = (int)GetBitsFromBB(FBits);
 					Header2.bV5Compression = BI_RGB;
 					Header2.bV5CSType = LCS_sRGB;
-					Header2.bV5Intent = LCS_GM_GRAPHICS;
+					Header2.bV5Intent = DIBV5ClipboardFormat ? LCS_GM_IMAGES : LCS_GM_GRAPHICS;
 					Output.Write(&Header2, sizeof(Header2));
 				}
 
@@ -13203,11 +13203,29 @@ WindowsClipboardService
 				WCF_HTML = ::RegisterClipboardFormat(L"HTML Format");
 			}
 
+			constexpr UINT_PTR ClipboardReadRetryTimer = 2;
+
+			void CALLBACK RetryWindowsClipboardNotification(HWND window, UINT, UINT_PTR timer, DWORD)
+			{
+				::KillTimer(window, timer);
+				::PostMessageW(window, WM_CLIPBOARDUPDATE, 0, 0);
+			}
+
 			Ptr<INativeClipboardReader> WindowsClipboardService::ReadClipboard()
+			{
+				if (auto result = TryReadClipboard()) return result;
+				return Ptr(new WindowsFakeClipboardReader);
+			}
+
+			Ptr<INativeClipboardReader> WindowsClipboardService::TryReadClipboard()
 			{
 				if (!reader)
 				{
-					if (!::OpenClipboard(ownerHandle)) return Ptr(new WindowsFakeClipboardReader);
+					if (!::OpenClipboard(ownerHandle))
+					{
+						if (ownerHandle) ::SetTimer(ownerHandle, ClipboardReadRetryTimer, USER_TIMER_MINIMUM, &RetryWindowsClipboardNotification);
+						return nullptr;
+					}
 					reader = new WindowsClipboardReader(this);
 				}
 				return Ptr(reader);
@@ -13221,6 +13239,7 @@ WindowsClipboardService
 			void WindowsClipboardService::SetOwnerHandle(HWND handle)
 			{
 				HWND oldHandle=ownerHandle;
+				if (oldHandle) ::KillTimer(oldHandle, ClipboardReadRetryTimer);
 				ownerHandle=handle;
 				if(handle==NULL)
 				{

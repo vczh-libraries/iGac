@@ -46641,14 +46641,8 @@ namespace vl::presentation::remote_renderer
 	void GuiRemoteRendererSingle::RegisterMainWindow(INativeWindow* _window, const WString& clipboardPeer)
 	{
 		window = _window;
+
 		clipboardOffered = globalConfig.injectClipboard && GetCurrentController()->ClipboardService() && clipboardPeer.Length() > 0;
-		if (clipboardOffered && clipboardPeer != L"localhost" && clipboardPeer != L"127.0.0.1" && clipboardPeer != L"::1" && clipboardPeer != L"[::1]")
-		{
-			auto dialogs = GetCurrentController()->DialogService();
-			auto message = L"Share your system clipboard with " + clipboardPeer + L" for this session? Items copied in other apps will be available to this Core.";
-			clipboardOffered = dialogs && dialogs->ShowMessageBox(window, message, L"GacUI clipboard sharing",
-				INativeDialogService::DisplayYesNo, INativeDialogService::DefaultSecond) == INativeDialogService::SelectYes;
-		}
 		windowSizingConfig = GetWindowSizingConfig();
 		window->InstallListener(this);
 		GetCurrentController()->CallbackService()->InstallListener(this);
@@ -52438,7 +52432,14 @@ DocumentModel::EditRun
 			// edit runs
 			Array<Ptr<DocumentParagraphRun>> runs;
 			CopyFrom(runs, model->paragraphs);
-			return EditRunNoCopy(begin, end, runs);
+			bool replacesFirstParagraph = runs.Count() > 0 && begin.column == 0 &&
+				(runs.Count() > 1 || end.column == runRanges[paragraphs[end.row].Obj()].end);
+			auto rows = EditRunNoCopy(begin, end, runs);
+			if (rows > 0 && replacesFirstParagraph)
+			{
+				paragraphs[begin.row]->alignment = runs[0]->alignment;
+			}
+			return rows;
 		}
 
 		vint DocumentModel::EditRunNoCopy(TextPos begin, TextPos end, const collections::Array<Ptr<DocumentParagraphRun>>& runs)
@@ -84072,7 +84073,7 @@ injections on the renderer. They never reach into an injection chain.
 		if (!clipboardSubscribed || !CanSendEvents()) return;
 		auto service = GetCurrentController()->ClipboardService();
 		if (!service) return;
-		auto reader = service->ReadClipboard();
+		auto reader = service->TryReadClipboard();
 		if (!reader) return;
 		auto snapshot = ReadClipboardSnapshot(reader.Obj());
 		reader = nullptr;
