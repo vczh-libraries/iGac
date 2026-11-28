@@ -2331,16 +2331,13 @@ WindowsController
 
 				void InvokeGlobalTimer()
 				{
+					clipboardService.DispatchClipboardUpdate(callbackService, false);
 					callbackService.InvokeGlobalTimer();
 				}
 
 				void InvokeClipboardUpdated()
 				{
-					// A busy clipboard schedules another notification. Keep it open for listeners once readable.
-					if (auto reader = clipboardService.ReadClipboard().Cast<WindowsClipboardReader>())
-					{
-						callbackService.InvokeClipboardUpdated();
-					}
+					clipboardService.DispatchClipboardUpdate(callbackService, true);
 				}
 
 				void InvokeGlobalShortcutkeyActivated(vint id)
@@ -13223,21 +13220,13 @@ WindowsClipboardService
 				WCF_PNG = ::RegisterClipboardFormat(L"PNG");
 			}
 
-			constexpr UINT_PTR ClipboardReadRetryTimer = 2;
-
-			void CALLBACK RetryWindowsClipboardNotification(HWND window, UINT, UINT_PTR timer, DWORD)
-			{
-				::KillTimer(window, timer);
-				::PostMessageW(window, WM_CLIPBOARDUPDATE, 0, 0);
-			}
-
 			Ptr<INativeClipboardReader> WindowsClipboardService::ReadClipboard()
 			{
 				if (!reader)
 				{
 					if (!::OpenClipboard(ownerHandle))
 					{
-						if (ownerHandle) ::SetTimer(ownerHandle, ClipboardReadRetryTimer, USER_TIMER_MINIMUM, &RetryWindowsClipboardNotification);
+						readPending = true;
 						return Ptr(new WindowsFakeClipboardReader);
 					}
 					reader = new WindowsClipboardReader(this);
@@ -13250,10 +13239,22 @@ WindowsClipboardService
 				return Ptr(new WindowsClipboardWriter(this));
 			}
 
+			void WindowsClipboardService::DispatchClipboardUpdate(INativeCallbackInvoker& callbacks, bool nativeChange)
+			{
+				if (!nativeChange && !readPending) return;
+				readPending = false;
+				// Keep the native clipboard open while listeners read this change.
+				auto nativeReader = ReadClipboard();
+				if (!readPending)
+				{
+					callbacks.InvokeClipboardUpdated();
+				}
+			}
+
 			void WindowsClipboardService::SetOwnerHandle(HWND handle)
 			{
 				HWND oldHandle=ownerHandle;
-				if (oldHandle) ::KillTimer(oldHandle, ClipboardReadRetryTimer);
+				readPending = false;
 				ownerHandle=handle;
 				if(handle==NULL)
 				{
@@ -14997,7 +14998,7 @@ namespace vl::presentation::windows
 			switch (message)
 			{
 			case WM_CLIPBOARDUPDATE:
-				controller->ClipboardUpdated();
+				if (!console::TUI::IsStopRequested()) controller->clipboardService.DispatchClipboardUpdate(controller->callbackService, true);
 				return 0;
 			case WM_HOTKEY:
 				controller->GlobalShortcutKeyActivated(static_cast<vint>(wParam));
@@ -15039,6 +15040,7 @@ namespace vl::presentation::windows
 
 	void TuiWindowsController::PumpPlatformEvents()
 	{
+		if (!console::TUI::IsStopRequested()) clipboardService.DispatchClipboardUpdate(callbackService, false);
 		MSG message;
 		while (!console::TUI::IsStopRequested() && PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE))
 		{
@@ -19198,7 +19200,8 @@ namespace vl::presentation::windows
 
 		bool PumpClipboardEvents() override
 		{
-			bool changed = false;
+			bool changed = readPending;
+			readPending = false;
 			MSG message;
 			while (PeekMessageW(&message, ownerHandle, 0, 0, PM_REMOVE))
 			{

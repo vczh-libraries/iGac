@@ -1903,6 +1903,7 @@ namespace vl
 				UINT							WCF_HTML;
 				UINT							WCF_PNG;
 				WindowsClipboardReader*			reader = nullptr;
+				bool							readPending = false;
 
 			public:
 				WindowsClipboardService(WindowsImageService* _nativeImageService = nullptr);
@@ -1911,6 +1912,7 @@ namespace vl
 				Ptr<INativeClipboardWriter>		WriteClipboard()override;
 
 				void							SetOwnerHandle(HWND handle);
+				void							DispatchClipboardUpdate(INativeCallbackInvoker& callbacks, bool nativeChange);
 			};
 		}
 	}
