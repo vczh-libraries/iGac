@@ -40,7 +40,7 @@ Read them thoroughly. Most macOS porting bugs come from behavioral differences b
 - **`Import/` and `Import-Test/` are frozen after `./import.sh` completes. Never modify anything under either directory to fix a build break.** Fix compatibility in this repository's CMake files or macOS integration code. Framework changes belong in their upstream repository and are re-imported through `GacUI`.
 - All macOS-specific code is under `Mac/`. Shared test utilities are in `MacShared/`.
 - Build with `./build.sh` (incremental) or `./build.sh --rebuild` (clean).
-- Test native apps with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, `./test.sh --app:tui`, or `./test.sh --app:renderer`; use `./test_core.sh --app:fct|rpt|rvmt --protocol:minihttp` for the sibling GacUI Core-side launcher.
+- Test native apps with `./test.sh --app:simple`, `./test.sh --app:fct`, `./test.sh --app:fct --hosted`, `./test.sh --app:rvmt`, `./test.sh --app:tui`, or `./test.sh --app:renderer`. Start the platform Core with `./test.sh --app:core`. Use `./test_core.sh --app:rvmt --protocol:minihttp` to start its native view-model host as well.
 - Run `<iGac repo>/syncProj.sh` to incrementally build Workflow's `CppMerge` and GacUI's `GacGen` and `GacBuild`, copy Full Control Test, Remote Protocol Test, Remote View Model Test, and Tui Control Test resources from `<GacUI repo>/Test/Resources/App/`, and call `<iGac repo>/GacBuild.sh -mode:GacGen` to merge their x32/x64 C++ sources under `<iGac repo>/Apps/`.
 - The native remote renderer uses automation port 8889 by default; use `--port:<port>` for a concurrent takeover renderer.
 - Generated embedded-resource `.cpp` files remove the need to load test resource binaries from disk.

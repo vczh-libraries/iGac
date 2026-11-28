@@ -10,7 +10,7 @@ macOS implementation of [GacUI](http://www.gaclib.net) using Cocoa and CoreGraph
 
 This repo is stand alone, all dependencies are in the repo for building.
 
-To run `RemotingTest_Rendering_macOS` by `test.sh --app:renderer`, the `GacUI` repo is needed. `test_core.sh` full-builds and runs the matching project under `GacUI/Test/Linux`.
+The platform build supplies `RemotingTest_Core` and `RemotingTest_Rendering_macOS`. The sibling GacUI repository supplies the standalone RVMT host.
 
 For developers maintaining this repo, run `./syncOrg.sh`, or clone the upstream repositories beside this repository. iGac reads framework imports, release sources, test resources, generated-code metadata, and the Knowledge Base directly from `../GacUI`; `import.sh` to take latest code from `GacUI/(Import|Release)` to `Import`; `syncProj.sh` also builds Workflow's `CppMerge` from `../Workflow`. The `Release` repository is not an iGac maintenance dependency. The importer normalizes each snapshot file to its existing line-ending convention so CodePack and Git checkout conversions do not cause unrelated changes.
 
@@ -104,6 +104,7 @@ iGac/
 │   └── Main.mm
 ├── MacTuiControlTest/          Foreground terminal showcase using TuiSkin
 ├── MacCppTestRvm/              Hosted Remote View Model Test client
+├── RemotingTest_Core/                Platform MiniHTTP Core with a local clipboard fallback
 ├── RemotingTest_Rendering_macOS/ Native `/MiniHttp` renderer for GacUI's RemotingTest_Core
 │
 ├── Apps/                       Upstream test resources and merged x32/x64 C++
@@ -136,7 +137,7 @@ iGac/
 ├── syncProj.sh                 Sync test resources and merge x32/x64 C++ sources
 ├── build.sh                    Build script (incremental by default, --rebuild for clean)
 ├── test.sh                     Run native test apps or the native remote renderer
-└── test_core.sh                Full-build and run a sibling GacUI Core-side test
+└── test_core.sh                Launch the platform Core or local RVM requester and its host
 ```
 
 The generated `Import/`, `Import-Test/`, and `Apps/` snapshots are committed so a normal iGac build does not require code generation. Run the synchronization scripts when updating upstream dependencies or test resources.
@@ -323,6 +324,8 @@ Code is compiled with `VCZH_DEBUG_NO_REFLECTION`. If reflection is needed, remov
 ./test.sh --app:renderer                       # Connect to RemotingTest_Core with /MiniHttp
 ./test.sh --app:renderer --port:8890           # Start a takeover renderer on automation port 8890
 ./test.sh --app:renderer --unblock             # Start the renderer and print its PID
+./test.sh --app:core /FCT --unblock
+./test.sh --app:core /RPT --fakeClipboard --denyClipboard
 ./test_core.sh --app:cpptest_rvm --protocol:minihttp --unblock
 ./test_core.sh --app:fct --protocol:minihttp
 ./test_core.sh --app:rpt --protocol:minihttp
@@ -337,14 +340,9 @@ only with `--app:renderer` and selects that renderer's automation listener; it
 does not change the `/MiniHttp` Core connection on port 8888. The default
 renderer automation port is 8889.
 
-`test_core.sh` follows the same `--app:` and `--unblock` spelling and requires
-`--protocol:minihttp`, the only portable transport. It calls GacUI's
-`Test/Linux` build helper with `-f` before starting each used GacUI project.
-For manual `cpptest_rvm` and `rvmt` modes it starts the requester/Core first,
-waits one second, then full-builds and starts `RemotingTest_RvmHost`; an
-unblocked manual run prints both PIDs. `--cli` is supported by `--app:rvmt`,
-prebuilds the host, and lets Core auto-launch it over stdio. Portable
-`Test_CppTest_Rvm` remains manual `/MiniHttp` only.
+After `./build.sh`, `./test.sh --app:core` starts the local CMake target over MiniHTTP and defaults to FCT. Pass `/RPT` or `/RVMT` to select another application. Both endpoints enable clipboard sharing by default. Either accepts `--denyClipboard`, and Core accepts `--fakeClipboard` to select its in-memory fallback. Use `?remoteClipboard=false` to disable the browser offer.
+
+`test_core.sh` accepts `--protocol:minihttp` and uses the same platform Core for `fct`, `rpt` and `rvmt`. In manual RVMT and `cpptest_rvm` modes it launches the local requester or Core, then builds and starts the sibling `RemotingTest_RvmHost`. An unblocked run prints both PIDs. With `--app:rvmt --cli` it prebuilds that host and Core starts it over stdio. Use `test.sh --app:core /RVMT` when GacJS supplies a network host, or pass a complete `/Cli:<command>` as one argument.
 
 `test_core.sh --app:rvmt --protocol:minihttp --cli` passes a quoted native-host
 command to Core. Core's `/Cli:<command>` option also accepts
@@ -374,7 +372,7 @@ then run:
 The RVM client exposes its control tree after the host connects.
 
 For the native renderer, start
-`GacUI/Test/Linux/RemotingTest_Core/Bin/RemotingTest_Core /MiniHttp /RPT`
+`./test.sh --app:core /RPT --unblock`
 (or use `./test_core.sh --app:rpt --protocol:minihttp`) before
 `./test.sh --app:renderer`. The renderer exposes its DOM and
 renderer-side IO on its selected automation port. A replacement can reuse 8889
