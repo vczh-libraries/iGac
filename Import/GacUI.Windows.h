@@ -1846,6 +1846,7 @@ namespace vl
 		namespace windows
 		{
 			class WindowsClipboardService;
+			class WindowsImageService;
 
 			class WindowsClipboardReader : public Object, public INativeClipboardReader
 			{
@@ -1879,7 +1880,7 @@ namespace vl
 				Ptr<DocumentModel>				documentData;
 				Ptr<INativeImage>				imageData;
 
-				void							SetClipboardData(UINT format, stream::MemoryStream& memoryStream);
+				bool							SetClipboardData(UINT format, stream::MemoryStream& memoryStream);
 			public:
 				WindowsClipboardWriter(WindowsClipboardService* _service);
 				~WindowsClipboardWriter();
@@ -1896,13 +1897,14 @@ namespace vl
 				friend class WindowsClipboardWriter;
 			protected:
 				HWND							ownerHandle;
+				WindowsImageService*			nativeImageService;
 				UINT							WCF_Document;
 				UINT							WCF_RTF;
 				UINT							WCF_HTML;
 				WindowsClipboardReader*			reader = nullptr;
 
 			public:
-				WindowsClipboardService();
+				WindowsClipboardService(WindowsImageService* _nativeImageService = nullptr);
 
 				Ptr<INativeClipboardReader>		ReadClipboard()override;
 				Ptr<INativeClipboardWriter>		WriteClipboard()override;

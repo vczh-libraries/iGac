@@ -20462,7 +20462,7 @@ GuiDocumentCommonInterface
 				{
 					writer->SetDocument(model);
 				}
-				writer->Submit();
+				if (!writer->Submit()) return false;
 				SetSelectionText(L"");
 				return true;
 			}
@@ -20477,8 +20477,7 @@ GuiDocumentCommonInterface
 				{
 					writer->SetDocument(model);
 				}
-				writer->Submit();
-				return true;
+				return writer->Submit();
 			}
 
 			bool GuiDocumentCommonInterface::Paste()
@@ -36990,6 +36989,10 @@ GuiRemoteController::INativeWindowService
 			{
 				callbackService.InvokeGlobalTimer();
 			}
+			if (clipboardEvents && clipboardEvents->PumpClipboardEvents() && !clipboardInjection.IsActive())
+			{
+				callbackService.InvokeClipboardUpdated();
+			}
 			asyncService.ExecuteAsyncTasks();
 		}
 		return !connectionStopped;
@@ -37004,6 +37007,8 @@ GuiRemoteController (events)
 		connectionGeneration++;
 		controllerConnected = true;
 		remoteGlobalConfig = _globalConfig;
+		clipboardInjection.Reset();
+		if (clipboardInjection.IsActive()) remoteMessages.RequestInjectionRequestClipboard();
 		UpdateGlobalShortcutKey();
 		vint idGetFontConfig = remoteMessages.RequestControllerGetFontConfig();
 		vint idGetScreenConfig = remoteMessages.RequestControllerGetScreenConfig();
@@ -37016,15 +37021,19 @@ GuiRemoteController (events)
 		imageService.OnControllerConnect();
 		resourceManager->OnControllerConnect();
 		callbackService.InvokeEnvironmentChanged();
+		callbackService.InvokeClipboardUpdated();
 	}
 
 	void GuiRemoteController::OnControllerDisconnect()
 	{
 		connectionGeneration++;
+		const bool shared = clipboardInjection.IsActive();
 		controllerConnected = false;
+		clipboardInjection.Reset();
 		remoteWindow.OnControllerDisconnect();
 		imageService.OnControllerDisconnect();
 		resourceManager->OnControllerDisconnect();
+		if (shared) callbackService.InvokeClipboardUpdated();
 	}
 
 	void GuiRemoteController::OnControllerRequestExit()
@@ -37048,12 +37057,14 @@ GuiRemoteController (events)
 GuiRemoteController
 ***********************************************************************/
 
-	GuiRemoteController::GuiRemoteController(IGuiRemoteProtocol* _remoteProtocol, const GuiRemoteControllerConfig& _globalConfig)
+	GuiRemoteController::GuiRemoteController(IGuiRemoteProtocol* _remoteProtocol, const GuiRemoteControllerConfig& _globalConfig, INativeClipboardService* _clipboardService)
 		: remoteProtocol(_remoteProtocol)
 		, remoteMessages(this)
 		, remoteEvents(this)
 		, remoteWindow(this)
 		, imageService(this)
+		, clipboardInjection(this, _clipboardService)
+		, clipboardEvents(dynamic_cast<IGuiRemoteClipboardEventSource*>(_clipboardService))
 		, globalConfig(_globalConfig)
 		, injectionState(Ptr(new GuiRemoteControllerInjectionState(this)))
 	{
@@ -37130,8 +37141,7 @@ GuiRemoteController (INativeController)
 
 	INativeClipboardService* GuiRemoteController::ClipboardService()
 	{
-		// Use FakeClipboardService
-		return nullptr;
+		return clipboardInjection.fallback || clipboardInjection.IsActive() ? &clipboardInjection : nullptr;
 	}
 
 	INativeImageService* GuiRemoteController::ImageService()
@@ -37187,9 +37197,10 @@ SetupRemoteNativeController
 
 extern void GuiApplicationMain();
 
-int SetupRemoteNativeController(vl::presentation::IGuiRemoteProtocol* protocol, const GuiRemoteControllerConfig& config)
+int SetupRemoteNativeControllerInternal(IGuiRemoteProtocol* protocol, const GuiRemoteControllerConfig& config, INativeClipboardService* clipboardService)
 {
-	GuiRemoteController remoteController(protocol, config);
+	FakeClipboardService fakeClipboard;
+	GuiRemoteController remoteController(protocol, config, clipboardService ? clipboardService : &fakeClipboard);
 	GuiHostedController hostedController(&remoteController);
 
 	GuiRemoteGraphicsResourceManager remoteResourceManager(&remoteController, &hostedController);
@@ -37357,6 +37368,11 @@ GuiRemoteEvents (events)
 	void GuiRemoteEvents::OnControllerForceExit()
 	{
 		remote->OnControllerForceExit();
+	}
+
+	void GuiRemoteEvents::OnInjectionUpdateClipboardFromRenderer(const remoteprotocol::InjectionClipboard& arguments)
+	{
+		if (remote->clipboardInjection.IsActive()) remote->clipboardInjection.Update(arguments);
 	}
 
 	void GuiRemoteEvents::OnControllerScreenUpdated(const remoteprotocol::ScreenConfig& arguments)
@@ -44277,6 +44293,7 @@ namespace vl::presentation::remoteprotocol
 		ConvertCustomTypeToJsonField(node, L"injectDateTime", value.injectDateTime);
 		ConvertCustomTypeToJsonField(node, L"injectLocale", value.injectLocale);
 		ConvertCustomTypeToJsonField(node, L"injectFileSystem", value.injectFileSystem);
+		ConvertCustomTypeToJsonField(node, L"injectClipboard", value.injectClipboard);
 		return node;
 	}
 
@@ -44351,6 +44368,15 @@ namespace vl::presentation::remoteprotocol
 		ConvertCustomTypeToJsonField(node, L"paths", value.paths);
 		ConvertCustomTypeToJsonField(node, L"info", value.info);
 		ConvertCustomTypeToJsonField(node, L"content", value.content);
+		return node;
+	}
+
+	template<> vl::Ptr<vl::glr::json::JsonNode> ConvertCustomTypeToJson<::vl::presentation::remoteprotocol::InjectionClipboard>(const ::vl::presentation::remoteprotocol::InjectionClipboard & value)
+	{
+		auto node = Ptr(new glr::json::JsonObject);
+		ConvertCustomTypeToJsonField(node, L"text", value.text);
+		ConvertCustomTypeToJsonField(node, L"document", value.document);
+		ConvertCustomTypeToJsonField(node, L"image", value.image);
 		return node;
 	}
 
@@ -45381,6 +45407,7 @@ namespace vl::presentation::remoteprotocol
 			if (field->name.value == L"injectDateTime") ConvertJsonToCustomType(field->value, value.injectDateTime); else
 			if (field->name.value == L"injectLocale") ConvertJsonToCustomType(field->value, value.injectLocale); else
 			if (field->name.value == L"injectFileSystem") ConvertJsonToCustomType(field->value, value.injectFileSystem); else
+			if (field->name.value == L"injectClipboard") ConvertJsonToCustomType(field->value, value.injectClipboard); else
 			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
 		}
 #undef ERROR_MESSAGE_PREFIX
@@ -45485,6 +45512,21 @@ namespace vl::presentation::remoteprotocol
 			if (field->name.value == L"paths") ConvertJsonToCustomType(field->value, value.paths); else
 			if (field->name.value == L"info") ConvertJsonToCustomType(field->value, value.info); else
 			if (field->name.value == L"content") ConvertJsonToCustomType(field->value, value.content); else
+			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
+		}
+#undef ERROR_MESSAGE_PREFIX
+	}
+
+	template<> void ConvertJsonToCustomType<::vl::presentation::remoteprotocol::InjectionClipboard>(vl::Ptr<vl::glr::json::JsonNode> node, ::vl::presentation::remoteprotocol::InjectionClipboard& value)
+	{
+#define ERROR_MESSAGE_PREFIX L"vl::presentation::remoteprotocol::ConvertJsonToCustomType<::vl::presentation::remoteprotocol::InjectionClipboard>(Ptr<JsonNode>, ::vl::presentation::remoteprotocol::InjectionClipboard&)#"
+		auto jsonNode = node.Cast<glr::json::JsonObject>();
+		CHECK_ERROR(jsonNode, ERROR_MESSAGE_PREFIX L"Json node does not match the expected type.");
+		for (auto field : jsonNode->fields)
+		{
+			if (field->name.value == L"text") ConvertJsonToCustomType(field->value, value.text); else
+			if (field->name.value == L"document") ConvertJsonToCustomType(field->value, value.document); else
+			if (field->name.value == L"image") ConvertJsonToCustomType(field->value, value.image); else
 			CHECK_FAIL(ERROR_MESSAGE_PREFIX L"Unsupported struct member.");
 		}
 #undef ERROR_MESSAGE_PREFIX
@@ -46395,6 +46437,7 @@ namespace vl::presentation::remote_renderer
 	void GuiRemoteRendererSingle::DisconnectFromCore()
 	{
 		disconnectingFromCore = true;
+		clipboardSubscribed = false;
 		if (window)
 		{
 			window->ReleaseCapture();
@@ -46480,6 +46523,7 @@ namespace vl::presentation::remote_renderer
 		globalConfig.injectDateTime = this->globalConfig.injectDateTime;
 		globalConfig.injectLocale = this->globalConfig.injectLocale;
 		globalConfig.injectFileSystem = this->globalConfig.injectFileSystem;
+		globalConfig.injectClipboard = clipboardOffered;
 		globalConfig.osSuperKeyName = GetCurrentController()->ResourceService()->GetOSSuperKeyName();
 #if defined VCZH_WCHAR_UTF16
 		globalConfig.documentCaretFromEncoding = vl::presentation::remoteprotocol::CharacterEncoding::UTF16;
@@ -46594,9 +46638,17 @@ namespace vl::presentation::remote_renderer
 		return rawElements;
 	}
 
-	void GuiRemoteRendererSingle::RegisterMainWindow(INativeWindow* _window)
+	void GuiRemoteRendererSingle::RegisterMainWindow(INativeWindow* _window, const WString& clipboardPeer)
 	{
 		window = _window;
+		clipboardOffered = globalConfig.injectClipboard && GetCurrentController()->ClipboardService() && clipboardPeer.Length() > 0;
+		if (clipboardOffered && clipboardPeer != L"localhost" && clipboardPeer != L"127.0.0.1" && clipboardPeer != L"::1" && clipboardPeer != L"[::1]")
+		{
+			auto dialogs = GetCurrentController()->DialogService();
+			auto message = L"Share your system clipboard with " + clipboardPeer + L" for this session? Items copied in other apps will be available to this Core.";
+			clipboardOffered = dialogs && dialogs->ShowMessageBox(window, message, L"GacUI clipboard sharing",
+				INativeDialogService::DisplayYesNo, INativeDialogService::DefaultSecond) == INativeDialogService::SelectYes;
+		}
 		windowSizingConfig = GetWindowSizingConfig();
 		window->InstallListener(this);
 		GetCurrentController()->CallbackService()->InstallListener(this);
@@ -84008,6 +84060,33 @@ Renderer feature implementations use public APIs, including application
 injections on the renderer. They never reach into an injection chain.
 ***********************************************************************/
 
+	void GuiRemoteRendererSingle::RequestInjectionRequestClipboard()
+	{
+		if (!clipboardOffered || clipboardSubscribed || !CanSendEvents()) return;
+		clipboardSubscribed = true;
+		ClipboardUpdated();
+	}
+
+	void GuiRemoteRendererSingle::ClipboardUpdated()
+	{
+		if (!clipboardSubscribed || !CanSendEvents()) return;
+		auto service = GetCurrentController()->ClipboardService();
+		if (!service) return;
+		auto reader = service->ReadClipboard();
+		if (!reader) return;
+		auto snapshot = ReadClipboardSnapshot(reader.Obj());
+		reader = nullptr;
+		if (CanSendEvents()) events->OnInjectionUpdateClipboardFromRenderer(snapshot);
+	}
+
+	void GuiRemoteRendererSingle::RequestInjectionUpdateClipboardFromCore(vint id, const InjectionClipboard& arguments)
+	{
+		if (!CanSendEvents()) return;
+		auto service = GetCurrentController()->ClipboardService();
+		bool success = clipboardSubscribed && service && WriteClipboardSnapshot(service, arguments);
+		if (CanSendEvents()) events->RespondInjectionUpdateClipboardFromCore(id, success);
+	}
+
 	void GuiRemoteRendererSingle::RequestInjectionLocalToUtc(vint id, const InjectionDateTime& arguments)
 	{
 		CHECK_ERROR(globalConfig.injectDateTime, L"vl::presentation::remote_renderer::GuiRemoteRendererSingle::RequestInjectionLocalToUtc()#Capability is disabled.");
@@ -84989,6 +85068,164 @@ GuiRemoteFileStreamInjection
 		CHECK_ERROR(opened && access != stream::FileStream::WriteOnly, L"vl::presentation::GuiRemoteFileStreamInjection::Peek()#Stream is closed or access is denied.");
 		return buffer->Peek(data, size);
 	}
-}
 
+/***********************************************************************
+GuiRemoteClipboardInjection
+***********************************************************************/
+
+	class GuiRemoteClipboardReader : public Object, public INativeClipboardReader
+	{
+		InjectionClipboard snapshot;
+	public:
+		GuiRemoteClipboardReader(const InjectionClipboard& value) : snapshot(value) {}
+		bool ContainsText() override { return snapshot.text; }
+		bool ContainsDocument() override { return snapshot.document; }
+		bool ContainsImage() override { return snapshot.image; }
+		WString GetText() override { return snapshot.text ? snapshot.text.Value() : WString(); }
+
+		Ptr<DocumentModel> GetDocument() override
+		{
+			if (!snapshot.document) return nullptr;
+			stream::MemoryWrapperStream input(snapshot.document->GetInternalBuffer(), (vint)snapshot.document->Size());
+			return LoadDocumentFromClipboardStream(input);
+		}
+
+		Ptr<INativeImage> GetImage() override
+		{
+			if (!snapshot.image) return nullptr;
+			return GetCurrentController()->ImageService()->CreateImageFromMemory(snapshot.image->GetInternalBuffer(), (vint)snapshot.image->Size());
+		}
+	};
+
+	Ptr<stream::MemoryStream> EncodeClipboardDocument(Ptr<DocumentModel> document)
+	{
+		if (!document) return nullptr;
+		auto bytes = Ptr(new stream::MemoryStream);
+		SaveDocumentToClipboardStream(document, *bytes.Obj());
+		return bytes;
+	}
+
+	Ptr<stream::MemoryStream> EncodeClipboardImage(Ptr<INativeImage> image)
+	{
+		if (!image) return nullptr;
+		auto bytes = Ptr(new stream::MemoryStream);
+		image->SaveToStream(*bytes.Obj(), INativeImage::Png);
+		return bytes;
+	}
+
+	InjectionClipboard ReadClipboardSnapshot(INativeClipboardReader* reader)
+	{
+		InjectionClipboard value;
+		if (reader->ContainsText()) value.text = reader->GetText();
+		if (reader->ContainsDocument()) value.document = EncodeClipboardDocument(reader->GetDocument());
+		if (reader->ContainsImage()) value.image = EncodeClipboardImage(reader->GetImage());
+		return value;
+	}
+
+	bool WriteClipboardSnapshot(INativeClipboardService* service, const InjectionClipboard& value)
+	{
+		GuiRemoteClipboardReader reader(value);
+		auto writer = service->WriteClipboard();
+		if (!writer) return false;
+		if (reader.ContainsDocument())
+		{
+			auto document = reader.GetDocument();
+			if (!document) return false;
+			writer->SetDocument(document);
+		}
+		if (reader.ContainsText()) writer->SetText(reader.GetText());
+		if (reader.ContainsImage())
+		{
+			auto image = reader.GetImage();
+			if (!image) return false;
+			writer->SetImage(image);
+		}
+		return writer->Submit();
+	}
+
+	class GuiRemoteClipboardWriter : public Object, public INativeClipboardWriter
+	{
+		Ptr<GuiRemoteControllerInjectionState> state;
+		vuint64_t connection;
+		InjectionClipboard value;
+	public:
+		GuiRemoteClipboardWriter(GuiRemoteClipboardInjection* owner)
+			: state(owner->remote->injectionState), connection(owner->remote->connectionGeneration)
+		{
+		}
+
+		void SetText(const WString& text) override
+		{
+			value.text = text;
+		}
+
+		void SetDocument(Ptr<DocumentModel> document) override
+		{
+			if (!value.text) SetText(document->GetTextForReading(WString::Unmanaged(L"\r\n\r\n")));
+			if (!value.image) SetImage(GetImageFromSingleImageDocument(document));
+			ModifyDocumentForClipboard(document);
+			value.document = EncodeClipboardDocument(document);
+		}
+
+		void SetImage(Ptr<INativeImage> image) override
+		{
+			value.image = EncodeClipboardImage(image);
+		}
+
+		bool Submit() override
+		{
+			if (!state) return false;
+			auto invocation = std::move(state);
+			return invocation->Execute([&](GuiRemoteController* controller)
+			{
+				auto& clipboard = controller->clipboardInjection;
+				if (connection != controller->connectionGeneration || !clipboard.IsActive()) return false;
+				auto revision = clipboard.revision;
+				auto& messages = controller->remoteMessages;
+				auto id = messages.RequestInjectionUpdateClipboardFromCore(value);
+				bool disconnected = false;
+				messages.Submit(disconnected);
+				if (disconnected || connection != controller->connectionGeneration) return false;
+				CHECK_ERROR(messages.RetrieveInjectionUpdateClipboardFromCore(id), L"GuiRemoteClipboardInjection#The renderer could not write the clipboard.");
+				if (revision == clipboard.revision) clipboard.Update(value);
+				return true;
+			});
+		}
+	};
+
+	GuiRemoteClipboardInjection::GuiRemoteClipboardInjection(GuiRemoteController* controller, INativeClipboardService* local)
+		: remote(controller), fallback(local)
+	{
+	}
+
+	bool GuiRemoteClipboardInjection::IsActive() const
+	{
+		return remote->controllerConnected && remote->globalConfig.injectClipboard && remote->remoteGlobalConfig.injectClipboard;
+	}
+
+	void GuiRemoteClipboardInjection::Reset()
+	{
+		snapshot = {};
+		revision++;
+	}
+
+	void GuiRemoteClipboardInjection::Update(const InjectionClipboard& value)
+	{
+		snapshot = value;
+		revision++;
+		remote->callbackService.InvokeClipboardUpdated();
+	}
+
+	Ptr<INativeClipboardReader> GuiRemoteClipboardInjection::ReadClipboard()
+	{
+		if (IsActive()) return Ptr(new GuiRemoteClipboardReader(snapshot));
+		return fallback->ReadClipboard();
+	}
+
+	Ptr<INativeClipboardWriter> GuiRemoteClipboardInjection::WriteClipboard()
+	{
+		if (IsActive()) return Ptr(new GuiRemoteClipboardWriter(this));
+		return fallback->WriteClipboard();
+	}
+}
 
