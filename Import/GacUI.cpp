@@ -37008,7 +37008,12 @@ GuiRemoteController (events)
 		controllerConnected = true;
 		remoteGlobalConfig = _globalConfig;
 		clipboardInjection.Reset();
-		if (clipboardInjection.IsActive()) remoteMessages.RequestInjectionRequestClipboard();
+		const bool shared = clipboardInjection.IsActive();
+		if (shared)
+		{
+			callbackService.InvokeClipboardUpdated();
+			remoteMessages.RequestInjectionRequestClipboard();
+		}
 		UpdateGlobalShortcutKey();
 		vint idGetFontConfig = remoteMessages.RequestControllerGetFontConfig();
 		vint idGetScreenConfig = remoteMessages.RequestControllerGetScreenConfig();
@@ -37021,7 +37026,7 @@ GuiRemoteController (events)
 		imageService.OnControllerConnect();
 		resourceManager->OnControllerConnect();
 		callbackService.InvokeEnvironmentChanged();
-		callbackService.InvokeClipboardUpdated();
+		if (!shared) callbackService.InvokeClipboardUpdated();
 	}
 
 	void GuiRemoteController::OnControllerDisconnect()
@@ -84073,8 +84078,7 @@ injections on the renderer. They never reach into an injection chain.
 		if (!clipboardSubscribed || !CanSendEvents()) return;
 		auto service = GetCurrentController()->ClipboardService();
 		if (!service) return;
-		auto reader = service->TryReadClipboard();
-		if (!reader) return;
+		auto reader = service->ReadClipboard();
 		auto snapshot = ReadClipboardSnapshot(reader.Obj());
 		reader = nullptr;
 		if (CanSendEvents()) events->OnInjectionUpdateClipboardFromRenderer(snapshot);

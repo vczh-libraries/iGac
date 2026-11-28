@@ -3118,8 +3118,6 @@ INativeClipboardService
 			/// <summary>Write clipboard.</summary>
 			/// <returns>The clipboard writer.</returns>
 			virtual Ptr<INativeClipboardWriter>		WriteClipboard() = 0;
-			/// <summary>Read the clipboard for a change notification. A temporarily busy service can return null and notify again when readable.</summary>
-			virtual Ptr<INativeClipboardReader>		TryReadClipboard() { return ReadClipboard(); }
 		};
 
 /***********************************************************************

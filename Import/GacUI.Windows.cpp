@@ -2336,7 +2336,11 @@ WindowsController
 
 				void InvokeClipboardUpdated()
 				{
-					callbackService.InvokeClipboardUpdated();
+					// A busy clipboard schedules another notification. Keep it open for listeners once readable.
+					if (auto reader = clipboardService.ReadClipboard().Cast<WindowsClipboardReader>())
+					{
+						callbackService.InvokeClipboardUpdated();
+					}
 				}
 
 				void InvokeGlobalShortcutkeyActivated(vint id)
@@ -13229,18 +13233,12 @@ WindowsClipboardService
 
 			Ptr<INativeClipboardReader> WindowsClipboardService::ReadClipboard()
 			{
-				if (auto result = TryReadClipboard()) return result;
-				return Ptr(new WindowsFakeClipboardReader);
-			}
-
-			Ptr<INativeClipboardReader> WindowsClipboardService::TryReadClipboard()
-			{
 				if (!reader)
 				{
 					if (!::OpenClipboard(ownerHandle))
 					{
 						if (ownerHandle) ::SetTimer(ownerHandle, ClipboardReadRetryTimer, USER_TIMER_MINIMUM, &RetryWindowsClipboardNotification);
-						return nullptr;
+						return Ptr(new WindowsFakeClipboardReader);
 					}
 					reader = new WindowsClipboardReader(this);
 				}
