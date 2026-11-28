@@ -74,7 +74,7 @@ CocoaClipboardWriter
                 }
                 if (imageData && imageData->GetFrameCount() > 0)
                 {
-                    [types addObject:NSPasteboardTypeTIFF];
+                    [types addObject:NSPasteboardTypePNG];
                 }
 
                 if ([types count] == 0) return false;
@@ -87,7 +87,7 @@ CocoaClipboardWriter
                 if (textData)
                 {
                     NSString* nsText = WStringToNSString(textData.Value());
-                    [pasteboard setString:nsText forType:NSPasteboardTypeString];
+                    if (![pasteboard setString:nsText forType:NSPasteboardTypeString]) return false;
                 }
 
                 // Write document in multiple formats
@@ -100,7 +100,7 @@ CocoaClipboardWriter
                         memoryStream.SeekFromBegin(0);
                         NSData* data = [NSData dataWithBytes:memoryStream.GetInternalBuffer()
                                                       length:(NSUInteger)memoryStream.Size()];
-                        [pasteboard setData:data forType:GacDocumentPasteboardType];
+                        if (![pasteboard setData:data forType:GacDocumentPasteboardType]) return false;
                     }
                     // RTF format
                     {
@@ -109,7 +109,7 @@ CocoaClipboardWriter
                         memoryStream.SeekFromBegin(0);
                         NSData* data = [NSData dataWithBytes:memoryStream.GetInternalBuffer()
                                                       length:(NSUInteger)memoryStream.Size()];
-                        [pasteboard setData:data forType:NSPasteboardTypeRTF];
+                        if (![pasteboard setData:data forType:NSPasteboardTypeRTF]) return false;
                     }
                     // HTML format
                     {
@@ -119,30 +119,17 @@ CocoaClipboardWriter
                         html = header + content + footer;
                         NSData* data = [NSData dataWithBytes:html.Buffer()
                                                       length:(NSUInteger)html.Length()];
-                        [pasteboard setData:data forType:NSPasteboardTypeHTML];
+                        if (![pasteboard setData:data forType:NSPasteboardTypeHTML]) return false;
                     }
                 }
 
-                // Write image as TIFF
                 if (imageData && imageData->GetFrameCount() > 0)
                 {
-                    auto* frame = imageData->GetFrame(0);
-                    auto size = frame->GetSize();
-                    auto* cocoaFrame = dynamic_cast<CocoaImageFrame*>(frame);
-                    if (cocoaFrame)
-                    {
-                        CGImageRef cgImage = cocoaFrame->GetCGImage();
-                        if (cgImage)
-                        {
-                            NSImage* nsImage = [[NSImage alloc] initWithCGImage:cgImage
-                                                                           size:NSMakeSize((CGFloat)size.x, (CGFloat)size.y)];
-                            NSData* tiffData = [nsImage TIFFRepresentation];
-                            if (tiffData)
-                            {
-                                [pasteboard setData:tiffData forType:NSPasteboardTypeTIFF];
-                            }
-                        }
-                    }
+                    stream::MemoryStream png;
+                    imageData->SaveToStream(png, INativeImage::Png);
+                    if (png.Size() == 0) return false;
+                    NSData* data = [NSData dataWithBytes:png.GetInternalBuffer() length:(NSUInteger)png.Size()];
+                    if (![pasteboard setData:data forType:NSPasteboardTypePNG]) return false;
                 }
 
                 service->CheckForUpdates();
@@ -213,7 +200,8 @@ CocoaClipboardReader
                 }
                 if (data)
                 {
-                    return service->imageService->CreateImageFromMemory(
+                    auto images = service->imageService ? service->imageService : GetCurrentController()->ImageService();
+                    return images->CreateImageFromMemory(
                         (void*)[data bytes],
                         (vint)[data length]
                     );
@@ -232,14 +220,20 @@ CocoaClipboardService
             {
             }
 
+            bool CocoaClipboardService::PumpClipboardEvents()
+            {
+                @autoreleasepool
+                {
+                    auto current = [[NSPasteboard generalPasteboard] changeCount];
+                    if (current == changeCount) return false;
+                    changeCount = current;
+                    return true;
+                }
+            }
+
             void CocoaClipboardService::CheckForUpdates()
             {
-                auto current = [[NSPasteboard generalPasteboard] changeCount];
-                if (current != changeCount)
-                {
-                    changeCount = current;
-                    callbackService->Invoker()->InvokeClipboardUpdated();
-                }
+                if (callbackService && PumpClipboardEvents()) callbackService->Invoker()->InvokeClipboardUpdated();
             }
 
             Ptr<INativeClipboardReader> CocoaClipboardService::ReadClipboard()

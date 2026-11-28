@@ -421,6 +421,7 @@ namespace vl {
                     if (inputService.IsTimerEnabled())
                     {
                         asyncService.ExecuteAsyncTasks();
+                        clipboardService.CheckForUpdates();
                         callbackService.InvokeGlobalTimer();
                     }
                 }

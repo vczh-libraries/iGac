@@ -4,9 +4,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GACUI_ROOT="$(cd "$SCRIPT_DIR/../GacUI" && pwd)"
-CORE_PROJECT="$GACUI_ROOT/Test/Linux/RemotingTest_Core"
 HOST_PROJECT="$GACUI_ROOT/Test/Linux/RemotingTest_RvmHost"
-CORE_EXE="$CORE_PROJECT/Bin/RemotingTest_Core"
+CORE_EXE="$SCRIPT_DIR/build/RemotingTest_Core/bin/RemotingTest_Core"
 HOST_EXE="$HOST_PROJECT/Bin/RemotingTest_RvmHost"
 LOCAL_RVM="$SCRIPT_DIR/build/MacCppTestRvm/bin/Test_CppTest_Rvm.app/Contents/MacOS/Test_CppTest_Rvm"
 
@@ -20,7 +19,7 @@ usage() {
     cat >&2 <<'EOF'
 Usage:
   ./test_core.sh --app:cpptest_rvm --protocol:minihttp [--unblock]
-  ./test_core.sh --app:fct --protocol:minihttp [--remoteDT] [--remoteLocale] [--remoteFS] [--unblock]
+  ./test_core.sh --app:fct --protocol:minihttp [--remoteDT] [--remoteLocale] [--remoteFS] [--fakeClipboard] [--denyClipboard] [--unblock]
   ./test_core.sh --app:rpt --protocol:minihttp [--unblock]
   ./test_core.sh --app:rvmt --protocol:minihttp [--cli] [--unblock]
 EOF
@@ -46,7 +45,7 @@ for argument in "$@"; do
         --cli)
             CLI=1
             ;;
-        --remoteDT|--remoteLocale|--remoteFS)
+        --remoteDT|--remoteLocale|--remoteFS|--fakeClipboard|--denyClipboard)
             INJECTION_ARGUMENTS+=("/${argument#--}")
             ;;
         --unblock)
@@ -77,6 +76,7 @@ build_gacui_project() {
 }
 
 if [[ "$APP_NAME" == "cpptest_rvm" ]]; then
+    if (( ${#INJECTION_ARGUMENTS[@]} )); then echo "Injection options require a Core application." >&2; exit 1; fi
     if [[ ! -x "$LOCAL_RVM" ]]; then
         echo "Test application not found. Run ./build.sh first: $LOCAL_RVM" >&2
         exit 1
@@ -88,9 +88,8 @@ else
     if [[ "$CLI" -eq 1 ]]; then
         build_gacui_project "$HOST_PROJECT"
     fi
-    build_gacui_project "$CORE_PROJECT"
     if [[ ! -x "$CORE_EXE" ]]; then
-        echo "GacUI Core build did not produce: $CORE_EXE" >&2
+        echo "Platform Core not found. Run ./build.sh first: $CORE_EXE" >&2
         exit 1
     fi
 
@@ -121,7 +120,7 @@ if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 && "$APP_NAME" == "cpptest_rvm" ]]; the
     exit 1
 fi
 if [[ "${#INJECTION_ARGUMENTS[@]}" -gt 0 ]]; then
-    PRIMARY_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}")
+    if (( ${#INJECTION_ARGUMENTS[@]} )); then PRIMARY_ARGUMENTS+=("${INJECTION_ARGUMENTS[@]}"); fi
 fi
 
 if [[ "$NEEDS_MANUAL_HOST" -eq 0 ]]; then

@@ -50,7 +50,7 @@ namespace vl {
                 bool Submit() override;
             };
 
-            class CocoaClipboardService: public Object, public INativeClipboardService
+            class CocoaClipboardService: public Object, public INativeClipboardService, public IGuiRemoteClipboardEventSource
             {
                 friend class CocoaClipboardReader;
                 friend class CocoaClipboardWriter;
@@ -60,6 +60,7 @@ namespace vl {
                 vint                            changeCount;
             public:
                 CocoaClipboardService(INativeCallbackService* callbacks, INativeImageService* images);
+                bool                            PumpClipboardEvents() override;
                 void                            CheckForUpdates();
                 Ptr<INativeClipboardReader>		ReadClipboard() override;
                 Ptr<INativeClipboardWriter>		WriteClipboard() override;

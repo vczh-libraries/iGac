@@ -33,6 +33,7 @@ set(GACOSX_FILES
 	"../Mac/NativeWindow/OSX/CocoaHelper.mm"
 	"../Mac/NativeWindow/OSX/CocoaIntrospection.mm"
 	"../Mac/NativeWindow/OSX/CocoaNativeController.mm"
+	"../Mac/NativeWindow/OSX/CocoaRemoteApplication.mm"
 	"../Mac/NativeWindow/OSX/CocoaWindow.mm"
 	"../Mac/NativeWindow/CocoaAutomationService.cpp"
 	"../Mac/NativeWindow/OSX/CoreGraphics/CoreGraphicsApp.mm"
